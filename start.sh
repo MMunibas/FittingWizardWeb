@@ -1,9 +1,7 @@
 #!/bin/bash
 
-cd `dirname $0`
+export JAVA_BIN_DIR=/usr/java/latest/
+export PYTHONPATH=/usr/local/lib64/python2.7/site-packages/
+export LD_LIBRARY_PATH=/usr/local/lib/
 
-JAVA_BIN_DIR=`which java`
-
-java -cp "*:$JAVA_BIN_DIR/../lib" com.javafx.main.Main
-
-cd -
+java -cp "bin:lib/*:$JAVA_BIN_DIR/jre/lib/jfxrt.jar" ch.scs.unibas.fittingwizard.Main
