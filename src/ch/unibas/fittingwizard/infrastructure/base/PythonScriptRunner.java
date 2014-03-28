@@ -1,0 +1,131 @@
+package ch.unibas.fittingwizard.infrastructure.base;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import ch.unibas.fittingwizard.application.scripts.base.ScriptExecutionException;
+
+public class PythonScriptRunner {
+
+	private final static Logger logger = Logger.getLogger(PythonScriptRunner.class);
+
+    private final static String ExecutableName = "python";
+	private ProcessBuilder pb = new ProcessBuilder();
+
+	public void setWorkingDir(File path) {
+		logger.debug("Setting workdir: " + path);
+		if (!path.exists()) {
+			throw new RuntimeException("Working directory does not exist");
+		}
+		pb.directory(path);
+	}
+	
+	public File getWorkingDir() {
+		return pb.directory();
+	}
+	
+	public void putEnvironment(Map<String, String> environment) {
+		logger.debug("Setting environment: " + environment);
+		Map<String, String> env = pb.environment();
+		env.putAll(environment);
+	}
+	
+	public Map<String, String> getEnvironment() {
+		return pb.environment();
+	}
+	
+	public static boolean isAvailable() {
+		try {
+            PythonScriptRunner runner = new PythonScriptRunner();
+            int retval = runner.exec("--version");
+			if (retval == 0) {
+				logger.info("Python found in path.");
+				return true;
+			} else {
+				logger.warn("Python not in path.");
+				return false;
+			}
+		} catch (Exception e) {
+            logger.warn("Python not in path.", e);
+            return false;
+        }
+    }
+	
+	public int exec(File scriptName) {
+        return exec(scriptName, new ArrayList<String>());
+	}
+	
+	public int exec(File scriptName, List<String> args)  {
+        return exec(scriptName, args, null);
+	}
+
+    public int exec(String command) {
+        return exec(null, Arrays.asList(command), null);
+    }
+
+    public int exec(File scriptName, List<String> args, File outputFile)  {
+        setCommand(scriptName, args, outputFile);
+        return run(scriptName);
+    }
+
+	private int run(File scriptName) {
+		logger.info("Running python script\n" + pb.command() +
+				    "\nin directory:\n" + pb.directory() +
+				    "\nwith environment:\n" + pb.environment());
+
+        int exitCode = 0;
+        try {
+            Process p = pb.start();
+            exitCode = p.waitFor();
+        } catch (Exception e) {
+            throw new RuntimeException(String.format("Python script [%s] failed.", scriptName.getName()), e);
+        }
+        logger.info("Python return value: " + exitCode);
+        if (exitCode != 0) {
+            throw new ScriptExecutionException(
+                    String.format("Python script [%s] did not exit correctly. Exit code: %s",
+                            scriptName.getName(),
+                            String.valueOf(exitCode)));
+        }
+
+		return exitCode;
+	}
+	
+	private void setCommand(File scriptName, List<String> args, File outputFile) {
+		if (scriptName != null && !scriptName.exists()) {
+			throw new ScriptExecutionException("Could not find Python script " + scriptName);
+		}
+
+        ArrayList<String> list = new ArrayList<>();
+        list.add(ExecutableName);
+        if (scriptName != null) {
+            list.add(FilenameUtils.normalize(scriptName.getAbsolutePath()));
+        }
+        if (! args.isEmpty()) {
+            list.addAll(args);
+        }
+
+        pb.command(list);
+        if (logger.isDebugEnabled()) {
+            logger.debug("ProcessBuilder.command = " + StringUtils.join(pb.command(), " "));
+        }
+
+        if (outputFile != null) {
+            logger.debug("redirectOutput set to " + FilenameUtils.normalize(outputFile.getAbsolutePath()));
+            pb.redirectOutput(outputFile);
+        } else {
+            logger.debug("redirectOutput set to inheritIO");
+            pb.inheritIO();
+        }
+	}
+
+
+}
