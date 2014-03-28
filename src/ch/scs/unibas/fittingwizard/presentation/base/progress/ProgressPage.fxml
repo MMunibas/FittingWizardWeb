@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane prefHeight="439.0" prefWidth="666.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+  <center>
+    <FlowPane alignment="CENTER" columnHalignment="LEFT" orientation="VERTICAL" prefHeight="200.0" prefWidth="200.0">
+      <children>
+        <Label fx:id="lblTitle" prefHeight="40.0" prefWidth="445.0" text="A missing title..." wrapText="true">
+          <font>
+            <Font name="System Bold" size="12.0" />
+          </font>
+        </Label>
+        <ProgressBar fx:id="progressBar" maxWidth="-1.0" prefHeight="26.0" prefWidth="445.0" progress="-1.0">
+          <FlowPane.margin>
+            <Insets top="20.0" />
+          </FlowPane.margin>
+        </ProgressBar>
+      </children>
+    </FlowPane>
+  </center>
+</BorderPane>

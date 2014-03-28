@@ -1,0 +1,12 @@
+mol delrep 0 top
+mol representation Licorice 0.300000 10.000000 10.000000
+mol color Name
+mol selection {all}
+mol material Opaque
+mol addrep top
+mol representation Isosurface 0.001000 0 2 1 1 1
+mol color Volume 0
+mol selection {all}
+mol addrep top
+mol scaleminmax top 1 -0.010000 0.010000
+

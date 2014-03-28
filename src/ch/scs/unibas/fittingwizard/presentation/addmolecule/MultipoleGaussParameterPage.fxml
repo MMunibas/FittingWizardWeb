@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane prefHeight="439.0" prefWidth="666.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+  <top>
+    <GridPane>
+      <children>
+        <Label styleClass="labelStyle" text="Net charge of molecule" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <Label styleClass="labelStyle" text="Quantum chemical details" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Label styleClass="labelStyle" text="Number of cores" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <Label styleClass="labelStyle" text="State (multiplicity)" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <TextField fx:id="txtNetCharge" alignment="CENTER_RIGHT" prefWidth="200.0" text="Defaults from config" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+        <TextField fx:id="txtQuantumChemicalDetails" alignment="CENTER_RIGHT" prefWidth="200.0" text="Defaults from config" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+        <TextField fx:id="txtNumberOfCores" alignment="CENTER_RIGHT" prefWidth="200.0" text="Defaults from config" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+        <TextField fx:id="txtState" alignment="CENTER_RIGHT" prefWidth="200.0" text="Defaults from config" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+      </children>
+      <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="330.0" minWidth="10.0" prefWidth="25.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="363.0" minWidth="10.0" prefWidth="260.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="387.0" minWidth="10.0" prefWidth="356.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="387.0" minWidth="10.0" prefWidth="25.0" />
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      </rowConstraints>
+    </GridPane>
+  </top>
+</BorderPane>
