@@ -30,6 +30,9 @@ public class WizardApplication extends Application {
 	
 	private static final Logger logger = Logger.getLogger(WizardApplication.class);
 
+	/**
+	 * For checking that thereis a config file and that it contains proper keywords
+	 */
     private Settings settings;
 
 	@Override
@@ -48,6 +51,9 @@ public class WizardApplication extends Application {
             primaryStage.setTitle("Multipole-electrostatics fitting wizard - " + version);
             primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("Icon.png")));
 
+            /**
+             * use the settings object to be sure that config file is OK
+             */
             boolean isOkay = new ApplicationSetup(settings).verify();
             if (isOkay) {
                 primaryStage.show();

@@ -12,6 +12,9 @@ public class Main {
     public static void main(String[] args) {
         fixOsxHeadlessException();
 
+        /**
+         * Create the GUI by passing WizardApplication to JAVAFX launcher
+         */
         Application.launch(WizardApplication.class, args);
     }
 
