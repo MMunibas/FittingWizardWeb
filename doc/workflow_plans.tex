@@ -1,0 +1,91 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+
+\usepackage{lmodern}
+
+\usepackage{url}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,urlcolor=blue}
+
+%\usepackage{listings}
+
+\usepackage[top=3cm, bottom=3cm, left=2.5cm, right=2.5cm]{geometry}
+
+\setlength\parindent{0pt}
+
+\author{Florent Hédin, Prashant Gupta}
+\title{FittingWizard : plans for further improvements}
+
+\begin{document}
+
+\maketitle
+
+\section{LJ parameters fitting}
+
+The goal would be to extend the current application in order to have the
+possibility to use it for performing a fit of the Lennard-Jones parameters for
+the CHARMM forcefield.
+
+\medskip
+
+The easiest way of doing that would be to add a button on the last panel of the 
+current software, i.e. when the ESP fit is done. Then a new panel would appear 
+for setting up parameters for the LJ fit.
+
+\section{Roadmap}
+
+Here is a first estimate of the required steps:
+
+\begin{itemize}
+\item Choose the type of properties used for estimating the LJ parameters: 
+density, heat of vaporisation, ...
+
+\item Generate CHARMM compatible coordinates (COR or PDB) and topology (PSF).
+
+\item Atom types: may be give to the user the opportunity to edit the atom 
+types manually before generating the COR and PSF files.
+
+\item Initial guess for the well depth and distance parameters, and increment 
+used: also define a lower and upper limit for the possible values ?
+
+\item Generate the corresponding input files for CHARMM.
+
+\item Copy files to distant server, similarly to what was done with Gaussian.
+
+\item Run CHARMM on the distant server.
+
+\item Either: (i) copy back output files on the local machine and run the 
+scripts locally, or (ii) run those scripts on the distant server and just copy 
+back final results to the local machine. Will depend on the computational cost 
+required by those scripts.
+
+\end{itemize}
+
+\section{Technical considerations}
+
+\subsection{Coordinates and topology files}
+The current software uses XYZ coordinates, not read by CHARMM, and containing 
+no topology or connectivity information.
+
+\medskip
+
+Then it is necessary to generate a COR or PDB file, and a topology PSF file. We 
+currently have a script from V. Zoete for building a PSF, and need to check for 
+some scripts written by group members for generating COR or PDB. 
+
+\medskip
+
+An alternative would be to have look at the possibility offered by 
+\textbf{OpenBabel}.\\
+(\href{http://openbabel.org/wiki/Babel}{http://openbabel.org/wiki/Babel}).
+
+\subsection{CHARMM input files}
+We need to have a proper template that will be used for preparing the input 
+files. Ideally the user would be able to run the fitting without having to 
+modify this template, but giving this opportunity to the user would be useful.
+
+
+\end{document}
+

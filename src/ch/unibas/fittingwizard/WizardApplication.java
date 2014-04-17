@@ -1,10 +1,8 @@
 package ch.unibas.fittingwizard;
 
-import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
 import ch.unibas.fittingwizard.presentation.base.Wizard;
 import ch.unibas.fittingwizard.presentation.base.WizardPageFactory;
 import ch.unibas.fittingwizard.presentation.MoleculeListPage;
-import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
 import ch.unibas.fittingwizard.presentation.base.ui.MainWindow;
 import javafx.scene.Parent;
 import org.apache.log4j.BasicConfigurator;
@@ -15,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.jar.Attributes;
@@ -31,7 +28,7 @@ public class WizardApplication extends Application {
 	private static final Logger logger = Logger.getLogger(WizardApplication.class);
 
 	/**
-	 * For checking that thereis a config file and that it contains proper keywords
+	 * For checking that there is a config file and that it contains proper keywords
 	 */
     private Settings settings;
 
@@ -42,12 +39,12 @@ public class WizardApplication extends Application {
 
         logger.info("Application starting.");
         try {
-            Parent root = setupWizard(primaryStage);
+            Parent root = this.setupWizard(primaryStage);
 
             Scene scene = new Scene(root,1024,768);
-            loadStylesheets(scene);
+            this.loadStylesheets(scene);
             primaryStage.setScene(scene);
-            String version = getVersionFromManifest();
+            String version = this.getVersionFromManifest();
             primaryStage.setTitle("Multipole-electrostatics fitting wizard - " + version);
             primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("Icon.png")));
 
