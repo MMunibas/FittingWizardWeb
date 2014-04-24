@@ -8,6 +8,10 @@ package ch.unibas.fieldcomp;
 
 import ch.unibas.fieldcomp.exceptions.FieldcompParamsException;
 import ch.unibas.fieldcomp.exceptions.FieldcompParamsShellException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 /**
  *
@@ -16,44 +20,46 @@ import ch.unibas.fieldcomp.exceptions.FieldcompParamsShellException;
 public final class Fieldcomp {
 
     //character strings
-    String cubefile, vdwfile, punfile, basename, line1, line2, wrd, rnk;
+    private String cubefile, vdwfile, punfile, basename, line1, line2, wrd, rnk;
 
     //allocatables
     //String Arg[];
-    int ele_type[], irank[], jrank[], pts[];
-    float en[][][], totener[][][], diff[][][];
-    double xr[], yr[], zr[];
-    double xs[], ys[], zs[];
-    double x1[], y1[], z1[];
-    double qu[], qu1z[], qu1y[], qu1x[];
-    double qu20[], qu21c[], qu21s[], qu22c[], qu22s[];
-    double qu30[], qu31c[], qu31s[], qu32c[], qu32s[];
-    double qu33c[], qu33s[], vdw[];
-    boolean excl[], sigma_range[], near_vdw[];
+    private int[] ele_type, irank, jrank, pts;
+    private float[][][] en, totener, diff;
+    private double[] xr, yr, zr;
+    private double[] xs, ys, zs;
+    private double[] x1, y1, z1;
+    private double[] qu, qu1z, qu1y, qu1x;
+    private double[] qu20, qu21c, qu21s, qu22c, qu22s;
+    private double[] qu30, qu31c, qu31s, qu32c, qu32s;
+    private double[] qu33c, qu33s, vdw;
+    private boolean[][][] excl, sigma_range, near_vdw;
 
     //integers
     //int nArgs;
-    int Error, io_error;
-    int n0, n1, n2, n3;
-    int diffcnt, i, j, k, natoms;
-    int diffcnt_sigma, diffcnt_nvdw, diffcnt_farout;
+    private int Error, io_error;
+    private int n0, n1, n2, n3;
+    private int diffcnt, i, j, k, natoms;
+    private int diffcnt_sigma, diffcnt_nvdw, diffcnt_farout;
 
     //float
-    float xstart, ystart, zstart, step_x, step_y, step_z, o, p, q, shell_i, shell_o;
-    float diffsum_sigma, diffsum_nvdw, diffsum_farout, diffperc_sigma, diffperc_nvdw, diffperc_farout, diffsum_sigma_sq;
+    private float xstart, ystart, zstart, step_x, step_y, step_z, o, p, q, shell_i, shell_o;
+    private float diffsum_sigma, diffsum_nvdw, diffsum_farout, diffperc_sigma, diffperc_nvdw, diffperc_farout, diffsum_sigma_sq;
 
     //double
-    double xc, yc, zc, x, y, z, r, a2b, b2a, chrg;
-    double trax, tray, traz;
-    double que, qu1ze, qu1ye, qu1xe, qu20e, qu21ce, qu21se, qu22ce, qu22se;
-    double qu30e, qu31ce, qu31se, qu32ce, qu32se, qu33ce, qu33se;
-    double diffsum;
-    double diffperc;
+    private double xc, yc, zc, x, y, z, r, a2b, b2a, chrg;
+    private double trax, tray, traz;
+    private double que, qu1ze, qu1ye, qu1xe, qu20e, qu21ce, qu21se, qu22ce, qu22se;
+    private double qu30e, qu31ce, qu31se, qu32ce, qu32se, qu33ce, qu33se;
+    private double diffsum;
+    private double diffperc;
 
     //logicals
     boolean no_pics, sigma_only, cubeout;
 
-    public Fieldcomp(String Arg[]) throws FieldcompParamsException {
+    private final String delims = "\\s+";
+
+    public Fieldcomp(String[] Arg) throws FieldcompParamsException {
         //Conversion parameters form Angstrom to Bohr and vice versa
         a2b = 1.889726;
         b2a = 0.52917720859;
@@ -66,6 +72,8 @@ public final class Fieldcomp {
         no_pics = true;
         sigma_only = false;
         cubeout = false;
+
+        pts = new int[3];
 
         int nArgs = Arg.length;
 
@@ -102,7 +110,8 @@ public final class Fieldcomp {
         } // end for on arguments
 
         //define basename using cubfile
-        //basename = cubefile(1:index(cubefile,'.')-1)//'_'
+        basename = cubefile.substring(0, cubefile.indexOf(".") - 1) + "_";
+
         //check inner and outer shell
         if (shell_i >= shell_o) {
             throw new FieldcompParamsShellException(shell_i, shell_o);
@@ -110,8 +119,108 @@ public final class Fieldcomp {
 
     } // end ctor
 
-    public void readCubefile() {
+    public void readCubefileAlloc() throws FileNotFoundException {
 
-    }
+        Scanner s = null;
+        s = new Scanner(new FileInputStream(new File(cubefile)));
 
-}
+        String inp = null;
+        String[] tokens = null;
+
+        //read(23,'(A)') line1
+        //read(23,'(A)') line2
+        line1 = s.nextLine();
+        line2 = s.nextLine();
+
+        //read(23,*) natoms, xstart, ystart, zstart
+        inp = s.nextLine();
+        tokens = inp.trim().split(delims);
+        natoms = Integer.parseInt(tokens[0]);
+        xstart = Float.valueOf(tokens[1]);
+        ystart = Float.valueOf(tokens[2]);
+        zstart = Float.valueOf(tokens[3]);
+
+        //read(23,*) pts(1), step_x, o, p
+        inp = s.nextLine();
+        tokens = inp.trim().split(delims);
+        pts[0] = Integer.parseInt(tokens[0]);
+        step_x = Float.valueOf(tokens[1]);
+        o = Float.valueOf(tokens[2]);
+        p = Float.valueOf(tokens[3]);
+
+        //read(23,*) pts(2), o, step_y, p
+        inp = s.nextLine();
+        tokens = inp.trim().split(delims);
+        pts[1] = Integer.parseInt(tokens[0]);
+        o = Float.valueOf(tokens[1]);
+        step_y = Float.valueOf(tokens[2]);
+        p = Float.valueOf(tokens[3]);
+
+        //read(23,*) pts(3), o, p, step_z
+        inp = s.nextLine();
+        tokens = inp.trim().split(delims);
+        pts[2] = Integer.parseInt(tokens[0]);
+        o = Float.valueOf(tokens[1]);
+        p = Float.valueOf(tokens[2]);
+        step_z = Float.valueOf(tokens[3]);
+
+        // Allocate all needed variables to natoms
+        ele_type = new int[natoms];
+        irank = new int[natoms];
+        jrank = new int[natoms];
+        //
+        xr = new double[natoms];
+        yr = new double[natoms];
+        zr = new double[natoms];
+        //
+        xs = new double[natoms];
+        ys = new double[natoms];
+        zs = new double[natoms];
+        //
+        x1 = new double[natoms];
+        y1 = new double[natoms];
+        z1 = new double[natoms];
+        //
+        qu = new double[natoms];
+        qu1x = new double[natoms];
+        qu1y = new double[natoms];
+        qu1z = new double[natoms];
+        //
+        qu20 = new double[natoms];
+        qu21c = new double[natoms];
+        qu21s = new double[natoms];
+        qu22c = new double[natoms];
+        qu22s = new double[natoms];
+        //
+        qu30 = new double[natoms];
+        qu31c = new double[natoms];
+        qu31s = new double[natoms];
+        qu32c = new double[natoms];
+        qu32s = new double[natoms];
+        qu33c = new double[natoms];
+        qu33s = new double[natoms];
+        //
+        vdw = new double[natoms];
+        // Done allocating variables to natoms
+
+        // reading extra data
+        for (n1 = 0; n1 < natoms; n1++) {
+            inp = s.nextLine();
+            tokens = inp.trim().split(delims);
+            ele_type[n1] = Integer.parseInt(tokens[0]);
+            chrg = Double.valueOf(tokens[1]);
+            x1[n1] = Double.valueOf(tokens[2]);
+            y1[n1] = Double.valueOf(tokens[3]);
+            z1[n1] = Double.valueOf(tokens[4]);
+        }
+        // more allocation now
+        excl = new boolean[pts[2]][pts[1]][pts[0]];
+        sigma_range = new boolean[pts[2]][pts[1]][pts[0]];
+        near_vdw = new boolean[pts[2]][pts[1]][pts[0]];
+        en = new float[pts[2]][pts[1]][pts[0]];
+        totener = new float[pts[2]][pts[1]][pts[0]];
+        diff = new float[pts[2]][pts[1]][pts[0]];
+
+    }// end readCubefile
+
+}// end of class

@@ -1,10 +1,10 @@
 *.class
 /scripts/*.mod
 /scripts/fieldcomp
-bin
-dist
-old
+/bin
+/dist
+/nbdist
+/old
 /nbproject/private/
 /build/
-/nbdist/
 /data/molecules/
