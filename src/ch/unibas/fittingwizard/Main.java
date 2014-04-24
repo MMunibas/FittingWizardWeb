@@ -10,7 +10,14 @@ import javafx.application.Application;
 public class Main {
 
     public static void main(String[] args) {
-        fixOsxHeadlessException();
+
+        String OS = System.getProperty("os.name").toLowerCase().trim();
+
+        if (OS.equals("macosx")) {
+            if (System.getProperty("java.version").startsWith("1.8.") == false) {
+                fixOsxHeadlessException();
+            }
+        }
 
         /**
          * Create the GUI by passing WizardApplication to JAVAFX launcher
