@@ -4,3 +4,7 @@ fieldcomp
 bin
 dist
 old
+/nbproject/private/
+/build/
+/nbdist/
+data/molecules/

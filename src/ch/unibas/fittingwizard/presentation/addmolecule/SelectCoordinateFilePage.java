@@ -81,7 +81,7 @@ public class SelectCoordinateFilePage extends WizardPage {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Coordinate file");
         fileChooser.setInitialDirectory(
-                new File(System.getProperty("user.home"))
+                new File(System.getProperty("user.dir"))
         );
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Coordinate file", "*.xyz"));
         File file = fileChooser.showOpenDialog(this.getScene().getWindow());
