@@ -1,0 +1,153 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+
+\usepackage{lmodern}
+
+\usepackage{graphicx}
+
+\usepackage{url}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,urlcolor=blue}
+
+\usepackage{listings}
+\usepackage[top=3cm, bottom=3cm, left=2.5cm, right=2.5cm]{geometry}
+
+\setlength\parindent{0pt}
+
+\author{Florent Hédin}
+\date{}
+\title{FittingWizard v0.8.0 : software prerequisites and installation 
+procedure}
+
+\begin{document}
+
+\maketitle
+
+\section{Java version}
+Oracle's Java proprietary implementation is required for running this software 
+under Linux : this can be downloaded at :\\ 
+\href{http://www.oracle.com/technetwork/java/javase/downloads/index.html}
+{http://www.oracle.com/technetwork/java/javase/downloads/index.html}\\
+
+Download the \texttt{JRE} if you just plan to use the software, or the 
+\texttt{JDK} if you plan some Java software development.
+
+\subsection{Fedora / RedHat Entreprise Linux / CentOS}
+Check this page for instructions if you are using either Fedora 12 to 20 or 
+RedHat/CentOS 5.10 to 6.5 : \\
+\href{http://www.if-not-true-then-false.com/2010/install-sun-oracle-java-jdk-jre-7-on-fedora-centos-red-hat-rhel/}
+{http://www.if-not-true-then-false.com/2010/install-sun-oracle-java-jdk-jre-7-on-fedora-centos-red-hat-rhel/}
+
+Please follow all the steps of the procedure, and do not forget the step 
+\texttt{alternatives --config java} for enabling the use of the Oracle 
+implementation.\\
+
+\subsection{Ubuntu}
+Check this page for instructions if you are using Ubuntu :\\
+\href{http://www.wikihow.com/Install-Oracle-Java-on-Ubuntu-Linux}
+{http://www.wikihow.com/Install-Oracle-Java-on-Ubuntu-Linux}
+
+\section{Babel/Open Babel}
+Open Babel is a toolkit for manipulating chemical data : in this toolkit it is 
+mainly used for chemical coordinates file conversion. Some Linux distributions 
+provide binary compiled versions.\\
+
+Otherwise check 
+\href{http://openbabel.org/wiki/Main_Page}{http://openbabel.org/wiki/Main\_Page}
+ for instructions and manual download and compiling.
+
+\section{VMD compatibility}
+This software allows you to visualize the resulting multipoles within VMD.
+
+First you need to install VMD : 
+\href{http://www.ks.uiuc.edu/Development/Download/download.cgi?PackageName=VMD}{Download
+ here} and see 
+\href{http://www.ks.uiuc.edu/Research/vmd/current/docs.html}{here} for 
+installation instructions.\\
+
+Then you need to compile a small fortran software provided in the 
+\texttt{./scripts} subdirectory with the following command : 
+\texttt{gfortran fieldcomp\_dyna.f90 -o fieldcomp}.
+
+If \texttt{gfortran} is not installed, use \texttt{''yum install 
+gcc-gfortran''} for Fedora/CentOS/RedHat or \texttt{''apt-get install 
+gfortran''} for Ubuntu.
+
+\section{Python 2.7}
+You need to have a Python 2.7 scripting environment installed : this is 
+already the case for most of the Linux distributions, if not please check the 
+documentation pages of your distribution for more instructions.\\
+
+Alternatively, you can download and compile Python 2.7 by yourself :\\
+\href{http://www.python.org/download/releases/2.7/}{http://www.python.org/download/releases/2.7/}
+
+\subsection{NumPy and SciPy}
+
+NumPy and SciPy are two Python modules used for scientific and mathematics 
+computations. Most of the Linux distributions will provide a way of directly 
+installing binary versions of those libraries.\\
+
+Otherwise, check \href{http://www.numpy.org/}{http://www.numpy.org/} and 
+\href{http://www.scipy.org/}{http://www.scipy.org/} for more instructions or 
+for a manual install.
+
+\subsection{RDKit}
+RDKit is an open source toolkit for cheminformatics. See 
+\href{http://sourceforge.net/projects/rdkit/files/}{http://sourceforge.net/projects/rdkit/files/}
+for downloading the sources and 
+\href{http://rdkit.org/docs/index.html}{http://rdkit.org/docs/index.html}
+for installation instructions.\\
+
+\underline{A few remarks:}\\
+
+If you need to compile RDKit by yourself, you will require several packages:
+\begin{itemize}
+\item Python development libraries : under Ubuntu, install 
+\texttt{''apt-get install python-dev''}, 
+under Fedora or CentOS/RHEL install \texttt{''yum install python-devel''}, if 
+you compiled 
+Python by yourself you should have it.
+
+\item Flex and Bison and Cmake, 3 packages used for building the software suite:
+\texttt{''yum install flex bison cmake''} or \texttt{''apt-get install flex 
+bison cmake''}. If you need to install the doftware manually, check:
+\begin{itemize}
+\item 
+\href{http://www.gnu.org/software/bison/}{http://www.gnu.org/software/bison/}
+\item \href{http://flex.sourceforge.net/}{http://flex.sourceforge.net/}
+\item 
+\href{http://www.cmake.org/cmake/resources/software.html}{http://www.cmake.org/cmake/resources/software.html}
+\end{itemize}
+
+\item The boost library, a collection of tools commonly used in modern 
+programming: install with \texttt{''yum install boost boost-devel''}
+or \texttt{''apt-get install libboost-all-dev''}. Alternatively for a manual 
+install, see 
+\href{http://www.boost.org/users/download/}{http://www.boost.org/users/download/}
+\end{itemize}
+
+
+Before running the \texttt{''make''} command and after using 
+\texttt{''cmake''} (see 
+RDKit docs), run \texttt{''cmake -D RDK\_INSTALL\_INTREE=OFF .''} for 
+choosing as installation path the default \texttt{/usr/local/}\\
+
+Once the software is installed you need to define the two following 
+environment variables :
+\texttt{export PYTHONPATH=/usr/local/lib64/python2.7/site-packages/} \\
+\texttt{export LD\_LIBRARY\_PATH=/usr/local/lib/} \\
+
+Then open a \texttt{python2.7} intepreter and try the following two commands 
+to test the installation: \\
+\texttt{import rdkit}\\
+\texttt{from rdkit import Chem}\\
+
+If no error message is displayed \texttt{RDKit} can be properly used by 
+\texttt{FittingWizard}
+
+
+
+\end{document}
+
