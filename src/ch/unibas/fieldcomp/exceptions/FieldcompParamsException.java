@@ -14,6 +14,7 @@ public class FieldcompParamsException extends Exception {
 
     public FieldcompParamsException() {
         System.err.println("Error detected with parameters passed to Fieldcomp : ");
+        System.exit(-1);
     }
 
 }

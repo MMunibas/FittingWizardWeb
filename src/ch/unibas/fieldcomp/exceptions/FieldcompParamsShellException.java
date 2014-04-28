@@ -10,7 +10,7 @@ package ch.unibas.fieldcomp.exceptions;
  *
  * @author hedin
  */
-public class FieldcompParamsShellException extends FieldcompParamsException {
+public final class FieldcompParamsShellException extends FieldcompParamsException {
 
     public FieldcompParamsShellException(float i, float o) {
         super();

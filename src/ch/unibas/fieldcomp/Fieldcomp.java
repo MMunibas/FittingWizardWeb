@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -55,11 +57,29 @@ public final class Fieldcomp {
     private double diffperc;
 
     //logicals
-    boolean no_pics, sigma_only, cubeout;
+    private boolean no_pics, sigma_only, cubeout;
 
+    private Scanner s = null;
+    private String inp = null;
+    private String[] tokens = null;
     private final String delims = "\\s+";
 
-    public Fieldcomp(String[] Arg) throws FieldcompParamsException {
+    public static void main(String[] args) {
+
+        Fieldcomp fdc = null;
+
+        try {
+            fdc = new Fieldcomp(args);
+        } catch (FieldcompParamsException | FileNotFoundException ex) {
+            Logger.getLogger(Fieldcomp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        fdc.readCubefileAlloc();
+
+        fdc.readESP();
+    }
+
+    public Fieldcomp(String[] args) throws FieldcompParamsException, FileNotFoundException {
         //Conversion parameters form Angstrom to Bohr and vice versa
         a2b = 1.889726;
         b2a = 0.52917720859;
@@ -75,18 +95,19 @@ public final class Fieldcomp {
 
         pts = new int[3];
 
-        int nArgs = Arg.length;
+        int nArgs = args.length;
 
-        for (int it = 1; it < nArgs; it++) {
-            switch (Arg[it].toLowerCase().trim()) {
+        for (int it = 0; it < nArgs; it++) {
+            //System.out.println(args[it]);
+            switch (args[it].toLowerCase().trim()) {
                 case "-cube":
-                    cubefile = Arg[++it];
+                    cubefile = args[++it];
                     break;
                 case "-vdw":
-                    vdwfile = Arg[++it];
+                    vdwfile = args[++it];
                     break;
                 case "-pun":
-                    punfile = Arg[++it];
+                    punfile = args[++it];
                     break;
                 case "-pics":
                     no_pics = false;
@@ -98,11 +119,11 @@ public final class Fieldcomp {
                     cubeout = true;
                     break;
                 case "-si":
-                    wrd = Arg[++it];
+                    wrd = args[++it];
                     shell_i = Float.valueOf(wrd);
                     break;
                 case "-so":
-                    wrd = Arg[++it];
+                    wrd = args[++it];
                     shell_o = Float.valueOf(wrd);
                     break;
 
@@ -117,15 +138,12 @@ public final class Fieldcomp {
             throw new FieldcompParamsShellException(shell_i, shell_o);
         }
 
+        s = new Scanner(new FileInputStream(new File(cubefile)));
+        System.out.println("Opening file " + cubefile);
+
     } // end ctor
 
-    public void readCubefileAlloc() throws FileNotFoundException {
-
-        Scanner s = null;
-        s = new Scanner(new FileInputStream(new File(cubefile)));
-
-        String inp = null;
-        String[] tokens = null;
+    public void readCubefileAlloc(){
 
         //read(23,'(A)') line1
         //read(23,'(A)') line2
@@ -221,6 +239,18 @@ public final class Fieldcomp {
         totener = new float[pts[2]][pts[1]][pts[0]];
         diff = new float[pts[2]][pts[1]][pts[0]];
 
+        System.out.println("Arrays allocated");
+
     }// end readCubefile
+
+    public void readESP() {
+
+        for (n1 = 0; n1 < pts[0]; n1++) {
+            for (n2 = 0; n2 < pts[1]; n2++) {
+
+            }
+        }
+
+    }
 
 }// end of class
