@@ -8,9 +8,11 @@ package ch.unibas.fieldcomp;
 
 import ch.unibas.fieldcomp.exceptions.FieldcompParamsException;
 import ch.unibas.fieldcomp.exceptions.FieldcompParamsShellException;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,7 +24,7 @@ import java.util.logging.Logger;
 public final class Fieldcomp {
 
     //character strings
-    private String cubefile, vdwfile, punfile, basename, line1, line2, wrd, rnk;
+    private String cubefile, vdwfile, punfile, basename /*,line1, line2, wrd, rnk*/;
 
     //allocatables
     //String Arg[];
@@ -40,13 +42,14 @@ public final class Fieldcomp {
     //integers
     //int nArgs;
     private int Error, io_error;
-    private int n0, n1, n2, n3;
-    private int diffcnt, i, j, k, natoms;
+    //private int n0, n1, n2, n3;
+    private int diffcnt, /*i, j, k,*/ natoms;
     private int diffcnt_sigma, diffcnt_nvdw, diffcnt_farout;
 
     //float
     private float xstart, ystart, zstart, step_x, step_y, step_z, o, p, q, shell_i, shell_o;
-    private float diffsum_sigma, diffsum_nvdw, diffsum_farout, diffperc_sigma, diffperc_nvdw, diffperc_farout, diffsum_sigma_sq;
+    private float diffsum_sigma, diffsum_nvdw, diffsum_farout, diffperc_sigma,
+            diffperc_nvdw, diffperc_farout, diffsum_sigma_sq;
 
     //double
     private double xc, yc, zc, x, y, z, r, a2b, b2a, chrg;
@@ -70,16 +73,13 @@ public final class Fieldcomp {
 
         try {
             fdc = new Fieldcomp(args);
+            fdc.run();
         } catch (FieldcompParamsException | FileNotFoundException ex) {
             Logger.getLogger(Fieldcomp.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        fdc.readCubefileAlloc();
-
-        fdc.readESP();
     }
 
-    public Fieldcomp(String[] args) throws FieldcompParamsException, FileNotFoundException {
+    public Fieldcomp(String[] args) throws FieldcompParamsException{
         //Conversion parameters form Angstrom to Bohr and vice versa
         a2b = 1.889726;
         b2a = 0.52917720859;
@@ -96,6 +96,12 @@ public final class Fieldcomp {
         pts = new int[3];
 
         int nArgs = args.length;
+
+        System.out.println("Parsing command line : ");
+        for (String str : args) {
+            System.out.print(str + " ");
+        }
+        System.out.println("\n");
 
         for (int it = 0; it < nArgs; it++) {
             //System.out.println(args[it]);
@@ -119,12 +125,10 @@ public final class Fieldcomp {
                     cubeout = true;
                     break;
                 case "-si":
-                    wrd = args[++it];
-                    shell_i = Float.valueOf(wrd);
+                    shell_i = Float.valueOf(args[++it]);
                     break;
                 case "-so":
-                    wrd = args[++it];
-                    shell_o = Float.valueOf(wrd);
+                    shell_o = Float.valueOf(args[++it]);
                     break;
 
             } // end case
@@ -137,18 +141,36 @@ public final class Fieldcomp {
         if (shell_i >= shell_o) {
             throw new FieldcompParamsShellException(shell_i, shell_o);
         }
-
-        s = new Scanner(new FileInputStream(new File(cubefile)));
-        System.out.println("Opening file " + cubefile);
-
     } // end ctor
 
-    public void readCubefileAlloc(){
+    public void run() throws FileNotFoundException {
+        this.readCubefile();
+        this.readVDWfile();
+        this.readPUNfile();
+    }
+
+    private void openFile(String fname) throws FileNotFoundException {
+        s = new Scanner(new FileInputStream(new File(fname)));
+        System.out.println("Opening file " + fname);
+    }
+
+    private void closeFile(String fname) {
+        if (s.hasNext()) {
+            System.out.println("Warning : file " + fname + " is closed but appears to still "
+                    + "have unread data");
+        }
+        s.close();
+        System.out.println("Closing file " + cubefile);
+    }
+
+    private void readCubefile() throws FileNotFoundException {
+        // first open the cube file
+        this.openFile(cubefile);
 
         //read(23,'(A)') line1
         //read(23,'(A)') line2
-        line1 = s.nextLine();
-        line2 = s.nextLine();
+        String line1 = s.nextLine();
+        String line2 = s.nextLine();
 
         //read(23,*) natoms, xstart, ystart, zstart
         inp = s.nextLine();
@@ -222,14 +244,14 @@ public final class Fieldcomp {
         // Done allocating variables to natoms
 
         // reading extra data
-        for (n1 = 0; n1 < natoms; n1++) {
+        for (int i = 0; i < natoms; i++) {
             inp = s.nextLine();
             tokens = inp.trim().split(delims);
-            ele_type[n1] = Integer.parseInt(tokens[0]);
+            ele_type[i] = Integer.parseInt(tokens[0]);
             chrg = Double.valueOf(tokens[1]);
-            x1[n1] = Double.valueOf(tokens[2]);
-            y1[n1] = Double.valueOf(tokens[3]);
-            z1[n1] = Double.valueOf(tokens[4]);
+            x1[i] = Double.valueOf(tokens[2]);
+            y1[i] = Double.valueOf(tokens[3]);
+            z1[i] = Double.valueOf(tokens[4]);
         }
         // more allocation now
         excl = new boolean[pts[2]][pts[1]][pts[0]];
@@ -241,16 +263,48 @@ public final class Fieldcomp {
 
         System.out.println("Arrays allocated");
 
+        // now read esp data from cube file
+        System.out.println("pts 1 2 3 : " + pts[0] + " " + pts[1] + " " + pts[2]);
+
+        int n3 = 0;
+        for (int n1 = 0; n1 < pts[0]; n1++) {
+            for (int n2 = 0; n2 < pts[1]; n2++) {
+                n3 = 0;
+                while (n3 < pts[2]) {
+                    inp = s.nextLine();
+                    tokens = inp.trim().split(delims);
+                    for (String val : tokens) {
+                        en[n3][n2][n1] = Float.valueOf(val);
+//                        en[n3][n2][n1] = s.nextFloat();
+                        n3++;
+                    }
+                }//end while
+                //System.out.println(n1 + " " + n2 + " " + n3);
+            }//end n2 loop
+        }//end n1 loop
+
+        System.out.println("ESP file properly read.");
+        //we don't need anymore cube file so close it
+        this.closeFile(cubefile);
     }// end readCubefile
 
-    public void readESP() {
+    private void readVDWfile() throws FileNotFoundException {
+        this.openFile(vdwfile);
 
-        for (n1 = 0; n1 < pts[0]; n1++) {
-            for (n2 = 0; n2 < pts[1]; n2++) {
-
-            }
+        //Read .vdw file
+        for (int i = 0; i < natoms; i++) {
+            vdw[i] = s.nextDouble();
+            jrank[i] = s.nextInt();
         }
 
+        this.closeFile(vdwfile);
+    }
+
+    private void readPUNfile() throws FileNotFoundException {
+        this.openFile(punfile);
+
+        //Read .pun file and transfer angstrom units to bohr
+        this.closeFile(punfile);
     }
 
 }// end of class
