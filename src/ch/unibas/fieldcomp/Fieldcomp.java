@@ -6,6 +6,7 @@
 
 package ch.unibas.fieldcomp;
 
+import ch.unibas.fieldcomp.exceptions.FieldcompFileRankException;
 import ch.unibas.fieldcomp.exceptions.FieldcompParamsException;
 import ch.unibas.fieldcomp.exceptions.FieldcompParamsShellException;
 import java.io.BufferedInputStream;
@@ -74,7 +75,7 @@ public final class Fieldcomp {
         try {
             fdc = new Fieldcomp(args);
             fdc.run();
-        } catch (FieldcompParamsException | FileNotFoundException ex) {
+        } catch (FieldcompParamsException | FileNotFoundException | FieldcompFileRankException ex) {
             Logger.getLogger(Fieldcomp.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -143,7 +144,7 @@ public final class Fieldcomp {
         }
     } // end ctor
 
-    public void run() throws FileNotFoundException {
+    public void run() throws FileNotFoundException, FieldcompFileRankException {
         this.readCubefile();
         this.readVDWfile();
         this.readPUNfile();
@@ -300,11 +301,77 @@ public final class Fieldcomp {
         this.closeFile(vdwfile);
     }
 
-    private void readPUNfile() throws FileNotFoundException {
+    private void readPUNfile() throws FileNotFoundException, FieldcompFileRankException {
         this.openFile(punfile);
 
         //Read .pun file and transfer angstrom units to bohr
+        inp = s.nextLine();
+        inp = s.nextLine(); //3 comments lines + 1 blank line
+        inp = s.nextLine();
+        inp = s.nextLine();
+
+        for (int i = 0; i < natoms; i++) {
+            System.out.println(i);
+            //first line
+            inp = s.nextLine();
+//            System.out.println(inp);
+            tokens = inp.trim().split(delims);
+            xs[i] = Double.valueOf(tokens[1]) * a2b;//angstroems to bohrs
+            ys[i] = Double.valueOf(tokens[2]) * a2b;
+            zs[i] = Double.valueOf(tokens[3]) * a2b;
+            irank[i] = Integer.parseInt(tokens[5]);
+            if (irank[i] != jrank[i]) {
+                throw new FieldcompFileRankException(tokens[0]);
+            }
+
+            //second line
+            inp = s.nextLine();
+//            System.out.println(inp);
+            tokens = inp.trim().split(delims);
+            qu[i] = Double.valueOf(tokens[0]);
+
+            //3rd line if required
+            if (irank[i] != 0) {
+                inp = s.nextLine();
+                tokens = inp.trim().split(delims);
+                qu1z[i] = Double.valueOf(tokens[0]);
+                qu1x[i] = Double.valueOf(tokens[1]);
+                qu1y[i] = Double.valueOf(tokens[2]);
+
+                //4th line if required
+                if (irank[i] != 1) {
+                    inp = s.nextLine();
+                    tokens = inp.trim().split(delims);
+                    qu20[i] = Double.valueOf(tokens[0]);
+                    qu21c[i] = Double.valueOf(tokens[1]);
+                    qu21s[i] = Double.valueOf(tokens[2]);
+                    qu22c[i] = Double.valueOf(tokens[3]);
+                    qu22s[i] = Double.valueOf(tokens[4]);
+
+                    //5th line if required
+                    if (irank[i] != 2) {
+                        inp = s.nextLine();
+                        tokens = inp.trim().split(delims);
+                        qu30[i] = Double.valueOf(tokens[0]);
+                        qu31c[i] = Double.valueOf(tokens[1]);
+                        qu31s[i] = Double.valueOf(tokens[2]);
+                        qu32c[i] = Double.valueOf(tokens[3]);
+                        qu32s[i] = Double.valueOf(tokens[4]);
+
+                        inp = s.nextLine();
+                        tokens = inp.trim().split(delims);
+                        qu33c[i] = Double.valueOf(tokens[0]);
+                        qu33s[i] = Double.valueOf(tokens[1]);
+                    }
+                }
+            }
+
+        }// end for loop on natoms
         this.closeFile(punfile);
-    }
+
+        // exclude point if within vdw radius of any atom and mark if close to vdw or within sigma range
+        // Cycle if calculation is demanded for sigma range only
+
+    }// end of readPUNfile function
 
 }// end of class
