@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,21 +46,21 @@ public final class Fieldcomp {
     //int nArgs;
     private int Error, io_error;
     //private int n0, n1, n2, n3;
-    private int diffcnt, /*i, j, k,*/ natoms;
-    private int diffcnt_sigma, diffcnt_nvdw, diffcnt_farout;
+    private int /*diffcnt, i, j, k,*/ natoms;
+//    private int diffcnt_sigma, diffcnt_nvdw, diffcnt_farout;
 
     //float
-    private float xstart, ystart, zstart, step_x, step_y, step_z, o, p, q, shell_i, shell_o;
-    private float diffsum_sigma, diffsum_nvdw, diffsum_farout, diffperc_sigma,
-            diffperc_nvdw, diffperc_farout, diffsum_sigma_sq;
+    private float xstart, ystart, zstart, step_x, step_y, step_z, /*o, p, q,*/ shell_i, shell_o;
+//    private float diffsum_sigma, diffsum_nvdw, diffsum_farout, diffperc_sigma,
+//            diffperc_nvdw, diffperc_farout, diffsum_sigma_sq;
 
     //double
-    private double xc, yc, zc, x, y, z, r, a2b, b2a, chrg;
-    private double trax, tray, traz;
-    private double que, qu1ze, qu1ye, qu1xe, qu20e, qu21ce, qu21se, qu22ce, qu22se;
+    private double xc, yc, zc, /*x, y, z,*/ o, p, q, r, a2b, b2a, chrg;
+    //private double trax, tray, traz;
+    private double /*que,*/ qu1ze, qu1ye, qu1xe, qu20e, qu21ce, qu21se, qu22ce, qu22se;
     private double qu30e, qu31ce, qu31se, qu32ce, qu32se, qu33ce, qu33se;
-    private double diffsum;
-    private double diffperc;
+//    private double diffsum;
+//    private double diffperc;
 
     //logicals
     private boolean no_pics, sigma_only, cubeout;
@@ -148,6 +150,7 @@ public final class Fieldcomp {
         this.readCubefile();
         this.readVDWfile();
         this.readPUNfile();
+        this.compute();
     }
 
     private void openFile(String fname) throws FileNotFoundException {
@@ -186,23 +189,23 @@ public final class Fieldcomp {
         tokens = inp.trim().split(delims);
         pts[0] = Integer.parseInt(tokens[0]);
         step_x = Float.valueOf(tokens[1]);
-        o = Float.valueOf(tokens[2]);
-        p = Float.valueOf(tokens[3]);
+        o = Double.valueOf(tokens[2]);
+        p = Double.valueOf(tokens[3]);
 
         //read(23,*) pts(2), o, step_y, p
         inp = s.nextLine();
         tokens = inp.trim().split(delims);
         pts[1] = Integer.parseInt(tokens[0]);
-        o = Float.valueOf(tokens[1]);
+        o = Double.valueOf(tokens[1]);
         step_y = Float.valueOf(tokens[2]);
-        p = Float.valueOf(tokens[3]);
+        p = Double.valueOf(tokens[3]);
 
         //read(23,*) pts(3), o, p, step_z
         inp = s.nextLine();
         tokens = inp.trim().split(delims);
         pts[2] = Integer.parseInt(tokens[0]);
-        o = Float.valueOf(tokens[1]);
-        p = Float.valueOf(tokens[2]);
+        o = Double.valueOf(tokens[1]);
+        p = Double.valueOf(tokens[2]);
         step_z = Float.valueOf(tokens[3]);
 
         // Allocate all needed variables to natoms
@@ -306,13 +309,12 @@ public final class Fieldcomp {
 
         //Read .pun file and transfer angstrom units to bohr
         inp = s.nextLine();
-        inp = s.nextLine(); //3 comments lines + 1 blank line
-        inp = s.nextLine();
+        inp = s.nextLine(); //3 comments lines 
         inp = s.nextLine();
 
         for (int i = 0; i < natoms; i++) {
-            System.out.println(i);
             //first line
+            inp = s.nextLine();//blank line
             inp = s.nextLine();
 //            System.out.println(inp);
             tokens = inp.trim().split(delims);
@@ -369,9 +371,131 @@ public final class Fieldcomp {
         }// end for loop on natoms
         this.closeFile(punfile);
 
+    }// end of readPUNfile function
+
+    private void compute() {
         // exclude point if within vdw radius of any atom and mark if close to vdw or within sigma range
         // Cycle if calculation is demanded for sigma range only
+        double x, y, z;
+        x = xstart - step_x;
+        for (int n1 = 0; n1 < pts[0]; n1++) {
+            x += step_x;
+            y = ystart - step_y;
+            for (int n2 = 0; n2 < pts[1]; n2++) {
+                y += step_y;
+                z = zstart - step_z;
+                for (int n3 = 0; n3 < pts[2]; n3++) {
+                    z += step_z;
+                    for (int n0 = 0; n0 < natoms; n0++) {
+                        o = vdw[n0] * vdw[n0];
+                        p = shell_i * vdw[n0];
+                        p *= p;
+                        q = shell_o * vdw[n0];
+                        q *= q;
+                        r = (xs[n0] - x) * (xs[n0] - x) + (ys[n0] - y) * (ys[n0] - y)
+                                + (zs[n0] - z) * (zs[n0] - z);
+                        if (r <= o) {
+                            excl[n3][n2][n1] = true;
+                            continue;
+                        } else if ((r >= o) && (r <= p)) {
+                            near_vdw[n3][n2][n1] = true;
+                            if (sigma_only == true) {
+                                excl[n3][n2][n1] = true;
+                                continue;
+                            }
+                        } else if ((r >= p) && (r <= q)) {
+                            sigma_range[n3][n2][n1] = true;
+                        }
+                    }// natoms loop
+                    if ((sigma_only == true) && (sigma_range[n3][n2][n1] == false)) {
+                        excl[n3][n2][n1] = true;
+                    }
+                }//n3 loop
+            }//n2 loop
+        }//n1 loop
 
-    }// end of readPUNfile function
+        double trax, tray, traz, que;
+        //step through all grid points, calculate potentials from Multipoles
+        for (int n0 = 0; n0 < natoms; n0++) {
+            x = xstart - step_x;
+            for (int n1 = 0; n1 < pts[0]; n1++) {
+                x += step_x;
+                y = ystart - step_y;
+                for (int n2 = 0; n2 < pts[1]; n2++) {
+                    y += step_y;
+                    z = zstart - step_z;
+                    for (int n3 = 0; n3 < pts[2]; n3++) {
+                        z += step_z;
+                        if (excl[n3][n2][n1] == true) {
+                            continue;
+                        }
+                        r = sqrt((xs[n0] - x) * (xs[n0] - x) + (ys[n0] - y) * (ys[n0] - y)
+                                + (zs[n0] - z) * (zs[n0] - z));
+                        trax = -(xs[n0] - x) / r;
+                        tray = -(ys[n0] - y) / r;
+                        traz = -(zs[n0] - z) / r;
+                        //qu(n0) is the charge on atom n0. The Potential due to this charge is calculated as (qu(n0))/(r)
+                        que = qu[n0] / r;
+                        //Contribution according to the monopole
+                        if (irank[n0] == 0) {
+                            totener[n3][n2][n1] += que;
+                        } else {
+                            /*
+                             qu1[x,y,z]e are the components of the dipole vector. The potential due to the dipole is calculated as qu1[x,y,z](n0)/(r**2)*-delta[x,y,z]/r
+                             (r**2) comes from the interaction between a dipole and a monopole
+                             the other terms (-delta[x,y,z]/r) are there because the directionality of the dipole has to be taken account of, weighted by the contribution
+                             of the single terms to the unit vector. (-delta[x,y,z]/r) scales to the unit vector.
+                             */
+                            qu1ze = qu1z[n0] / pow(r, 2) * traz;
+                            qu1ye = qu1y[n0] / pow(r, 2) * tray;
+                            qu1xe = qu1x[n0] / pow(r, 2) * trax;
+                            if (irank[n0] != 1) {
+                                totener[n3][n2][n1] += que + qu1ze + qu1xe + qu1ye;
+                            } else {
+                                //This is the contribution according to the quadrupole
+                                qu20e = qu20[n0] / pow(r, 3) * 0.5 * (3 * traz * traz - 1);
+                                qu21ce = qu21c[n0] / pow(r, 3) * pow(3, 0.5) * trax * traz;
+                                qu21se = qu21s[n0] / pow(r, 3) * pow(3, 0.5) * tray * traz;
+                                qu22ce = qu22c[n0] / pow(r, 3) * (0.5 * pow(3, 0.5) * (trax * trax - tray * tray));
+                                qu22se = qu22s[n0] / pow(r, 3) * pow(3, 0.5) * trax * tray;
+
+                                if (irank[n0] == 2) {
+                                    totener[n3][n2][n1] += que + qu1ze + qu1xe + qu1ye + qu20e + qu21ce + qu21se + qu22ce + qu22se;
+                                } else {
+                                    //This is the contribution according to the octupole
+                                    qu30e = qu30[n0] / pow(r, 4) * (5 * pow(traz, 3) - 3 * traz);
+                                    qu31ce = qu31c[n0] / pow(r, 4) * 0.25 * 2.449409 * trax * (pow(traz, 2) - 1);
+                                    qu31se = qu31s[n0] / pow(r, 4) * 0.25 * 2.449409 * tray * (pow(traz, 2) - 1);
+                                    qu32ce = qu32c[n0] / pow(r, 4) * 0.5 * 3.872983 * traz * (pow(trax, 2) - pow(tray, 2));
+                                    qu32se = qu32s[n0] / pow(r, 4) * 3.872983 * trax * tray * traz;
+                                    qu33ce = qu33c[n0] / pow(r, 4) * 0.25 * 3.162278 * trax * (pow(trax, 2) - 3 * pow(tray, 2));
+                                    qu33se = qu33s[n0] / pow(r, 4) * 0.25 * 3.162278 * tray * (3 * pow(trax, 2) - pow(tray, 2));
+                                    totener[n3][n2][n1] += que + qu1ze + qu1xe + qu1ye + qu20e + qu21ce + qu21se + qu22ce + qu22se + qu30e
+                                            + qu31ce + qu31se + qu32ce + qu32se + qu33ce + qu33se;
+                                }//end of octopole contribution
+                            }//end of quadrupole contribution
+                        }//end of monopole contribution
+                    }//n3 loop
+                }//n2 loops
+            }//ni loops
+        }//natoms no loop
+
+        //Analysis of the differences TODO
+        int diffcnt = 0;
+        int diffsum = 0;
+        int diffperc = 0;
+        int diffcnt_sigma = 0;
+        int diffsum_sigma = 0;
+        int diffperc_sigma = 0;
+        int diffsum_sigma_sq = 0;
+        int diffcnt_nvdw = 0;
+        int diffsum_nvdw = 0;
+        int diffperc_nvdw = 0;
+        int diffcnt_farout = 0;
+        int diffsum_farout = 0;
+        int diffperc_farout = 0;
+
+
+    }//end of compute 
 
 }// end of class
