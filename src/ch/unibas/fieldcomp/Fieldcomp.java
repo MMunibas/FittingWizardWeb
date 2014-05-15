@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import static java.lang.Math.abs;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 import java.util.Scanner;
@@ -44,23 +45,23 @@ public final class Fieldcomp {
 
     //integers
     //int nArgs;
-    private int Error, io_error;
+//    private int Error, io_error;
     //private int n0, n1, n2, n3;
-    private int /*diffcnt, i, j, k,*/ natoms;
-//    private int diffcnt_sigma, diffcnt_nvdw, diffcnt_farout;
+    private int diffcnt, /*i, j, k,*/ natoms;
+    private int diffcnt_sigma, diffcnt_nvdw, diffcnt_farout;
 
     //float
     private float xstart, ystart, zstart, step_x, step_y, step_z, /*o, p, q,*/ shell_i, shell_o;
-//    private float diffsum_sigma, diffsum_nvdw, diffsum_farout, diffperc_sigma,
-//            diffperc_nvdw, diffperc_farout, diffsum_sigma_sq;
+    private float diffsum_sigma, diffsum_nvdw, diffsum_farout, diffperc_sigma,
+            diffperc_nvdw, diffperc_farout, diffsum_sigma_sq;
 
     //double
-    private double xc, yc, zc, /*x, y, z,*/ o, p, q, r, a2b, b2a, chrg;
+    private double /*xc, yc, zc, x, y, z,*/ o, p, q, r, a2b, b2a, chrg;
     //private double trax, tray, traz;
-    private double /*que,*/ qu1ze, qu1ye, qu1xe, qu20e, qu21ce, qu21se, qu22ce, qu22se;
+    private double que, qu1ze, qu1ye, qu1xe, qu20e, qu21ce, qu21se, qu22ce, qu22se;
     private double qu30e, qu31ce, qu31se, qu32ce, qu32se, qu33ce, qu33se;
-//    private double diffsum;
-//    private double diffperc;
+    private double diffsum;
+    private double diffperc;
 
     //logicals
     private boolean no_pics, sigma_only, cubeout;
@@ -151,6 +152,7 @@ public final class Fieldcomp {
         this.readVDWfile();
         this.readPUNfile();
         this.compute();
+        this.print();
     }
 
     private void openFile(String fname) throws FileNotFoundException {
@@ -414,7 +416,7 @@ public final class Fieldcomp {
             }//n2 loop
         }//n1 loop
 
-        double trax, tray, traz, que;
+        double trax, tray, traz;
         //step through all grid points, calculate potentials from Multipoles
         for (int n0 = 0; n0 < natoms; n0++) {
             x = xstart - step_x;
@@ -481,21 +483,83 @@ public final class Fieldcomp {
         }//natoms no loop
 
         //Analysis of the differences TODO
-        int diffcnt = 0;
-        int diffsum = 0;
-        int diffperc = 0;
-        int diffcnt_sigma = 0;
-        int diffsum_sigma = 0;
-        int diffperc_sigma = 0;
-        int diffsum_sigma_sq = 0;
-        int diffcnt_nvdw = 0;
-        int diffsum_nvdw = 0;
-        int diffperc_nvdw = 0;
-        int diffcnt_farout = 0;
-        int diffsum_farout = 0;
-        int diffperc_farout = 0;
+        diffcnt = 0;
+        diffsum = 0;
+        diffperc = 0;
+        diffcnt_sigma = 0;
+        diffsum_sigma = 0;
+        diffperc_sigma = 0;
+        diffsum_sigma_sq = 0;
+        diffcnt_nvdw = 0;
+        diffsum_nvdw = 0;
+        diffperc_nvdw = 0;
+        diffcnt_farout = 0;
+        diffsum_farout = 0;
+        diffperc_farout = 0;
 
+        for (int n1 = 0; n1 < pts[0]; n1++) {
+            for (int n2 = 0; n2 < pts[1]; n2++) {
+                for (int n3 = 0; n3 < pts[2]; n3++) {
 
-    }//end of compute 
+                    if (excl[n3][n2][n1] == true) {
+                        diff[n3][n2][n1] = 0.f;
+                    } else if (near_vdw[n3][n2][n1] == true) {
+                        diffcnt_nvdw = diffcnt_nvdw + 1;
+                        diffcnt = diffcnt + 1;
+                        diff[n3][n2][n1] = abs(totener[n3][n2][n1] - en[n3][n2][n1]);
+                        diffsum_nvdw = diffsum_nvdw + diff[n3][n2][n1];
+                        diffsum = diffsum + diff[n3][n2][n1];
+                        diffperc_nvdw = diffperc_nvdw + diff[n3][n2][n1] / (abs(en[n3][n2][n1]));
+                        diffperc = diffperc + diff[n3][n2][n1] / (abs(en[n3][n2][n1]));
+                    } else if (sigma_range[n3][n2][n1] == true) {
+                        diffcnt_sigma = diffcnt_sigma + 1;
+                        diffcnt = diffcnt + 1;
+                        diff[n3][n2][n1] = abs(totener[n3][n2][n1] - en[n3][n2][n1]);
+                        diffsum_sigma = diffsum_sigma + diff[n3][n2][n1];
+                        diffsum_sigma_sq = (float) (diffsum_sigma_sq + pow(diff[n3][n2][n1], 2));
+                        diffsum = diffsum + diff[n3][n2][n1];
+                        diffperc_sigma = diffperc_sigma + diff[n3][n2][n1] / (abs(en[n3][n2][n1]));
+                        diffperc = diffperc + diff[n3][n2][n1] / (abs(en[n3][n2][n1]));
+                    } else {
+                        diffcnt_farout = diffcnt_farout + 1;
+                        diffcnt = diffcnt + 1;
+                        diff[n3][n2][n1] = abs(totener[n3][n2][n1] - en[n3][n2][n1]);
+                        diffsum_farout = diffsum_farout + diff[n3][n2][n1];
+                        diffsum = diffsum + diff[n3][n2][n1];
+                        diffperc_farout = diffperc_farout + diff[n3][n2][n1] / (abs(en[n3][n2][n1]));
+                        diffperc = diffperc + diff[n3][n2][n1] / (abs(en[n3][n2][n1]));
+                    }
+
+                }//n3
+            }//n2
+        }//n1
+
+    }//end of compute
+
+    private void print() {
+        if (sigma_only == true) {
+            System.out.println("diffsum_sigma_sq/diffcnt_sigma = " + diffsum_sigma_sq / (float) diffcnt_sigma);
+        } else {
+            System.out.println("Analysis of total space");
+            System.out.println("sum of differences: " + diffsum * 2625.5f + " kJ/mol");
+            System.out.println("difference average: " + diffsum * 2625.5f / (double) diffcnt + " kJ/mol");
+            System.out.println("difference percentage: " + (diffperc / (double) diffcnt) * 100.0 + " %");
+            System.out.println();
+            System.out.println("Analysis of space between vdW-Surface and " + shell_i + " * vdW-Surface");
+            System.out.println("sum of differences: " + diffsum_nvdw * 2625.5f + " kJ/mol");
+            System.out.println("difference average: " + diffsum_nvdw * 2625.5f / (float) diffcnt_nvdw + " kJ/mol");
+            System.out.println("difference percentage: " + (diffperc_nvdw / (float) diffcnt_nvdw) * 100.f + " %");
+            System.out.println();
+            System.out.println("Analysis of space between " + shell_i + " * vdW-Surface - " + shell_o + " * vdw-Surface");
+            System.out.println("sum of differences: " + diffsum_sigma * 2625.5f + " kJ/mol");
+            System.out.println("difference average: " + diffsum_sigma * 2625.5f / (float) diffcnt_sigma + " kJ/mol");
+            System.out.println("difference percentage: " + (diffperc_sigma / (float) diffcnt_sigma) * 100.f + " %");
+            System.out.println();
+            System.out.println("Analysis of space outside " + shell_o + " * vdW-Surface");
+            System.out.println("sum of differences: " + diffsum_farout * 2625.5f + " kJ/mol");
+            System.out.println("difference average: " + diffsum_farout * 2625.5f / (float) diffcnt_farout + " kJ/mol");
+            System.out.println("difference percentage: " + (diffperc_farout / (float) diffcnt_farout) * 100.f + " %");
+        }
+    }// end of print
 
 }// end of class
