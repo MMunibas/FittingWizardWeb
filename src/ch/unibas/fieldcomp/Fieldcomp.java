@@ -455,23 +455,23 @@ public final class Fieldcomp {
                                 totener[n3][n2][n1] += que + qu1ze + qu1xe + qu1ye;
                             } else {
                                 //This is the contribution according to the quadrupole
-                                qu20e = qu20[n0] / pow(r, 3) * 0.5 * (3 * traz * traz - 1);
-                                qu21ce = qu21c[n0] / pow(r, 3) * pow(3, 0.5) * trax * traz;
-                                qu21se = qu21s[n0] / pow(r, 3) * pow(3, 0.5) * tray * traz;
+                                qu20e = qu20[n0] / pow(r, 3) * 0.5 * (3.0 * traz * traz - 1.0);
+                                qu21ce = qu21c[n0] / pow(r, 3) * pow(3.0, 0.5) * trax * traz;
+                                qu21se = qu21s[n0] / pow(r, 3) * pow(3.0, 0.5) * tray * traz;
                                 qu22ce = qu22c[n0] / pow(r, 3) * (0.5 * pow(3, 0.5) * (trax * trax - tray * tray));
-                                qu22se = qu22s[n0] / pow(r, 3) * pow(3, 0.5) * trax * tray;
+                                qu22se = qu22s[n0] / pow(r, 3) * pow(3.0, 0.5) * trax * tray;
 
                                 if (irank[n0] == 2) {
                                     totener[n3][n2][n1] += que + qu1ze + qu1xe + qu1ye + qu20e + qu21ce + qu21se + qu22ce + qu22se;
                                 } else {
                                     //This is the contribution according to the octupole
-                                    qu30e = qu30[n0] / pow(r, 4) * (5 * pow(traz, 3) - 3 * traz);
-                                    qu31ce = qu31c[n0] / pow(r, 4) * 0.25 * 2.449409 * trax * (pow(traz, 2) - 1);
+                                    qu30e = qu30[n0] / pow(r, 4) * 5 * pow(traz, 3) - 3.0 * traz;
+                                    qu31ce = qu31c[n0] / pow(r, 4) * 0.25 * 2.449409 * trax * (pow(traz, 2) - 1.0);
                                     qu31se = qu31s[n0] / pow(r, 4) * 0.25 * 2.449409 * tray * (pow(traz, 2) - 1);
                                     qu32ce = qu32c[n0] / pow(r, 4) * 0.5 * 3.872983 * traz * (pow(trax, 2) - pow(tray, 2));
                                     qu32se = qu32s[n0] / pow(r, 4) * 3.872983 * trax * tray * traz;
-                                    qu33ce = qu33c[n0] / pow(r, 4) * 0.25 * 3.162278 * trax * (pow(trax, 2) - 3 * pow(tray, 2));
-                                    qu33se = qu33s[n0] / pow(r, 4) * 0.25 * 3.162278 * tray * (3 * pow(trax, 2) - pow(tray, 2));
+                                    qu33ce = qu33c[n0] / pow(r, 4) * 0.25 * 3.162278 * trax * (pow(trax, 2) - 3.0 * pow(tray, 2));
+                                    qu33se = qu33s[n0] / pow(r, 4) * 0.25 * 3.162278 * tray * (3.0 * pow(trax, 2) - pow(tray, 2));
                                     totener[n3][n2][n1] += que + qu1ze + qu1xe + qu1ye + qu20e + qu21ce + qu21se + qu22ce + qu22se + qu30e
                                             + qu31ce + qu31se + qu32ce + qu32se + qu33ce + qu33se;
                                 }//end of octopole contribution
