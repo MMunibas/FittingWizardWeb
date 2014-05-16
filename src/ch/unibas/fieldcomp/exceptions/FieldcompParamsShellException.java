@@ -12,7 +12,7 @@ package ch.unibas.fieldcomp.exceptions;
  */
 public final class FieldcompParamsShellException extends FieldcompParamsException {
 
-    public FieldcompParamsShellException(float i, float o) {
+    public FieldcompParamsShellException(double i, double o) {
         super();
         System.err.println("Inner shell has to be smaller than outer shell. Check '-si' and '-so' settings");
         System.err.println("'-si' was : " + i);
