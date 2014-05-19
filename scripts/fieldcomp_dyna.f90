@@ -301,8 +301,9 @@ if (sigma_only .eqv. .false.) write(*,*) 'ESP read.'
 open(unit=30,file=vdwfile)
 do n1=1,natoms
    read(30,*) vdw(n1)
-   read(30,*) jrank(n1)
-enddo
+   read(30, *) jrank(n1)
+   !write(6, *) vdw(n1), jrank(n1)
+    enddo
 close(30)
 
 ! Read .pun file and transfer angstrom units to bohr
@@ -331,7 +332,8 @@ do n1=1, natoms
       endif
     endif
   endif
-enddo
+!  write(6, *) qu(n1), qu1z(n1), qu1x(n1), qu1y(n1), qu20(n1), qu21c(n1), qu21s(n1), qu22c(n1), qu22s(n1)
+    enddo
 close(28)
 
 ! exclude point if within vdw radius of any atom and mark if close to vdw or within sigma range

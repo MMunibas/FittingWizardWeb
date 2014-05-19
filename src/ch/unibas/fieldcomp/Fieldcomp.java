@@ -297,6 +297,7 @@ public final class Fieldcomp {
         for (int i = 0; i < natoms; i++) {
             vdw[i] = s.nextDouble();
             jrank[i] = s.nextInt();
+//            System.out.println(vdw[i] + " " + jrank[i]);
         }
 
         this.closeFile(vdwfile);
@@ -329,6 +330,8 @@ public final class Fieldcomp {
 //            System.out.println(inp);
             tokens = inp.trim().split(delims);
             qu[i] = Double.valueOf(tokens[0]);
+
+            System.out.println(irank[i]);
 
             //3rd line if required
             if (irank[i] != 0) {
@@ -365,7 +368,7 @@ public final class Fieldcomp {
                     }
                 }
             }
-
+//            System.out.println(qu[i] + " " + qu1z[i] + " " + qu1x[i] + " " + qu1y[i] + " " + qu20[i] + " " + qu21c[i] + " " + qu21s[i] + " " + qu22c[i] + " " + qu22s[i]);
         }// end for loop on natoms
         this.closeFile(punfile);
 
