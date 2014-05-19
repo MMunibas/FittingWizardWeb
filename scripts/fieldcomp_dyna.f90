@@ -465,8 +465,6 @@ diffcnt_farout = 0
 diffsum_farout = 0
 diffperc_farout = 0
 
-
-
 do n1=1, pts(1)
   do n2=1, pts(2)
     do n3=1, pts(3)
@@ -504,6 +502,10 @@ do n1=1, pts(1)
     enddo
   enddo
 enddo
+
+write(6, *) diffcnt, diffsum, diffperc, diffcnt_sigma, diffsum_sigma
+write(6, *) diffperc_sigma, diffsum_sigma_sq, diffcnt_nvdw, diffsum_nvdw
+write(6, *) diffperc_nvdw, diffcnt_farout, diffsum_farout, diffperc_farout
 
 if (sigma_only .eqv. .true.) then
   write(*,*)diffsum_sigma_sq/diffcnt_sigma

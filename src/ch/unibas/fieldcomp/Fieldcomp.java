@@ -331,7 +331,7 @@ public final class Fieldcomp {
             tokens = inp.trim().split(delims);
             qu[i] = Double.valueOf(tokens[0]);
 
-            System.out.println(irank[i]);
+            //System.out.println(irank[i]);
 
             //3rd line if required
             if (irank[i] != 0) {
@@ -392,6 +392,7 @@ public final class Fieldcomp {
                         p = pow(shell_i * vdw[n0], 2);
                         q = pow(shell_o * vdw[n0], 2);
                         r = pow((xs[n0] - x), 2) + pow((ys[n0] - y), 2) + pow((zs[n0] - z), 2);
+//                        System.err.println(o + " " + p + " " + q + " " + r);
                         if (r < o) {
                             excl[n3][n2][n1] = true;
                             continue;
@@ -461,9 +462,9 @@ public final class Fieldcomp {
                                     totener[n3][n2][n1] += que + qu1ze + qu1xe + qu1ye + qu20e + qu21ce + qu21se + qu22ce + qu22se;
                                 } else {
                                     //This is the contribution according to the octupole
-                                    qu30e = qu30[n0] / pow(r, 4) * 5 * pow(traz, 3) - 3.0 * traz;
+                                    qu30e = qu30[n0] / pow(r, 4) * (5 * pow(traz, 3) - 3.0 * traz);
                                     qu31ce = qu31c[n0] / pow(r, 4) * 0.25 * 2.449409 * trax * (pow(traz, 2) - 1.0);
-                                    qu31se = qu31s[n0] / pow(r, 4) * 0.25 * 2.449409 * tray * (pow(traz, 2) - 1);
+                                    qu31se = qu31s[n0] / pow(r, 4) * 0.25 * 2.449409 * tray * (pow(traz, 2) - 1.0);
                                     qu32ce = qu32c[n0] / pow(r, 4) * 0.5 * 3.872983 * traz * (pow(trax, 2) - pow(tray, 2));
                                     qu32se = qu32s[n0] / pow(r, 4) * 3.872983 * trax * tray * traz;
                                     qu33ce = qu33c[n0] / pow(r, 4) * 0.25 * 3.162278 * trax * (pow(trax, 2) - 3.0 * pow(tray, 2));
@@ -500,35 +501,39 @@ public final class Fieldcomp {
                     if (excl[n3][n2][n1] == true) {
                         diff[n3][n2][n1] = 0.0;
                     } else if (near_vdw[n3][n2][n1] == true) {
-                        diffcnt_nvdw = diffcnt_nvdw + 1;
-                        diffcnt = diffcnt + 1;
+                        diffcnt_nvdw += 1;
+                        diffcnt += 1;
                         diff[n3][n2][n1] = abs(totener[n3][n2][n1] - en[n3][n2][n1]);
-                        diffsum_nvdw = diffsum_nvdw + diff[n3][n2][n1];
-                        diffsum = diffsum + diff[n3][n2][n1];
-                        diffperc_nvdw = diffperc_nvdw + diff[n3][n2][n1] / (abs(en[n3][n2][n1]));
-                        diffperc = diffperc + diff[n3][n2][n1] / (abs(en[n3][n2][n1]));
+                        diffsum_nvdw += diff[n3][n2][n1];
+                        diffsum += diff[n3][n2][n1];
+                        diffperc_nvdw += diff[n3][n2][n1] / abs(en[n3][n2][n1]);
+                        diffperc += diff[n3][n2][n1] / abs(en[n3][n2][n1]);
                     } else if (sigma_range[n3][n2][n1] == true) {
-                        diffcnt_sigma = diffcnt_sigma + 1;
-                        diffcnt = diffcnt + 1;
+                        diffcnt_sigma += 1;
+                        diffcnt += 1;
                         diff[n3][n2][n1] = abs(totener[n3][n2][n1] - en[n3][n2][n1]);
-                        diffsum_sigma = diffsum_sigma + diff[n3][n2][n1];
-                        diffsum_sigma_sq = (double) (diffsum_sigma_sq + pow(diff[n3][n2][n1], 2));
-                        diffsum = diffsum + diff[n3][n2][n1];
-                        diffperc_sigma = diffperc_sigma + diff[n3][n2][n1] / (abs(en[n3][n2][n1]));
-                        diffperc = diffperc + diff[n3][n2][n1] / (abs(en[n3][n2][n1]));
+                        diffsum_sigma += diff[n3][n2][n1];
+                        diffsum_sigma_sq += pow(diff[n3][n2][n1], 2);
+                        diffsum += diff[n3][n2][n1];
+                        diffperc_sigma += diff[n3][n2][n1] / abs(en[n3][n2][n1]);
+                        diffperc += diff[n3][n2][n1] / abs(en[n3][n2][n1]);
                     } else {
-                        diffcnt_farout = diffcnt_farout + 1;
-                        diffcnt = diffcnt + 1;
+                        diffcnt_farout += 1;
+                        diffcnt += 1;
                         diff[n3][n2][n1] = abs(totener[n3][n2][n1] - en[n3][n2][n1]);
-                        diffsum_farout = diffsum_farout + diff[n3][n2][n1];
-                        diffsum = diffsum + diff[n3][n2][n1];
-                        diffperc_farout = diffperc_farout + diff[n3][n2][n1] / (abs(en[n3][n2][n1]));
-                        diffperc = diffperc + diff[n3][n2][n1] / (abs(en[n3][n2][n1]));
+                        diffsum_farout += diff[n3][n2][n1];
+                        diffsum += diff[n3][n2][n1];
+                        diffperc_farout += diff[n3][n2][n1] / abs(en[n3][n2][n1]);
+                        diffperc += diff[n3][n2][n1] / abs(en[n3][n2][n1]);
                     }
 
                 }//n3
             }//n2
         }//n1
+
+        System.out.println(diffcnt + " " + diffsum + " " + diffperc + " " + diffcnt_sigma + " " + diffsum_sigma);
+        System.out.println(diffperc_sigma + " " + diffsum_sigma_sq + " " + diffcnt_nvdw + " " + diffsum_nvdw);
+        System.out.println(diffperc_nvdw + " " + diffcnt_farout + " " + diffsum_farout + " " + diffperc_farout);
 
     }//end of compute
 
@@ -537,23 +542,23 @@ public final class Fieldcomp {
             System.out.println("diffsum_sigma_sq/diffcnt_sigma = " + diffsum_sigma_sq / (double) diffcnt_sigma);
         } else {
             System.out.println("Analysis of total space");
-            System.out.println("sum of differences: " + diffsum * 2625.5f + " kJ/mol");
-            System.out.println("difference average: " + diffsum * 2625.5f / (double) diffcnt + " kJ/mol");
+            System.out.println("sum of differences: " + diffsum * 2625.5 + " kJ/mol");
+            System.out.println("difference average: " + diffsum * 2625.5 / (double) diffcnt + " kJ/mol");
             System.out.println("difference percentage: " + (diffperc / (double) diffcnt) * 100.0 + " %");
             System.out.println();
             System.out.println("Analysis of space between vdW-Surface and " + shell_i + " * vdW-Surface");
-            System.out.println("sum of differences: " + diffsum_nvdw * 2625.5f + " kJ/mol");
-            System.out.println("difference average: " + diffsum_nvdw * 2625.5f / (double) diffcnt_nvdw + " kJ/mol");
+            System.out.println("sum of differences: " + diffsum_nvdw * 2625.5 + " kJ/mol");
+            System.out.println("difference average: " + diffsum_nvdw * 2625.5 / (double) diffcnt_nvdw + " kJ/mol");
             System.out.println("difference percentage: " + (diffperc_nvdw / (double) diffcnt_nvdw) * 100.0 + " %");
             System.out.println();
             System.out.println("Analysis of space between " + shell_i + " * vdW-Surface - " + shell_o + " * vdw-Surface");
-            System.out.println("sum of differences: " + diffsum_sigma * 2625.5f + " kJ/mol");
-            System.out.println("difference average: " + diffsum_sigma * 2625.5f / (double) diffcnt_sigma + " kJ/mol");
+            System.out.println("sum of differences: " + diffsum_sigma * 2625.5 + " kJ/mol");
+            System.out.println("difference average: " + diffsum_sigma * 2625.5 / (double) diffcnt_sigma + " kJ/mol");
             System.out.println("difference percentage: " + (diffperc_sigma / (double) diffcnt_sigma) * 100.0 + " %");
             System.out.println();
             System.out.println("Analysis of space outside " + shell_o + " * vdW-Surface");
-            System.out.println("sum of differences: " + diffsum_farout * 2625.5f + " kJ/mol");
-            System.out.println("difference average: " + diffsum_farout * 2625.5f / (double) diffcnt_farout + " kJ/mol");
+            System.out.println("sum of differences: " + diffsum_farout * 2625.5 + " kJ/mol");
+            System.out.println("difference average: " + diffsum_farout * 2625.5 / (double) diffcnt_farout + " kJ/mol");
             System.out.println("difference percentage: " + (diffperc_farout / (double) diffcnt_farout) * 100.0 + " %");
         }
     }// end of print
