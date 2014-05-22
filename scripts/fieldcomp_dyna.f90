@@ -317,7 +317,8 @@ do n1=1, natoms
   xs(n1) = xs(n1) * a2b
   ys(n1) = ys(n1) * a2b
   zs(n1) = zs(n1) * a2b
-  if (irank(n1).ne.jrank(n1)) then
+        write(6, *) xs(n1), ys(n1), zs(n1)
+        if (irank(n1).ne.jrank(n1)) then
     print *, "Check rank in vdw and dma file !"
     stop
   endif
@@ -503,9 +504,9 @@ do n1=1, pts(1)
   enddo
 enddo
 
-write(6, *) diffcnt, diffsum, diffperc, diffcnt_sigma, diffsum_sigma
-write(6, *) diffperc_sigma, diffsum_sigma_sq, diffcnt_nvdw, diffsum_nvdw
-write(6, *) diffperc_nvdw, diffcnt_farout, diffsum_farout, diffperc_farout
+!write(6, *) diffcnt, diffsum, diffperc, diffcnt_sigma, diffsum_sigma
+    !write(6, *) diffperc_sigma, diffsum_sigma_sq, diffcnt_nvdw, diffsum_nvdw
+    !write(6, *) diffperc_nvdw, diffcnt_farout, diffsum_farout, diffperc_farout
 
 if (sigma_only .eqv. .true.) then
   write(*,*)diffsum_sigma_sq/diffcnt_sigma

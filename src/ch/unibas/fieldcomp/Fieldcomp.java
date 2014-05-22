@@ -320,6 +320,7 @@ public final class Fieldcomp {
             xs[i] = Double.valueOf(tokens[1]) * a2b;//angstroems to bohrs
             ys[i] = Double.valueOf(tokens[2]) * a2b;
             zs[i] = Double.valueOf(tokens[3]) * a2b;
+            System.out.println(xs[i] + " " + ys[i] + " " + zs[i]);
             irank[i] = Integer.parseInt(tokens[5]);
             if (irank[i] != jrank[i]) {
                 throw new FieldcompFileRankException(tokens[0]);
@@ -531,9 +532,9 @@ public final class Fieldcomp {
             }//n2
         }//n1
 
-        System.out.println(diffcnt + " " + diffsum + " " + diffperc + " " + diffcnt_sigma + " " + diffsum_sigma);
-        System.out.println(diffperc_sigma + " " + diffsum_sigma_sq + " " + diffcnt_nvdw + " " + diffsum_nvdw);
-        System.out.println(diffperc_nvdw + " " + diffcnt_farout + " " + diffsum_farout + " " + diffperc_farout);
+//        System.out.println(diffcnt + " " + diffsum + " " + diffperc + " " + diffcnt_sigma + " " + diffsum_sigma);
+//        System.out.println(diffperc_sigma + " " + diffsum_sigma_sq + " " + diffcnt_nvdw + " " + diffsum_nvdw);
+//        System.out.println(diffperc_nvdw + " " + diffcnt_farout + " " + diffsum_farout + " " + diffperc_farout);
 
     }//end of compute
 
