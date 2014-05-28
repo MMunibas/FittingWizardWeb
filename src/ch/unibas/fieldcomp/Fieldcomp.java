@@ -50,7 +50,7 @@ public final class Fieldcomp {
             diffperc_nvdw, diffperc_farout, diffsum_sigma_sq;
 
     //double
-    private double o, p, q, r, a2b, /*b2a,*/ chrg;
+    private double o, p, q, a2b, /*b2a,*/ chrg;
     private double que, qu1ze, qu1ye, qu1xe, qu20e, qu21ce, qu21se, qu22ce, qu22se;
     private double qu30e, qu31ce, qu31se, qu32ce, qu32se, qu33ce, qu33se;
     private double diffsum;
@@ -379,6 +379,7 @@ public final class Fieldcomp {
         // exclude point if within vdw radius of any atom and mark if close to vdw or within sigma range
         // Cycle if calculation is demanded for sigma range only
         double x, y, z;
+        double r;
         x = xstart - step_x;
         for (int n1 = 0; n1 < pts[0]; n1++) {
             x += step_x;
@@ -422,6 +423,8 @@ public final class Fieldcomp {
         }//n1 loop
 
         double trax, tray, traz;
+        double r2, r3, r4;
+        final double sq3 = sqrt(3.0);
         //step through all grid points, calculate potentials from Multipoles
         for (int n0 = 0; n0 < natoms; n0++) {
             x = xstart - step_x;
@@ -438,6 +441,9 @@ public final class Fieldcomp {
                         }
                         r = sqrt(pow((xs[n0] - x), 2) + pow((ys[n0] - y), 2)
                                 + pow((zs[n0] - z), 2));
+                        r2 = r * r;
+                        r3 = r2 * r;
+                        r4 = r2 * r2;
                         trax = -(xs[n0] - x) / r;
                         tray = -(ys[n0] - y) / r;
                         traz = -(zs[n0] - z) / r;
@@ -453,30 +459,30 @@ public final class Fieldcomp {
                              the other terms (-delta[x,y,z]/r) are there because the directionality of the dipole has to be taken account of, weighted by the contribution
                              of the single terms to the unit vector. (-delta[x,y,z]/r) scales to the unit vector.
                              */
-                            qu1ze = qu1z[n0] / pow(r, 2) * traz;
-                            qu1ye = qu1y[n0] / pow(r, 2) * tray;
-                            qu1xe = qu1x[n0] / pow(r, 2) * trax;
+                            qu1ze = qu1z[n0] / r2 * traz;
+                            qu1ye = qu1y[n0] / r2 * tray;
+                            qu1xe = qu1x[n0] / r2 * trax;
                             if (irank[n0] == 1) {
                                 totener[n3][n2][n1] += que + qu1ze + qu1xe + qu1ye;
                             } else {
                                 //This is the contribution according to the quadrupole
-                                qu20e = qu20[n0] / pow(r, 3) * 0.5 * (3.0 * traz * traz - 1.0);
-                                qu21ce = qu21c[n0] / pow(r, 3) * pow(3.0, 0.5) * trax * traz;
-                                qu21se = qu21s[n0] / pow(r, 3) * pow(3.0, 0.5) * tray * traz;
-                                qu22ce = qu22c[n0] / pow(r, 3) * (0.5 * pow(3, 0.5) * (trax * trax - tray * tray));
-                                qu22se = qu22s[n0] / pow(r, 3) * pow(3.0, 0.5) * trax * tray;
+                                qu20e = qu20[n0] / r3 * 0.5 * (3.0 * traz * traz - 1.0);
+                                qu21ce = qu21c[n0] / r3 * sq3 * trax * traz;
+                                qu21se = qu21s[n0] / r3 * sq3 * tray * traz;
+                                qu22ce = qu22c[n0] / r3 * (0.5 * sq3 * (trax * trax - tray * tray));
+                                qu22se = qu22s[n0] / r3 * sq3 * trax * tray;
 
                                 if (irank[n0] == 2) {
                                     totener[n3][n2][n1] += que + qu1ze + qu1xe + qu1ye + qu20e + qu21ce + qu21se + qu22ce + qu22se;
                                 } else {
                                     //This is the contribution according to the octupole
-                                    qu30e = qu30[n0] / pow(r, 4) * (5 * pow(traz, 3) - 3.0 * traz);
-                                    qu31ce = qu31c[n0] / pow(r, 4) * 0.25 * 2.449409 * trax * (pow(traz, 2) - 1.0);
-                                    qu31se = qu31s[n0] / pow(r, 4) * 0.25 * 2.449409 * tray * (pow(traz, 2) - 1.0);
-                                    qu32ce = qu32c[n0] / pow(r, 4) * 0.5 * 3.872983 * traz * (pow(trax, 2) - pow(tray, 2));
-                                    qu32se = qu32s[n0] / pow(r, 4) * 3.872983 * trax * tray * traz;
-                                    qu33ce = qu33c[n0] / pow(r, 4) * 0.25 * 3.162278 * trax * (pow(trax, 2) - 3.0 * pow(tray, 2));
-                                    qu33se = qu33s[n0] / pow(r, 4) * 0.25 * 3.162278 * tray * (3.0 * pow(trax, 2) - pow(tray, 2));
+                                    qu30e = qu30[n0] / r4 * (5 * pow(traz, 3) - 3.0 * traz);
+                                    qu31ce = qu31c[n0] / r4 * 0.25 * 2.449409 * trax * (pow(traz, 2) - 1.0);
+                                    qu31se = qu31s[n0] / r4 * 0.25 * 2.449409 * tray * (pow(traz, 2) - 1.0);
+                                    qu32ce = qu32c[n0] / r4 * 0.5 * 3.872983 * traz * (pow(trax, 2) - pow(tray, 2));
+                                    qu32se = qu32s[n0] / r4 * 3.872983 * trax * tray * traz;
+                                    qu33ce = qu33c[n0] / r4 * 0.25 * 3.162278 * trax * (pow(trax, 2) - 3.0 * pow(tray, 2));
+                                    qu33se = qu33s[n0] / r4 * 0.25 * 3.162278 * tray * (3.0 * pow(trax, 2) - pow(tray, 2));
                                     totener[n3][n2][n1] += que + qu1ze + qu1xe + qu1ye + qu20e + qu21ce + qu21se + qu22ce + qu22se + qu30e
                                             + qu31ce + qu31se + qu32ce + qu32se + qu33ce + qu33se;
                                 }//end of octopole contribution
@@ -539,9 +545,9 @@ public final class Fieldcomp {
             }//n2
         }//n1
 
-//        System.out.println(diffcnt + " " + diffsum + " " + diffperc + " " + diffcnt_sigma + " " + diffsum_sigma);
-//        System.out.println(diffperc_sigma + " " + diffsum_sigma_sq + " " + diffcnt_nvdw + " " + diffsum_nvdw);
-//        System.out.println(diffperc_nvdw + " " + diffcnt_farout + " " + diffsum_farout + " " + diffperc_farout);
+        System.out.println(diffcnt + " " + diffsum + " " + diffperc + " " + diffcnt_sigma + " " + diffsum_sigma);
+        System.out.println(diffperc_sigma + " " + diffsum_sigma_sq + " " + diffcnt_nvdw + " " + diffsum_nvdw);
+        System.out.println(diffperc_nvdw + " " + diffcnt_farout + " " + diffsum_farout + " " + diffperc_farout);
 
     }//end of compute
 

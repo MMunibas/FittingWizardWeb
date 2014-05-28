@@ -422,11 +422,11 @@ program fieldcomp
 
                         ! This is the contribution according to the quadrupole
 
-                        qu20e = qu20(n0) /(r * r * r) * 0.5d0 * (3.d0 * (traz**2) - 1.d0)
-                        qu21ce = qu21c(n0)/(r * r * r)*(3.d0**(0.5))*(trax * traz)
-                        qu21se = qu21s(n0)/(r * r * r)*(3.d0**(0.5))*(tray * traz)
-                        qu22ce = qu22c(n0)/(r * r * r)*(0.5d0 * (3.d0**(0.5))*(trax**2 - tray**2))
-                        qu22se = qu22s(n0)/(r * r * r)*(3.d0**(0.5))*(trax * tray)
+                        qu20e = qu20(n0) /(r * r * r) * 0.5d0 * (3.d0 * traz * traz - 1.d0)
+                        qu21ce = qu21c(n0)/(r * r * r) * 1.7320508075688772d0 * (trax * traz)
+                        qu21se = qu21s(n0)/(r * r * r) * 1.7320508075688772d0 * (tray * traz)
+                        qu22ce = qu22c(n0)/(r * r * r)*(0.5d0 * 1.7320508075688772d0 * (trax * trax - tray * tray))
+                        qu22se = qu22s(n0)/(r * r * r) * 1.7320508075688772d0 * (trax * tray)
 
                         if (irank(n0) .eq. 2) then
                         totener(n3, n2, n1) = totener(n3, n2, n1) + que + qu1ze + qu1xe + qu1ye&
@@ -435,13 +435,13 @@ program fieldcomp
 
                         ! This is the contribution according to the octupole
 
-                        qu30e = qu30(n0) /(r * r * r * r)*(5.d0 * traz**3 - 3.d0 * traz)
-                        qu31ce = qu31c(n0)/(r * r * r * r) * 0.25d0 * 2.449409d0 * trax * (traz**2 - 1.d0)
-                        qu31se = qu31s(n0)/(r * r * r * r) * 0.25d0 * 2.449409d0 * tray * (traz**2 - 1.d0)
-                        qu32ce = qu32c(n0)/(r * r * r * r) * 0.5d0 * 3.872983d0 * traz * (trax**2 - tray**2)
+                        qu30e = qu30(n0) /(r * r * r * r)*(5.d0 * traz * traz * traz - 3.d0 * traz)
+                        qu31ce = qu31c(n0)/(r * r * r * r) * 0.25d0 * 2.449409d0 * trax * (traz * traz - 1.d0)
+                        qu31se = qu31s(n0)/(r * r * r * r) * 0.25d0 * 2.449409d0 * tray * (traz * traz - 1.d0)
+                        qu32ce = qu32c(n0)/(r * r * r * r) * 0.5d0 * 3.872983d0 * traz * (trax * trax - tray * tray)
                         qu32se = qu32s(n0)/(r * r * r * r) * 3.872983d0 * trax * tray * traz
-                        qu33ce = qu33c(n0)/(r * r * r * r) * 0.25d0 * 3.162278d0 * trax * (trax**2 - 3.d0 * tray**2)
-                        qu33se = qu33s(n0)/(r * r * r * r) * 0.25d0 * 3.162278d0 * tray * (3.d0 * trax**2 - tray**2)
+                        qu33ce = qu33c(n0)/(r * r * r * r) * 0.25d0 * 3.162278d0 * trax * (trax * trax - 3.d0 * tray * tray)
+                        qu33se = qu33s(n0)/(r * r * r * r) * 0.25d0 * 3.162278d0 * tray * (3.d0 * trax * trax - tray * tray)
                         totener(n3, n2, n1) = totener(n3, n2, n1) + que + qu1ze + qu1xe + qu1ye&
                         & +qu20e + qu21ce + qu21se + qu22ce + qu22se + qu30e&
                         & +qu31ce + qu31se + qu32ce + qu32se + qu33ce + qu33se
@@ -507,9 +507,9 @@ program fieldcomp
         enddo
     enddo
 
-    !write(6, *) diffcnt, diffsum, diffperc, diffcnt_sigma, diffsum_sigma
-    !write(6, *) diffperc_sigma, diffsum_sigma_sq, diffcnt_nvdw, diffsum_nvdw
-    !write(6, *) diffperc_nvdw, diffcnt_farout, diffsum_farout, diffperc_farout
+    write(6, *) diffcnt, diffsum, diffperc, diffcnt_sigma, diffsum_sigma
+    write(6, *) diffperc_sigma, diffsum_sigma_sq, diffcnt_nvdw, diffsum_nvdw
+    write(6, *) diffperc_nvdw, diffcnt_farout, diffsum_farout, diffperc_farout
 
     if (sigma_only .eqv. .true.) then
         write(*, *) diffsum_sigma_sq/diffcnt_sigma
