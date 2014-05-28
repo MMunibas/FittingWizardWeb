@@ -320,7 +320,7 @@ public final class Fieldcomp {
             xs[i] = Double.valueOf(tokens[1]) * a2b;//angstroems to bohrs
             ys[i] = Double.valueOf(tokens[2]) * a2b;
             zs[i] = Double.valueOf(tokens[3]) * a2b;
-            System.out.println(xs[i] + " " + ys[i] + " " + zs[i]);
+//            System.out.println(xs[i] + " " + ys[i] + " " + zs[i]);
             irank[i] = Integer.parseInt(tokens[5]);
             if (irank[i] != jrank[i]) {
                 throw new FieldcompFileRankException(tokens[0]);
@@ -393,7 +393,14 @@ public final class Fieldcomp {
                         p = pow(shell_i * vdw[n0], 2);
                         q = pow(shell_o * vdw[n0], 2);
                         r = pow((xs[n0] - x), 2) + pow((ys[n0] - y), 2) + pow((zs[n0] - z), 2);
-//                        System.err.println(o + " " + p + " " + q + " " + r);
+//                        o = vdw[n0] * vdw[n0];
+//                        p = (shell_i * vdw[n0]) * (shell_i * vdw[n0]);
+//                        q = (shell_o * vdw[n0]) * (shell_o * vdw[n0]);
+//                        r = (xs[n0] - x) * (xs[n0] - x)
+//                                + (ys[n0] - y) * (ys[n0] - y)
+//                                + (zs[n0] - z) * (zs[n0] - z);
+                        //System.err.println(o + " " + p + " " + q + " " + r);
+//                        System.err.format("%10.3f %10.3f %10.3f %10.3f\n", o, p, q, r);
                         if (r < o) {
                             excl[n3][n2][n1] = true;
                             continue;
@@ -449,7 +456,7 @@ public final class Fieldcomp {
                             qu1ze = qu1z[n0] / pow(r, 2) * traz;
                             qu1ye = qu1y[n0] / pow(r, 2) * tray;
                             qu1xe = qu1x[n0] / pow(r, 2) * trax;
-                            if (irank[n0] != 1) {
+                            if (irank[n0] == 1) {
                                 totener[n3][n2][n1] += que + qu1ze + qu1xe + qu1ye;
                             } else {
                                 //This is the contribution according to the quadrupole
