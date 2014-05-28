@@ -31,7 +31,7 @@ public final class Fieldcomp {
 
     //allocatables
     private int[] ele_type, irank, jrank, pts;
-    private double[][][] en, totener, diff;
+    private float[][][] en, totener, diff;
     private double[] xs, ys, zs;
     private double[] x1, y1, z1;
     private double[] qu, qu1z, qu1y, qu1x;
@@ -45,12 +45,12 @@ public final class Fieldcomp {
     private int diffcnt_sigma, diffcnt_nvdw, diffcnt_farout;
 
     //double
-    private double xstart, ystart, zstart, step_x, step_y, step_z, shell_i, shell_o;
-    private double diffsum_sigma, diffsum_nvdw, diffsum_farout, diffperc_sigma,
+    private float xstart, ystart, zstart, step_x, step_y, step_z, o, p, q, shell_i, shell_o;
+    private float diffsum_sigma, diffsum_nvdw, diffsum_farout, diffperc_sigma,
             diffperc_nvdw, diffperc_farout, diffsum_sigma_sq;
 
     //double
-    private double o, p, q, a2b, /*b2a,*/ chrg;
+    private double /*o, p, q, b2a,*/ a2b, chrg;
     private double que, qu1ze, qu1ye, qu1xe, qu20e, qu21ce, qu21se, qu22ce, qu22se;
     private double qu30e, qu31ce, qu31se, qu32ce, qu32se, qu33ce, qu33se;
     private double diffsum;
@@ -82,8 +82,8 @@ public final class Fieldcomp {
         //b2a = 0.52917720859;
 
         //Factors defining the shells for anaylsis of MEP deviation
-        shell_i = 1.66;
-        shell_o = 2.2;
+        shell_i = 1.66f;
+        shell_o = 2.2f;
 
         //Read input from commandline
         no_pics = true;
@@ -122,10 +122,10 @@ public final class Fieldcomp {
                     cubeout = true;
                     break;
                 case "-si":
-                    shell_i = Double.valueOf(args[++it]);
+                    shell_i = Float.valueOf(args[++it]);
                     break;
                 case "-so":
-                    shell_o = Double.valueOf(args[++it]);
+                    shell_o = Float.valueOf(args[++it]);
                     break;
 
             } // end case
@@ -175,33 +175,33 @@ public final class Fieldcomp {
         inp = s.nextLine();
         tokens = inp.trim().split(delims);
         natoms = Integer.parseInt(tokens[0]);
-        xstart = Double.valueOf(tokens[1]);
-        ystart = Double.valueOf(tokens[2]);
-        zstart = Double.valueOf(tokens[3]);
+        xstart = Float.valueOf(tokens[1]);
+        ystart = Float.valueOf(tokens[2]);
+        zstart = Float.valueOf(tokens[3]);
 
         //read(23,*) pts(1), step_x, o, p
         inp = s.nextLine();
         tokens = inp.trim().split(delims);
         pts[0] = Integer.parseInt(tokens[0]);
-        step_x = Double.valueOf(tokens[1]);
-        o = Double.valueOf(tokens[2]);
-        p = Double.valueOf(tokens[3]);
+        step_x = Float.valueOf(tokens[1]);
+        o = Float.valueOf(tokens[2]);
+        p = Float.valueOf(tokens[3]);
 
         //read(23,*) pts(2), o, step_y, p
         inp = s.nextLine();
         tokens = inp.trim().split(delims);
         pts[1] = Integer.parseInt(tokens[0]);
-        o = Double.valueOf(tokens[1]);
-        step_y = Double.valueOf(tokens[2]);
-        p = Double.valueOf(tokens[3]);
+        o = Float.valueOf(tokens[1]);
+        step_y = Float.valueOf(tokens[2]);
+        p = Float.valueOf(tokens[3]);
 
         //read(23,*) pts(3), o, p, step_z
         inp = s.nextLine();
         tokens = inp.trim().split(delims);
         pts[2] = Integer.parseInt(tokens[0]);
-        o = Double.valueOf(tokens[1]);
-        p = Double.valueOf(tokens[2]);
-        step_z = Double.valueOf(tokens[3]);
+        o = Float.valueOf(tokens[1]);
+        p = Float.valueOf(tokens[2]);
+        step_z = Float.valueOf(tokens[3]);
 
         // Allocate all needed variables to natoms
         ele_type = new int[natoms];
@@ -256,9 +256,9 @@ public final class Fieldcomp {
         excl = new boolean[pts[2]][pts[1]][pts[0]];
         sigma_range = new boolean[pts[2]][pts[1]][pts[0]];
         near_vdw = new boolean[pts[2]][pts[1]][pts[0]];
-        en = new double[pts[2]][pts[1]][pts[0]];
-        totener = new double[pts[2]][pts[1]][pts[0]];
-        diff = new double[pts[2]][pts[1]][pts[0]];
+        en = new float[pts[2]][pts[1]][pts[0]];
+        totener = new float[pts[2]][pts[1]][pts[0]];
+        diff = new float[pts[2]][pts[1]][pts[0]];
 
         System.out.println("Arrays allocated");
 
@@ -273,7 +273,7 @@ public final class Fieldcomp {
                     inp = s.nextLine();
                     tokens = inp.trim().split(delims);
                     for (String val : tokens) {
-                        en[n3][n2][n1] = Double.valueOf(val);
+                        en[n3][n2][n1] = Float.valueOf(val);
 //                        en[n3][n2][n1] = s.nextDouble();
                         n3++;
                     }
@@ -390,9 +390,9 @@ public final class Fieldcomp {
                 for (int n3 = 0; n3 < pts[2]; n3++) {
                     z += step_z;
                     for (int n0 = 0; n0 < natoms; n0++) {
-                        o = pow(vdw[n0], 2);
-                        p = pow(shell_i * vdw[n0], 2);
-                        q = pow(shell_o * vdw[n0], 2);
+                        o = (float) pow(vdw[n0], 2);
+                        p = (float) pow(shell_i * vdw[n0], 2);
+                        q = (float) pow(shell_o * vdw[n0], 2);
                         r = pow((xs[n0] - x), 2) + pow((ys[n0] - y), 2) + pow((zs[n0] - z), 2);
 //                        o = vdw[n0] * vdw[n0];
 //                        p = (shell_i * vdw[n0]) * (shell_i * vdw[n0]);
@@ -513,7 +513,7 @@ public final class Fieldcomp {
                 for (int n3 = 0; n3 < pts[2]; n3++) {
 
                     if (excl[n3][n2][n1] == true) {
-                        diff[n3][n2][n1] = 0.0;
+                        diff[n3][n2][n1] = 0.f;
                     } else if (near_vdw[n3][n2][n1] == true) {
                         diffcnt_nvdw += 1;
                         diffcnt += 1;
