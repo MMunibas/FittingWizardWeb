@@ -9,17 +9,25 @@ package ch.unibas.fieldcomp;
 import ch.unibas.fieldcomp.exceptions.FieldcompFileRankException;
 import ch.unibas.fieldcomp.exceptions.FieldcompParamsException;
 import ch.unibas.fieldcomp.exceptions.FieldcompParamsShellException;
-
+import ch.unibas.fieldcomp.exceptions.FieldcompParamsUnknownException;
+import ch.unibas.fieldcomp.exceptions.FieldcompUnknownOutputFileType;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
 import static java.lang.Math.abs;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 import java.util.Scanner;
-
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -30,7 +38,7 @@ public class Fieldcomp {
     private final static Logger logger = Logger.getLogger(Fieldcomp.class);
 
     //character strings
-    private String cubefile, vdwfile, punfile /*,line1, line2, wrd, rnk*/;
+    private String cubefile, vdwfile, punfile, line1, line2/*, wrd, rnk*/;
     private final String basename;
 
     //allocatables
@@ -68,23 +76,25 @@ public class Fieldcomp {
     private String[] tokens = null;
     private final String delims = "\\s+";
 
-//    public static void main(String[] args) {
-//
-//        // configure logger
-//        BasicConfigurator.configure();
-//
-//        Fieldcomp fdc = null;
-//
-//        try {
-//            fdc = new Fieldcomp(args);
-//            fdc.run();
-//        } catch (FieldcompParamsException | FieldcompFileRankException ex) {
-//            logger.warn("Please solve the error previously reported");
-//        } catch (FileNotFoundException fex) {
-//            logger.warn("FileNotFoundException was detected : " + fex.getMessage());
-//        }
-//
-//    }// end test main
+    public static void main(String[] args) {
+
+        // configure logger
+        BasicConfigurator.configure();
+
+        Fieldcomp fdc = null;
+
+        try {
+            fdc = new Fieldcomp(args);
+            fdc.run();
+        } catch (FieldcompParamsException | FieldcompFileRankException | FieldcompUnknownOutputFileType ex) {
+            logger.warn("Please solve the error previously reported.");
+        } catch (FileNotFoundException fex) {
+            logger.warn("FileNotFoundException was detected : " + fex.getMessage());
+        } catch (IOException iex) {
+            logger.warn("IOException was detected : " + iex.getMessage());
+        }
+
+    }// end test main
 
     public Fieldcomp(String[] args) throws FieldcompParamsException{
         //Conversion parameters form Angstrom to Bohr and vice versa
@@ -108,7 +118,7 @@ public class Fieldcomp {
         for (String str : args) {
             System.out.print(str + " ");
         }
-        System.out.println("\n");
+        System.out.println("%n");
 
         for (int it = 0; it < nArgs; it++) {
             //System.out.println(args[it]);
@@ -138,24 +148,34 @@ public class Fieldcomp {
                     shell_o = Float.valueOf(args[++it]);
                     break;
 
+                default:
+                    throw new FieldcompParamsUnknownException(Fieldcomp.logger, args[it]);
+
             } // end case
         } // end for on arguments
 
         //define basename using cubfile
-        basename = cubefile.substring(0, cubefile.indexOf(".") - 1) + "_";
+        basename = cubefile.substring(0, cubefile.indexOf(".")) + "_";
 
         //check inner and outer shell
         if (shell_i >= shell_o) {
-            throw new FieldcompParamsShellException(logger, shell_i, shell_o);
+            throw new FieldcompParamsShellException(Fieldcomp.logger, shell_i, shell_o);
         }
     } // end ctor
 
-    public void run() throws FileNotFoundException, FieldcompFileRankException {
+    public void run() throws FileNotFoundException, FieldcompFileRankException, FieldcompUnknownOutputFileType, IOException {
+
         this.readCubefile();
         this.readVDWfile();
         this.readPUNfile();
         this.compute();
         this.print();
+
+        if (cubeout) {
+            this.writeOutFiles("gausscube", "Electrostatic potential from Total SCF Density                        ");
+            this.writeOutFiles("mtpcube", "Electrostatic potential from Atomic Multipoles                        ");
+            this.writeOutFiles("diffcube", "Difference between ab-initio and MTP Electrostatic Potential          ");
+        }
     }
 
     private void openFile(String fname) throws FileNotFoundException {
@@ -178,8 +198,8 @@ public class Fieldcomp {
 
         //read(23,'(A)') line1
         //read(23,'(A)') line2
-        String line1 = s.nextLine();
-        String line2 = s.nextLine();
+        line1 = s.nextLine();
+        line2 = s.nextLine();
 
         //read(23,*) natoms, xstart, ystart, zstart
         inp = s.nextLine();
@@ -333,7 +353,7 @@ public class Fieldcomp {
 //            System.out.println(xs[i] + " " + ys[i] + " " + zs[i]);
             irank[i] = Integer.parseInt(tokens[5]);
             if (irank[i] != jrank[i]) {
-                throw new FieldcompFileRankException(logger, tokens[0]);
+                throw new FieldcompFileRankException(Fieldcomp.logger, tokens[0]);
             }
 
             //second line
@@ -411,7 +431,7 @@ public class Fieldcomp {
 //                                + (ys[n0] - y) * (ys[n0] - y)
 //                                + (zs[n0] - z) * (zs[n0] - z);
                         //System.err.println(o + " " + p + " " + q + " " + r);
-//                        System.err.format("%10.3f %10.3f %10.3f %10.3f\n", o, p, q, r);
+//                        System.err.format("%10.3f %10.3f %10.3f %10.3f%n", o, p, q, r);
                         if (r < o) {
                             excl[n3][n2][n1] = true;
                             continue;
@@ -561,6 +581,7 @@ public class Fieldcomp {
 
     }//end of compute
 
+    // print to terminal computed properties
     private void print() {
         if (sigma_only == true) {
             logger.info("diffsum_sigma_sq/diffcnt_sigma = " + diffsum_sigma_sq / (double) diffcnt_sigma);
@@ -586,5 +607,76 @@ public class Fieldcomp {
             logger.info("difference percentage: " + (diffperc_farout / (double) diffcnt_farout) * 100.0 + " %");
         }
     }// end of print
+
+    // generic method for writing results to new cube files
+    private void writeOutFiles(String mode, String description) throws FieldcompUnknownOutputFileType, IOException {
+
+        float matrix[][][] = null;
+
+        switch (mode.toLowerCase().trim()) {
+            case "gausscube":
+                matrix = en;
+                break;
+
+            case "mtpcube":
+                matrix = totener;
+                break;
+
+            case "diffcube":
+                matrix = new float[pts[2]][pts[1]][pts[0]];
+                for (int n1 = 0; n1 < pts[0]; n1++) {
+                    for (int n2 = 0; n2 < pts[1]; n2++) {
+                        for (int n3 = 0; n3 < pts[2]; n3++) {
+                            matrix[n3][n2][n1] = en[n3][n2][n1] - totener[n3][n2][n1];
+                        }
+                    }
+                }
+                break;
+
+            default:
+                throw new FieldcompUnknownOutputFileType(Fieldcomp.logger, mode);
+        }//end of switch filling matrix[][][] properly (copy or computation)
+
+        BufferedWriter of = null;
+        String line = "";
+
+        //Write File with Gaussian ESPs with point in sigma range only
+        String newname = basename.trim() + mode.trim() + ".cube";
+        logger.info("Writing new file '" + newname + "'");
+        of = new BufferedWriter(new FileWriter(newname));
+
+        //Write header
+        of.write(String.format(" %s%n", line1));
+        of.write(String.format(" %s%n", description));
+        of.write(String.format("%5d%12.6f%12.6f%12.6f%n", natoms, xstart, ystart, zstart));
+        of.write(String.format("%5d%12.6f%s%n", pts[0], step_x, "    0.000000    0.000000"));
+        of.write(String.format("%5d%s%12.6f%s%n", pts[1], "    0.000000", step_y, "	0.000000"));
+        of.write(String.format("%5d%s%12.6f%n", pts[2], "    0.000000    0.000000", step_z));
+        for (int n1 = 0; n1 < natoms; n1++) {
+            of.write(
+                    String.format("%5d%12.6f%12.6f%12.6f%12.6f%n", ele_type[n1], (float) ele_type[n1], x1[n1], y1[n1], z1[n1])
+            );
+        }
+
+        //Write numbers
+        for (int n1 = 0; n1 < pts[0]; n1++) {
+            for (int n2 = 0; n2 < pts[1]; n2++) {
+                for (int n3 = 0; n3 < pts[2]; n3++) {
+                    if (excl[n3][n2][n1] == false && near_vdw[n3][n2][n1] == false && sigma_range[n3][n2][n1] == true) {
+                        of.write(String.format(" %12.5E", matrix[n3][n2][n1]));
+                    } else {
+                        of.write(String.format("%s", "  0.00000E+00"));
+                    }//end if
+                    if ((n3 + 1) % 6 == 0 && n3 < pts[2]) {
+                        of.write(String.format("%n"));
+                    }
+                }//for n3
+                of.write(String.format("%n"));
+            }//for n2
+        }//for n1
+
+        of.close();
+
+    }// end of writeOutFiles
 
 }// end of class

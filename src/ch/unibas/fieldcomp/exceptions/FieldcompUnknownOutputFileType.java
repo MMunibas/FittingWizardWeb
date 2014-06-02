@@ -12,10 +12,10 @@ import org.apache.log4j.Logger;
  *
  * @author hedin
  */
-public class FieldcompParamsException extends Exception {
+public class FieldcompUnknownOutputFileType extends Exception {
 
-    public FieldcompParamsException(Logger logger) {
-        logger.error("Error detected for parameters passed to Fieldcomp : ");
+    public FieldcompUnknownOutputFileType(Logger logger, String mode) {
+        logger.error("Unknown OutputFile mode '" + mode + "'");
+        logger.error("It should be one of 'gausscube' , 'mtpcube'  , 'diffcube'");
     }
-
 }
