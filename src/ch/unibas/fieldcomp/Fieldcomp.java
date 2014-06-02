@@ -9,6 +9,7 @@ package ch.unibas.fieldcomp;
 import ch.unibas.fieldcomp.exceptions.FieldcompFileRankException;
 import ch.unibas.fieldcomp.exceptions.FieldcompParamsException;
 import ch.unibas.fieldcomp.exceptions.FieldcompParamsShellException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,14 +17,17 @@ import static java.lang.Math.abs;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.BasicConfigurator;
 
 /**
  *
  * @author hedin
  */
-public final class Fieldcomp {
+public class Fieldcomp {
+
+    private final static Logger logger = Logger.getLogger(Fieldcomp.class);
 
     //character strings
     private String cubefile, vdwfile, punfile /*,line1, line2, wrd, rnk*/;
@@ -64,17 +68,23 @@ public final class Fieldcomp {
     private String[] tokens = null;
     private final String delims = "\\s+";
 
-    public static void main(String[] args) {
-
-        Fieldcomp fdc = null;
-
-        try {
-            fdc = new Fieldcomp(args);
-            fdc.run();
-        } catch (FieldcompParamsException | FileNotFoundException | FieldcompFileRankException ex) {
-            Logger.getLogger(Fieldcomp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+//    public static void main(String[] args) {
+//
+//        // configure logger
+//        BasicConfigurator.configure();
+//
+//        Fieldcomp fdc = null;
+//
+//        try {
+//            fdc = new Fieldcomp(args);
+//            fdc.run();
+//        } catch (FieldcompParamsException | FieldcompFileRankException ex) {
+//            logger.warn("Please solve the error previously reported");
+//        } catch (FileNotFoundException fex) {
+//            logger.warn("FileNotFoundException was detected : " + fex.getMessage());
+//        }
+//
+//    }// end test main
 
     public Fieldcomp(String[] args) throws FieldcompParamsException{
         //Conversion parameters form Angstrom to Bohr and vice versa
@@ -136,7 +146,7 @@ public final class Fieldcomp {
 
         //check inner and outer shell
         if (shell_i >= shell_o) {
-            throw new FieldcompParamsShellException(shell_i, shell_o);
+            throw new FieldcompParamsShellException(logger, shell_i, shell_o);
         }
     } // end ctor
 
@@ -150,16 +160,16 @@ public final class Fieldcomp {
 
     private void openFile(String fname) throws FileNotFoundException {
         s = new Scanner(new FileInputStream(new File(fname)));
-        System.out.println("Opening file " + fname);
+        logger.info("Opening file " + fname);
     }
 
     private void closeFile(String fname) {
         if (s.hasNext()) {
-            System.out.println("Warning : file " + fname + " is closed but appears to still "
+            logger.info("Warning : file " + fname + " is closed but appears to still "
                     + "have unread data");
         }
         s.close();
-        System.out.println("Closing file " + cubefile);
+        logger.info("Closing file " + cubefile);
     }
 
     private void readCubefile() throws FileNotFoundException {
@@ -260,7 +270,7 @@ public final class Fieldcomp {
         totener = new float[pts[2]][pts[1]][pts[0]];
         diff = new float[pts[2]][pts[1]][pts[0]];
 
-        System.out.println("Arrays allocated");
+        logger.info("Arrays allocated");
 
         // now read esp data from cube file
 //        System.out.println("pts 1 2 3 : " + pts[0] + " " + pts[1] + " " + pts[2]);
@@ -283,7 +293,7 @@ public final class Fieldcomp {
         }//end n1 loop
 
         if (sigma_only == false) {
-            System.out.println("ESP file properly read.");
+            logger.info("ESP file properly read.");
         }
 
         //we don't need anymore cube file so close it
@@ -323,7 +333,7 @@ public final class Fieldcomp {
 //            System.out.println(xs[i] + " " + ys[i] + " " + zs[i]);
             irank[i] = Integer.parseInt(tokens[5]);
             if (irank[i] != jrank[i]) {
-                throw new FieldcompFileRankException(tokens[0]);
+                throw new FieldcompFileRankException(logger, tokens[0]);
             }
 
             //second line
@@ -545,35 +555,35 @@ public final class Fieldcomp {
             }//n2
         }//n1
 
-        System.out.println(diffcnt + " " + diffsum + " " + diffperc + " " + diffcnt_sigma + " " + diffsum_sigma);
-        System.out.println(diffperc_sigma + " " + diffsum_sigma_sq + " " + diffcnt_nvdw + " " + diffsum_nvdw);
-        System.out.println(diffperc_nvdw + " " + diffcnt_farout + " " + diffsum_farout + " " + diffperc_farout);
+//        System.out.println(diffcnt + " " + diffsum + " " + diffperc + " " + diffcnt_sigma + " " + diffsum_sigma);
+//        System.out.println(diffperc_sigma + " " + diffsum_sigma_sq + " " + diffcnt_nvdw + " " + diffsum_nvdw);
+//        System.out.println(diffperc_nvdw + " " + diffcnt_farout + " " + diffsum_farout + " " + diffperc_farout);
 
     }//end of compute
 
     private void print() {
         if (sigma_only == true) {
-            System.out.println("diffsum_sigma_sq/diffcnt_sigma = " + diffsum_sigma_sq / (double) diffcnt_sigma);
+            logger.info("diffsum_sigma_sq/diffcnt_sigma = " + diffsum_sigma_sq / (double) diffcnt_sigma);
         } else {
-            System.out.println("Analysis of total space");
-            System.out.println("sum of differences: " + diffsum * 2625.5 + " kJ/mol");
-            System.out.println("difference average: " + diffsum * 2625.5 / (double) diffcnt + " kJ/mol");
-            System.out.println("difference percentage: " + (diffperc / (double) diffcnt) * 100.0 + " %");
-            System.out.println();
-            System.out.println("Analysis of space between vdW-Surface and " + shell_i + " * vdW-Surface");
-            System.out.println("sum of differences: " + diffsum_nvdw * 2625.5 + " kJ/mol");
-            System.out.println("difference average: " + diffsum_nvdw * 2625.5 / (double) diffcnt_nvdw + " kJ/mol");
-            System.out.println("difference percentage: " + (diffperc_nvdw / (double) diffcnt_nvdw) * 100.0 + " %");
-            System.out.println();
-            System.out.println("Analysis of space between " + shell_i + " * vdW-Surface - " + shell_o + " * vdw-Surface");
-            System.out.println("sum of differences: " + diffsum_sigma * 2625.5 + " kJ/mol");
-            System.out.println("difference average: " + diffsum_sigma * 2625.5 / (double) diffcnt_sigma + " kJ/mol");
-            System.out.println("difference percentage: " + (diffperc_sigma / (double) diffcnt_sigma) * 100.0 + " %");
-            System.out.println();
-            System.out.println("Analysis of space outside " + shell_o + " * vdW-Surface");
-            System.out.println("sum of differences: " + diffsum_farout * 2625.5 + " kJ/mol");
-            System.out.println("difference average: " + diffsum_farout * 2625.5 / (double) diffcnt_farout + " kJ/mol");
-            System.out.println("difference percentage: " + (diffperc_farout / (double) diffcnt_farout) * 100.0 + " %");
+            logger.info("Analysis of total space");
+            logger.info("sum of differences: " + diffsum * 2625.5 + " kJ/mol");
+            logger.info("difference average: " + diffsum * 2625.5 / (double) diffcnt + " kJ/mol");
+            logger.info("difference percentage: " + (diffperc / (double) diffcnt) * 100.0 + " %");
+//            System.out.println();
+            logger.info("Analysis of space between vdW-Surface and " + shell_i + " * vdW-Surface");
+            logger.info("sum of differences: " + diffsum_nvdw * 2625.5 + " kJ/mol");
+            logger.info("difference average: " + diffsum_nvdw * 2625.5 / (double) diffcnt_nvdw + " kJ/mol");
+            logger.info("difference percentage: " + (diffperc_nvdw / (double) diffcnt_nvdw) * 100.0 + " %");
+//            System.out.println();
+            logger.info("Analysis of space between " + shell_i + " * vdW-Surface - " + shell_o + " * vdw-Surface");
+            logger.info("sum of differences: " + diffsum_sigma * 2625.5 + " kJ/mol");
+            logger.info("difference average: " + diffsum_sigma * 2625.5 / (double) diffcnt_sigma + " kJ/mol");
+            logger.info("difference percentage: " + (diffperc_sigma / (double) diffcnt_sigma) * 100.0 + " %");
+//            System.out.println();
+            logger.info("Analysis of space outside " + shell_o + " * vdW-Surface");
+            logger.info("sum of differences: " + diffsum_farout * 2625.5 + " kJ/mol");
+            logger.info("difference average: " + diffsum_farout * 2625.5 / (double) diffcnt_farout + " kJ/mol");
+            logger.info("difference percentage: " + (diffperc_farout / (double) diffcnt_farout) * 100.0 + " %");
         }
     }// end of print
 

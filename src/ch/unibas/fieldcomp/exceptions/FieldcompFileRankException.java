@@ -6,16 +6,17 @@
 
 package ch.unibas.fieldcomp.exceptions;
 
+import org.apache.log4j.Logger;
+
 /**
  *
  * @author hedin
  */
-final public class FieldcompFileRankException extends Exception {
+public class FieldcompFileRankException extends Exception {
 
-    public FieldcompFileRankException(String id) {
-        System.err.println("Error : irank[i] != jrank[i] for lpun atomid '" + id
+    public FieldcompFileRankException(Logger logger, String id) {
+        logger.error("Error : irank[i] != jrank[i] for lpun atomid '" + id
                 + "' ; Check rank in vdw and dma file !");
-        System.exit(-1);
     }
 
 }

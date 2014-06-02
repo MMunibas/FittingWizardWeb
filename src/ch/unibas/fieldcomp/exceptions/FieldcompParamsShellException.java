@@ -6,17 +6,19 @@
 
 package ch.unibas.fieldcomp.exceptions;
 
+import org.apache.log4j.Logger;
+
 /**
  *
  * @author hedin
  */
-public final class FieldcompParamsShellException extends FieldcompParamsException {
+public class FieldcompParamsShellException extends FieldcompParamsException {
 
-    public FieldcompParamsShellException(double i, double o) {
-        super();
-        System.err.println("Inner shell has to be smaller than outer shell. Check '-si' and '-so' settings");
-        System.err.println("'-si' was : " + i);
-        System.err.println("'-so' was : " + o);
+    public FieldcompParamsShellException(Logger logger, double i, double o) {
+        super(logger);
+        logger.error("Inner shell has to be smaller than outer shell. Check '-si' and '-so' settings");
+        logger.error("'-si' was : " + i);
+        logger.error("'-so' was : " + o);
     }
 
 }

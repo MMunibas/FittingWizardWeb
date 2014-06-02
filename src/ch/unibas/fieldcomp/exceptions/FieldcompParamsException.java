@@ -6,15 +6,16 @@
 
 package ch.unibas.fieldcomp.exceptions;
 
+import org.apache.log4j.Logger;
+
 /**
  *
  * @author hedin
  */
 public class FieldcompParamsException extends Exception {
 
-    public FieldcompParamsException() {
-        System.err.println("Error detected with parameters passed to Fieldcomp : ");
-        System.exit(-1);
+    public FieldcompParamsException(Logger logger) {
+        logger.error("Error detected with parameters passed to Fieldcomp : ");
     }
 
 }
