@@ -11,6 +11,7 @@ import ch.unibas.fieldcomp.exceptions.FieldcompParamsException;
 import ch.unibas.fieldcomp.exceptions.FieldcompParamsShellException;
 import ch.unibas.fieldcomp.exceptions.FieldcompParamsUnknownException;
 import ch.unibas.fieldcomp.exceptions.FieldcompUnknownOutputFileType;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,14 +19,10 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 import java.util.Scanner;
-import java.util.logging.Level;
+
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
@@ -76,25 +73,25 @@ public class Fieldcomp {
     private String[] tokens = null;
     private final String delims = "\\s+";
 
-    public static void main(String[] args) {
-
-        // configure logger
-        BasicConfigurator.configure();
-
-        Fieldcomp fdc = null;
-
-        try {
-            fdc = new Fieldcomp(args);
-            fdc.run();
-        } catch (FieldcompParamsException | FieldcompFileRankException | FieldcompUnknownOutputFileType ex) {
-            logger.warn("Please solve the error previously reported.");
-        } catch (FileNotFoundException fex) {
-            logger.warn("FileNotFoundException was detected : " + fex.getMessage());
-        } catch (IOException iex) {
-            logger.warn("IOException was detected : " + iex.getMessage());
-        }
-
-    }// end test main
+//    public static void main(String[] args) {
+//
+//        // configure logger
+//        BasicConfigurator.configure();
+//
+//        Fieldcomp fdc = null;
+//
+//        try {
+//            fdc = new Fieldcomp(args);
+//            fdc.run();
+//        } catch (FieldcompParamsException | FieldcompFileRankException | FieldcompUnknownOutputFileType ex) {
+//            logger.warn("Please solve the error previously reported.");
+//        } catch (FileNotFoundException fex) {
+//            logger.warn("FileNotFoundException was detected : " + fex.getMessage());
+//        } catch (IOException iex) {
+//            logger.warn("IOException was detected : " + iex.getMessage());
+//        }
+//
+//    }// end test main
 
     public Fieldcomp(String[] args) throws FieldcompParamsException{
         //Conversion parameters form Angstrom to Bohr and vice versa
@@ -118,7 +115,7 @@ public class Fieldcomp {
         for (String str : args) {
             System.out.print(str + " ");
         }
-        System.out.println("%n");
+        //System.out.println("%n");
 
         for (int it = 0; it < nArgs; it++) {
             //System.out.println(args[it]);
@@ -176,6 +173,36 @@ public class Fieldcomp {
             this.writeOutFiles("mtpcube", "Electrostatic potential from Atomic Multipoles                        ");
             this.writeOutFiles("diffcube", "Difference between ab-initio and MTP Electrostatic Potential          ");
         }
+    }
+
+
+    public int run(int useless) {
+
+        int exitcode = 0;
+
+        try {
+            this.readCubefile();
+            this.readVDWfile();
+            this.readPUNfile();
+            this.compute();
+            this.print();
+            if (cubeout) {
+                this.writeOutFiles("gausscube", "Electrostatic potential from Total SCF Density                        ");
+                this.writeOutFiles("mtpcube", "Electrostatic potential from Atomic Multipoles                        ");
+                this.writeOutFiles("diffcube", "Difference between ab-initio and MTP Electrostatic Potential          ");
+            }
+        } catch (FieldcompFileRankException | FieldcompUnknownOutputFileType ex) {
+            logger.warn("Please solve the error previously reported.");
+            exitcode = 1;
+        } catch (FileNotFoundException fex) {
+            logger.warn("FileNotFoundException was detected : " + fex.getMessage());
+            exitcode = 2;
+        } catch (IOException iex) {
+            logger.warn("IOException was detected : " + iex.getMessage());
+            exitcode = 3;
+        }
+
+        return exitcode;
     }
 
     private void openFile(String fname) throws FileNotFoundException {

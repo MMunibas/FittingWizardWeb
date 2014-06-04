@@ -133,7 +133,7 @@ public class FitResultPage extends WizardPageWithVisualization {
         addButtonToButtonBar(exportButton);
         
         Settings settings = Settings.loadConfig();
-        if (settings.getValue("mocks.enabled").equals("false") && VmdRunner.isAvailable() && FieldcompRunner.isAvailable(settings.getScriptsDir())) {
+        if (settings.getValue("mocks.enabled").equals("false") && VmdRunner.isAvailable() /*&& FieldcompRunner.isAvailable(settings.getScriptsDir())*/) {
 	        Button vmdButton = ButtonFactory.createButtonBarButton("Show in VMD", new EventHandler<ActionEvent>() {
 	            @Override
 	            public void handle(ActionEvent actionEvent) {

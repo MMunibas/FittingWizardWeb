@@ -1,16 +1,17 @@
 package ch.unibas.fittingwizard.infrastructure.base;
 
+import ch.unibas.fieldcomp.Fieldcomp;
+import ch.unibas.fieldcomp.exceptions.FieldcompParamsException;
+import ch.unibas.fittingwizard.application.scripts.base.ScriptExecutionException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
+import java.util.logging.Level;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-
-import ch.unibas.fittingwizard.application.scripts.base.ScriptExecutionException;
 
 public class FieldcompRunner {
 
@@ -19,7 +20,9 @@ public class FieldcompRunner {
     private final static String ExecutableName = "fieldcomp";
 	private ProcessBuilder pb = new ProcessBuilder();
 
-	private final File scriptsPath;
+    private final File scriptsPath;
+
+    private Fieldcomp fd = null;
 
 	public FieldcompRunner(File scriptsPath) {
 		this.scriptsPath = scriptsPath;
@@ -80,51 +83,72 @@ public class FieldcompRunner {
         setCommand(args, outputFile);
         return run();
     }
+    
+//    private int run() {
+//		logger.info("Running fieldcomp:\n" + pb.command() +
+//				    "\nin directory:\n" + pb.directory() +
+//				    "\nwith environment:\n" + pb.environment());
+//        int exitCode = 0;
+//        try {
+//            Process p = pb.start();
+//            exitCode = p.waitFor();
+//        } catch (Exception e) {
+//            throw new RuntimeException(String.format("Fieldcomp [%s] failed.", e));
+//        }
+//        logger.info("Fieldcomp return value: " + exitCode);
+//        if (exitCode != 0) {
+//            throw new ScriptExecutionException(
+//                    String.format("Fieldcomp did not exit correctly. Exit code: %s",
+//                            String.valueOf(exitCode)));
+//        }
+//
+//		return exitCode;
+//    }
+     
 
-	private int run() {
-		logger.info("Running fieldcomp:\n" + pb.command() +
-				    "\nin directory:\n" + pb.directory() +
-				    "\nwith environment:\n" + pb.environment());
+    private int run() {
+        logger.info("Running fieldcomp:\n" + pb.command()
+                + "\nin directory:\n" + pb.directory()
+                + "\nwith environment:\n" + pb.environment());
         int exitCode = 0;
-        try {
-            Process p = pb.start();
-            exitCode = p.waitFor();
-        } catch (Exception e) {
-            throw new RuntimeException(String.format("Fieldcomp [%s] failed.", e));
-        }
-        logger.info("Fieldcomp return value: " + exitCode);
-        if (exitCode != 0) {
-            throw new ScriptExecutionException(
-                    String.format("Fieldcomp did not exit correctly. Exit code: %s",
-                            String.valueOf(exitCode)));
-        }
+        exitCode = fd.run(0);
+        fd = null;
 
-		return exitCode;
-	}
+        return exitCode;
+    }
 	
-	private void setCommand(List<String> args, File outputFile) {
+//	private void setCommand(List<String> args, File outputFile) {
+//
+//        ArrayList<String> list = new ArrayList<>();
+//        File executable = new File(this.scriptsPath, ExecutableName);
+//        list.add(executable.getAbsolutePath());
+//
+//        if (! args.isEmpty()) {
+//            list.addAll(args);
+//        }
+//
+//        pb.command(list);
+//        if (logger.isDebugEnabled()) {
+//            logger.debug("ProcessBuilder.command = " + StringUtils.join(pb.command(), " "));
+//        }
+//
+//        if (outputFile != null) {
+//            logger.debug("redirectOutput set to " + FilenameUtils.normalize(outputFile.getAbsolutePath()));
+//            pb.redirectOutput(outputFile);
+//        } else {
+//            logger.debug("redirectOutput set to inheritIO");
+//            pb.inheritIO();
+//        }
+//	}
+    private void setCommand(List<String> args, File outputFile) {
 
-        ArrayList<String> list = new ArrayList<>();
-        File executable = new File(this.scriptsPath, ExecutableName);
-        list.add(executable.getAbsolutePath());
-
-        if (! args.isEmpty()) {
-            list.addAll(args);
+        try {
+            fd = new Fieldcomp((String[]) args.toArray());
+        } catch (FieldcompParamsException ex) {
+            logger.warn("Please solve the error previously reported.");
         }
 
-        pb.command(list);
-        if (logger.isDebugEnabled()) {
-            logger.debug("ProcessBuilder.command = " + StringUtils.join(pb.command(), " "));
-        }
-
-        if (outputFile != null) {
-            logger.debug("redirectOutput set to " + FilenameUtils.normalize(outputFile.getAbsolutePath()));
-            pb.redirectOutput(outputFile);
-        } else {
-            logger.debug("redirectOutput set to inheritIO");
-            pb.inheritIO();
-        }
-	}
+    }
 
 
-}
+}//end of class
