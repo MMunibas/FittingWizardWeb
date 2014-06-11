@@ -93,7 +93,7 @@ public class RealVmdDisplayScript implements IVmdDisplayScript {
         // -cube parameter
         File moleculeCubeFile = getCubeFileForMolecule(input.getMoleculeId());
         
-        List<String> fieldcompArgs = Arrays.asList("-cube", moleculeCubeFile.getName(),
+        List<String> fieldcompArgs = Arrays.asList("-cube", /*moleculeCubeFile.getName()*/ moleculeCubeFile.getAbsolutePath(),
                 "-vdw", modifiedVdwFile.getAbsolutePath(),
                 "-pun", punOutputFile.getAbsolutePath(),
                 "-cubeout");

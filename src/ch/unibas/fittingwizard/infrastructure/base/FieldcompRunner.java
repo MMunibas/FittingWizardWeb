@@ -143,7 +143,9 @@ public class FieldcompRunner {
     private void setCommand(List<String> args, File outputFile) {
 
         try {
-            fd = new Fieldcomp((String[]) args.toArray());
+            String st[] = null;
+            st = args.toArray(new String[0]);
+            fd = new Fieldcomp(st);
         } catch (FieldcompParamsException ex) {
             logger.warn("Please solve the error previously reported.");
         }
