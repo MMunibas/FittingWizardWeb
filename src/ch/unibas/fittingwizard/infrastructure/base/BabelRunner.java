@@ -27,22 +27,22 @@ public class BabelRunner {
 		pb.directory(path);
 	}
 	
-	public static boolean isAvailable() {
-        try {
-            BabelRunner runner = new BabelRunner();
-            int retval = runner.exec();
-            if (retval == 0) {
-                logger.info("Babel found in path.");
-                return true;
-            } else {
-                logger.warn("Babel not in path.");
-                return false;
-            }
-        } catch (Exception e) {
-            logger.warn("Babel not in path.", e);
-            return false;
-        }
-	}
+//	public static boolean isAvailable() {
+//        try {
+//            BabelRunner runner = new BabelRunner();
+//            int retval = runner.exec();
+//            if (retval == 0) {
+//                logger.info("Babel found in path.");
+//                return true;
+//            } else {
+//                logger.warn("Babel not in path.");
+//                return false;
+//            }
+//        } catch (Exception e) {
+//            logger.warn("Babel not in path.", e);
+//            return false;
+//        }
+//	}
 	
 	public int exec() throws Exception {
 		setCommand(new ArrayList<String>());

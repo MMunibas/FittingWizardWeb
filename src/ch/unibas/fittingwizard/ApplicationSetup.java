@@ -52,11 +52,11 @@ public class ApplicationSetup {
                 }
             }
 
-            boolean babelIsVailable = BabelRunner.isAvailable();
-            if (!babelIsVailable) {
-                missingStuff += "Babel is not available.\n";
-                isMissing = true;
-            }
+//            boolean babelIsVailable = BabelRunner.isAvailable();
+//            if (!babelIsVailable) {
+//                missingStuff += "Babel is not available.\n";
+//                isMissing = true;
+//            }
 
             if (isMissing) {
                 missingStuff += "\nPlease check your installation. Maybe dependencies are just missing in the PATH.";

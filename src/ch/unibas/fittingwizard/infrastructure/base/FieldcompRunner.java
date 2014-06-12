@@ -50,22 +50,22 @@ public class FieldcompRunner {
 		return pb.environment();
 	}
 	
-	public static boolean isAvailable(File scriptsPath) {
-		try {
-            FieldcompRunner runner = new FieldcompRunner(scriptsPath);
-            int retval = runner.exec();
-			if (retval == 0) {
-				logger.info("Fieldcomp found in scripts directory.");
-				return true;
-			} else {
-				logger.warn("Fieldcomp not in scripts directory.");
-				return false;
-			}
-		} catch (Exception e) {
-            logger.warn("Fieldcomp not in scripts directory.", e);
-            return false;
-        }
-    }
+//	public static boolean isAvailable(File scriptsPath) {
+//		try {
+//            FieldcompRunner runner = new FieldcompRunner(scriptsPath);
+//            int retval = runner.exec();
+//			if (retval == 0) {
+//				logger.info("Fieldcomp found in scripts directory.");
+//				return true;
+//			} else {
+//				logger.warn("Fieldcomp not in scripts directory.");
+//				return false;
+//			}
+//		} catch (Exception e) {
+//            logger.warn("Fieldcomp not in scripts directory.", e);
+//            return false;
+//        }
+//    }
 	
 	public int exec() {
 		return exec(new ArrayList(), null);
