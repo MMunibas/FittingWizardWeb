@@ -73,25 +73,25 @@ public class Fieldcomp {
     private String[] tokens = null;
     private final String delims = "\\s+";
 
-//    public static void main(String[] args) {
-//
-//        // configure logger
-//        BasicConfigurator.configure();
-//
-//        Fieldcomp fdc = null;
-//
-//        try {
-//            fdc = new Fieldcomp(args);
-//            fdc.run();
-//        } catch (FieldcompParamsException | FieldcompFileRankException | FieldcompUnknownOutputFileType ex) {
-//            logger.warn("Please solve the error previously reported.");
-//        } catch (FileNotFoundException fex) {
-//            logger.warn("FileNotFoundException was detected : " + fex.getMessage());
-//        } catch (IOException iex) {
-//            logger.warn("IOException was detected : " + iex.getMessage());
-//        }
-//
-//    }// end test main
+    public static void main(String[] args) {
+
+        // configure logger
+        BasicConfigurator.configure();
+
+        Fieldcomp fdc = null;
+
+        try {
+            fdc = new Fieldcomp(args);
+            fdc.run();
+        } catch (FieldcompParamsException | FieldcompFileRankException | FieldcompUnknownOutputFileType ex) {
+            logger.warn("Please solve the error previously reported.");
+        } catch (FileNotFoundException fex) {
+            logger.warn("FileNotFoundException was detected : " + fex.getMessage());
+        } catch (IOException iex) {
+            logger.warn("IOException was detected : " + iex.getMessage());
+        }
+
+    }// end test main
 
     public Fieldcomp(String[] args) throws FieldcompParamsException{
         //Conversion parameters form Angstrom to Bohr and vice versa
