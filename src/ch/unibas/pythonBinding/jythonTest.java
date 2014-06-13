@@ -6,8 +6,11 @@
 
 package ch.unibas.pythonBinding;
 
-import org.python.util.PythonInterpreter;
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.Properties;
 import org.python.core.*;
+import org.python.util.PythonInterpreter;
 
 /**
  *
@@ -20,17 +23,29 @@ public class jythonTest {
      */
     public static void main(String[] args) {
 
+        Map<String, String> env = System.getenv();
+
+//        for (Map.Entry<String, String> entry : env.entrySet()) {
+//            System.out.println(entry.getKey() + " : " + entry.getValue());
+//        }
+
+        Properties oldProps = System.getProperties();
+        Properties newProps = new Properties();
+        newProps.setProperty("python.path", "/usr/local/lib64/python2.7/site-packages/");
+        newProps.setProperty("java.library.path", env.get("LD_LIBRARY_PATH"));
+
+//        Enumeration e = oldProps.propertyNames();
+//        while (e.hasMoreElements()) {
+//            String key = (String) e.nextElement();
+//            System.out.println(key + " -- " + oldProps.getProperty(key));
+//        }
+
+        PythonInterpreter.initialize(oldProps, newProps, null);
         PythonInterpreter python = new PythonInterpreter();
+//        python.execfile("/home/hedin/progra/workflowopt/scripts/check_rdkit_dependency.py");
+        python.execfile("/home/hedin/progra/workflowopt/scripts/check_scipy_dependency.py");
 
-        int number1 = 10;
-        int number2 = 32;
-
-        python.set("number1", new PyInteger(number1));
-        python.set("number2", new PyInteger(number2));
-        python.exec("number3 = number1+number2");
-        PyObject number3 = python.get("number3");
-        System.out.println("val : " + number3.toString());
-    }
+    }//main
 
 
 }

@@ -9,3 +9,5 @@
 /build/
 /data/molecules/
 /data
+/lib/jython/cachedir/
+
