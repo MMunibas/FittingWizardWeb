@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  *
  * @author hedin
  */
-public class PSF_read extends PSF {
+public final class PSF_read extends PSF {
 
     public PSF_read(String filename) {
         myname = filename;

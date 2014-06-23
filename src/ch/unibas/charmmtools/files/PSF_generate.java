@@ -18,7 +18,7 @@ import java.util.List;
  *
  * @author hedin
  */
-public class PSF_generate extends PSF {
+public final class PSF_generate extends PSF {
 
     private List<XyzAtom> atoms;
 
