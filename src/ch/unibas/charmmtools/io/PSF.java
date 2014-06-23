@@ -43,7 +43,7 @@ import java.util.logging.Logger;
  *
  * @author hedin
  */
-public final class PSF {
+public class PSF {
 
     String myname;
 

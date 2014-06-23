@@ -30,7 +30,7 @@ package ch.unibas.charmmtools.exceptions;
  *
  * @author hedin
  */
-public final class UnsupportedVELDException extends Exception {
+public class UnsupportedVELDException extends Exception {
 
     public UnsupportedVELDException() {
         System.err.println("CHARMM Velocity files (VELD) are not supported for the moment.");

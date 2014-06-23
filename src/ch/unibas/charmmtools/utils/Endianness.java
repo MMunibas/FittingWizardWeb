@@ -33,7 +33,7 @@ import java.nio.ByteOrder;
  *
  * @author hedin
  */
-public final class Endianness {
+public class Endianness {
 
     // Buffers
     ByteBuffer bf = null;

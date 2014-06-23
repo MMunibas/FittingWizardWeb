@@ -30,7 +30,7 @@ package ch.unibas.charmmtools.exceptions;
  *
  * @author hedin
  */
-public final class UnknownFileTypeException extends Exception {
+public class UnknownFileTypeException extends Exception {
 
     public UnknownFileTypeException() {
         System.err.println("This file is of an unknown type: is it really a DCD ?");

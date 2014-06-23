@@ -30,7 +30,7 @@ package ch.unibas.charmmtools.exceptions;
  *
  * @author hedin
  */
-public final class NotPsfException extends Exception {
+public class NotPsfException extends Exception {
 
     public NotPsfException(String fname, String line) {
         System.err.println("This file does not contains the PSF key word on first line : "

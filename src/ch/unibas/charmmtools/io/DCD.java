@@ -43,7 +43,7 @@ import java.util.logging.Logger;
  *
  * @author hedin
  */
-public final class DCD {
+public class DCD {
 
     // attributes
 //    private DataInputStream data = null;           //object representing the dcd file

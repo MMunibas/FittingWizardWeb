@@ -43,7 +43,7 @@ import java.util.logging.Logger;
  *
  * @author hedin
  */
-public final class COR {
+public class COR {
 
     private int natom;
 

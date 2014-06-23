@@ -7,3 +7,6 @@ export LD_LIBRARY_PATH=/usr/local/lib/
 java -cp "build/classes:lib/*:$JAVA_BIN_DIR/jre/lib/jfxrt.jar" ch.unibas.fittingwizard.Main
 
 #java -jar FittingWizard.jar
+
+
+

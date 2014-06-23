@@ -58,8 +58,8 @@ foreach $i (0..@pdb){
 
 if ($ARGV[0] eq "-c") {
 #  system "tcsh; setenv BABEL_DIR /usr/etc/babel; babel -ipdb $ARGV[1] -omopint temp.dat \"AM1 1SCF MMOK \"";
-  system "babel -ipdb $ARGV[1] -omopint temp.dat \"AM1 GNORM=1 MMOK \"";
-  system "mopac temp > /dev/null";
+  system "babel -ipdb $ARGV[1] -omopin temp.dat \"AM1 GNORM=1 MMOK \"";
+  system "mopac7 temp > /dev/null";
   open(MOPAC,"temp.out");
   @line=<MOPAC>;
   foreach $i (0..@line) {
