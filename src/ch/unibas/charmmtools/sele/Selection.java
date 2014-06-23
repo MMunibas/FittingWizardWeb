@@ -9,8 +9,8 @@
 
 package ch.unibas.charmmtools.sele;
 
-import ch.unibas.charmmtools.io.COR;
-import ch.unibas.charmmtools.io.PSF;
+import ch.unibas.charmmtools.files.COR;
+import ch.unibas.charmmtools.files.PSF;
 
 /**
  *

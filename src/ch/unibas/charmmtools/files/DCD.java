@@ -7,7 +7,7 @@
  *
  */
 
-package ch.unibas.charmmtools.io;
+package ch.unibas.charmmtools.files;
 
 import java.io.FileNotFoundException;
 

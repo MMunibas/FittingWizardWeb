@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.io;
+package ch.unibas.charmmtools.files;
 
 import ch.unibas.charmmtools.exceptions.NotPsfException;
 import ch.unibas.charmmtools.types.Angle;
@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * This class is derived from the abstract PSF class, it contains a parse method reading a PSF file and storing all the stuff in inherited attributes .
  *
  * @author hedin
  */
@@ -166,7 +167,8 @@ public class PSF_read extends PSF {
 
     } //end of parse routine
 
-    private void allocate() {
+    @Override
+    protected void allocate() {
         //allocate memory
         atomID = new int[natom];
         segName = new String[natom];
@@ -181,4 +183,4 @@ public class PSF_read extends PSF {
         /* TODO : handle DRUDE and CHECK */
     }
 
-}
+}//end class

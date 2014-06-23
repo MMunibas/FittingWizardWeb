@@ -7,7 +7,7 @@
  *
  */
 
-package ch.unibas.charmmtools.io;
+package ch.unibas.charmmtools.files;
 
 import java.util.Scanner;
 
@@ -17,6 +17,7 @@ import ch.unibas.charmmtools.types.Dihedral;
 import ch.unibas.charmmtools.types.Improper;
 
 /**
+ * This abstract class contains attributes and setters/getters useful for reading or generating a CHARMM PSF file.
  *
  * @author hedin
  */
@@ -66,46 +67,9 @@ public abstract class PSF {
     protected final String delims = "\\s+";
 
     /**
-     * @return the isExtendedFormat
+     * Inheriting classes have to redefine this allocator method if storage to arrays is required
      */
-    public boolean isExtendedFormat() {
-        return isExtendedFormat;
-    }
-
-    /**
-     * @return the isUsingCMAP
-     */
-    public boolean isUsingCMAP() {
-        return isUsingCMAP;
-    }
-
-    /**
-     * @return the isUsingCHEQ
-     */
-    public boolean isUsingCHEQ() {
-        return isUsingCHEQ;
-    }
-
-    /**
-     * @return the isUsingDRUDE
-     */
-    public boolean isUsingDRUDE() {
-        return isUsingDRUDE;
-    }
-
-    /**
-     * @return the ntitle
-     */
-    public int getNtitle() {
-        return ntitle;
-    }
-
-    /**
-     * @return the natom
-     */
-    public int getNatom() {
-        return natom;
-    }
+    protected abstract void allocate();
 
     /**
      * @return the atomID
@@ -140,34 +104,6 @@ public abstract class PSF {
      */
     public String[] getAtomName() {
         return atomName;
-    }
-
-    /**
-     * @return the typeID
-     */
-    public int[] getTypeID() {
-        return typeID;
-    }
-
-    /**
-     * @return the charge
-     */
-    public float[] getCharge() {
-        return charge;
-    }
-
-    /**
-     * @return the mass
-     */
-    public float[] getMass() {
-        return mass;
-    }
-
-    /**
-     * @return the imove
-     */
-    public int[] getImove() {
-        return imove;
     }
 
 } // end of class PSF
