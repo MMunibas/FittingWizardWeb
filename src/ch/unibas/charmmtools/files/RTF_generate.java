@@ -9,8 +9,11 @@
 
 package ch.unibas.charmmtools.files;
 
+import ch.unibas.charmmtools.types.Bond;
 import ch.unibas.fittingwizard.application.xyz.XyzAtom;
 import ch.unibas.fittingwizard.application.xyz.XyzFile;
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +24,8 @@ import java.util.List;
 public final class RTF_generate extends RTF {
 
     private List<XyzAtom> atoms = null;
+
+    private int nbonds = 0;
 
     //covalence radii
     private final double C = 0.8;
@@ -34,6 +39,7 @@ public final class RTF_generate extends RTF {
     private List<Double> x = null, y = null, z = null;
     private List<Integer> id = null;
     private List<String> name = null;
+    private List<Bond> bonds = null;
 
     public RTF_generate(XyzFile xyz) {
         atoms = xyz.getAtoms();
@@ -50,6 +56,7 @@ public final class RTF_generate extends RTF {
         z = new ArrayList<>();
         id = new ArrayList<>();
         name = new ArrayList<>();
+        bonds = new ArrayList<>();
     }
 
     protected void copy_data() {
@@ -68,6 +75,23 @@ public final class RTF_generate extends RTF {
 
     private void gen_bonds() {
 
-    }
+        double dist;
+
+        for (int i = 0; i < natom; i++) {
+            for (int j = 0; j < natom; j++) {
+                if (j == i) {
+                    continue;
+                }
+                dist = sqrt(
+                        pow(x.get(i) - x.get(j), 2)
+                        + pow(y.get(i) - y.get(j), 2)
+                        + pow(z.get(i) - z.get(j), 2)
+                );
+                /* TODO */
+//                if()
+            }
+        }
+    }//end of gen_bonds
+
 
 }//end of class
