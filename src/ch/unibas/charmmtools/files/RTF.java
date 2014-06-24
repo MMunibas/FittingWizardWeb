@@ -19,5 +19,5 @@ public abstract class RTF {
     /**
      * Inheriting classes have to redefine this allocator method if storage to arrays is required
      */
-    protected abstract void allocate();
+//    protected abstract void allocate();
 }

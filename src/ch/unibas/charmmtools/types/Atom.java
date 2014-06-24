@@ -27,6 +27,11 @@ public class Atom {
 
     private double x = 0.0, y = 0.0, z = 0.0;
 
+    /**
+     * Count the number of bonds of this atom with other atoms
+     */
+    private int numberOfBonds = 0;
+
     public Atom(int _id) {
         this.atomID = _id;
     }
@@ -217,6 +222,20 @@ public class Atom {
      */
     public void setZ(double z) {
         this.z = z;
+    }
+
+    /**
+     * @return the numberOfBonds
+     */
+    public int getNumberOfBonds() {
+        return numberOfBonds;
+    }
+
+    /**
+     * @param numberOfBonds the numberOfBonds to set
+     */
+    public void setNumberOfBonds(int numberOfBonds) {
+        this.numberOfBonds = numberOfBonds;
     }
 
 }//end class
