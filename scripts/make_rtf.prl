@@ -97,10 +97,10 @@ for ($i=1;$i<$num+1;$i++) {
       $bond_length[$j][$i]=$dist;
       $num_link[$i]+=1;
       $num_link[$j]+=1;
-      $link[$i][$num_link[$i]]=$j;
-      $link[$j][$num_link[$j]]=$i;
-      $bound{$atom[$j]}[$i]+=1;
-      $bound{$atom[$i]}[$j]+=1;
+      $link[$i][$num_link[$i]]=$j; #!!
+      $link[$j][$num_link[$j]]=$i; #!!
+      $bound{$atom[$j]}[$i]+=1; #!!
+      $bound{$atom[$i]}[$j]+=1; #!!
     };
   };
 }

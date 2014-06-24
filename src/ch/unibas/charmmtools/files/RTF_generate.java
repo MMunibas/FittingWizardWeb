@@ -9,18 +9,11 @@
 
 package ch.unibas.charmmtools.files;
 
-import ch.unibas.charmmtools.types.Angle;
 import ch.unibas.charmmtools.types.Atom;
 import ch.unibas.charmmtools.types.Bond;
-import ch.unibas.charmmtools.types.Dihedral;
-import ch.unibas.charmmtools.types.Improper;
 import ch.unibas.fittingwizard.application.xyz.XyzAtom;
 import ch.unibas.fittingwizard.application.xyz.XyzFile;
-import static java.lang.Math.pow;
-import static java.lang.Math.sqrt;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.Iterator;
 
 /**
  *
@@ -28,76 +21,25 @@ import java.util.List;
  */
 public final class RTF_generate extends RTF {
 
-    private List<XyzAtom> atoms = null;
-
-    private int nbonds = 0;
-
-    //covalence radii
-//    private final double C = 0.8;
-//    private final double H = 0.4;
-//    private final double O = 0.8;
-//    private final double N = 0.8;
-//    private final double S = 1.2;
-//    private final double P = 1.2;
-//    private final double F = 1.3;
-    private Hashtable<String, Double> covRad = new Hashtable<String, Double>() {
-        {
-            put("C", 0.8);
-            put("H", 0.4);
-            put("O", 0.8);
-            put("N", 0.8);
-            put("S", 1.2);
-            put("P", 1.2);
-            put("F", 1.3);
-        }
-    };
-
-    private List<Atom> atmList = new ArrayList<>();
-    private List<Bond> bndList = new ArrayList<>();
-    private List<Angle> angList = new ArrayList<>();
-    private List<Dihedral> diheList = new ArrayList<>();
-    private List<Improper> imprList = new ArrayList<>();
 
     public RTF_generate(XyzFile xyz) {
-        atoms = xyz.getAtoms();
-        this.natom = xyz.getAtomCount();
-//        this.allocate();
-//        this.copy_data();
-        for (XyzAtom it : atoms) {
+
+        InputDataAtoms = xyz.getAtoms();
+        Iterator<?> iterator = InputDataAtoms.iterator();
+        while (iterator.hasNext()) {
+            XyzAtom it = (XyzAtom) iterator.next();
             atmList.add(new Atom(it.getIndex(), it.getName(),
                     it.getX(), it.getY(), it.getZ()));
         }
+
+        this.natom = xyz.getAtomCount();
+
         this.generate();
     }
 
-//    @Override
-//    protected void allocate() {
-//        x = new ArrayList<>();
-//        y = new ArrayList<>();
-//        z = new ArrayList<>();
-//        id = new ArrayList<>();
-//        name = new ArrayList<>();
-//        bonds = new ArrayList<>();
-//    }
-
-//    protected void copy_data() {
-//        for (XyzAtom it : atoms) {
-//            x.add(it.getX());
-//            y.add(it.getY());
-//            z.add(it.getZ());
-//            id.add(it.getIndex());
-//            name.add(it.getName());
-//        }
-//    }
-
-    public void generate() {
-//        this.gen_atomlist();
+    private void generate() {
         this.gen_bonds();
     }
-
-//    private void gen_atomlist() {
-//
-//    }
 
     private void gen_bonds() {
         double dist;
