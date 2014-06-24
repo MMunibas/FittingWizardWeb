@@ -11,6 +11,7 @@ package ch.unibas.charmmtools.files;
 
 import java.util.Scanner;
 
+import ch.unibas.charmmtools.types.Atom;
 import ch.unibas.charmmtools.types.Angle;
 import ch.unibas.charmmtools.types.Bond;
 import ch.unibas.charmmtools.types.Dihedral;
@@ -42,21 +43,22 @@ public abstract class PSF {
 //    protected int molnt;
 
     // always present in PSF
-    protected int[] atomID = null;
-    protected String[] segName = null;
-    protected int[] resID = null;
-    protected String[] resName = null;
-    protected String[] atomName = null;
-    protected int[] typeID = null;
-    protected float[] charge = null;
-    protected float[] mass = null;
-    protected int[] imove = null;
+//    protected int[] atomID = null;
+//    protected String[] segName = null;
+//    protected int[] resID = null;
+//    protected String[] resName = null;
+//    protected String[] atomName = null;
+//    protected int[] typeID = null;
+//    protected float[] charge = null;
+//    protected float[] mass = null;
+//    protected int[] imove = null;
 
     // optional data depending on booleans isUsingCHEQ isUsingDRUDE
 //    protected double[] opt1 = null;
 //    protected double[] opt2 = null;
 
     // the lists read from PSF
+    protected Atom[] atomList = null;
     protected Bond[] bondList = null;
     protected Angle[] angleList = null;
     protected Dihedral[] diheList = null;

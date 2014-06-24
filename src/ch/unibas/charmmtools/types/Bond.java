@@ -9,19 +9,23 @@
 
 package ch.unibas.charmmtools.types;
 
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
+
 /**
  *
  * @author hedin
  */
 public class Bond {
 
-    private Atom a1;
-    private Atom a2;
-    private double length;
+    private Atom a1 = null;
+    private Atom a2 = null;
+    private double length = 0.0;
 
     public Bond(Atom _at1, Atom _at2) {
         this.a1 = _at1;
         this.a2 = _at2;
+        this.length = calcLength(a1, a2);
     }
 
     public Bond(Atom _at1, Atom _at2, double _l) {
@@ -30,4 +34,11 @@ public class Bond {
         this.length = _l;
     }
 
-}
+    public static double calcLength(Atom a1, Atom a2) {
+        double l = 0.0;
+        l = pow(a1.getX() - a2.getX(), 2) + pow(a1.getY() - a2.getY(), 2) + pow(a1.getZ() - a2.getZ(), 2);
+        l = sqrt(l);
+        return l;
+    }
+
+}//end class

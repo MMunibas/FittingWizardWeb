@@ -15,8 +15,20 @@ package ch.unibas.charmmtools.types;
  */
 public class Improper extends Dihedral {
 
-    public Improper(int _a1, int _a2, int _a3, int _a4) {
+    public Improper(Atom _a1, Atom _a2, Atom _a3, Atom _a4) {
         super(_a1, _a2, _a3, _a4);
     }
 
-}
+    public Improper(Atom _a1, Atom _a2, Atom _a3, Atom _a4, double _dihe) {
+        super(_a1, _a2, _a3, _a4, _dihe);
+    }
+
+    public Improper(Atom _a1, Atom _a2, Atom _a3, Atom _a4, boolean _radian) {
+        super(_a1, _a2, _a3, _a4, _radian);
+    }
+
+    public Improper(Atom _a1, Atom _a2, Atom _a3, Atom _a4, double _dihe, boolean _radian) {
+        super(_a1, _a2, _a3, _a4, _dihe, _radian);
+    }
+
+}//end class

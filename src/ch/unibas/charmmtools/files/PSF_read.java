@@ -10,6 +10,7 @@ package ch.unibas.charmmtools.files;
 
 import ch.unibas.charmmtools.exceptions.NotPsfException;
 import ch.unibas.charmmtools.types.Angle;
+import ch.unibas.charmmtools.types.Atom;
 import ch.unibas.charmmtools.types.Bond;
 import ch.unibas.charmmtools.types.Dihedral;
 import ch.unibas.charmmtools.types.Improper;
@@ -123,7 +124,7 @@ public final class PSF_read extends PSF {
         // Fill bond array
         bondList = new Bond[nbond];
         for (int i = 0; i < nbond; i++) {
-            bondList[i] = new Bond(s.nextInt(), s.nextInt());
+            bondList[i] = new Bond(new Atom(s.nextInt()), new Atom(s.nextInt()));
         }
 
         // go to angles section
@@ -136,7 +137,7 @@ public final class PSF_read extends PSF {
         // Fill bond array
         angleList = new Angle[ntheta];
         for (int i = 0; i < ntheta; i++) {
-            angleList[i] = new Angle(s.nextInt(), s.nextInt(), s.nextInt());
+            angleList[i] = new Angle(new Atom(s.nextInt()), new Atom(s.nextInt()), new Atom(s.nextInt()));
         }
 
         // go to dihedrals section
@@ -149,7 +150,7 @@ public final class PSF_read extends PSF {
         // Fill bond array
         diheList = new Dihedral[nphi];
         for (int i = 0; i < nphi; i++) {
-            diheList[i] = new Dihedral(s.nextInt(), s.nextInt(), s.nextInt(), s.nextInt());
+            diheList[i] = new Dihedral(new Atom(s.nextInt()), new Atom(s.nextInt()), new Atom(s.nextInt()), new Atom(s.nextInt()));
         }
 
         // go to impropers section
@@ -162,7 +163,7 @@ public final class PSF_read extends PSF {
         // Fill bond array
         imprList = new Improper[nimphi];
         for (int i = 0; i < nphi; i++) {
-            imprList[i] = new Improper(s.nextInt(), s.nextInt(), s.nextInt(), s.nextInt());
+            imprList[i] = new Improper(new Atom(s.nextInt()), new Atom(s.nextInt()), new Atom(s.nextInt()), new Atom(s.nextInt()));
         }
 
     } //end of parse routine
