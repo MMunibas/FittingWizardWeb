@@ -442,9 +442,11 @@ sub calcul_dihedral {
     $vec_x[1]=$x[$a]-$x[$b];
     $vec_y[1]=$y[$a]-$y[$b];
     $vec_z[1]=$z[$a]-$z[$b];
+    
     $vec_x[2]=$x[$d]-$x[$c];
     $vec_y[2]=$y[$d]-$y[$c];
     $vec_z[2]=$z[$d]-$z[$c];
+    
     $vec_x[3]=$x[$b]-$x[$c];
     $vec_y[3]=$y[$b]-$y[$c];
     $vec_z[3]=$z[$b]-$z[$c];

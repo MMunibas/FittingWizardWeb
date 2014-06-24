@@ -10,6 +10,8 @@
 package ch.unibas.charmmtools.types;
 
 import ch.unibas.charmmtools.utils.MathTools;
+import static java.lang.Math.acos;
+import static java.lang.Math.asin;
 
 /**
  *
@@ -95,9 +97,27 @@ public class Dihedral {
         n2[1] /= norm2;
         n2[2] /= norm2;
 
-        /* TODO */
+        double[] u3 = v;
+        double normv = MathTools.dotProd3x3(v, v);
+        u3[0] /= normv;
+        u3[1] /= normv;
+        u3[2] /= normv;
+        double[] u2 = MathTools.crossProd3x3(u3, n2);
 
-        return 0.0;
+        double dp1 = MathTools.dotProd3x3(n1, n2);
+        double dp2 = MathTools.dotProd3x3(n1, u2);
+
+        double angle = -acos(dp1);
+        double sign = asin(dp2);
+
+        if (sign < 0) {
+            angle = -angle;
+        }
+
+        if (!radian)
+            angle *= 180.0 / Math.PI;
+
+        return angle;
     }
 
 }//end class

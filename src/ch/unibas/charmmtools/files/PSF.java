@@ -68,44 +68,4 @@ public abstract class PSF {
 
     protected final String delims = "\\s+";
 
-    /**
-     * Inheriting classes have to redefine this allocator method if storage to arrays is required
-     */
-    protected abstract void allocate();
-
-    /**
-     * @return the atomID
-     */
-    public int[] getAtomID() {
-        return atomID;
-    }
-
-    /**
-     * @return the segName
-     */
-    public String[] getSegName() {
-        return segName;
-    }
-
-    /**
-     * @return the resID
-     */
-    public int[] getResID() {
-        return resID;
-    }
-
-    /**
-     * @return the resName
-     */
-    public String[] getResName() {
-        return resName;
-    }
-
-    /**
-     * @return the atomName
-     */
-    public String[] getAtomName() {
-        return atomName;
-    }
-
 } // end of class PSF

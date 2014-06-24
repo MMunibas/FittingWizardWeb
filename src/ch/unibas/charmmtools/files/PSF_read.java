@@ -96,22 +96,23 @@ public final class PSF_read extends PSF {
         natom = Integer.parseInt(tokens[0]);
 //        System.out.println("natom from PSF : " + natom);
 
-        allocate();
+//        allocate();
+        atomList = new Atom[natom];
 
         // read params of atom section
         for (int i = 0; i < natom; i++) {
             inp = s.nextLine();
             tokens = inp.trim().split(delims);
             int idx = 0;
-            atomID[i] = Integer.parseInt(tokens[idx++]);
-            segName[i] = tokens[idx++];
-            resID[i] = Integer.parseInt(tokens[idx++]);
-            resName[i] = tokens[idx++];
-            atomName[i] = tokens[idx++];
-            typeID[i] = Integer.parseInt(tokens[idx++]);
-            charge[i] = Float.parseFloat(tokens[idx++]);
-            mass[i] = Float.parseFloat(tokens[idx++]);
-            imove[i] = Integer.parseInt(tokens[idx++]);
+            atomList[i].setAtomID(Integer.parseInt(tokens[idx++]));
+            atomList[i].setSegName(tokens[idx++]);
+            atomList[i].setResID(Integer.parseInt(tokens[idx++]));
+            atomList[i].setResName(tokens[idx++]);
+            atomList[i].setAtomName(tokens[idx++]);
+            atomList[i].setTypeID(Integer.parseInt(tokens[idx++]));
+            atomList[i].setCharge(Float.parseFloat(tokens[idx++]));
+            atomList[i].setMass(Float.parseFloat(tokens[idx++]));
+            atomList[i].setImove(Integer.parseInt(tokens[idx++]));
         }
 
         // go to bonds section
@@ -168,20 +169,20 @@ public final class PSF_read extends PSF {
 
     } //end of parse routine
 
-    @Override
-    protected void allocate() {
-        //allocate memory
-        atomID = new int[natom];
-        segName = new String[natom];
-        resID = new int[natom];
-        resName = new String[natom];
-        atomName = new String[natom];
-        typeID = new int[natom];
-        charge = new float[natom];
-        mass = new float[natom];
-        imove = new int[natom];
-
-        /* TODO : handle DRUDE and CHECK */
-    }
+//    @Override
+//    protected void allocate() {
+//        //allocate memory
+//        atomID = new int[natom];
+//        segName = new String[natom];
+//        resID = new int[natom];
+//        resName = new String[natom];
+//        atomName = new String[natom];
+//        typeID = new int[natom];
+//        charge = new float[natom];
+//        mass = new float[natom];
+//        imove = new int[natom];
+//
+//        /* TODO : handle DRUDE and CHECK */
+//    }
 
 }//end class

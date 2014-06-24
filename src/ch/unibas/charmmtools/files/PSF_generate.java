@@ -32,20 +32,20 @@ public final class PSF_generate extends PSF {
         //allocate();
     }
 
-    @Override
-    protected void allocate() {
-        //allocate memory
-        this.atomID = new int[natom];
-        this.segName = new String[natom];
-        this.resID = new int[natom];
-        this.resName = new String[natom];
-        this.atomName = new String[natom];
-        this.typeID = new int[natom];
-        this.charge = new float[natom];
-        this.mass = new float[natom];
-        this.imove = new int[natom];
-
-        /* TODO : handle DRUDE and CHECK */
-    }
+//    @Override
+//    protected void allocate() {
+//        //allocate memory
+//        this.atomID = new int[natom];
+//        this.segName = new String[natom];
+//        this.resID = new int[natom];
+//        this.resName = new String[natom];
+//        this.atomName = new String[natom];
+//        this.typeID = new int[natom];
+//        this.charge = new float[natom];
+//        this.mass = new float[natom];
+//        this.imove = new int[natom];
+//
+//        /* TODO : handle DRUDE and CHECK */
+//    }
 
 }//end class
