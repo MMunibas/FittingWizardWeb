@@ -15,7 +15,7 @@ import ch.unibas.charmmtools.types.Bond;
 import ch.unibas.charmmtools.types.Dihedral;
 import ch.unibas.charmmtools.types.Improper;
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -26,10 +26,10 @@ public abstract class RTF {
 
     protected List<?> InputDataAtoms = null;
 
-    protected int natom;
+    protected int natom = 0;
     protected int nbonds = 0;
 
-    protected Hashtable<String, Double> covRad = new Hashtable<String, Double>() {
+    protected HashMap<String, Double> covRadList = new HashMap<String, Double>() {
         {
             put("C", 0.8);
             put("H", 0.4);
@@ -41,9 +41,47 @@ public abstract class RTF {
         }
     };
 
-    protected List<Atom> atmList = new ArrayList<>();
-    protected List<Bond> bndList = new ArrayList<>();
-    protected List<Angle> angList = new ArrayList<>();
-    protected List<Dihedral> diheList = new ArrayList<>();
-    protected List<Improper> imprList = new ArrayList<>();
+    protected HashMap<Integer, String> C_hybridList = new HashMap<Integer, String>() {
+        {
+            put(4, "sp3");
+            put(3, "sp2");
+            put(2, "sp");
+        }
+    };
+
+    protected HashMap<Integer, String> O_hybridList = new HashMap<Integer, String>() {
+        {
+            put(2, "sp3");
+            put(1, "sp2");
+        }
+    };
+
+    protected HashMap<Integer, String> N_hybridList = new HashMap<Integer, String>() {
+        {
+            put(4, "sp3");
+            put(3, "sp3");
+            put(2, "sp2");
+            put(1, "sp");
+        }
+    };
+
+    protected List<Atom> atmTypeList = new ArrayList<>();
+    protected List<Bond> bndTypeList = new ArrayList<>();
+    protected List<Angle> angTypeList = new ArrayList<>();
+    protected List<Dihedral> diheTypeList = new ArrayList<>();
+    protected List<Improper> imprTypeList = new ArrayList<>();
+
+    /**
+     * @return the atmTypeList
+     */
+    public List<Atom> getAtmTypeList() {
+        return atmTypeList;
+    }
+
+    /**
+     * @return the bndTypeList
+     */
+    public List<Bond> getBndTypeList() {
+        return bndTypeList;
+    }
 }

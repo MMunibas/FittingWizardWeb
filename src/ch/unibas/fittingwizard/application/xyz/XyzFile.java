@@ -34,6 +34,13 @@ public class XyzFile {
         this.atoms = atoms;
     }
 
+    public XyzFile(List<XyzAtom> atoms) {
+        this.atomCount = atoms.size();
+        this.atoms = atoms;
+        name = null;
+        source = null;
+    }
+
     public String getMoleculeName() {
         return name;
     }

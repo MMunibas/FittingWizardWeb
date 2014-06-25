@@ -9,12 +9,18 @@
 
 package ch.unibas.charmmtools.types;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author hedin
  */
 public class Atom {
 
+    /**
+     * data from the PSF
+     */
     private int atomID = 0;
     private String segName = null;
     private int resID = 0;
@@ -25,12 +31,39 @@ public class Atom {
     private double mass = 0.0;
     private int imove = 0;
 
+    /**
+     * Coordinates of this atom
+     */
     private double x = 0.0, y = 0.0, z = 0.0;
 
     /**
      * Count the number of bonds of this atom with other atoms
      */
     private int numberOfBonds = 0;
+
+    /**
+     * Represents the hybridisation state of this atom : sp3, sp2, ...
+     */
+    private String hybridisation = null;
+
+    /**
+     * List of AtomID to which this atom is linked
+     */
+    private List<Integer> linkingList = new ArrayList<>();
+
+    /**
+     * saves the id of an atom to which this atom is connected
+     *
+     * @param atomId
+     */
+    public void addBondTo(int atomId) {
+        linkingList.add(atomId);
+        numberOfBonds++;
+    }
+
+    public int getBondAt(int position) {
+        return linkingList.get(position);
+    }
 
     public Atom(int _id) {
         this.atomID = _id;
@@ -231,11 +264,38 @@ public class Atom {
         return numberOfBonds;
     }
 
+//    /**
+//     * @param numberOfBonds the numberOfBonds to set
+//     */
+//    public void setNumberOfBonds(int numberOfBonds) {
+//        this.numberOfBonds = numberOfBonds;
+//    }
+
     /**
-     * @param numberOfBonds the numberOfBonds to set
+     * @return the hybridisation
      */
-    public void setNumberOfBonds(int numberOfBonds) {
-        this.numberOfBonds = numberOfBonds;
+    public String getHybridisation() {
+        return hybridisation;
     }
 
+    /**
+     * @param hybridisation the hybridisation to set
+     */
+    public void setHybridisation(String hybridisation) {
+        this.hybridisation = hybridisation;
+    }
+
+//    /**
+//     * @return the linkingList
+//     */
+//    public List<Integer> getLinkingList() {
+//        return linkingList;
+//    }
+//
+//    /**
+//     * @param linkingList the linkingList to set
+//     */
+//    public void setLinkingList(List<Integer> linkingList) {
+//        this.linkingList = linkingList;
+//    }
 }//end class

@@ -41,4 +41,25 @@ public class Bond {
         return l;
     }
 
+    /**
+     * @return the a1
+     */
+    public Atom getA1() {
+        return a1;
+    }
+
+    /**
+     * @return the a2
+     */
+    public Atom getA2() {
+        return a2;
+    }
+
+    /**
+     * @return the length
+     */
+    public double getLength() {
+        return length;
+    }
+
 }//end class

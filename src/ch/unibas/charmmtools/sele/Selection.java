@@ -43,16 +43,16 @@ public class Selection {
         allocateBooleanArray();
     }
 
-    public Selection(PSF _psf) {
-        this.atomID = _psf.getAtomID();
-        this.resID = _psf.getResID();
-        this.resName = _psf.getResName();
-        this.atomName = _psf.getAtomName();
-        this.segName = _psf.getSegName();
-
-        nat = atomID.length;
-        allocateBooleanArray();
-    }
+//    public Selection(PSF _psf) {
+//        this.atomID = _psf.getAtomID();
+//        this.resID = _psf.getResID();
+//        this.resName = _psf.getResName();
+//        this.atomName = _psf.getAtomName();
+//        this.segName = _psf.getSegName();
+//
+//        nat = atomID.length;
+//        allocateBooleanArray();
+//    }
 
     private void allocateBooleanArray() {
         isSelected = new boolean[nat];
