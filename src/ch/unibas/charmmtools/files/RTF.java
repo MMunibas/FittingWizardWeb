@@ -31,13 +31,21 @@ public abstract class RTF {
 
     protected HashMap<String, Double> covRadList = new HashMap<String, Double>() {
         {
-            put("C", 0.8);
-            put("H", 0.4);
-            put("O", 0.8);
-            put("N", 0.8);
-            put("S", 1.2);
-            put("P", 1.2);
-            put("F", 1.3);
+//            put("C", 0.8);
+//            put("H", 0.4);
+//            put("O", 0.8);
+//            put("N", 0.8);
+//            put("S", 1.2);
+//            put("P", 1.2);
+//            put("F", 1.3);
+            put("C", 0.77);
+            put("H", 0.37);
+            put("O", 0.73);
+            put("N", 0.75);
+            put("S", 1.02);
+            put("P", 1.06);
+            put("F", 0.71);
+            put("Se", 1.16);
         }
     };
 

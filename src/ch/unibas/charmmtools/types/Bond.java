@@ -36,7 +36,11 @@ public class Bond {
 
     public static double calcLength(Atom a1, Atom a2) {
         double l = 0.0;
-        l = pow(a1.getX() - a2.getX(), 2) + pow(a1.getY() - a2.getY(), 2) + pow(a1.getZ() - a2.getZ(), 2);
+        double X = a1.getX() - a2.getX();
+        double Y = a1.getY() - a2.getY();
+        double Z = a1.getZ() - a2.getZ();
+//        l = pow(a1.getX() - a2.getX(), 2) + pow(a1.getY() - a2.getY(), 2) + pow(a1.getZ() - a2.getZ(), 2);
+        l = X * X + Y * Y + Z * Z;
         l = sqrt(l);
         return l;
     }

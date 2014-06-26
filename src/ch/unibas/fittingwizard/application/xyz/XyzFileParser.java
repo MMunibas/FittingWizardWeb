@@ -8,14 +8,14 @@
  */
 package ch.unibas.fittingwizard.application.xyz;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 /**
  * User: mhelmer
@@ -37,6 +37,7 @@ public class XyzFileParser {
     }
 
     private XyzFileParser(File file) {
+        logger.setLevel(Level.INFO);
         logger.info(String.format("Initializing parser for file %s", file.getAbsoluteFile()));
         this.file = file;
     }
@@ -78,7 +79,7 @@ public class XyzFileParser {
                             lineIdx-FirstAtomLine,
                             Double.parseDouble(parts[1]),
                             Double.parseDouble(parts[2]), Double.parseDouble(parts[3]));
-            logger.info("Found atom: " + atom);
+            logger.debug("Found atom: " + atom);
             atoms.add(atom);
         }
 

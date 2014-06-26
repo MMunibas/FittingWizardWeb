@@ -15,9 +15,9 @@ import ch.unibas.fittingwizard.application.xyz.XyzAtom;
 import ch.unibas.fittingwizard.application.xyz.XyzFile;
 import ch.unibas.fittingwizard.application.xyz.XyzFileParser;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -26,33 +26,33 @@ import java.util.List;
 public final class RTF_generate extends RTF {
 
     public static void main(String[] args) {
-//        List<XyzAtom> xyz = new ArrayList<>();
-//
-//        xyz.add(new XyzAtom("O", 1, 1.09470, 0.02223, 0.00068));
-//        xyz.add(new XyzAtom("C", 1, 2.29155, 0.02223, 0.00068));
-//        xyz.add(new XyzAtom("O", 1, 3.48840, 0.02223, 0.00068));
 
-        String fname = "/home/hedin/progra/workflowopt/data/testdata/molecules/co2.xyz";
+        // initialise logger
+        BasicConfigurator.configure();
+
+//        String fname = "/home/hedin/progra/workflowopt/data/testdata/molecules/ethane.xyz";
+//        String fname = "/home/hedin/progra/workflowopt/3G61.xyz";
+        String fname = args[0];
         XyzFile xyzf = XyzFileParser.parse(new File(fname));
 
         RTF rtff = new RTF_generate(xyzf);
 
-        List<Atom> atmlist = rtff.getAtmTypeList();
-
-        System.out.println("Atoms list");
-        for (Atom at : atmlist) {
-            String name = at.getAtomName();
-            String hybr = at.getHybridisation();
-            System.out.println(name + " " + hybr + " " + at.getX() + " " + at.getY() + " " + at.getZ());
-        }
-
-        List<Bond> bndlist = rtff.getBndTypeList();
-        System.out.println("Bonds list :");
-        for (Bond bd : bndlist) {
-            Atom a1 = bd.getA1();
-            Atom a2 = bd.getA2();
-            System.out.println("Bond between atoms " + a1.getAtomID() + ":" + a1.getAtomName() + " and " + a2.getAtomID() + ":" + a2.getAtomName() + " of length " + bd.getLength());
-        }
+//        List<Atom> atmlist = rtff.getAtmTypeList();
+//
+//        System.out.println("Atoms list");
+//        for (Atom at : atmlist) {
+//            String name = at.getAtomName();
+//            String hybr = at.getHybridisation();
+//            System.out.println(at.getAtomID() + " " + name + " " + hybr + " " + at.getX() + " " + at.getY() + " " + at.getZ());
+//        }
+//
+//        List<Bond> bndlist = rtff.getBndTypeList();
+//        System.out.println("Bonds list :");
+//        for (Bond bd : bndlist) {
+//            Atom a1 = bd.getA1();
+//            Atom a2 = bd.getA2();
+//            System.out.println("Bond between atoms " + a1.getAtomID() + ":" + a1.getAtomName() + " and " + a2.getAtomID() + ":" + a2.getAtomName() + " of length " + bd.getLength());
+//        }
     }
 
     public RTF_generate(XyzFile xyz) {
@@ -63,7 +63,7 @@ public final class RTF_generate extends RTF {
 
         while (iterator.hasNext()) {
             XyzAtom it = iterator.next();
-            atmTypeList.add(new Atom(it.getIndex() + 1, it.getName(),
+            atmTypeList.add(new Atom(it.getIndex(), it.getName(),
                     it.getX(), it.getY(), it.getZ()));
         }
 
@@ -135,7 +135,7 @@ public final class RTF_generate extends RTF {
          * Then we treat the N atoms
          */
         for (Atom it : atmTypeList) {
-            if (it.getAtomName().equals("N")) {
+            if (it.getAtomName().equals("N") && it.getNumberOfBonds() == 3) {
                 if (atmTypeList.get(it.getBondAt(0)).getHybridisation().equals("sp2")
                         || atmTypeList.get(it.getBondAt(1)).getHybridisation().equals("sp2")
                         || atmTypeList.get(it.getBondAt(2)).getHybridisation().equals("sp2")) {
