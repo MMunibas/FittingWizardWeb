@@ -15,7 +15,9 @@ import ch.unibas.fittingwizard.application.xyz.XyzAtom;
 import ch.unibas.fittingwizard.application.xyz.XyzFile;
 import ch.unibas.fittingwizard.application.xyz.XyzFileParser;
 import java.io.File;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
@@ -37,25 +39,31 @@ public final class RTF_generate extends RTF {
 
         RTF rtff = new RTF_generate(xyzf);
 
-//        List<Atom> atmlist = rtff.getAtmTypeList();
-//
-//        System.out.println("Atoms list");
-//        for (Atom at : atmlist) {
-//            String name = at.getAtomName();
-//            String hybr = at.getHybridisation();
-//            System.out.println(at.getAtomID() + " " + name + " " + hybr + " " + at.getX() + " " + at.getY() + " " + at.getZ());
-//        }
-//
-//        List<Bond> bndlist = rtff.getBndTypeList();
-//        System.out.println("Bonds list :");
-//        for (Bond bd : bndlist) {
-//            Atom a1 = bd.getA1();
-//            Atom a2 = bd.getA2();
-//            System.out.println("Bond between atoms " + a1.getAtomID() + ":" + a1.getAtomName() + " and " + a2.getAtomID() + ":" + a2.getAtomName() + " of length " + bd.getLength());
-//        }
+        List<Atom> atmlist = rtff.getAtmTypeList();
+
+        System.out.println("Atoms list");
+        for (Atom at : atmlist) {
+            String name = at.getAtomName();
+            String hybr = at.getHybridisation();
+            System.out.println(at.getAtomID() + " " + name + " " + hybr + " " + at.getX() + " " + at.getY() + " " + at.getZ());
+            System.out.print("Multiplicity dump: ");
+            HashMap<String, Integer> map = at.getMultiplicity();
+            System.out.println(map.toString());
+        }
+
+        List<Bond> bndlist = rtff.getBndTypeList();
+        System.out.println("Bonds list :");
+        for (Bond bd : bndlist) {
+            Atom a1 = bd.getA1();
+            Atom a2 = bd.getA2();
+            System.out.println("Bond between atoms " + a1.getAtomID() + ":" + a1.getAtomName() + " and " + a2.getAtomID() + ":" + a2.getAtomName() + " of length " + bd.getLength());
+        }
+
     }
 
     public RTF_generate(XyzFile xyz) {
+
+        super();
 
         InputDataAtoms = xyz.getAtoms();
         Iterator<XyzAtom> iterator = null;
@@ -93,7 +101,8 @@ public final class RTF_generate extends RTF {
                     atmTypeList.get(i).addBondTo(j);
                     atmTypeList.get(j).addBondTo(i);
                     /*TODO*/
-                    ;
+                    atmTypeList.get(i).addMultiplicity(atmTypeList.get(j).getAtomName());
+                    atmTypeList.get(j).addMultiplicity(atmTypeList.get(i).getAtomName());
                 }//end if
             }//for j
         }//for i
@@ -147,6 +156,14 @@ public final class RTF_generate extends RTF {
         } //for atomlist
 
     }// end of gen_hybridation
+
+    /**
+     * depending on hybridisation of a given atom find the type used for forcefield, i.e. CT2, CT3, CA, ...
+     */
+    private void gen_type() {
+
+    }
+
 
 
 }//end of class

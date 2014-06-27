@@ -10,6 +10,7 @@
 package ch.unibas.charmmtools.types;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -52,18 +53,21 @@ public class Atom {
     private List<Integer> linkingList = new ArrayList<>();
 
     /**
-     * saves the id of an atom to which this atom is connected
-     *
-     * @param atomId
+     * For a given atom, stores the multiplicity of the bond between this atom and an other atom of a given atomName
      */
-    public void addBondTo(int atomId) {
-        linkingList.add(atomId);
-        numberOfBonds++;
-    }
+    private HashMap<String, Integer> multiplicity = new HashMap<String, Integer>() {
+        {
+            put("H", 0);
+            put("C", 0);
+            put("N", 0);
+            put("O", 0);
+        }
+    };
 
-    public int getBondAt(int position) {
-        return linkingList.get(position);
-    }
+    /**
+     * atom type for RTF file (CT2, CT3, CA, ...)
+     */
+    private String rtfType = null;
 
     public Atom(int _id) {
         this.atomID = _id;
@@ -87,6 +91,26 @@ public class Atom {
         this.x = _x;
         this.y = _y;
         this.z = _z;
+    }
+
+    /**
+     * saves the id of an atom to which this atom is connected
+     *
+     * @param atomId
+     */
+    public void addBondTo(int atomId) {
+        linkingList.add(atomId);
+        numberOfBonds++;
+    }
+
+    /**
+     * This returns the atom id of the atom linked to the current atom
+     *
+     * @param index
+     * @return For a given index, returns the atom id of the atom linked to the current atom
+     */
+    public int getBondAt(int index) {
+        return linkingList.get(index);
     }
 
     /**
@@ -298,4 +322,15 @@ public class Atom {
 //    public void setLinkingList(List<Integer> linkingList) {
 //        this.linkingList = linkingList;
 //    }
+    public void addMultiplicity(String type) {
+        this.multiplicity.put(type, this.multiplicity.get(type) + 1);
+    }
+
+    /**
+     * @return the multiplicity
+     */
+    public HashMap<String, Integer> getMultiplicity() {
+        return multiplicity;
+    }
+
 }//end class

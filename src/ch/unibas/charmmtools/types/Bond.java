@@ -39,7 +39,6 @@ public class Bond {
         double X = a1.getX() - a2.getX();
         double Y = a1.getY() - a2.getY();
         double Z = a1.getZ() - a2.getZ();
-//        l = pow(a1.getX() - a2.getX(), 2) + pow(a1.getY() - a2.getY(), 2) + pow(a1.getZ() - a2.getZ(), 2);
         l = X * X + Y * Y + Z * Z;
         l = sqrt(l);
         return l;
