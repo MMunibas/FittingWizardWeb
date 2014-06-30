@@ -53,16 +53,9 @@ public class Atom {
     private List<Integer> linkingList = new ArrayList<>();
 
     /**
-     * For a given atom, stores the multiplicity of the bond between this atom and an other atom of a given atomName
+     * For a given atom, stores to which atom type this atom is linked
      */
-    private HashMap<String, Integer> multiplicity = new HashMap<String, Integer>() {
-        {
-            put("H", 0);
-            put("C", 0);
-            put("N", 0);
-            put("O", 0);
-        }
-    };
+    private HashMap<String, Integer> connectivity = new HashMap<>();
 
     /**
      * atom type for RTF file (CT2, CT3, CA, ...)
@@ -309,28 +302,19 @@ public class Atom {
         this.hybridisation = hybridisation;
     }
 
-//    /**
-//     * @return the linkingList
-//     */
-//    public List<Integer> getLinkingList() {
-//        return linkingList;
-//    }
-//
-//    /**
-//     * @param linkingList the linkingList to set
-//     */
-//    public void setLinkingList(List<Integer> linkingList) {
-//        this.linkingList = linkingList;
-//    }
-    public void addMultiplicity(String type) {
-        this.multiplicity.put(type, this.multiplicity.get(type) + 1);
+    public void addConnectivity(String type) {
+        if (this.connectivity.containsKey(type)) {
+            this.connectivity.put(type, this.connectivity.get(type) + 1);
+        } else {
+            this.connectivity.put(type, 1);
+        }
     }
 
     /**
-     * @return the multiplicity
+     * @return the connectivity
      */
-    public HashMap<String, Integer> getMultiplicity() {
-        return multiplicity;
+    public HashMap<String, Integer> getConnectivity() {
+        return connectivity;
     }
 
 }//end class

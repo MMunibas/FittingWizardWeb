@@ -32,9 +32,7 @@ public abstract class RTF {
     protected HashMap<String, Double> covRadList;
 
     protected HashMap<Integer, String> C_hybridList;
-
     protected HashMap<Integer, String> O_hybridList;
-
     protected HashMap<Integer, String> N_hybridList;
 
     protected List<Atom> atmTypeList = new ArrayList<>();

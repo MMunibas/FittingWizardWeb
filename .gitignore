@@ -10,4 +10,4 @@
 /data/molecules/
 /data
 /lib/jython/cachedir/
-
+/test/*.log

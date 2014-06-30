@@ -9,15 +9,20 @@
 
 package ch.unibas.charmmtools.files;
 
+import au.com.bytecode.opencsv.CSVReader;
 import ch.unibas.charmmtools.types.Atom;
 import ch.unibas.charmmtools.types.Bond;
 import ch.unibas.fittingwizard.application.xyz.XyzAtom;
 import ch.unibas.fittingwizard.application.xyz.XyzFile;
 import ch.unibas.fittingwizard.application.xyz.XyzFileParser;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
@@ -32,8 +37,22 @@ public final class RTF_generate extends RTF {
         // initialise logger
         BasicConfigurator.configure();
 
-//        String fname = "/home/hedin/progra/workflowopt/data/testdata/molecules/ethane.xyz";
-//        String fname = "/home/hedin/progra/workflowopt/3G61.xyz";
+//        try {
+//            CSVReader csv = new CSVReader(new FileReader("/home/hedin/progra/workflowopt/test/cov_rad.csv"));
+//            List<String[]> myEntries = csv.readAll();
+//            for (String[] dat : myEntries) {
+//                for (String st : dat) {
+//                    System.out.print(st + " ");
+//                }
+//                System.out.println("");
+//            }
+//
+//        } catch (FileNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(RTF_generate.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (IOException ex) {
+//            java.util.logging.Logger.getLogger(RTF_generate.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+
         String fname = args[0];
         XyzFile xyzf = XyzFileParser.parse(new File(fname));
 
@@ -46,8 +65,8 @@ public final class RTF_generate extends RTF {
             String name = at.getAtomName();
             String hybr = at.getHybridisation();
             System.out.println(at.getAtomID() + " " + name + " " + hybr + " " + at.getX() + " " + at.getY() + " " + at.getZ());
-            System.out.print("Multiplicity dump: ");
-            HashMap<String, Integer> map = at.getMultiplicity();
+            System.out.print("Connectivity dump: ");
+            HashMap<String, Integer> map = at.getConnectivity();
             System.out.println(map.toString());
         }
 
@@ -59,7 +78,7 @@ public final class RTF_generate extends RTF {
             System.out.println("Bond between atoms " + a1.getAtomID() + ":" + a1.getAtomName() + " and " + a2.getAtomID() + ":" + a2.getAtomName() + " of length " + bd.getLength());
         }
 
-    }
+    }//end main
 
     public RTF_generate(XyzFile xyz) {
 
@@ -100,9 +119,8 @@ public final class RTF_generate extends RTF {
                     bndTypeList.add(new Bond(atmTypeList.get(i), atmTypeList.get(j), dist));
                     atmTypeList.get(i).addBondTo(j);
                     atmTypeList.get(j).addBondTo(i);
-                    /*TODO*/
-                    atmTypeList.get(i).addMultiplicity(atmTypeList.get(j).getAtomName());
-                    atmTypeList.get(j).addMultiplicity(atmTypeList.get(i).getAtomName());
+                    atmTypeList.get(i).addConnectivity(atmTypeList.get(j).getAtomName());
+                    atmTypeList.get(j).addConnectivity(atmTypeList.get(i).getAtomName());
                 }//end if
             }//for j
         }//for i
