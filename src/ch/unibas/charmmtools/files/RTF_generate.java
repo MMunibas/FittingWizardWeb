@@ -37,26 +37,10 @@ public final class RTF_generate extends RTF {
         // initialise logger
         BasicConfigurator.configure();
 
-//        try {
-//            CSVReader csv = new CSVReader(new FileReader("/home/hedin/progra/workflowopt/test/cov_rad.csv"));
-//            List<String[]> myEntries = csv.readAll();
-//            for (String[] dat : myEntries) {
-//                for (String st : dat) {
-//                    System.out.print(st + " ");
-//                }
-//                System.out.println("");
-//            }
-//
-//        } catch (FileNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(RTF_generate.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (IOException ex) {
-//            java.util.logging.Logger.getLogger(RTF_generate.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-
         String fname = args[0];
         XyzFile xyzf = XyzFileParser.parse(new File(fname));
 
-        RTF rtff = new RTF_generate(xyzf);
+        RTF rtff = new RTF_generate(xyzf, "cov_rad.csv");
 
         List<Atom> atmlist = rtff.getAtmTypeList();
 
@@ -95,8 +79,27 @@ public final class RTF_generate extends RTF {
         }
 
         this.natom = xyz.getAtomCount();
-
         this.generate();
+
+    }//ctor
+
+    public RTF_generate(XyzFile xyz, String csv) {
+
+        super(csv);
+
+        InputDataAtoms = xyz.getAtoms();
+        Iterator<XyzAtom> iterator = null;
+        iterator = (Iterator<XyzAtom>) InputDataAtoms.iterator();
+
+        while (iterator.hasNext()) {
+            XyzAtom it = iterator.next();
+            atmTypeList.add(new Atom(it.getIndex(), it.getName(),
+                    it.getX(), it.getY(), it.getZ()));
+        }
+
+        this.natom = xyz.getAtomCount();
+        this.generate();
+
     }//ctor
 
     private void generate() {
