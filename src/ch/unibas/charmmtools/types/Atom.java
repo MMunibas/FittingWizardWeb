@@ -302,6 +302,20 @@ public class Atom {
         this.hybridisation = hybridisation;
     }
 
+    /**
+     * @return the linkingList
+     */
+    public List<Integer> getLinkingList() {
+        return linkingList;
+    }
+
+    /**
+     * @param linkingList the linkingList to set
+     */
+    public void setLinkingList(List<Integer> linkingList) {
+        this.linkingList = linkingList;
+    }
+
     public void addConnectivity(String type) {
         if (this.connectivity.containsKey(type)) {
             this.connectivity.put(type, this.connectivity.get(type) + 1);
@@ -315,6 +329,20 @@ public class Atom {
      */
     public HashMap<String, Integer> getConnectivity() {
         return connectivity;
+    }
+
+    /**
+     * @return the rtfType
+     */
+    public String getRtfType() {
+        return rtfType;
+    }
+
+    /**
+     * @param rtfType the rtfType to set
+     */
+    public void setRtfType(String rtfType) {
+        this.rtfType = rtfType;
     }
 
 }//end class

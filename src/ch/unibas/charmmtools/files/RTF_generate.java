@@ -40,7 +40,7 @@ public final class RTF_generate extends RTF {
         String fname = args[0];
         XyzFile xyzf = XyzFileParser.parse(new File(fname));
 
-        RTF rtff = new RTF_generate(xyzf, "cov_rad.csv");
+        RTF rtff  = new RTF_generate(xyzf, "cov_rad.csv");
 
         List<Atom> atmlist = rtff.getAtmTypeList();
 
@@ -62,9 +62,9 @@ public final class RTF_generate extends RTF {
             System.out.println("Bond between atoms " + a1.getAtomID() + ":" + a1.getAtomName() + " and " + a2.getAtomID() + ":" + a2.getAtomName() + " of length " + bd.getLength());
         }
 
-    }//end main
+    }
 
-    public RTF_generate(XyzFile xyz) {
+    public RTF_generate(XyzFile xyz){
 
         super();
 
@@ -83,7 +83,7 @@ public final class RTF_generate extends RTF {
 
     }//ctor
 
-    public RTF_generate(XyzFile xyz, String csv) {
+    public RTF_generate(XyzFile xyz, String csv){
 
         super(csv);
 
@@ -102,9 +102,10 @@ public final class RTF_generate extends RTF {
 
     }//ctor
 
-    private void generate() {
+    private void generate(){
         this.gen_bonds();
         this.gen_hybridisation();
+        this.gen_type();
     }
 
     private void gen_bonds() {
@@ -147,16 +148,8 @@ public final class RTF_generate extends RTF {
                 case "O":
                     it.setHybridisation(O_hybridList.get(it.getNumberOfBonds()));
                     break;
-//                case "N":
-//                    if (it.getNumberOfBonds() == 3) {
-//                        if () {
-//
-//                        } else {
-//                            it.setHybridisation(N_hybridList.get(it.getNumberOfBonds()));
-//                        }
-//                    }
-//                    break;
                 default:
+                    /* TODO */
                     break;
             }//end of switch
         }//end of for
@@ -180,10 +173,48 @@ public final class RTF_generate extends RTF {
 
     /**
      * depending on hybridisation of a given atom find the type used for forcefield, i.e. CT2, CT3, CA, ...
+     * it is called 3 times consecutively
      */
-    private void gen_type() {
+    private void gen_type(){
 
-    }
+        int connect = -1;
+
+        for (Atom at : this.atmTypeList) {
+            if (at.getAtomName().equals("C")) {
+                switch (at.getHybridisation()) {
+                    case "sp3":
+                        connect = at.getConnectivity().getOrDefault("H", -1);
+                        if (connect == 3 || connect == 4) {
+                            at.setRtfType("CT3");
+                        } else if (connect == 2) {
+                            at.setRtfType("CT2");
+                        } else {
+                            at.setRtfType("CT1");
+                        }
+                        break;
+                    case "sp2":
+                        connect = at.getConnectivity().getOrDefault("C", -1);
+                        if (connect == 3) {
+                            List<Integer> lst = at.getLinkingList();
+                            // with the following code if only one hybridation of a linked atom is not sp2 the isSP2 becomes false
+                            boolean isSP2 = true;
+                            for (int test : lst) {
+                                isSP2 = isSP2 && atmTypeList.get(test).getHybridisation().equals("sp2");
+                            }
+                            if (isSP2) {
+                                at.setRtfType("CA");
+                            }
+                        }//connect ==3
+                        break;
+                    default:
+                        /* TODO */
+//                        throw new Exception("Problem with hybridisation '" + at.getHybridisation() + "' of atom " + at.getAtomID() + ":" + at.getAtomName());
+                        break;
+                }//switch on hybridisation
+            }//loop on C atoms
+        }//first loop on all atoms
+
+    }//end gen_type()
 
 
 

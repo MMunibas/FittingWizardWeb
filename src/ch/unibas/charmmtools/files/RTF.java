@@ -81,6 +81,7 @@ public abstract class RTF {
     }//ctor
 
     public RTF(String csvfile) {
+        this.covRadList = new HashMap<String, Double>();
         readCovRad(csvfile);
     }//ctor
 
@@ -94,8 +95,8 @@ public abstract class RTF {
             //ignore first line
             dat = csv.readNext();
 
+            //iterate over csv file to get covalence radii
             while ((dat = csv.readNext()) != null) {
-//                System.out.println(dat[0] + " " + dat[1] + " " + Double.parseDouble(dat[2]));
                 this.covRadList.put(dat[1], Double.parseDouble(dat[2]));
             }
    
