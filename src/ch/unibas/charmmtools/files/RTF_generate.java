@@ -44,22 +44,29 @@ public final class RTF_generate extends RTF {
 
         List<Atom> atmlist = rtff.getAtmTypeList();
 
-        System.out.println("Atoms list");
+//        System.out.println("Atoms list");
+//        for (Atom at : atmlist) {
+//            String name = at.getAtomName();
+//            String hybr = at.getHybridisation();
+//            System.out.println(at.getAtomID() + " " + name + " " + hybr + " " + at.getX() + " " + at.getY() + " " + at.getZ());
+//            System.out.print("Connectivity dump: ");
+//            HashMap<String, Integer> map = at.getConnectivity();
+//            System.out.println(map.toString());
+//        }
+//
+//        List<Bond> bndlist = rtff.getBndTypeList();
+//        System.out.println("Bonds list :");
+//        for (Bond bd : bndlist) {
+//            Atom a1 = bd.getA1();
+//            Atom a2 = bd.getA2();
+//            System.out.println("Bond between atoms " + a1.getAtomID() + ":" + a1.getAtomName() + " and " + a2.getAtomID() + ":" + a2.getAtomName() + " of length " + bd.getLength());
+//        }
+        System.out.println("RTF types");
         for (Atom at : atmlist) {
             String name = at.getAtomName();
             String hybr = at.getHybridisation();
-            System.out.println(at.getAtomID() + " " + name + " " + hybr + " " + at.getX() + " " + at.getY() + " " + at.getZ());
-            System.out.print("Connectivity dump: ");
-            HashMap<String, Integer> map = at.getConnectivity();
-            System.out.println(map.toString());
-        }
-
-        List<Bond> bndlist = rtff.getBndTypeList();
-        System.out.println("Bonds list :");
-        for (Bond bd : bndlist) {
-            Atom a1 = bd.getA1();
-            Atom a2 = bd.getA2();
-            System.out.println("Bond between atoms " + a1.getAtomID() + ":" + a1.getAtomName() + " and " + a2.getAtomID() + ":" + a2.getAtomName() + " of length " + bd.getLength());
+            String type = at.getRtfType();
+            System.out.println(at.getAtomID() + ":" + name + " has bybridisation " + hybr + " and has rtftype  : " + type);
         }
 
     }
@@ -181,7 +188,9 @@ public final class RTF_generate extends RTF {
 
         for (Atom at : this.atmTypeList) {
             if (at.getAtomName().equals("C")) {
-                switch (at.getHybridisation()) {
+                String hybr = at.getHybridisation();
+                List<Integer> lst = at.getLinkingList();
+                switch (hybr) {
                     case "sp3":
                         connect = at.getConnectivity().getOrDefault("H", -1);
                         if (connect == 3 || connect == 4) {
@@ -194,17 +203,44 @@ public final class RTF_generate extends RTF {
                         break;
                     case "sp2":
                         connect = at.getConnectivity().getOrDefault("C", -1);
+                        if (lst.size() > 3) {
+                            throw new IndexOutOfBoundsException("LinkingList for a C SP2 atom has too much elements (more than 3)!");
+                        }
+                        String h1 = atmTypeList.get(lst.get(0)).getHybridisation();
+                        String h2 = atmTypeList.get(lst.get(1)).getHybridisation();
+                        String h3 = atmTypeList.get(lst.get(2)).getHybridisation();
                         if (connect == 3) {
-                            List<Integer> lst = at.getLinkingList();
-                            // with the following code if only one hybridation of a linked atom is not sp2 the isSP2 becomes false
-                            boolean isSP2 = true;
-                            for (int test : lst) {
-                                isSP2 = isSP2 && atmTypeList.get(test).getHybridisation().equals("sp2");
-                            }
-                            if (isSP2) {
+                            if (h1.equals("sp2") && h2.equals("sp2") && h3.equals("sp2")) {
                                 at.setRtfType("CA");
+                            } else if ((h1.equals("sp2") && h2.equals("sp2"))
+                                    || (h1.equals("sp2") && h3.equals("sp2"))
+                                    || (h2.equals("sp2") && h3.equals("sp2"))) {
+                                at.setRtfType("CA");
+                            } else if ((h1.equals("sp3") && h2.equals("sp3"))
+                                    || (h1.equals("sp3") && h3.equals("sp3"))
+                                    || (h2.equals("sp3") && h3.equals("sp3"))) {
+                                at.setRtfType("CE1");
                             }
-                        }//connect ==3
+                        }//connect==3
+                        else if (connect == 2) {
+                            if ((h1.equals("sp2") && h2.equals("sp2"))
+                                    || (h1.equals("sp2") && h3.equals("sp2"))
+                                    || (h2.equals("sp2") && h3.equals("sp2"))) {
+                                at.setRtfType("CA");
+                            } else if ((h1.equals("sp3") && h2.equals("sp3"))
+                                    || (h1.equals("sp3") && h3.equals("sp3"))
+                                    || (h2.equals("sp3") && h3.equals("sp3"))) {
+                                if (at.getConnectivity().getOrDefault("O", -1) == 1
+                                        || at.getConnectivity().getOrDefault("N", -1) == 1) {
+                                    at.setRtfType("C");
+                                }
+                            } else if (at.getConnectivity().getOrDefault("H", -1) == 1) {
+                                at.setRtfType("CE1");
+                            } else if (at.getConnectivity().getOrDefault("H", -1) == 1
+                                    || at.getConnectivity().getOrDefault("N", -1) == 1) {
+                                at.setRtfType("C");
+                            }
+                        }//connect==2
                         break;
                     default:
                         /* TODO */

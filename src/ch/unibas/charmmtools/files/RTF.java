@@ -35,7 +35,7 @@ public abstract class RTF {
     protected int natom = 0;
     protected int nbonds = 0;
 
-    protected HashMap<String, Double> covRadList;
+    protected HashMap<String, Double> covRadList = null;
 
     protected HashMap<Integer, String> C_hybridList = new HashMap<Integer, String>() {
         {

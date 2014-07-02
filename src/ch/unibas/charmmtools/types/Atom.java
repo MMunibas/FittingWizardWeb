@@ -292,7 +292,7 @@ public class Atom {
      * @return the hybridisation
      */
     public String getHybridisation() {
-        return hybridisation;
+        return ((hybridisation == null) ? "UNK" : hybridisation);
     }
 
     /**
@@ -335,7 +335,7 @@ public class Atom {
      * @return the rtfType
      */
     public String getRtfType() {
-        return rtfType;
+        return ((rtfType == null) ? "UNK" : rtfType);
     }
 
     /**
