@@ -195,7 +195,7 @@ if ($atom[$i] eq "C") {
 }
 
 
-
+#second loop on atoms for "O"
 for ($i=1;$i<$num+1;$i++) {
 
 if ($atom[$i] eq "O") {

@@ -186,6 +186,7 @@ public final class RTF_generate extends RTF {
 
         int connect = -1;
 
+        //first loop on all atoms to get type of C atoms
         for (Atom at : this.atmTypeList) {
             if (at.getAtomName().equals("C")) {
                 String hybr = at.getHybridisation();
@@ -240,15 +241,62 @@ public final class RTF_generate extends RTF {
                                     || at.getConnectivity().getOrDefault("N", -1) == 1) {
                                 at.setRtfType("C");
                             }
+                            int idx1 = at.getLinkingList().get(0);
+                            int idx2 = at.getLinkingList().get(1);
+                            int idx3 = at.getLinkingList().get(2);
+                            if (at.getRtfType().equals("CA")
+                                    && (atmTypeList.get(idx1).getRtfType().substring(0, 2).equals("NR")
+                                    || atmTypeList.get(idx2).getRtfType().substring(0, 2).equals("NR")
+                                    || atmTypeList.get(idx3).getRtfType().substring(0, 2).equals("NR"))) {
+                                at.setRtfType("CPH1");
+                            }
                         }//connect==2
+                        else if (connect == 1) {
+                            if (at.getConnectivity().getOrDefault("N", -1) == 1
+                                    && at.getConnectivity().getOrDefault("O", -1) == 1) {
+                                at.setRtfType("C");
+                            } else if (at.getConnectivity().getOrDefault("O", -1) == 2) {
+                                at.setRtfType("CC");
+                            } else if (at.getConnectivity().getOrDefault("N", -1) == 1
+                                    && at.getConnectivity().getOrDefault("H", -1) == 1) {
+                                int idx1 = at.getLinkingList().get(0);
+                                int idx2 = at.getLinkingList().get(1);
+                                int idx3 = at.getLinkingList().get(2);
+                                if (atmTypeList.get(idx1).getRtfType().equals("CA")
+                                        || atmTypeList.get(idx2).getRtfType().equals("CA")
+                                        || atmTypeList.get(idx3).getRtfType().equals("CA")) {
+                                    at.setRtfType("CPH2");
+                                } else {
+                                    at.setRtfType("CA");
+                                }
+                            } else if (at.getConnectivity().getOrDefault("H", -1) == 2) {
+                                at.setRtfType("CE2");
+                            }
+                        }//connect==1
+                        else if (at.getConnectivity().getOrDefault("N", -1) == 3) {
+                            at.setRtfType("C");
+                        } else if (at.getConnectivity().getOrDefault("N", -1) == 2
+                                || at.getConnectivity().getOrDefault("O", -1) == 1) {
+                            at.setRtfType("C");
+                        } else if (at.getConnectivity().getOrDefault("N", -1) == 2
+                                || at.getConnectivity().getOrDefault("H", -1) == 1) {
+                            at.setRtfType("CPH2");
+                        }
                         break;
                     default:
-                        /* TODO */
-//                        throw new Exception("Problem with hybridisation '" + at.getHybridisation() + "' of atom " + at.getAtomID() + ":" + at.getAtomName());
                         break;
                 }//switch on hybridisation
             }//loop on C atoms
         }//first loop on all atoms
+
+        //second loop on all atoms for O
+        for (Atom at : this.atmTypeList) {
+            if (at.getAtomName().equals("O")) {
+                String hybr = at.getHybridisation();
+                List<Integer> lst = at.getLinkingList();
+                /* TODO */
+            }//loop on O atoms
+        }//second loop on all atoms
 
     }//end gen_type()
 

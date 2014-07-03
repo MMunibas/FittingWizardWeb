@@ -23,10 +23,10 @@ public class Atom {
      * data from the PSF
      */
     private int atomID = 0;
-    private String segName = null;
+    private String segName = "UNK";
     private int resID = 0;
-    private String resName = null;
-    private String atomName = null;
+    private String resName = "UNK";
+    private String atomName = "UNK";
     private int typeID = 0;
     private double charge = 0.0;
     private double mass = 0.0;
@@ -45,7 +45,7 @@ public class Atom {
     /**
      * Represents the hybridisation state of this atom : sp3, sp2, ...
      */
-    private String hybridisation = null;
+    private String hybridisation = "";
 
     /**
      * List of AtomID to which this atom is linked
@@ -60,7 +60,7 @@ public class Atom {
     /**
      * atom type for RTF file (CT2, CT3, CA, ...)
      */
-    private String rtfType = null;
+    private String rtfType = "";
 
     public Atom(int _id) {
         this.atomID = _id;
@@ -292,7 +292,8 @@ public class Atom {
      * @return the hybridisation
      */
     public String getHybridisation() {
-        return ((hybridisation == null) ? "UNK" : hybridisation);
+        //return ((hybridisation == null) ? "UNK" : hybridisation);
+        return hybridisation;
     }
 
     /**
@@ -335,7 +336,8 @@ public class Atom {
      * @return the rtfType
      */
     public String getRtfType() {
-        return ((rtfType == null) ? "UNK" : rtfType);
+        //return ((rtfType == null) ? "UNK" : rtfType);
+        return rtfType;
     }
 
     /**
