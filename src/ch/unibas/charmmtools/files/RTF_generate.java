@@ -9,22 +9,15 @@
 
 package ch.unibas.charmmtools.files;
 
-import au.com.bytecode.opencsv.CSVReader;
 import ch.unibas.charmmtools.types.Atom;
 import ch.unibas.charmmtools.types.Bond;
 import ch.unibas.fittingwizard.application.xyz.XyzAtom;
 import ch.unibas.fittingwizard.application.xyz.XyzFile;
 import ch.unibas.fittingwizard.application.xyz.XyzFileParser;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
 import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
 
 /**
  *
@@ -289,14 +282,25 @@ public final class RTF_generate extends RTF {
             }//loop on C atoms
         }//first loop on all atoms
 
-        //second loop on all atoms for O
-        for (Atom at : this.atmTypeList) {
-            if (at.getAtomName().equals("O")) {
-                String hybr = at.getHybridisation();
-                List<Integer> lst = at.getLinkingList();
-                /* TODO */
-            }//loop on O atoms
-        }//second loop on all atoms
+//        //second loop on all atoms for O
+//        for (Atom at : this.atmTypeList) {
+//            if (at.getAtomName().equals("O")) {
+//                String hybr = at.getHybridisation();
+//                List<Integer> lst = at.getLinkingList();
+//                /* TODO */
+//                if (at.getNumberOfBonds() == 1) {
+//                    int idx1 = at.getLinkingList().get(0);
+//                    if (atmTypeList.get(idx1).getRtfType().equals("C")) {
+//                        at.setRtfType("O");
+//                    } else if () {
+//                        int iidx1 = at.getLinkingList().get(0);
+//                    }
+//                }//end getNumberOfBonds() == 1)
+//                else if (at.getNumberOfBonds() == 2) {
+//
+//                }
+//            }//loop on O atoms
+//        }//second loop on all atoms
 
     }//end gen_type()
 

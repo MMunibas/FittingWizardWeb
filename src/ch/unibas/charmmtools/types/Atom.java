@@ -45,7 +45,7 @@ public class Atom {
     /**
      * Represents the hybridisation state of this atom : sp3, sp2, ...
      */
-    private String hybridisation = "";
+    private String hybridisation = "UNK";
 
     /**
      * List of AtomID to which this atom is linked
@@ -60,7 +60,7 @@ public class Atom {
     /**
      * atom type for RTF file (CT2, CT3, CA, ...)
      */
-    private String rtfType = "";
+    private String rtfType = "UNK";
 
     public Atom(int _id) {
         this.atomID = _id;
@@ -292,8 +292,8 @@ public class Atom {
      * @return the hybridisation
      */
     public String getHybridisation() {
-        //return ((hybridisation == null) ? "UNK" : hybridisation);
-        return hybridisation;
+        return ((hybridisation == null) ? "UNK" : hybridisation);
+//        return hybridisation;
     }
 
     /**
