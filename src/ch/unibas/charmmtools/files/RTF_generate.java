@@ -282,25 +282,25 @@ public final class RTF_generate extends RTF {
             }//loop on C atoms
         }//first loop on all atoms
 
-//        //second loop on all atoms for O
-//        for (Atom at : this.atmTypeList) {
-//            if (at.getAtomName().equals("O")) {
-//                String hybr = at.getHybridisation();
-//                List<Integer> lst = at.getLinkingList();
-//                /* TODO */
-//                if (at.getNumberOfBonds() == 1) {
-//                    int idx1 = at.getLinkingList().get(0);
-//                    if (atmTypeList.get(idx1).getRtfType().equals("C")) {
-//                        at.setRtfType("O");
-//                    } else if () {
-//                        int iidx1 = at.getLinkingList().get(0);
-//                    }
-//                }//end getNumberOfBonds() == 1)
-//                else if (at.getNumberOfBonds() == 2) {
-//
-//                }
-//            }//loop on O atoms
-//        }//second loop on all atoms
+        //second loop on all atoms for O
+        for (Atom at : this.atmTypeList) {
+            if (at.getAtomName().equals("O")) {
+                //String hybr = at.getHybridisation();
+                //List<Integer> lst = at.getLinkingList();
+                /* TODO */
+                if (at.getNumberOfBonds() == 1) {
+                    int idx1 = at.getLinkingList().get(0);
+                    int idx2 = atmTypeList.get(idx1).getAtomID();
+                    if (atmTypeList.get(idx1).getRtfType().equals("C")) {
+                        at.setRtfType("O");
+                    } else if () {
+                    }
+                }//end getNumberOfBonds() == 1)
+                else if (at.getNumberOfBonds() == 2) {
+
+                }
+            }//loop on O atoms
+        }//second loop on all atoms
 
     }//end gen_type()
 
