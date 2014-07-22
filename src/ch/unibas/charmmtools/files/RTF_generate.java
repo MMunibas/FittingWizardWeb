@@ -15,6 +15,7 @@ import ch.unibas.fittingwizard.application.xyz.XyzAtom;
 import ch.unibas.fittingwizard.application.xyz.XyzFile;
 import ch.unibas.fittingwizard.application.xyz.XyzFileParser;
 import java.io.File;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.log4j.BasicConfigurator;
@@ -54,6 +55,7 @@ public final class RTF_generate extends RTF {
 //            Atom a2 = bd.getA2();
 //            System.out.println("Bond between atoms " + a1.getAtomID() + ":" + a1.getAtomName() + " and " + a2.getAtomID() + ":" + a2.getAtomName() + " of length " + bd.getLength());
 //        }
+
         System.out.println("RTF types");
         for (Atom at : atmlist) {
             String name = at.getAtomName();
@@ -105,6 +107,9 @@ public final class RTF_generate extends RTF {
     private void generate(){
         this.gen_bonds();
         this.gen_hybridisation();
+        // 3 calls to gen_type are required
+        this.gen_type();
+        this.gen_type();
         this.gen_type();
     }
 
@@ -237,11 +242,13 @@ public final class RTF_generate extends RTF {
                             int idx1 = at.getLinkingList().get(0);
                             int idx2 = at.getLinkingList().get(1);
                             int idx3 = at.getLinkingList().get(2);
-                            if (at.getRtfType().equals("CA")
-                                    && (atmTypeList.get(idx1).getRtfType().substring(0, 2).equals("NR")
-                                    || atmTypeList.get(idx2).getRtfType().substring(0, 2).equals("NR")
-                                    || atmTypeList.get(idx3).getRtfType().substring(0, 2).equals("NR"))) {
-                                at.setRtfType("CPH1");
+                            if (at.getRtfType().equals("CA")) {
+                                String s1 = atmTypeList.get(idx1).getRtfType().substring(0, 2);
+                                String s2 = atmTypeList.get(idx2).getRtfType().substring(0, 2);
+                                String s3 = atmTypeList.get(idx3).getRtfType().substring(0, 2);
+                                if (s1.equals("NR") || s2.equals("NR") || s3.equals("NR")) {
+                                    at.setRtfType("CPH1");
+                                }
                             }
                         }//connect==2
                         else if (connect == 1) {
@@ -282,25 +289,28 @@ public final class RTF_generate extends RTF {
             }//loop on C atoms
         }//first loop on all atoms
 
-        //second loop on all atoms for O
-        for (Atom at : this.atmTypeList) {
-            if (at.getAtomName().equals("O")) {
-                //String hybr = at.getHybridisation();
-                //List<Integer> lst = at.getLinkingList();
-                /* TODO */
-                if (at.getNumberOfBonds() == 1) {
-                    int idx1 = at.getLinkingList().get(0);
-                    int idx2 = atmTypeList.get(idx1).getAtomID();
-                    if (atmTypeList.get(idx1).getRtfType().equals("C")) {
-                        at.setRtfType("O");
-                    } else if () {
-                    }
-                }//end getNumberOfBonds() == 1)
-                else if (at.getNumberOfBonds() == 2) {
-
-                }
-            }//loop on O atoms
-        }//second loop on all atoms
+//        //second loop on all atoms for O
+//        for (Atom at : this.atmTypeList) {
+//            if (at.getAtomName().equals("O")) {
+//                //String hybr = at.getHybridisation();
+//                //List<Integer> lst = at.getLinkingList();
+//                /* TODO */
+//                if (at.getNumberOfBonds() == 1) {
+//                    int idx1 = at.getLinkingList().get(0);//$link[$i][1]
+//                    int idx2 = at.getLinkingList().get(1);//$link[$i][2]
+//                    int idx3 = at.getLinkingList().get(2);//$link[$i][3]
+//                    Atom iat1 = atmTypeList.get(idx1);
+//                    boolean check1 = iat1.getRtfType().equals("C");//if ($type[$link[$i][1]] eq "C")
+//                    if (check1) {
+//                        at.setRtfType("O");
+//                    } else if (false) {
+//                    }
+//                }//end getNumberOfBonds() == 1)
+//                else if (at.getNumberOfBonds() == 2) {
+//
+//                }
+//            }//loop on O atoms
+//        }//second loop on all atoms
 
     }//end gen_type()
 

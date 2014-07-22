@@ -48,9 +48,9 @@ public class Atom {
     private String hybridisation = "UNK";
 
     /**
-     * List of AtomID to which this atom is linked
+     * List of AtomID to which this atom is linked ; at least of size 3
      */
-    private List<Integer> linkingList = new ArrayList<>();
+    private List<Integer> linkingList = new ArrayList<>(3);
 
     /**
      * For a given atom, stores to which atom type this atom is linked
