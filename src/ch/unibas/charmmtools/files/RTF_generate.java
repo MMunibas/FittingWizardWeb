@@ -108,9 +108,13 @@ public final class RTF_generate extends RTF {
         this.gen_bonds();
         this.gen_hybridisation();
         // 3 calls to gen_type are required
+        System.out.println("Run 1 ...");
         this.gen_type();
+        System.out.println("Done\nRun 2 ...");
         this.gen_type();
+        System.out.println("Done\nRun 3 ...");
         this.gen_type();
+        System.out.println("Done");
     }
 
     private void gen_bonds() {
@@ -243,10 +247,13 @@ public final class RTF_generate extends RTF {
                             int idx2 = at.getLinkingList().get(1);
                             int idx3 = at.getLinkingList().get(2);
                             if (at.getRtfType().equals("CA")) {
-                                String s1 = atmTypeList.get(idx1).getRtfType().substring(0, 2);
-                                String s2 = atmTypeList.get(idx2).getRtfType().substring(0, 2);
-                                String s3 = atmTypeList.get(idx3).getRtfType().substring(0, 2);
-                                if (s1.equals("NR") || s2.equals("NR") || s3.equals("NR")) {
+                                String s1 = atmTypeList.get(idx1).getRtfType();
+                                String s2 = atmTypeList.get(idx2).getRtfType();
+                                String s3 = atmTypeList.get(idx3).getRtfType();
+//                                System.out.println(idx1 + " " + idx2 + " " + idx3);
+//                                System.out.println(s1 + " " + s2 + " " + s3);
+//                                System.out.flush();
+                                if (s1.contains("NR") || s2.contains("NR") || s3.contains("NR")) {
                                     at.setRtfType("CPH1");
                                 }
                             }
@@ -289,28 +296,28 @@ public final class RTF_generate extends RTF {
             }//loop on C atoms
         }//first loop on all atoms
 
-//        //second loop on all atoms for O
-//        for (Atom at : this.atmTypeList) {
-//            if (at.getAtomName().equals("O")) {
-//                //String hybr = at.getHybridisation();
-//                //List<Integer> lst = at.getLinkingList();
-//                /* TODO */
-//                if (at.getNumberOfBonds() == 1) {
-//                    int idx1 = at.getLinkingList().get(0);//$link[$i][1]
-//                    int idx2 = at.getLinkingList().get(1);//$link[$i][2]
-//                    int idx3 = at.getLinkingList().get(2);//$link[$i][3]
-//                    Atom iat1 = atmTypeList.get(idx1);
-//                    boolean check1 = iat1.getRtfType().equals("C");//if ($type[$link[$i][1]] eq "C")
-//                    if (check1) {
-//                        at.setRtfType("O");
-//                    } else if (false) {
-//                    }
-//                }//end getNumberOfBonds() == 1)
-//                else if (at.getNumberOfBonds() == 2) {
-//
-//                }
-//            }//loop on O atoms
-//        }//second loop on all atoms
+        //second loop on all atoms for O
+        for (Atom at : this.atmTypeList) {
+            if (at.getAtomName().equals("O")) {
+                //String hybr = at.getHybridisation();
+                //List<Integer> lst = at.getLinkingList();
+                /* TODO */
+                if (at.getNumberOfBonds() == 1) {
+                    int idx1 = at.getLinkingList().get(0);//$link[$i][1]
+                    int idx2 = at.getLinkingList().get(1);//$link[$i][2]
+                    int idx3 = at.getLinkingList().get(2);//$link[$i][3]
+                    Atom iat1 = atmTypeList.get(idx1);
+                    boolean check1 = iat1.getRtfType().equals("C");//if ($type[$link[$i][1]] eq "C")
+                    if (check1) {
+                        at.setRtfType("O");
+                    } else if (false) {
+                    }
+                }//end getNumberOfBonds() == 1)
+                else if (at.getNumberOfBonds() == 2) {
+
+                }
+            }//loop on O atoms
+        }//second loop on all atoms
 
     }//end gen_type()
 
