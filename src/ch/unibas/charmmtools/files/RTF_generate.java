@@ -195,7 +195,7 @@ public final class RTF_generate extends RTF {
                 List<Integer> lst = at.getLinkingList();
                 switch (hybr) {
                     case "sp3":
-                        connect = at.getConnectivity().getOrDefault("H", -1);
+                        connect = at.getConnectivity().getOrDefault("H", -1);//$bound{"H"}[$i]
                         if (connect == 3 || connect == 4) {
                             at.setRtfType("CT3");
                         } else if (connect == 2) {
@@ -205,7 +205,7 @@ public final class RTF_generate extends RTF {
                         }
                         break;
                     case "sp2":
-                        connect = at.getConnectivity().getOrDefault("C", -1);
+                        connect = at.getConnectivity().getOrDefault("C", -1);//$bound{"C"}[$i]
                         if (lst.size() > 3) {
                             throw new IndexOutOfBoundsException("LinkingList for a C SP2 atom has too much elements (more than 3)!");
                         }
@@ -299,25 +299,52 @@ public final class RTF_generate extends RTF {
         //second loop on all atoms for O
         for (Atom at : this.atmTypeList) {
             if (at.getAtomName().equals("O")) {
-                //String hybr = at.getHybridisation();
-                //List<Integer> lst = at.getLinkingList();
-                /* TODO */
                 if (at.getNumberOfBonds() == 1) {
                     int idx1 = at.getLinkingList().get(0);//$link[$i][1]
-                    int idx2 = at.getLinkingList().get(1);//$link[$i][2]
-                    int idx3 = at.getLinkingList().get(2);//$link[$i][3]
-                    Atom iat1 = atmTypeList.get(idx1);
-                    boolean check1 = iat1.getRtfType().equals("C");//if ($type[$link[$i][1]] eq "C")
-                    if (check1) {
+                    int iidx1 = atmTypeList.get(idx1).getLinkingList().get(0);//$link[$link[$i][1]][1]
+//                    int idx2 = at.getLinkingList().get(1);//$link[$i][2]
+                    int iidx2 = atmTypeList.get(idx1).getLinkingList().get(1);//$link[$link[$i][1]][2]
+//                    int idx3 = at.getLinkingList().get(2);//$link[$i][3]
+                    int iidx3 = atmTypeList.get(idx1).getLinkingList().get(2);//$link[$link[$i][1]][3]
+                    if (atmTypeList.get(idx1).getRtfType().equals("C")) {
                         at.setRtfType("O");
-                    } else if (false) {
+                    } else if (atmTypeList.get(iidx1).getRtfType().equals("OH1")
+                            || atmTypeList.get(iidx2).getRtfType().equals("OH1")
+                            || atmTypeList.get(iidx3).getRtfType().equals("OH1")) {
+                        at.setRtfType("OB");
+                    } else if (atmTypeList.get(iidx1).getRtfType().equals("OS")
+                            || atmTypeList.get(iidx2).getRtfType().equals("OS")
+                            || atmTypeList.get(iidx3).getRtfType().equals("OS")) {
+                        at.setRtfType("OB");
+                    } else if (atmTypeList.get(idx1).getRtfType().equals("CC")) {
+                        at.setRtfType("OC");
                     }
-                }//end getNumberOfBonds() == 1)
+                }//end getNumberOfBonds() == 1
                 else if (at.getNumberOfBonds() == 2) {
+                    int idx1 = at.getLinkingList().get(0);//$link[$i][1]
+                    int idx2 = at.getLinkingList().get(1);//$link[$i][2]
+                    connect = at.getConnectivity().getOrDefault("H", -1);//$bound{"H"}[$i]
+                    if (connect == 2) {
+                        at.setRtfType("OT");
+                    } else if (connect == 1) {
+                        if (atmTypeList.get(idx1).getRtfType().equals("CC")
+                                || atmTypeList.get(idx2).getRtfType().equals("CC")) {
+                            at.setRtfType("OH1");
+                        } else if (!atmTypeList.get(idx1).getRtfType().equals("CC") || !atmTypeList.get(idx2).getRtfType().equals("CC")) {
+                            at.setRtfType("OH1");
+                        }
+                    } else if (at.getConnectivity().getOrDefault("C", -1) == 2) {
+                        if (atmTypeList.get(idx1).getRtfType().equals("CC")
+                                || atmTypeList.get(idx2).getRtfType().equals("CC")) {
+                            at.setRtfType("OS");
+                        }
+                    }
+                }//end getNumberOfBonds() == 2
 
-                }
             }//loop on O atoms
         }//second loop on all atoms
+
+        /* TODO : on N */
 
     }//end gen_type()
 

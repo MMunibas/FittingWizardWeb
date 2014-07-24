@@ -208,9 +208,9 @@ if ($atom[$i] eq "O") {
     elsif ($num_link[$i]==2) {
     if ($bound{"H"}[$i]==2) { $type[$i]="OT"; }
     elsif ($bound{"H"}[$i]==1) {
-    if ($type[$link[$i][1]] eq "CC" or $type[$link[$i][2]] eq "CC") { $type[$i]="OH1"; }
-    elsif ($type[$link[$i][1]] ne "CC" and $type[$link[$i][2]] ne "CC") { $type[$i]="OH1"; }
-    else { $type[$i]="UNK"; }
+        if ($type[$link[$i][1]] eq "CC" or $type[$link[$i][2]] eq "CC") { $type[$i]="OH1"; }
+        elsif ($type[$link[$i][1]] ne "CC" and $type[$link[$i][2]] ne "CC") { $type[$i]="OH1"; }
+        else { $type[$i]="UNK"; }
     }
     elsif ($bound{"C"}[$i]==2) { 
     if ($type[$link[$i][1]] eq "CC" or $type[$link[$i][2]] eq "CC") { $type[$i]="OS"; }
