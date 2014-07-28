@@ -188,7 +188,7 @@ public final class RTF_generate extends RTF {
 
         int connect = 0;
 
-        //first loop on all atoms to get type of C atoms
+        //loop on all atoms to get type of C atoms
         for (Atom at : this.atmTypeList) {
             if (at.getAtomName().equals("C")) {
                 String hybr = at.getHybridisation();
@@ -294,9 +294,9 @@ public final class RTF_generate extends RTF {
                         break;
                 }//switch on hybridisation
             }//loop on C atoms
-        }//first loop on all atoms
+        }//loop on all atoms
 
-        //second loop on all atoms for O
+        //loop on all atoms for O
         for (Atom at : this.atmTypeList) {
             if (at.getAtomName().equals("O")) {
                 if (at.getNumberOfBonds() == 1) {
@@ -342,9 +342,9 @@ public final class RTF_generate extends RTF {
                 }//end getNumberOfBonds() == 2
 
             }//loop on O atoms
-        }//second loop on all atoms
+        }//loop on all atoms
 
-        //third loop on all atoms for N
+        //loop on all atoms for N
         for (Atom at : this.atmTypeList) {
             if (at.getAtomName().equals("N")) {
                 String hybr = at.getHybridisation();
@@ -405,9 +405,28 @@ public final class RTF_generate extends RTF {
                         break;
                 }
             }//loop on N atoms
-        }//third loop on all atoms
+        }//loop on all atoms
 
-        /*TODO for S atoms*/
+        //loop on all atoms for S
+        for (Atom at : this.atmTypeList) {
+            if (at.getAtomName().equals("S")) {
+
+                if (at.getConnectivity().getOrDefault("C", 0) == 2) {
+                    at.setRtfType("S");
+                }
+
+                if ((at.getConnectivity().getOrDefault("C", 0) == 1) && (at.getConnectivity().getOrDefault("H", 0) == 1)) {
+                    at.setRtfType("S");
+                }
+
+                if ((at.getConnectivity().getOrDefault("C", 0) == 1) && (at.getConnectivity().getOrDefault("S", 0) == 1)) {
+                    at.setRtfType("SM");
+                }
+
+            }//loop on S atoms
+        }//loop on all atoms
+
+        /* TODO : work on H atoms */
     
     }//end gen_type()
 
