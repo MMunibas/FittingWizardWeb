@@ -186,7 +186,7 @@ public final class RTF_generate extends RTF {
      */
     private void gen_type(){
 
-        int connect = -1;
+        int connect = 0;
 
         //first loop on all atoms to get type of C atoms
         for (Atom at : this.atmTypeList) {
@@ -195,7 +195,7 @@ public final class RTF_generate extends RTF {
                 List<Integer> lst = at.getLinkingList();
                 switch (hybr) {
                     case "sp3":
-                        connect = at.getConnectivity().getOrDefault("H", -1);//$bound{"H"}[$i]
+                        connect = at.getConnectivity().getOrDefault("H", 0);//$bound{"H"}[$i]
                         if (connect == 3 || connect == 4) {
                             at.setRtfType("CT3");
                         } else if (connect == 2) {
@@ -205,7 +205,7 @@ public final class RTF_generate extends RTF {
                         }
                         break;
                     case "sp2":
-                        connect = at.getConnectivity().getOrDefault("C", -1);//$bound{"C"}[$i]
+                        connect = at.getConnectivity().getOrDefault("C", 0);//$bound{"C"}[$i]
                         if (lst.size() > 3) {
                             throw new IndexOutOfBoundsException("LinkingList for a C SP2 atom has too much elements (more than 3)!");
                         }
@@ -233,14 +233,14 @@ public final class RTF_generate extends RTF {
                             } else if ((h1.equals("sp3") && h2.equals("sp3"))
                                     || (h1.equals("sp3") && h3.equals("sp3"))
                                     || (h2.equals("sp3") && h3.equals("sp3"))) {
-                                if (at.getConnectivity().getOrDefault("O", -1) == 1
-                                        || at.getConnectivity().getOrDefault("N", -1) == 1) {
+                                if (at.getConnectivity().getOrDefault("O", 0) == 1
+                                        || at.getConnectivity().getOrDefault("N", 0) == 1) {
                                     at.setRtfType("C");
                                 }
-                            } else if (at.getConnectivity().getOrDefault("H", -1) == 1) {
+                            } else if (at.getConnectivity().getOrDefault("H", 0) == 1) {
                                 at.setRtfType("CE1");
-                            } else if (at.getConnectivity().getOrDefault("H", -1) == 1
-                                    || at.getConnectivity().getOrDefault("N", -1) == 1) {
+                            } else if (at.getConnectivity().getOrDefault("H", 0) == 1
+                                    || at.getConnectivity().getOrDefault("N", 0) == 1) {
                                 at.setRtfType("C");
                             }
                             int idx1 = at.getLinkingList().get(0);
@@ -259,13 +259,13 @@ public final class RTF_generate extends RTF {
                             }
                         }//connect==2
                         else if (connect == 1) {
-                            if (at.getConnectivity().getOrDefault("N", -1) == 1
-                                    && at.getConnectivity().getOrDefault("O", -1) == 1) {
+                            if (at.getConnectivity().getOrDefault("N", 0) == 1
+                                    && at.getConnectivity().getOrDefault("O", 0) == 1) {
                                 at.setRtfType("C");
-                            } else if (at.getConnectivity().getOrDefault("O", -1) == 2) {
+                            } else if (at.getConnectivity().getOrDefault("O", 0) == 2) {
                                 at.setRtfType("CC");
-                            } else if (at.getConnectivity().getOrDefault("N", -1) == 1
-                                    && at.getConnectivity().getOrDefault("H", -1) == 1) {
+                            } else if (at.getConnectivity().getOrDefault("N", 0) == 1
+                                    && at.getConnectivity().getOrDefault("H", 0) == 1) {
                                 int idx1 = at.getLinkingList().get(0);
                                 int idx2 = at.getLinkingList().get(1);
                                 int idx3 = at.getLinkingList().get(2);
@@ -276,17 +276,17 @@ public final class RTF_generate extends RTF {
                                 } else {
                                     at.setRtfType("CA");
                                 }
-                            } else if (at.getConnectivity().getOrDefault("H", -1) == 2) {
+                            } else if (at.getConnectivity().getOrDefault("H", 0) == 2) {
                                 at.setRtfType("CE2");
                             }
                         }//connect==1
-                        else if (at.getConnectivity().getOrDefault("N", -1) == 3) {
+                        else if (at.getConnectivity().getOrDefault("N", 0) == 3) {
                             at.setRtfType("C");
-                        } else if (at.getConnectivity().getOrDefault("N", -1) == 2
-                                || at.getConnectivity().getOrDefault("O", -1) == 1) {
+                        } else if (at.getConnectivity().getOrDefault("N", 0) == 2
+                                || at.getConnectivity().getOrDefault("O", 0) == 1) {
                             at.setRtfType("C");
-                        } else if (at.getConnectivity().getOrDefault("N", -1) == 2
-                                || at.getConnectivity().getOrDefault("H", -1) == 1) {
+                        } else if (at.getConnectivity().getOrDefault("N", 0) == 2
+                                || at.getConnectivity().getOrDefault("H", 0) == 1) {
                             at.setRtfType("CPH2");
                         }
                         break;
@@ -323,7 +323,7 @@ public final class RTF_generate extends RTF {
                 else if (at.getNumberOfBonds() == 2) {
                     int idx1 = at.getLinkingList().get(0);//$link[$i][1]
                     int idx2 = at.getLinkingList().get(1);//$link[$i][2]
-                    connect = at.getConnectivity().getOrDefault("H", -1);//$bound{"H"}[$i]
+                    connect = at.getConnectivity().getOrDefault("H", 0);//$bound{"H"}[$i]
                     if (connect == 2) {
                         at.setRtfType("OT");
                     } else if (connect == 1) {
@@ -333,7 +333,7 @@ public final class RTF_generate extends RTF {
                         } else if (!atmTypeList.get(idx1).getRtfType().equals("CC") || !atmTypeList.get(idx2).getRtfType().equals("CC")) {
                             at.setRtfType("OH1");
                         }
-                    } else if (at.getConnectivity().getOrDefault("C", -1) == 2) {
+                    } else if (at.getConnectivity().getOrDefault("C", 0) == 2) {
                         if (atmTypeList.get(idx1).getRtfType().equals("CC")
                                 || atmTypeList.get(idx2).getRtfType().equals("CC")) {
                             at.setRtfType("OS");
@@ -344,8 +344,71 @@ public final class RTF_generate extends RTF {
             }//loop on O atoms
         }//second loop on all atoms
 
-        /* TODO : on N */
+        //third loop on all atoms for N
+        for (Atom at : this.atmTypeList) {
+            if (at.getAtomName().equals("N")) {
+                String hybr = at.getHybridisation();
+                switch (hybr) {
+                    case "sp3":
 
+                        connect = at.getConnectivity().getOrDefault("H", 0);//$bound{"H"}[$i]
+                        if (connect == 3) {
+                            at.setRtfType("NH3");
+                        } else if (connect == 2 || connect == 1) {
+                            at.setRtfType("NP");
+                        } else {
+                            connect = at.getConnectivity().getOrDefault("C", 0);
+                            if (connect == 3) {
+                                at.setRtfType("NP");
+                            }
+                        }
+
+                        break;
+                    case "sp2":
+
+                        int idx1 = at.getLinkingList().get(0);//$link[$i][1]
+                        int idx2 = at.getLinkingList().get(1);//$link[$i][2]
+                        int idx3 = at.getLinkingList().get(2);//$link[$i][3]
+
+                        if (atmTypeList.get(idx1).getRtfType().equals("CA") || atmTypeList.get(idx2).getRtfType().equals("CA")
+                                || atmTypeList.get(idx3).getRtfType().equals("CA")) {
+                            //aniline
+                            at.setRtfType("NH2");
+                        } else if ((atmTypeList.get(idx1).getRtfType().equals("C") || atmTypeList.get(idx2).getRtfType().equals("C") || atmTypeList.get(idx3).getRtfType().equals("C"))
+                                && (at.getConnectivity().getOrDefault("H", 0) == 2)) {
+                            //secondary amide
+                            at.setRtfType("NH2");
+                        } else if ((atmTypeList.get(idx1).getRtfType().equals("C") || atmTypeList.get(idx2).getRtfType().equals("C") || atmTypeList.get(idx3).getRtfType().equals("C"))
+                                && (at.getConnectivity().getOrDefault("H", 0) == 1)) {
+                            //primary amide
+                            at.setRtfType("NH1");
+                        } else if ((atmTypeList.get(idx1).getRtfType().equals("C") || atmTypeList.get(idx2).getRtfType().equals("C") || atmTypeList.get(idx3).getRtfType().equals("C"))
+                                && (at.getConnectivity().getOrDefault("H", 0) == 0)) {
+                            //proline type N peptide
+                            at.setRtfType("N");
+                        }
+
+                        if ((at.getConnectivity().getOrDefault("C", 0) == 2) && (at.getConnectivity().getOrDefault("H", 0) == 0)) {
+                            if (atmTypeList.get(idx1).getRtfType().contains("CPH") || atmTypeList.get(idx2).getRtfType().contains("CPH")) {
+                                at.setRtfType("NR2");
+                            }
+                        }
+
+                        if ((at.getConnectivity().getOrDefault("C", 0) == 2) && (at.getConnectivity().getOrDefault("H", 0) == 1)) {
+                            if (atmTypeList.get(idx1).getRtfType().contains("CPH") || atmTypeList.get(idx2).getRtfType().contains("CPH") || atmTypeList.get(idx3).getRtfType().contains("CPH")) {
+                                at.setRtfType("NR1");
+                            }
+                        }
+
+                        break;
+                    default:
+                        break;
+                }
+            }//loop on N atoms
+        }//third loop on all atoms
+
+        /*TODO for S atoms*/
+    
     }//end gen_type()
 
 
