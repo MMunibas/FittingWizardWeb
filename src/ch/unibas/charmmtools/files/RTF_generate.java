@@ -427,6 +427,45 @@ public final class RTF_generate extends RTF {
         }//loop on all atoms
 
         /* TODO : work on H atoms */
+        for (Atom at : this.atmTypeList) {
+            if (at.getAtomName().equals("H")) {
+                int idx1 = at.getLinkingList().get(0);//$link[$i][1]
+                if (at.getConnectivity().getOrDefault("N", 0) == 1) {
+                    at.setRtfType("H");
+                } else if (at.getConnectivity().getOrDefault("O", 0) == 1) {
+                    if (atmTypeList.get(idx1).getRtfType().equals("OH1")) {
+                        at.setRtfType("H");
+                    }
+                    if (atmTypeList.get(idx1).getRtfType().equals("OT")) {
+                        at.setRtfType("HT");
+                    }
+                } else if (at.getConnectivity().getOrDefault("S", 0) == 1) {
+                    at.setRtfType("HS");
+                } else if (at.getConnectivity().getOrDefault("C", 0) == 1) {
+                    if (atmTypeList.get(idx1).getHybridisation().equals("sp3")) {
+                        at.setRtfType("HA");
+                    } else {
+                        switch (atmTypeList.get(idx1).getRtfType()) {
+                            case "CE1":
+                                at.setRtfType("HA1");
+                                break;
+                            case "CE2":
+                                at.setRtfType("HA2");
+                                break;
+                            case "CA":
+                                at.setRtfType("HP");
+                                break;
+                            case "CPH1":
+                                at.setRtfType("HR3");
+                                break;
+                            case "CPH2":
+                                at.setRtfType("HR1");
+                                break;
+                        }//end switch
+                    }
+                }
+            }//loop on H atoms
+        }//loop on all atoms
     
     }//end gen_type()
 
