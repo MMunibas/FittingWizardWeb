@@ -11,6 +11,7 @@ package ch.unibas.charmmtools.files;
 
 import ch.unibas.charmmtools.types.Atom;
 import ch.unibas.charmmtools.types.Bond;
+import ch.unibas.charmmtools.types.Improper;
 import ch.unibas.fittingwizard.application.xyz.XyzAtom;
 import ch.unibas.fittingwizard.application.xyz.XyzFile;
 import ch.unibas.fittingwizard.application.xyz.XyzFileParser;
@@ -38,25 +39,39 @@ public final class RTF_generate extends RTF {
 
         List<Atom> atmlist = rtff.getAtmTypeList();
 
-//        System.out.println("Atoms list");
-//        for (Atom at : atmlist) {
-//            String name = at.getAtomName();
-//            String hybr = at.getHybridisation();
-//            System.out.println(at.getAtomID() + " " + name + " " + hybr + " " + at.getX() + " " + at.getY() + " " + at.getZ());
-//            System.out.print("Connectivity dump: ");
-//            HashMap<String, Integer> map = at.getConnectivity();
-//            System.out.println(map.toString());
-//        }
-//
-//        List<Bond> bndlist = rtff.getBndTypeList();
-//        System.out.println("Bonds list :");
-//        for (Bond bd : bndlist) {
-//            Atom a1 = bd.getA1();
-//            Atom a2 = bd.getA2();
-//            System.out.println("Bond between atoms " + a1.getAtomID() + ":" + a1.getAtomName() + " and " + a2.getAtomID() + ":" + a2.getAtomName() + " of length " + bd.getLength());
-//        }
+        System.out.println("Atoms list :");
+        for (Atom at : atmlist) {
+            String name = at.getAtomName();
+            String hybr = at.getHybridisation();
+            System.out.println(at.getAtomID() + " " + name + " " + hybr + " " + at.getX() + " " + at.getY() + " " + at.getZ());
+            System.out.print("Connectivity dump: ");
+            HashMap<String, Integer> map = at.getConnectivity();
+            System.out.println(map.toString());
+        }
 
-        System.out.println("RTF types");
+        List<Bond> bndlist = rtff.getBndTypeList();
+        System.out.println("Bonds list :");
+        for (Bond bd : bndlist) {
+            Atom a1 = bd.getA1();
+            Atom a2 = bd.getA2();
+            System.out.println("Bond between atoms " + a1.getAtomID() + ":" + a1.getAtomName() + " and " + a2.getAtomID() + ":" + a2.getAtomName() + " of length " + bd.getLength());
+        }
+
+        List<Improper> implist = rtff.getImprTypeList();
+        System.out.println("Impropers list :");
+        for (Improper imp : implist) {
+            Atom a1 = imp.getA1();
+            Atom a2 = imp.getA2();
+            Atom a3 = imp.getA3();
+            Atom a4 = imp.getA4();
+            System.out.println("Improper between atoms " + a1.getAtomID() + ":" + a1.getAtomName()
+                    + " and " + a2.getAtomID() + ":" + a2.getAtomName()
+                    + " and " + a3.getAtomID() + ":" + a3.getAtomName()
+                    + " and " + a4.getAtomID() + ":" + a4.getAtomName()
+                    + " of value " + imp.getDihe());
+        }
+
+        System.out.println("RTF types :");
         for (Atom at : atmlist) {
             String name = at.getAtomName();
             String hybr = at.getHybridisation();
@@ -108,13 +123,10 @@ public final class RTF_generate extends RTF {
         this.gen_bonds();
         this.gen_hybridisation();
         // 3 calls to gen_type are required
-        System.out.println("Run 1 ...");
-        this.gen_type();
-        System.out.println("Done\nRun 2 ...");
-        this.gen_type();
-        System.out.println("Done\nRun 3 ...");
-        this.gen_type();
-        System.out.println("Done");
+        for (int i = 0; i < 3; i++) {
+            this.gen_type();
+            this.find_impropers();
+        }
     }
 
     private void gen_bonds() {
@@ -302,9 +314,7 @@ public final class RTF_generate extends RTF {
                 if (at.getNumberOfBonds() == 1) {
                     int idx1 = at.getLinkingList().get(0);//$link[$i][1]
                     int iidx1 = atmTypeList.get(idx1).getLinkingList().get(0);//$link[$link[$i][1]][1]
-//                    int idx2 = at.getLinkingList().get(1);//$link[$i][2]
                     int iidx2 = atmTypeList.get(idx1).getLinkingList().get(1);//$link[$link[$i][1]][2]
-//                    int idx3 = at.getLinkingList().get(2);//$link[$i][3]
                     int iidx3 = atmTypeList.get(idx1).getLinkingList().get(2);//$link[$link[$i][1]][3]
                     if (atmTypeList.get(idx1).getRtfType().equals("C")) {
                         at.setRtfType("O");
@@ -426,7 +436,7 @@ public final class RTF_generate extends RTF {
             }//loop on S atoms
         }//loop on all atoms
 
-        /* TODO : work on H atoms */
+        // TODO : work on H atoms
         for (Atom at : this.atmTypeList) {
             if (at.getAtomName().equals("H")) {
                 int idx1 = at.getLinkingList().get(0);//$link[$i][1]
@@ -469,6 +479,24 @@ public final class RTF_generate extends RTF {
     
     }//end gen_type()
 
-
+    /**
+     * this generates the list of improper dihedrals
+     */
+    private void find_impropers() {
+        for (Atom at : atmTypeList) {
+            if ((at.getAtomName().equals("C") || at.getAtomName().equals("N"))
+                    && (at.getHybridisation().equals("sp2")) && (!at.getRtfType().equals("NR2"))) {
+                nimpr++;
+                int a2, a3, a4;
+                a2 = at.getLinkingList().get(0);
+                a3 = at.getLinkingList().get(1);
+                a4 = at.getLinkingList().get(2);
+                imprTypeList.add(new Improper(at,
+                        atmTypeList.get(a2),
+                        atmTypeList.get(a3),
+                        atmTypeList.get(a4)));
+            }
+        }//loop on all atoms
+    }//end find_impropers()
 
 }//end of class

@@ -34,6 +34,7 @@ public abstract class RTF {
 
     protected int natom = 0;
     protected int nbonds = 0;
+    protected int nimpr = 0;
 
     protected HashMap<String, Double> covRadList = null;
 
@@ -123,4 +124,26 @@ public abstract class RTF {
     public final List<Bond> getBndTypeList() {
         return bndTypeList;
     }
+
+    /**
+     * @return the angTypeList
+     */
+    public List<Angle> getAngTypeList() {
+        return angTypeList;
+    }
+
+    /**
+     * @return the diheTypeList
+     */
+    public List<Dihedral> getDiheTypeList() {
+        return diheTypeList;
+    }
+
+    /**
+     * @return the imprTypeList
+     */
+    public List<Improper> getImprTypeList() {
+        return imprTypeList;
+    }
+
 }

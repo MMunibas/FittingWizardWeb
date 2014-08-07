@@ -19,13 +19,13 @@ import static java.lang.Math.asin;
  */
 public class Dihedral {
 
-    Atom a1 = null;
-    Atom a2 = null;
-    Atom a3 = null;
-    Atom a4 = null;
+    private Atom a1 = null;
+    private Atom a2 = null;
+    private Atom a3 = null;
+    private Atom a4 = null;
 
-    double dihe = 0.0;
-    boolean inRadian = false;
+    private double dihe = 0.0;
+    private boolean inRadian = false;
 
     public Dihedral(Atom _a1, Atom _a2, Atom _a3, Atom _a4) {
         this.a1 = _a1;
@@ -119,5 +119,41 @@ public class Dihedral {
 
         return angle;
     }
+
+    /**
+     * @return the a1
+     */
+    public Atom getA1() {
+        return a1;
+    }
+
+    /**
+     * @return the a2
+     */
+    public Atom getA2() {
+        return a2;
+    }
+
+    /**
+     * @return the a3
+     */
+    public Atom getA3() {
+        return a3;
+    }
+
+    /**
+     * @return the a4
+     */
+    public Atom getA4() {
+        return a4;
+    }
+
+    /**
+     * @return the dihe
+     */
+    public double getDihe() {
+        return dihe;
+    }
+
 
 }//end class
