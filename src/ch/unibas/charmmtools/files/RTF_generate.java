@@ -37,25 +37,25 @@ public final class RTF_generate extends RTF {
 
         RTF rtff  = new RTF_generate(xyzf, "cov_rad.csv");
 
-        List<Atom> atmlist = rtff.getAtmTypeList();
+//        List<Atom> atmlist = rtff.getAtmTypeList();
 
-        System.out.println("Atoms list :");
-        for (Atom at : atmlist) {
-            String name = at.getAtomName();
-            String hybr = at.getHybridisation();
-            System.out.println(at.getAtomID() + " " + name + " " + hybr + " " + at.getX() + " " + at.getY() + " " + at.getZ());
-            System.out.print("Connectivity dump: ");
-            HashMap<String, Integer> map = at.getConnectivity();
-            System.out.println(map.toString());
-        }
-
-        List<Bond> bndlist = rtff.getBndTypeList();
-        System.out.println("Bonds list :");
-        for (Bond bd : bndlist) {
-            Atom a1 = bd.getA1();
-            Atom a2 = bd.getA2();
-            System.out.println("Bond between atoms " + a1.getAtomID() + ":" + a1.getAtomName() + " and " + a2.getAtomID() + ":" + a2.getAtomName() + " of length " + bd.getLength());
-        }
+//        System.out.println("Atoms list :");
+//        for (Atom at : atmlist) {
+//            String name = at.getAtomName();
+//            String hybr = at.getHybridisation();
+//            System.out.println(at.getAtomID() + " " + name + " " + hybr + " " + at.getX() + " " + at.getY() + " " + at.getZ());
+//            System.out.print("Connectivity dump: ");
+//            HashMap<String, Integer> map = at.getConnectivity();
+//            System.out.println(map.toString());
+//        }
+//
+//        List<Bond> bndlist = rtff.getBndTypeList();
+//        System.out.println("Bonds list :");
+//        for (Bond bd : bndlist) {
+//            Atom a1 = bd.getA1();
+//            Atom a2 = bd.getA2();
+//            System.out.println("Bond between atoms " + a1.getAtomID() + ":" + a1.getAtomName() + " and " + a2.getAtomID() + ":" + a2.getAtomName() + " of length " + bd.getLength());
+//        }
 
         List<Improper> implist = rtff.getImprTypeList();
         System.out.println("Impropers list :");
@@ -71,13 +71,13 @@ public final class RTF_generate extends RTF {
                     + " of value " + imp.getDihe());
         }
 
-        System.out.println("RTF types :");
-        for (Atom at : atmlist) {
-            String name = at.getAtomName();
-            String hybr = at.getHybridisation();
-            String type = at.getRtfType();
-            System.out.println(at.getAtomID() + ":" + name + " has bybridisation " + hybr + " and has rtftype  : " + type);
-        }
+//        System.out.println("RTF types :");
+//        for (Atom at : atmlist) {
+//            String name = at.getAtomName();
+//            String hybr = at.getHybridisation();
+//            String type = at.getRtfType();
+//            System.out.println(at.getAtomID() + ":" + name + " has bybridisation " + hybr + " and has rtftype  : " + type);
+//        }
 
     }
 
@@ -125,8 +125,8 @@ public final class RTF_generate extends RTF {
         // 3 calls to gen_type are required
         for (int i = 0; i < 3; i++) {
             this.gen_type();
-            this.find_impropers();
         }
+        this.find_impropers();
     }
 
     private void gen_bonds() {
@@ -312,10 +312,23 @@ public final class RTF_generate extends RTF {
         for (Atom at : this.atmTypeList) {
             if (at.getAtomName().equals("O")) {
                 if (at.getNumberOfBonds() == 1) {
-                    int idx1 = at.getLinkingList().get(0);//$link[$i][1]
-                    int iidx1 = atmTypeList.get(idx1).getLinkingList().get(0);//$link[$link[$i][1]][1]
-                    int iidx2 = atmTypeList.get(idx1).getLinkingList().get(1);//$link[$link[$i][1]][2]
-                    int iidx3 = atmTypeList.get(idx1).getLinkingList().get(2);//$link[$link[$i][1]][3]
+
+                    List<Integer> tmpAt = at.getLinkingList();
+                    int idx1 = 0, iidx1 = 0, iidx2 = 0, iidx3 = 0;
+                    if (tmpAt.size() >= 1) {
+                        idx1 = tmpAt.get(0);//$link[$i][1]
+                    }
+                    List<Integer> tmpAt2 = atmTypeList.get(idx1).getLinkingList();
+                    if (tmpAt2.size() >= 1) {
+                        iidx1 = tmpAt2.get(0);//$link[$link[$i][1]][1]
+                    }
+                    if (tmpAt2.size() >= 2) {
+                        iidx2 = tmpAt2.get(1);//$link[$link[$i][1]][2]
+                    }
+                    if (tmpAt2.size() >= 3) {
+                        iidx3 = tmpAt2.get(2);//$link[$link[$i][1]][3]
+                    }
+
                     if (atmTypeList.get(idx1).getRtfType().equals("C")) {
                         at.setRtfType("O");
                     } else if (atmTypeList.get(iidx1).getRtfType().equals("OH1")
@@ -329,6 +342,7 @@ public final class RTF_generate extends RTF {
                     } else if (atmTypeList.get(idx1).getRtfType().equals("CC")) {
                         at.setRtfType("OC");
                     }
+
                 }//end getNumberOfBonds() == 1
                 else if (at.getNumberOfBonds() == 2) {
                     int idx1 = at.getLinkingList().get(0);//$link[$i][1]
