@@ -7,7 +7,7 @@
  *
  */
 
-package ch.unibas.charmmtools.types;
+package ch.unibas.charmmtools.structures;
 
 /**
  *

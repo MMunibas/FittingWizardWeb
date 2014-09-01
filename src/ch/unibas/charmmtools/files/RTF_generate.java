@@ -9,9 +9,9 @@
 
 package ch.unibas.charmmtools.files;
 
-import ch.unibas.charmmtools.types.Atom;
-import ch.unibas.charmmtools.types.Bond;
-import ch.unibas.charmmtools.types.Improper;
+import ch.unibas.charmmtools.structures.Atom;
+import ch.unibas.charmmtools.structures.Bond;
+import ch.unibas.charmmtools.structures.Improper;
 import ch.unibas.fittingwizard.application.xyz.XyzAtom;
 import ch.unibas.fittingwizard.application.xyz.XyzFile;
 import ch.unibas.fittingwizard.application.xyz.XyzFileParser;
@@ -37,7 +37,7 @@ public final class RTF_generate extends RTF {
 
         RTF rtff  = new RTF_generate(xyzf, "cov_rad.csv");
 
-//        List<Atom> atmlist = rtff.getAtmTypeList();
+        List<Atom> atmlist = rtff.getAtmTypeList();
 
 //        System.out.println("Atoms list :");
 //        for (Atom at : atmlist) {
@@ -57,27 +57,27 @@ public final class RTF_generate extends RTF {
 //            System.out.println("Bond between atoms " + a1.getAtomID() + ":" + a1.getAtomName() + " and " + a2.getAtomID() + ":" + a2.getAtomName() + " of length " + bd.getLength());
 //        }
 
-        List<Improper> implist = rtff.getImprTypeList();
-        System.out.println("Impropers list :");
-        for (Improper imp : implist) {
-            Atom a1 = imp.getA1();
-            Atom a2 = imp.getA2();
-            Atom a3 = imp.getA3();
-            Atom a4 = imp.getA4();
-            System.out.println("Improper between atoms " + a1.getAtomID() + ":" + a1.getAtomName()
-                    + " and " + a2.getAtomID() + ":" + a2.getAtomName()
-                    + " and " + a3.getAtomID() + ":" + a3.getAtomName()
-                    + " and " + a4.getAtomID() + ":" + a4.getAtomName()
-                    + " of value " + imp.getDihe());
-        }
-
-//        System.out.println("RTF types :");
-//        for (Atom at : atmlist) {
-//            String name = at.getAtomName();
-//            String hybr = at.getHybridisation();
-//            String type = at.getRtfType();
-//            System.out.println(at.getAtomID() + ":" + name + " has bybridisation " + hybr + " and has rtftype  : " + type);
+//        List<Improper> implist = rtff.getImprTypeList();
+//        System.out.println("Impropers list :");
+//        for (Improper imp : implist) {
+//            Atom a1 = imp.getA1();
+//            Atom a2 = imp.getA2();
+//            Atom a3 = imp.getA3();
+//            Atom a4 = imp.getA4();
+//            System.out.println("Improper between atoms " + a1.getAtomID() + ":" + a1.getAtomName()
+//                    + " and " + a2.getAtomID() + ":" + a2.getAtomName()
+//                    + " and " + a3.getAtomID() + ":" + a3.getAtomName()
+//                    + " and " + a4.getAtomID() + ":" + a4.getAtomName()
+//                    + " of value " + imp.getDihe());
 //        }
+
+        System.out.println("RTF types :");
+        for (Atom at : atmlist) {
+            String name = at.getAtomName();
+            String hybr = at.getHybridisation();
+            String type = at.getRtfType();
+            System.out.println(at.getAtomID() + ":" + name + " has bybridisation " + hybr + " and has rtftype  : " + type);
+        }
 
     }
 

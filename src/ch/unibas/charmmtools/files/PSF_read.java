@@ -9,11 +9,11 @@
 package ch.unibas.charmmtools.files;
 
 import ch.unibas.charmmtools.exceptions.NotPsfException;
-import ch.unibas.charmmtools.types.Angle;
-import ch.unibas.charmmtools.types.Atom;
-import ch.unibas.charmmtools.types.Bond;
-import ch.unibas.charmmtools.types.Dihedral;
-import ch.unibas.charmmtools.types.Improper;
+import ch.unibas.charmmtools.structures.Angle;
+import ch.unibas.charmmtools.structures.Atom;
+import ch.unibas.charmmtools.structures.Bond;
+import ch.unibas.charmmtools.structures.Dihedral;
+import ch.unibas.charmmtools.structures.Improper;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

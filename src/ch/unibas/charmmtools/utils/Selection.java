@@ -7,7 +7,7 @@
  *
  */
 
-package ch.unibas.charmmtools.sele;
+package ch.unibas.charmmtools.utils;
 
 import ch.unibas.charmmtools.files.COR;
 import ch.unibas.charmmtools.files.PSF;
