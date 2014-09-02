@@ -71,13 +71,13 @@ public final class RTF_generate extends RTF {
 //                    + " of value " + imp.getDihe());
 //        }
 
-        System.out.println("RTF types :");
-        for (Atom at : atmlist) {
-            String name = at.getAtomName();
-            String hybr = at.getHybridisation();
-            String type = at.getRtfType();
-            System.out.println(at.getAtomID() + ":" + name + " has bybridisation " + hybr + " and has rtftype  : " + type);
-        }
+//        System.out.println("RTF types :");
+//        for (Atom at : atmlist) {
+//            String name = at.getAtomName();
+//            String hybr = at.getHybridisation();
+//            String type = at.getRtfType();
+//            System.out.println(at.getAtomID() + ":" + name + " has bybridisation " + hybr + " and has rtftype  : " + type);
+//        }
 
     }
 
@@ -512,5 +512,37 @@ public final class RTF_generate extends RTF {
             }
         }//loop on all atoms
     }//end find_impropers()
+
+    private void find_IC() {
+
+        for (int i = 0; i < atmTypeList.size(); i++) {
+
+            for (int j = 0; j < atmTypeList.get(i).getNumberOfBonds(); j++) {
+                int l1 = atmTypeList.get(i).getLinkingList().get(j);
+
+                for (int k = 0; k < atmTypeList.get(l1).getNumberOfBonds(); k++) {
+                    int l2 = atmTypeList.get(l1).getLinkingList().get(k);
+
+                    if (l2 != i) {
+
+                        for (int l = 0; l < atmTypeList.get(l2).getNumberOfBonds(); l++) {
+                            int l3 = atmTypeList.get(l2).getLinkingList().get(l);
+
+                            if ((l3 != i) && (l3 != l1)) {
+                                boolean test = false;
+
+                            }//if ((l3 != i) && (l3 != l1))
+
+                        }//loop l
+
+                    }// end if (l2 != i)
+
+                }//loop k
+
+            }//loop j
+
+        }//loop on all atoms
+
+    }//end find_IC()
 
 }//end of class

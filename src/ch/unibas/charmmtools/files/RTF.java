@@ -15,6 +15,7 @@ import ch.unibas.charmmtools.structures.Atom;
 import ch.unibas.charmmtools.structures.Bond;
 import ch.unibas.charmmtools.structures.Dihedral;
 import ch.unibas.charmmtools.structures.Improper;
+import ch.unibas.charmmtools.structures.InternalCoordinates;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -66,6 +67,7 @@ public abstract class RTF {
     protected List<Angle> angTypeList = new ArrayList<>();
     protected List<Dihedral> diheTypeList = new ArrayList<>();
     protected List<Improper> imprTypeList = new ArrayList<>();
+    protected List<InternalCoordinates> IC_List = new ArrayList<>();
 
     public RTF() {
         this.covRadList = new HashMap<String, Double>() {

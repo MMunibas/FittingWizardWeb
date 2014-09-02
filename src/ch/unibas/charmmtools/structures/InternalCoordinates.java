@@ -13,7 +13,7 @@ package ch.unibas.charmmtools.structures;
  *
  * @author hedin
  */
-public class InternalCoordinate {
+public class InternalCoordinates {
 
     //4 atoms composing the internal coordinates structure from charmm
     private Atom at1, at2, at3, at4;
@@ -32,7 +32,7 @@ public class InternalCoordinate {
     //Flag indicating that this is an improper torsion
     private boolean isImproper;
 
-    public InternalCoordinate(Atom a1, Atom a2, Atom a3, Atom a4, boolean impr) {
+    public InternalCoordinates(Atom a1, Atom a2, Atom a3, Atom a4, boolean impr) {
         this.at1 = a1;
         this.at2 = a2;
         this.at3 = a3;
