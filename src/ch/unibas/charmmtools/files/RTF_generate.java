@@ -12,6 +12,7 @@ package ch.unibas.charmmtools.files;
 import ch.unibas.charmmtools.structures.Atom;
 import ch.unibas.charmmtools.structures.Bond;
 import ch.unibas.charmmtools.structures.Improper;
+import ch.unibas.charmmtools.structures.InternalCoordinates;
 import ch.unibas.fittingwizard.application.xyz.XyzAtom;
 import ch.unibas.fittingwizard.application.xyz.XyzFile;
 import ch.unibas.fittingwizard.application.xyz.XyzFileParser;
@@ -515,6 +516,7 @@ public final class RTF_generate extends RTF {
 
     private void find_IC() {
 
+        //Calculates IC;
         for (int i = 0; i < atmTypeList.size(); i++) {
 
             for (int j = 0; j < atmTypeList.get(i).getNumberOfBonds(); j++) {
@@ -529,7 +531,24 @@ public final class RTF_generate extends RTF {
                             int l3 = atmTypeList.get(l2).getLinkingList().get(l);
 
                             if ((l3 != i) && (l3 != l1)) {
+
                                 boolean test = false;
+                                for (int m = 0; m < IC_List.size(); m++) {
+                                    if ((i == IC_List.get(m).getAt4().getAtomID())
+                                            && (l1 == IC_List.get(m).getAt3().getAtomID())
+                                            && (l2 == IC_List.get(m).getAt2().getAtomID())
+                                            && (l3 == IC_List.get(m).getAt1().getAtomID())) {
+                                        test = true;
+                                    }
+                                }//m loop
+
+                                if (!test) {
+                                    IC_List.add(new InternalCoordinates(atmTypeList.get(i),
+                                            atmTypeList.get(l1),
+                                            atmTypeList.get(l2),
+                                            atmTypeList.get(l3),
+                                            false));
+                                }//end !test
 
                             }//if ((l3 != i) && (l3 != l1))
 
@@ -542,6 +561,19 @@ public final class RTF_generate extends RTF {
             }//loop j
 
         }//loop on all atoms
+
+        // register impropers
+        if (this.nimpr != 0) {
+        for (int i = 0; i < atmTypeList.size(); i++) {
+            IC_List.add(new InternalCoordinates(
+                    imprTypeList.get(i).getA2(),
+                    imprTypeList.get(i).getA3(),
+                    imprTypeList.get(i).getA1(),
+                    imprTypeList.get(i).getA4(),
+                    true
+            ));
+            }//loop on all atoms
+        }//end this.nimpr != 0
 
     }//end find_IC()
 

@@ -49,4 +49,32 @@ public class InternalCoordinates {
 
     }//ctor
 
+    /**
+     * @return the at1
+     */
+    public Atom getAt1() {
+        return at1;
+    }
+
+    /**
+     * @return the at2
+     */
+    public Atom getAt2() {
+        return at2;
+    }
+
+    /**
+     * @return the at3
+     */
+    public Atom getAt3() {
+        return at3;
+    }
+
+    /**
+     * @return the at4
+     */
+    public Atom getAt4() {
+        return at4;
+    }
+
 }
