@@ -28,6 +28,8 @@ import org.apache.log4j.BasicConfigurator;
  */
 public final class RTF_generate extends RTF {
 
+    private String fname = null;
+
     public static void main(String[] args) {
 
         // initialise logger
@@ -38,7 +40,7 @@ public final class RTF_generate extends RTF {
 
         RTF rtff  = new RTF_generate(xyzf, "cov_rad.csv");
 
-        List<Atom> atmlist = rtff.getAtmTypeList();
+//        List<Atom> atmlist = rtff.getAtmTypeList();
 
 //        System.out.println("Atoms list :");
 //        for (Atom at : atmlist) {
@@ -86,6 +88,8 @@ public final class RTF_generate extends RTF {
 
         super();
 
+        this.fname = xyz.getMoleculeName();
+
         InputDataAtoms = xyz.getAtoms();
         Iterator<XyzAtom> iterator = null;
         iterator = (Iterator<XyzAtom>) InputDataAtoms.iterator();
@@ -104,6 +108,8 @@ public final class RTF_generate extends RTF {
     public RTF_generate(XyzFile xyz, String csv){
 
         super(csv);
+
+        this.fname = xyz.getMoleculeName();
 
         InputDataAtoms = xyz.getAtoms();
         Iterator<XyzAtom> iterator = null;
@@ -128,6 +134,8 @@ public final class RTF_generate extends RTF {
             this.gen_type();
         }
         this.find_impropers();
+        this.find_IC();
+        this.write_topology_file();
     }
 
     private void gen_bonds() {
@@ -576,5 +584,48 @@ public final class RTF_generate extends RTF {
         }//end this.nimpr != 0
 
     }//end find_IC()
+
+    private void write_topology_file() {
+        System.out.print("* ... \n");
+        System.out.print("* Build RTF for " + this.fname + " \n");
+        System.out.print("* ...\n*\n");
+
+        System.out.print("   22    0 \n\n");
+
+        System.out.print("AUTOGENERATE ANGLES DIHE\n");
+        System.out.print("DEFA FIRS NONE LAST NONE\n\n");
+
+        System.out.print("RESI LIG   0.000\n");
+        System.out.print("GROUP\n");
+
+        for (Atom at : atmTypeList) {
+            System.out.println(String.format("ATOM %s %s %6.4f",
+                    at.getAtomName(), at.getRtfType(), at.getCharge()));
+        }
+
+        for (Bond bnd : bndTypeList) {
+            System.out.println(String.format("BOND %s %s",
+                    bnd.getA1().getAtomName(), bnd.getA2().getAtomName()
+            ));
+        }
+
+        for (Improper impr : imprTypeList) {
+            System.out.println(String.format("IMPH %s %s %s %s",
+                    impr.getA1().getAtomName(), impr.getA2().getAtomName(),
+                    impr.getA3().getAtomName(), impr.getA4().getAtomName()
+            ));
+        }
+
+        for (InternalCoordinates ic : IC_List) {
+            System.out.print(String.format("IC %s %s %s%s %s   ",
+                    ic.getAt1().getAtomName(), ic.getAt2().getAtomName(), (ic.isImproper() ? "*" : " "),
+                    ic.getAt3().getAtomName(), ic.getAt4().getAtomName()
+            ));
+            System.out.println(String.format("%4.2f %7.2f %7.2f %7.2f   %4.2f",
+                    ic.getBndAB(), ic.getAngABC(), ic.getDiheABCD(), ic.getAngBCD(), ic.getBndCD()
+            ));
+        }
+
+    }//end write_topology_file()
 
 }//end of class

@@ -20,14 +20,14 @@ public class InternalCoordinates {
 
     //Bond length between first two atoms
     //Bond length between last two atoms
-    private double bnd12, bnd23;
+    private double bndAB, bndCD;
 
     //Bond angle between first three atoms
     //Bond angle between last three atoms
-    private double ang123, ang234;
+    private double angABC, angBCD;
 
     //Torsion angle made by the four atoms (degree)
-    private double dihe;
+    private double diheABCD;
 
     //Flag indicating that this is an improper torsion
     private boolean isImproper;
@@ -39,13 +39,20 @@ public class InternalCoordinates {
         this.at4 = a4;
         this.isImproper = impr;
 
-        bnd12 = Bond.calcLength(at1, at2);
-        bnd23 = Bond.calcLength(at2, at3);
-
-        // false because we want the angles and dihedral in degrees
-        ang123 = Angle.calculateAngle(at1, at2, at3, false);
-        ang234 = Angle.calculateAngle(at2, at3, at4, false);
-        dihe = Dihedral.calculateDihe(at1, at2, at3, at4, false);
+        if (!isImproper) {
+            this.bndAB = Bond.calcLength(at1, at2);
+            this.bndCD = Bond.calcLength(at3, at4);
+            // false because we want the angles and dihedral in degrees
+            this.angABC = Angle.calculateAngle(at1, at2, at3, false);
+            this.angBCD = Angle.calculateAngle(at2, at3, at4, false);
+            this.diheABCD = Dihedral.calculateDihe(at1, at2, at3, at4, false);
+        } else {
+            this.bndAB = Bond.calcLength(at1, at3);
+            this.bndCD = Bond.calcLength(at3, at4);
+            this.angABC = Angle.calculateAngle(at1, at3, at2, false);
+            this.angBCD = Angle.calculateAngle(at2, at3, at4, false);
+            this.diheABCD = Dihedral.calculateDihe(at1, at2, at3, at4, false);
+        }
 
     }//ctor
 
@@ -75,6 +82,48 @@ public class InternalCoordinates {
      */
     public Atom getAt4() {
         return at4;
+    }
+
+    /**
+     * @return the isImproper
+     */
+    public boolean isImproper() {
+        return isImproper;
+    }
+
+    /**
+     * @return the dihe
+     */
+    public double getDiheABCD() {
+        return diheABCD;
+    }
+
+    /**
+     * @return the bndAB
+     */
+    public double getBndAB() {
+        return bndAB;
+    }
+
+    /**
+     * @return the bndCD
+     */
+    public double getBndCD() {
+        return bndCD;
+    }
+
+    /**
+     * @return the angABC
+     */
+    public double getAngABC() {
+        return angABC;
+    }
+
+    /**
+     * @return the angBCD
+     */
+    public double getAngBCD() {
+        return angBCD;
     }
 
 }
