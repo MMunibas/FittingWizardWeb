@@ -60,22 +60,22 @@ public class Angle {
     }
 
     public static double calculateAngle(Atom a1, Atom a2, Atom a3, boolean radian) {
-        double[] u = new double[3];
-        double[] v = new double[3];
+        double[] x = new double[2];
+        double[] y = new double[2];
+        double[] z = new double[2];
 
-        u[0] = a1.getX() - a2.getX();
-        u[1] = a1.getY() - a2.getY();
-        u[2] = a1.getZ() - a2.getZ();
+        x[0] = a1.getX() - a2.getX();
+        y[0] = a1.getY() - a2.getY();
+        z[0] = a1.getZ() - a2.getZ();
 
-        v[0] = a1.getX() - a3.getX();
-        v[1] = a1.getY() - a3.getY();
-        v[2] = a1.getZ() - a3.getZ();
+        x[1] = a3.getX() - a2.getX();
+        y[1] = a3.getY() - a2.getY();
+        z[1] = a3.getZ() - a2.getZ();
 
-        double dot_prod = MathTools.dotProd3x3(u, v);
-        double uNorm = MathTools.norm3(u);
-        double vNorm = MathTools.norm3(v);
-
-        double angle = acos(dot_prod / (uNorm * vNorm));
+        double norm1 = Math.sqrt(x[0] * x[0] + y[0] * y[0] + z[0] * z[0]);
+        double norm2 = Math.sqrt(x[1] * x[1] + y[1] * y[1] + z[1] * z[1]);
+        double prod = x[0] * x[1] + y[0] * y[1] + z[0] * z[1];
+        double angle = acos(prod / (norm1 * norm2));
 
         if (!radian) {
             angle *= 180.0 / Math.PI;

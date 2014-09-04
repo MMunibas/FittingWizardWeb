@@ -626,6 +626,8 @@ public final class RTF_generate extends RTF {
             ));
         }
 
+        System.out.print("\nEND\n");
+
     }//end write_topology_file()
 
 }//end of class

@@ -32,12 +32,12 @@ public class InternalCoordinates {
     //Flag indicating that this is an improper torsion
     private boolean isImproper;
 
-    public InternalCoordinates(Atom a1, Atom a2, Atom a3, Atom a4, boolean impr) {
-        this.at1 = a1;
-        this.at2 = a2;
-        this.at3 = a3;
-        this.at4 = a4;
-        this.isImproper = impr;
+    public InternalCoordinates(Atom _a1, Atom _a2, Atom _a3, Atom _a4, boolean _impr) {
+        this.at1 = _a1;
+        this.at2 = _a2;
+        this.at3 = _a3;
+        this.at4 = _a4;
+        this.isImproper = _impr;
 
         if (!isImproper) {
             this.bndAB = Bond.calcLength(at1, at2);
