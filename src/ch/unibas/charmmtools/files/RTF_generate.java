@@ -16,10 +16,16 @@ import ch.unibas.charmmtools.structures.InternalCoordinates;
 import ch.unibas.fittingwizard.application.xyz.XyzAtom;
 import ch.unibas.fittingwizard.application.xyz.XyzFile;
 import ch.unibas.fittingwizard.application.xyz.XyzFileParser;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.log4j.BasicConfigurator;
 
 /**
@@ -32,13 +38,16 @@ public final class RTF_generate extends RTF {
 
     public static void main(String[] args) {
 
-        // initialise logger
-        BasicConfigurator.configure();
+        try {
+            // initialise logger
+            BasicConfigurator.configure();
 
-        String fname = args[0];
-        XyzFile xyzf = XyzFileParser.parse(new File(fname));
+            String xyzName = args[0];
+            String csvName = args[1];
 
-        RTF rtff  = new RTF_generate(xyzf, "cov_rad.csv");
+            XyzFile xyzf = XyzFileParser.parse(new File(xyzName));
+
+            RTF rtff = new RTF_generate(xyzf, csvName);
 
 //        List<Atom> atmlist = rtff.getAtmTypeList();
 
@@ -81,10 +90,13 @@ public final class RTF_generate extends RTF {
 //            String type = at.getRtfType();
 //            System.out.println(at.getAtomID() + ":" + name + " has bybridisation " + hybr + " and has rtftype  : " + type);
 //        }
+        } catch (IOException ex) {
+            Logger.getLogger(RTF_generate.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 
-    public RTF_generate(XyzFile xyz){
+    public RTF_generate(XyzFile xyz) throws IOException {
 
         super();
 
@@ -105,7 +117,7 @@ public final class RTF_generate extends RTF {
 
     }//ctor
 
-    public RTF_generate(XyzFile xyz, String csv){
+    public RTF_generate(XyzFile xyz, String csv) throws IOException {
 
         super(csv);
 
@@ -126,7 +138,7 @@ public final class RTF_generate extends RTF {
 
     }//ctor
 
-    private void generate(){
+    private void generate() throws IOException {
         this.gen_bonds();
         this.gen_hybridisation();
         // 3 calls to gen_type are required
@@ -585,48 +597,54 @@ public final class RTF_generate extends RTF {
 
     }//end find_IC()
 
-    private void write_topology_file() {
-        System.out.print("* ... \n");
-        System.out.print("* Build RTF for " + this.fname + " \n");
-        System.out.print("* ...\n*\n");
+    private void write_topology_file() throws IOException {
+        Date d = new Date();
+        BufferedWriter writer = new BufferedWriter(new FileWriter("topol.rtf"));
 
-        System.out.print("   22    0 \n\n");
+        writer.write("* ...\n");
+        writer.write("* Build RTF for " + this.fname + ".xyz\n");
+        writer.write("* generated on " + d.toString() + "\n");
+        writer.write("*\n");
 
-        System.out.print("AUTOGENERATE ANGLES DIHE\n");
-        System.out.print("DEFA FIRS NONE LAST NONE\n\n");
+        writer.write("   22    0 \n\n");
 
-        System.out.print("RESI LIG   0.000\n");
-        System.out.print("GROUP\n");
+        writer.write("AUTOGENERATE ANGLES DIHE\n");
+        writer.write("DEFA FIRS NONE LAST NONE\n\n");
+
+        writer.write("RESI LIG   0.000\n");
+        writer.write("GROUP\n");
 
         for (Atom at : atmTypeList) {
-            System.out.println(String.format("ATOM %s %s %6.4f",
+            writer.write(String.format("ATOM %s %s %6.4f\n",
                     at.getAtomName(), at.getRtfType(), at.getCharge()));
         }
 
         for (Bond bnd : bndTypeList) {
-            System.out.println(String.format("BOND %s %s",
+            writer.write(String.format("BOND %s %s\n",
                     bnd.getA1().getAtomName(), bnd.getA2().getAtomName()
             ));
         }
 
         for (Improper impr : imprTypeList) {
-            System.out.println(String.format("IMPH %s %s %s %s",
+            writer.write(String.format("IMPH %s %s %s %s\n",
                     impr.getA1().getAtomName(), impr.getA2().getAtomName(),
                     impr.getA3().getAtomName(), impr.getA4().getAtomName()
             ));
         }
 
         for (InternalCoordinates ic : IC_List) {
-            System.out.print(String.format("IC %s %s %s%s %s   ",
+            writer.write(String.format("IC %s %s %s%s %s   ",
                     ic.getAt1().getAtomName(), ic.getAt2().getAtomName(), (ic.isImproper() ? "*" : " "),
                     ic.getAt3().getAtomName(), ic.getAt4().getAtomName()
             ));
-            System.out.println(String.format("%4.2f %7.2f %7.2f %7.2f   %4.2f",
+            writer.write(String.format("%4.2f %7.2f %7.2f %7.2f   %4.2f\n",
                     ic.getBndAB(), ic.getAngABC(), ic.getDiheABCD(), ic.getAngBCD(), ic.getBndCD()
             ));
         }
 
-        System.out.print("\nEND\n");
+        writer.write("\nEND\n");
+
+        writer.close();
 
     }//end write_topology_file()
 
