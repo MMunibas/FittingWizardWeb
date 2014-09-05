@@ -26,15 +26,6 @@ public abstract class MathTools {
         return sqrt(norm);
     }
 
-//    public static double norm3square(double[] a) {
-//        if (a.length != 3) {
-//            throw new IllegalArgumentException("The dimensions have to be equal (3)!");
-//        }
-//        double norm = 0.0;
-//        norm = a[0] * a[0] + a[1] * a[1] + a[2] * a[2];
-//        return norm;
-//    }
-
     public static double dotProd3x3(double[] a, double[] b) {
         if (a.length != 3 || b.length != 3) {
             throw new IllegalArgumentException("The dimensions have to be equal (3)!");

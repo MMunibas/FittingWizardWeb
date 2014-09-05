@@ -109,9 +109,28 @@ public abstract class RTF {
             Logger.getLogger(RTF.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-            
-
     }//end readCovRad
+
+    /**
+     * @return the natom
+     */
+    public int getNatom() {
+        return natom;
+    }
+
+    /**
+     * @return the nbonds
+     */
+    public int getNbonds() {
+        return nbonds;
+    }
+
+    /**
+     * @return the nimpr
+     */
+    public int getNimpr() {
+        return nimpr;
+    }
 
     /**
      * @return the atmTypeList
@@ -146,6 +165,13 @@ public abstract class RTF {
      */
     public List<Improper> getImprTypeList() {
         return imprTypeList;
+    }
+
+    /**
+     * @return the IC_List
+     */
+    public List<InternalCoordinates> getIC_List() {
+        return IC_List;
     }
 
 }

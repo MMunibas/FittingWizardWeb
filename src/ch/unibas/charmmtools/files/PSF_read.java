@@ -169,20 +169,4 @@ public final class PSF_read extends PSF {
 
     } //end of parse routine
 
-//    @Override
-//    protected void allocate() {
-//        //allocate memory
-//        atomID = new int[natom];
-//        segName = new String[natom];
-//        resID = new int[natom];
-//        resName = new String[natom];
-//        atomName = new String[natom];
-//        typeID = new int[natom];
-//        charge = new float[natom];
-//        mass = new float[natom];
-//        imove = new int[natom];
-//
-//        /* TODO : handle DRUDE and CHECK */
-//    }
-
 }//end class

@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -48,48 +47,6 @@ public final class RTF_generate extends RTF {
             XyzFile xyzf = XyzFileParser.parse(new File(xyzName));
 
             RTF rtff = new RTF_generate(xyzf, csvName);
-
-//        List<Atom> atmlist = rtff.getAtmTypeList();
-
-//        System.out.println("Atoms list :");
-//        for (Atom at : atmlist) {
-//            String name = at.getAtomName();
-//            String hybr = at.getHybridisation();
-//            System.out.println(at.getAtomID() + " " + name + " " + hybr + " " + at.getX() + " " + at.getY() + " " + at.getZ());
-//            System.out.print("Connectivity dump: ");
-//            HashMap<String, Integer> map = at.getConnectivity();
-//            System.out.println(map.toString());
-//        }
-//
-//        List<Bond> bndlist = rtff.getBndTypeList();
-//        System.out.println("Bonds list :");
-//        for (Bond bd : bndlist) {
-//            Atom a1 = bd.getA1();
-//            Atom a2 = bd.getA2();
-//            System.out.println("Bond between atoms " + a1.getAtomID() + ":" + a1.getAtomName() + " and " + a2.getAtomID() + ":" + a2.getAtomName() + " of length " + bd.getLength());
-//        }
-
-//        List<Improper> implist = rtff.getImprTypeList();
-//        System.out.println("Impropers list :");
-//        for (Improper imp : implist) {
-//            Atom a1 = imp.getA1();
-//            Atom a2 = imp.getA2();
-//            Atom a3 = imp.getA3();
-//            Atom a4 = imp.getA4();
-//            System.out.println("Improper between atoms " + a1.getAtomID() + ":" + a1.getAtomName()
-//                    + " and " + a2.getAtomID() + ":" + a2.getAtomName()
-//                    + " and " + a3.getAtomID() + ":" + a3.getAtomName()
-//                    + " and " + a4.getAtomID() + ":" + a4.getAtomName()
-//                    + " of value " + imp.getDihe());
-//        }
-
-//        System.out.println("RTF types :");
-//        for (Atom at : atmlist) {
-//            String name = at.getAtomName();
-//            String hybr = at.getHybridisation();
-//            String type = at.getRtfType();
-//            System.out.println(at.getAtomID() + ":" + name + " has bybridisation " + hybr + " and has rtftype  : " + type);
-//        }
         } catch (IOException ex) {
             Logger.getLogger(RTF_generate.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -283,9 +240,6 @@ public final class RTF_generate extends RTF {
                                 String s1 = atmTypeList.get(idx1).getRtfType();
                                 String s2 = atmTypeList.get(idx2).getRtfType();
                                 String s3 = atmTypeList.get(idx3).getRtfType();
-//                                System.out.println(idx1 + " " + idx2 + " " + idx3);
-//                                System.out.println(s1 + " " + s2 + " " + s3);
-//                                System.out.flush();
                                 if (s1.contains("NR") || s2.contains("NR") || s3.contains("NR")) {
                                     at.setRtfType("CPH1");
                                 }
