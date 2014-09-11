@@ -16,6 +16,7 @@ import ch.unibas.charmmtools.structures.Angle;
 import ch.unibas.charmmtools.structures.Bond;
 import ch.unibas.charmmtools.structures.Dihedral;
 import ch.unibas.charmmtools.structures.Improper;
+import java.util.List;
 
 /**
  * This abstract class contains attributes and setters/getters useful for reading or generating a CHARMM PSF file.
@@ -58,11 +59,11 @@ public abstract class PSF {
 //    protected double[] opt2 = null;
 
     // the lists read from PSF
-    protected Atom[] atomList = null;
-    protected Bond[] bondList = null;
-    protected Angle[] angleList = null;
-    protected Dihedral[] diheList = null;
-    protected Improper[] imprList = null;
+    protected List<Atom> atomList = null;
+    protected List<Bond> bondList = null;
+    protected List<Angle> angleList = null;
+    protected List<Dihedral> diheList = null;
+    protected List<Improper> imprList = null;
 
     protected Scanner s = null;
 

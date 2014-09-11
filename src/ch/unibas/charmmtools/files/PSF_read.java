@@ -97,22 +97,24 @@ public final class PSF_read extends PSF {
 //        System.out.println("natom from PSF : " + natom);
 
 //        allocate();
-        atomList = new Atom[natom];
+//        atomList = new Atom[natom];
 
         // read params of atom section
         for (int i = 0; i < natom; i++) {
             inp = s.nextLine();
             tokens = inp.trim().split(delims);
             int idx = 0;
-            atomList[i].setAtomID(Integer.parseInt(tokens[idx++]));
-            atomList[i].setSegName(tokens[idx++]);
-            atomList[i].setResID(Integer.parseInt(tokens[idx++]));
-            atomList[i].setResName(tokens[idx++]);
-            atomList[i].setAtomName(tokens[idx++]);
-            atomList[i].setTypeID(Integer.parseInt(tokens[idx++]));
-            atomList[i].setCharge(Float.parseFloat(tokens[idx++]));
-            atomList[i].setMass(Float.parseFloat(tokens[idx++]));
-            atomList[i].setImove(Integer.parseInt(tokens[idx++]));
+            atomList.add(
+                    new Atom(Integer.parseInt(tokens[idx++]))
+            );
+            atomList.get(i).setSegName(tokens[idx++]);
+            atomList.get(i).setResID(Integer.parseInt(tokens[idx++]));
+            atomList.get(i).setResName(tokens[idx++]);
+            atomList.get(i).setAtomName(tokens[idx++]);
+            atomList.get(i).setTypeID(Integer.parseInt(tokens[idx++]));
+            atomList.get(i).setCharge(Float.parseFloat(tokens[idx++]));
+            atomList.get(i).setMass(Float.parseFloat(tokens[idx++]));
+            atomList.get(i).setImove(Integer.parseInt(tokens[idx++]));
         }
 
         // go to bonds section
@@ -123,9 +125,11 @@ public final class PSF_read extends PSF {
         nbond = Integer.parseInt(tokens[0]);
 //        System.out.println("nbond from PSF : " + nbond);
         // Fill bond array
-        bondList = new Bond[nbond];
+//        bondList = new Bond[nbond];
         for (int i = 0; i < nbond; i++) {
-            bondList[i] = new Bond(new Atom(s.nextInt()), new Atom(s.nextInt()));
+            bondList.add(
+                    new Bond(atomList.get(s.nextInt()), atomList.get(s.nextInt()))
+            );
         }
 
         // go to angles section
@@ -136,9 +140,11 @@ public final class PSF_read extends PSF {
         ntheta = Integer.parseInt(tokens[0]);
 //        System.out.println("nangles from PSF : " + ntheta);
         // Fill bond array
-        angleList = new Angle[ntheta];
-        for (int i = 0; i < ntheta; i++) {
-            angleList[i] = new Angle(new Atom(s.nextInt()), new Atom(s.nextInt()), new Atom(s.nextInt()));
+//        angleList =  new Angle[ntheta]; 
+       for (int i = 0; i < ntheta; i++) {
+            angleList.add(
+                    new Angle(atomList.get(s.nextInt()), atomList.get(s.nextInt()), atomList.get(s.nextInt()))
+            );
         }
 
         // go to dihedrals section
@@ -149,9 +155,11 @@ public final class PSF_read extends PSF {
         nphi = Integer.parseInt(tokens[0]);
 //        System.out.println("nphi from PSF : " + nphi);
         // Fill bond array
-        diheList = new Dihedral[nphi];
+//        diheList = new Dihedral[nphi];
         for (int i = 0; i < nphi; i++) {
-            diheList[i] = new Dihedral(new Atom(s.nextInt()), new Atom(s.nextInt()), new Atom(s.nextInt()), new Atom(s.nextInt()));
+            diheList.add(
+                    new Dihedral(atomList.get(s.nextInt()), atomList.get(s.nextInt()), atomList.get(s.nextInt()), atomList.get(s.nextInt()))
+            );
         }
 
         // go to impropers section
@@ -162,9 +170,11 @@ public final class PSF_read extends PSF {
         nimphi = Integer.parseInt(tokens[0]);
 //        System.out.println("nimphi from PSF : " + nimphi);
         // Fill bond array
-        imprList = new Improper[nimphi];
+//        imprList = new Improper[nimphi];
         for (int i = 0; i < nphi; i++) {
-            imprList[i] = new Improper(new Atom(s.nextInt()), new Atom(s.nextInt()), new Atom(s.nextInt()), new Atom(s.nextInt()));
+            imprList.add( 
+                    new Improper(atomList.get(s.nextInt()), atomList.get(s.nextInt()), atomList.get(s.nextInt()), atomList.get(s.nextInt()))
+            );
         }
 
     } //end of parse routine
