@@ -15,17 +15,12 @@ import ch.unibas.charmmtools.structures.Improper;
 import ch.unibas.charmmtools.structures.InternalCoordinates;
 import ch.unibas.fittingwizard.application.xyz.XyzAtom;
 import ch.unibas.fittingwizard.application.xyz.XyzFile;
-import ch.unibas.fittingwizard.application.xyz.XyzFileParser;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.log4j.BasicConfigurator;
 
 /**
  *
@@ -34,24 +29,6 @@ import org.apache.log4j.BasicConfigurator;
 public final class RTF_generate extends RTF {
 
     private String fname = null;
-
-    public static void main(String[] args) {
-
-        try {
-            // initialise logger
-            BasicConfigurator.configure();
-
-            String xyzName = args[0];
-            String csvName = args[1];
-
-            XyzFile xyzf = XyzFileParser.parse(new File(xyzName));
-
-            RTF rtff = new RTF_generate(xyzf, csvName);
-        } catch (IOException ex) {
-            Logger.getLogger(RTF_generate.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
 
     public RTF_generate(XyzFile xyz) throws IOException {
 

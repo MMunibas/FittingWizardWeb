@@ -17,7 +17,7 @@ import org.openbabel.OBMol;
  */
 
 
-public class BabelConverterAPI {
+class BabelConverterAPI {
 
     OBConversion conv;
     OBMol mol;

@@ -76,6 +76,7 @@ public class Fieldcomp {
     private String[] tokens = null;
     private final String delims = "\\s+";
 
+    /*
     public static void main(String[] args) {
 
         // configure logger
@@ -95,6 +96,7 @@ public class Fieldcomp {
         }
 
     }// end test main
+    */
 
     public Fieldcomp(String[] args) throws FieldcompParamsException{
         //Conversion parameters form Angstrom to Bohr and vice versa

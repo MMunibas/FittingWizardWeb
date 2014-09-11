@@ -38,25 +38,6 @@ public abstract class PSF {
     protected int ntheta;
     protected int nphi;
     protected int nimphi;
-//    protected int ndon;
-//    protected int nacc;
-//    protected int nnb;
-//    protected int molnt;
-
-    // always present in PSF
-//    protected int[] atomID = null;
-//    protected String[] segName = null;
-//    protected int[] resID = null;
-//    protected String[] resName = null;
-//    protected String[] atomName = null;
-//    protected int[] typeID = null;
-//    protected float[] charge = null;
-//    protected float[] mass = null;
-//    protected int[] imove = null;
-
-    // optional data depending on booleans isUsingCHEQ isUsingDRUDE
-//    protected double[] opt1 = null;
-//    protected double[] opt2 = null;
 
     // the lists read from PSF
     protected List<Atom> atomList = null;
@@ -64,9 +45,5 @@ public abstract class PSF {
     protected List<Angle> angleList = null;
     protected List<Dihedral> diheList = null;
     protected List<Improper> imprList = null;
-
-    protected Scanner s = null;
-
-    protected final String delims = "\\s+";
 
 } // end of class PSF

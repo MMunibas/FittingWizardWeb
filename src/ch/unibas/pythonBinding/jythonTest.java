@@ -22,7 +22,7 @@ public class jythonTest {
 
     /**
      * @param args the command line arguments
-     */
+     
     public static void main(String[] args) {
 
         Map<String, String> env = System.getenv();
@@ -47,7 +47,7 @@ public class jythonTest {
 //        python.execfile("/home/hedin/progra/workflowopt/scripts/check_rdkit_dependency.py");
 //        python.execfile("/home/hedin/progra/workflowopt/scripts/check_scipy_dependency.py");
 
-    }//main
+    }//main*/
 
 
 }
