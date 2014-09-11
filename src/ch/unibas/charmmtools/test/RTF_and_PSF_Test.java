@@ -8,6 +8,8 @@
  */
 package ch.unibas.charmmtools.test;
 
+import ch.unibas.charmmtools.files.PSF;
+import ch.unibas.charmmtools.files.PSF_generate;
 import ch.unibas.charmmtools.files.RTF;
 import ch.unibas.charmmtools.files.RTF_generate;
 import ch.unibas.fittingwizard.application.xyz.XyzFile;
@@ -33,12 +35,19 @@ public class RTF_and_PSF_Test {
             // initialise logger
             BasicConfigurator.configure();
 
+            //path to xyz file and csv file
             String xyzName = args[0];
             String csvName = args[1];
 
+            //reads a coordinates file (xyz format only)
             XyzFile xyzf = XyzFileParser.parse(new File(xyzName));
 
+            //generates a topology file
             RTF rtff = new RTF_generate(xyzf, csvName);
+            
+            //then a PSF file re-using data from PSF 
+            PSF psff = new PSF_generate(rtff);
+            
         } catch (IOException ex) {
             Logger.getLogger(RTF_generate.class.getName()).log(Level.SEVERE, null, ex);
         }
