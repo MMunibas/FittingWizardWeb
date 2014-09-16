@@ -9,8 +9,6 @@
 
 package ch.unibas.charmmtools.files;
 
-import java.util.Scanner;
-
 import ch.unibas.charmmtools.structures.Atom;
 import ch.unibas.charmmtools.structures.Angle;
 import ch.unibas.charmmtools.structures.Bond;

@@ -515,15 +515,21 @@ public final class RTF_generate extends RTF {
 
         // register impropers
         if (this.nimpr != 0) {
-        for (int i = 0; i < atmTypeList.size(); i++) {
-            IC_List.add(new InternalCoordinates(
-                    imprTypeList.get(i).getA2(),
-                    imprTypeList.get(i).getA3(),
-                    imprTypeList.get(i).getA1(),
-                    imprTypeList.get(i).getA4(),
-                    true
-            ));
+
+            for (int i = 0; i < this.nimpr; i++) {
+//                try {
+                IC_List.add(new InternalCoordinates(
+                        imprTypeList.get(i).getA2(),
+                        imprTypeList.get(i).getA3(),
+                        imprTypeList.get(i).getA1(),
+                        imprTypeList.get(i).getA4(),
+                        true));
+//                } catch (IndexOutOfBoundsException e) {
+//                    System.err.println("index error at i = " + i + " : " + e.getMessage());
+//                }
+
             }//loop on all atoms
+
         }//end this.nimpr != 0
 
     }//end find_IC()
@@ -537,7 +543,7 @@ public final class RTF_generate extends RTF {
         writer.write("* generated on " + d.toString() + "\n");
         writer.write("*\n");
 
-        writer.write("   22    0 \n\n");
+        writer.write("   22    0\n\n");
 
         writer.write("AUTOGENERATE ANGLES DIHE\n");
         writer.write("DEFA FIRS NONE LAST NONE\n\n");
