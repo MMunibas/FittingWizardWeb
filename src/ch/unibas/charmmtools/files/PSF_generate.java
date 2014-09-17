@@ -9,6 +9,7 @@
 
 package ch.unibas.charmmtools.files;
 
+import ch.unibas.charmmtools.structures.Atom;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -47,7 +48,8 @@ public final class PSF_generate extends PSF {
         this.imprList = topolInfo.getImprTypeList();
 
         //force extended output and disable other options
-        this.isExtendedFormat = true;
+//        this.isExtendedFormat = true;
+        this.isExtendedFormat = false;
         this.isUsingCHEQ = false;
         this.isUsingCMAP = false;
         this.isUsingDRUDE = false;
@@ -70,12 +72,12 @@ public final class PSF_generate extends PSF {
     private void setFormats() {
         if (isExtendedFormat) {
             format00 = "%10d%s";
-            format01 = "%10d %8c %8c %8c %8c %4d %14.6G%14.6G%8d";
-            format01a = "%10d %8c %8c %8c %8c %4d %14.6G%14.6G%8d%14.6G%14.6G";
-            format01b = "%10d %8c %8c %8c %8c %4d %14.6G%14.6G%8d%14.6G%14.6G%1b";
-            format02 = "%10d %8c %8c %8c %8c %6c %14.6G%14.6G%8d%14.6G%14.6G";
-            format02a = "%10d %8c %8c %8c %8c %6c %14.6G%14.6G%8d%14.6G%14.6G";
-            format02b = "%10d %8c %8c %8c %8c %6c %14.6G%14.6G%8d%14.6G%14.6G";
+            format01 = "%10d %8s %8s %8s %8s %4d %14.6G%14.6G%8d";
+            format01a = "%10d %8s %8s %8s %8s %4d %14.6G%14.6G%8d%14.6G%14.6G";
+            format01b = "%10d %8s %8s %8s %8s %4d %14.6G%14.6G%8d%14.6G%14.6G%1b";
+            format02 = "%10d %8s %8s %8s %8s %6c %14.6G%14.6G%8d%14.6G%14.6G";
+            format02a = "%10d %8s %8s %8s %8s %6c %14.6G%14.6G%8d%14.6G%14.6G";
+            format02b = "%10d %8s %8s %8s %8s %6c %14.6G%14.6G%8d%14.6G%14.6G";
             format03 = "%10d%10d%10d%10d%10d%10d%10d%10d";
             format04 = "%10d%10d%10d%10d%10d%10d%10d%10d%10d";
             format05 = "%10d%10d%s";
@@ -86,10 +88,10 @@ public final class PSF_generate extends PSF {
             header += " EXT";
         } else {
             format00 = "%8d%s";
-            format01 = "%8d %4c %4c %4c %4c %4d %14.6G%14.6G%8d";
-            format01a = "%8d %4c %4c %4c %4c %4d %14.6G%14.6G%8d%14.6G%14.6G";
-            format02 = "%8d %4c %4c %4c %4c %4c %14.6G%14.6G%8d";
-            format02a = "%8d %4c %4c %4c %4c %4c %14.6G%14.6G%8d%14.6G%14.6G";
+            format01 = "%8d %4s %4s %4s %4s %4d %14.6G%14.6G%8d";
+            format01a = "%8d %4s %4s %4s %4s %4d %14.6G%14.6G%8d%14.6G%14.6G";
+            format02 = "%8d %4s %4s %4s %4s %4s %14.6G%14.6G%8d";
+            format02a = "%8d %4s %4s %4s %4s %4s %14.6G%14.6G%8d%14.6G%14.6G";
             format03 = "%8d%8d%8d%8d%8d%8d%8d%8d";
             format04 = "%8d%8d%8d%8d%8d%8d%8d%8d%8d";
             format05 = "%8d%8d%s";
@@ -119,6 +121,12 @@ public final class PSF_generate extends PSF {
 
     private void writeNatomSection() throws IOException {
         writer.write(String.format(format00, this.natom, " !NATOM\n"));
+        for (Atom at : this.atomList) {
+            writer.write(String.format(
+                    format01,
+                    at.getAtomID(), at.getSegName(), Integer.toString(at.getResID()), at.getResName(),
+                    at.getRtfType(), at.getTypeID(), at.getCharge(), at.getMass(), 0) + "\n"); //"%8d %4s %4s %4s %4s %4d %14.6G%14.6G%8d"
+        }
     }
 
 

@@ -1,6 +1,16 @@
-PSF EXT
-         3 !NTITLE
+PSF
+       3 !NTITLE
 * PSF file for ethanol.xyz
-* generated on Wed Sep 17 16:14:33 CEST 2014
+* generated on Wed Sep 17 18:18:56 CEST 2014
 * by user hedin on machine Linux amd64 3.15.10-201.fc20.x86_64
-*
+
+       9 !NATOM
+       0  UNK    0  UNK  CT3    0        0.00000       0.00000       0
+       1  UNK    0  UNK  CT2    0        0.00000       0.00000       0
+       2  UNK    0  UNK  OH1    0        0.00000       0.00000       0
+       3  UNK    0  UNK   HA    0        0.00000       0.00000       0
+       4  UNK    0  UNK   HA    0        0.00000       0.00000       0
+       5  UNK    0  UNK   HA    0        0.00000       0.00000       0
+       6  UNK    0  UNK   HA    0        0.00000       0.00000       0
+       7  UNK    0  UNK   HA    0        0.00000       0.00000       0
+       8  UNK    0  UNK    H    0        0.00000       0.00000       0
