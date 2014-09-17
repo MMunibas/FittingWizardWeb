@@ -31,6 +31,8 @@ import java.util.logging.Logger;
  */
 public abstract class RTF {
 
+    protected String fname = null;
+
     protected List<?> InputDataAtoms = null;
 
     protected int natom = 0;
@@ -172,6 +174,13 @@ public abstract class RTF {
      */
     public List<InternalCoordinates> getIC_List() {
         return IC_List;
+    }
+
+    /**
+     * @return the fname
+     */
+    public String getFname() {
+        return fname;
     }
 
 }

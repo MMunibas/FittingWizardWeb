@@ -28,8 +28,6 @@ import java.util.List;
  */
 public final class RTF_generate extends RTF {
 
-    private String fname = null;
-
     public RTF_generate(XyzFile xyz) throws IOException {
 
         super();
@@ -536,11 +534,14 @@ public final class RTF_generate extends RTF {
 
     private void write_topology_file() throws IOException {
         Date d = new Date();
-        BufferedWriter writer = new BufferedWriter(new FileWriter("topol.rtf"));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(this.fname + ".rtf"));
 
         writer.write("* ...\n");
         writer.write("* Build RTF for " + this.fname + ".xyz\n");
         writer.write("* generated on " + d.toString() + "\n");
+        writer.write("* by user " + System.getProperty("user.name") + " on machine "
+                + System.getProperty("os.name") + " " + System.getProperty("os.arch") + " "
+                + System.getProperty("os.version") + "\n");
         writer.write("*\n");
 
         writer.write("   22    0\n\n");
