@@ -10,6 +10,7 @@
 package ch.unibas.charmmtools.files;
 
 import ch.unibas.charmmtools.structures.Atom;
+import ch.unibas.charmmtools.structures.Bond;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -56,28 +57,40 @@ public final class PSF_generate extends PSF {
 
         this.myname = topolInfo.getFname();
 
+        //fix possibly missing mass of atoms
+        this.fixMass(topolInfo);
+
+        //generate psf file
         writer = new BufferedWriter(new FileWriter(this.myname + ".psf"));
-
         this.generate();
-
         writer.close();
+    }
+
+    private void fixMass(RTF topolInfo) {
+        for (Atom at : atomList) {
+            if (at.getMass() < 1.0) {
+                at.setMass(topolInfo.findMass(at.getAtomName()));
+            }
+        }
     }
 
     private void generate() throws IOException {
         this.setFormats();
         this.writeHeaderAndTitle();
-        this.writeNatomSection();
+        this.writeAtomSection();
+        this.writeBondSection();
+        this.writeAngleSection();
     }
 
     private void setFormats() {
         if (isExtendedFormat) {
             format00 = "%10d%s";
-            format01 = "%10d %8s %8s %8s %8s %4d %14.6G%14.6G%8d";
-            format01a = "%10d %8s %8s %8s %8s %4d %14.6G%14.6G%8d%14.6G%14.6G";
-            format01b = "%10d %8s %8s %8s %8s %4d %14.6G%14.6G%8d%14.6G%14.6G%1b";
-            format02 = "%10d %8s %8s %8s %8s %6c %14.6G%14.6G%8d%14.6G%14.6G";
-            format02a = "%10d %8s %8s %8s %8s %6c %14.6G%14.6G%8d%14.6G%14.6G";
-            format02b = "%10d %8s %8s %8s %8s %6c %14.6G%14.6G%8d%14.6G%14.6G";
+            format01 = "%10d %-8s %-8s %-8s %-8s %4d %14.6G%14.6G%8d";
+            format01a = "%10d %-8s %-8s %-8s %-8s %4d %14.6G%14.6G%8d%14.6G%14.6G";
+            format01b = "%10d %-8s %-8s %-8s %-8s %4d %14.6G%14.6G%8d%14.6G%14.6G%1b";
+            format02 = "%10d %-8s %-8s %-8s %-8s %-6s %14.6G%14.6G%8d%14.6G%14.6G";
+            format02a = "%10d %-8s %-8s %-8s %-8s %-6s %14.6G%14.6G%8d%14.6G%14.6G";
+            format02b = "%10d %-8s %-8s %-8s %-8s %-6s %14.6G%14.6G%8d%14.6G%14.6G";
             format03 = "%10d%10d%10d%10d%10d%10d%10d%10d";
             format04 = "%10d%10d%10d%10d%10d%10d%10d%10d%10d";
             format05 = "%10d%10d%s";
@@ -88,10 +101,10 @@ public final class PSF_generate extends PSF {
             header += " EXT";
         } else {
             format00 = "%8d%s";
-            format01 = "%8d %4s %4s %4s %4s %4d %14.6G%14.6G%8d";
-            format01a = "%8d %4s %4s %4s %4s %4d %14.6G%14.6G%8d%14.6G%14.6G";
-            format02 = "%8d %4s %4s %4s %4s %4s %14.6G%14.6G%8d";
-            format02a = "%8d %4s %4s %4s %4s %4s %14.6G%14.6G%8d%14.6G%14.6G";
+            format01 = "%8d %-4s %-4s %-4s %-4s %4d %14.6G%14.6G%8d";
+            format01a = "%8d %-4s %-4s %-4s %-4s %4d %14.6G%14.6G%8d%14.6G%14.6G";
+            format02 = "%8d %-4s %-4s %-4s %-4s %-4s %14.6G%14.6G%8d";
+            format02a = "%8d %-4s %-4s %-4s %-4s %-4s %14.6G%14.6G%8d%14.6G%14.6G";
             format03 = "%8d%8d%8d%8d%8d%8d%8d%8d";
             format04 = "%8d%8d%8d%8d%8d%8d%8d%8d%8d";
             format05 = "%8d%8d%s";
@@ -119,16 +132,45 @@ public final class PSF_generate extends PSF {
 
     }
 
-    private void writeNatomSection() throws IOException {
+    private void writeAtomSection() throws IOException {
         writer.write(String.format(format00, this.natom, " !NATOM\n"));
         for (Atom at : this.atomList) {
             writer.write(String.format(
                     format01,
-                    at.getAtomID(), at.getSegName(), Integer.toString(at.getResID()), at.getResName(),
-                    at.getRtfType(), at.getTypeID(), at.getCharge(), at.getMass(), 0) + "\n"); //"%8d %4s %4s %4s %4s %4d %14.6G%14.6G%8d"
+                    at.getCHARMMAtomID(), at.getSegName(), Integer.toString(at.getResID()), at.getResName(),
+                    at.getRtfType(), at.getTypeID(), at.getCharge(), at.getMass(), 0) + "\n");
         }
+        writer.write("\n");
     }
 
+    private void writeBondSection() throws IOException {
+        writer.write(String.format(format00, this.nbond, " !NBOND: bonds\n"));
+        for (int bnd = 0; bnd < nbond; bnd++) {
+            writer.write(String.format(
+                    format03,
+                    bondList.get(bnd).getA1().getCHARMMAtomID(), bondList.get(bnd).getA2().getCHARMMAtomID(),
+                    bondList.get(++bnd).getA1().getCHARMMAtomID(), bondList.get(bnd).getA2().getCHARMMAtomID(),
+                    bondList.get(++bnd).getA1().getCHARMMAtomID(), bondList.get(bnd).getA2().getCHARMMAtomID(),
+                    bondList.get(++bnd).getA1().getCHARMMAtomID(), bondList.get(bnd).getA2().getCHARMMAtomID()
+            ));
+            writer.write("\n");
+        }
+        writer.write("\n");
+    }
+
+    private void writeAngleSection() throws IOException {
+        writer.write(String.format(format00, this.ntheta, " !NTHETA: angles\n"));
+        for (int ang = 0; ang < ntheta; ang++) {
+            writer.write(String.format(
+                    format04,
+                    angleList.get(ang).getA1().getCHARMMAtomID(), angleList.get(ang).getA2().getCHARMMAtomID(), angleList.get(ang).getA3().getCHARMMAtomID(),
+                    angleList.get(++ang).getA1().getCHARMMAtomID(), angleList.get(ang).getA2().getCHARMMAtomID(), angleList.get(ang).getA3().getCHARMMAtomID(),
+                    angleList.get(++ang).getA1().getCHARMMAtomID(), angleList.get(ang).getA2().getCHARMMAtomID(), angleList.get(ang).getA3().getCHARMMAtomID()
+            ));
+            writer.write("\n");
+        }
+        writer.write("\n");
+    }
 
 
 }//end class

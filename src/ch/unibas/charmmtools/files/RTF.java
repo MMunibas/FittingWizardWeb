@@ -39,7 +39,8 @@ public abstract class RTF {
     protected int nbonds = 0;
     protected int nimpr = 0;
 
-    protected HashMap<String, Double> covRadList = null;
+    protected HashMap<String, Double> covRad = null;
+    protected HashMap<String, Double> atomicWeight = null;
 
     protected HashMap<Integer, String> C_hybridList = new HashMap<Integer, String>() {
         {
@@ -48,6 +49,7 @@ public abstract class RTF {
             put(2, "sp");
         }
     };
+
     protected HashMap<Integer, String> O_hybridList = new HashMap<Integer, String>() {
         {
             put(2, "sp3");
@@ -72,7 +74,7 @@ public abstract class RTF {
     protected List<InternalCoordinates> IC_List = new ArrayList<>();
 
     public RTF() {
-        this.covRadList = new HashMap<String, Double>() {
+        this.covRad = new HashMap<String, Double>() {
             {
                 put("C", 0.8);
                 put("H", 0.4);
@@ -83,26 +85,39 @@ public abstract class RTF {
                 put("F", 1.3);
             }
         };
+        this.atomicWeight = new HashMap<String, Double>() {
+            {
+                put("C", 12.011);
+                put("H", 1.008);
+                put("O", 15.999);
+                put("N", 14.007);
+                put("S", 32.060);
+                put("P", 30.974);
+                put("F", 18.998);
+            }
+        };
     }//ctor
 
-    public RTF(String csvfile) {
-        this.covRadList = new HashMap<String, Double>();
-        readCovRad(csvfile);
+    public RTF(String atomicInfo) {
+        this.covRad = new HashMap<String, Double>();
+        this.atomicWeight = new HashMap<String, Double>();
+        readAtomicInfo(atomicInfo);
     }//ctor
 
-    public final void readCovRad(String csvfilename) {
+    public final void readAtomicInfo(String atInfoFileName) {
 
         CSVReader csv = null;
         String[] dat = null;
         try {
 
-            csv = new CSVReader(new FileReader(csvfilename));
+            csv = new CSVReader(new FileReader(atInfoFileName));
             //ignore first line
             dat = csv.readNext();
 
-            //iterate over csv file to get covalence radii
+            //iterate over csv file to get atomic data
             while ((dat = csv.readNext()) != null) {
-                this.covRadList.put(dat[1], Double.parseDouble(dat[2]));
+                this.covRad.put(dat[1], Double.parseDouble(dat[2]));
+                this.atomicWeight.put(dat[1], Double.parseDouble(dat[3]));
             }
    
         } catch (FileNotFoundException ex) {
@@ -111,7 +126,7 @@ public abstract class RTF {
             Logger.getLogger(RTF.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-    }//end readCovRad
+    }//end readAtomicInfo
 
     /**
      * @return the natom
@@ -183,4 +198,8 @@ public abstract class RTF {
         return fname;
     }
 
-}
+    public double findMass(String atname) {
+        return atomicWeight.get(atname);
+    }
+
+}//end of RTF class

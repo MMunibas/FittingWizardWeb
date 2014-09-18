@@ -107,10 +107,17 @@ public class Atom {
     }
 
     /**
-     * @return the atomID
+     * @return the atomID (starting at 0)
      */
     public int getAtomID() {
         return atomID;
+    }
+
+    /**
+     * @return the atomID for charmm (starting at 1)
+     */
+    public int getCHARMMAtomID() {
+        return atomID + 1;
     }
 
     /**

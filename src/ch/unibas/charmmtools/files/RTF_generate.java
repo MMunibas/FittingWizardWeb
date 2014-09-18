@@ -91,8 +91,8 @@ public final class RTF_generate extends RTF {
                     continue;
                 }
                 dist = Bond.calcLength(atmTypeList.get(i), atmTypeList.get(j));
-                if (dist < covRadList.get(atmTypeList.get(i).getAtomName())
-                        + covRadList.get(atmTypeList.get(j).getAtomName())) {
+                if (dist < covRad.get(atmTypeList.get(i).getAtomName())
+                        + covRad.get(atmTypeList.get(j).getAtomName())) {
                     this.nbonds++;
                     bndTypeList.add(new Bond(atmTypeList.get(i), atmTypeList.get(j), dist));
                     atmTypeList.get(i).addBondTo(j);

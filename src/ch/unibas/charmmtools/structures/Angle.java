@@ -83,6 +83,26 @@ public class Angle {
         return angle;
     }
 
+    /**
+     * @return the a1
+     */
+    public Atom getA1() {
+        return a1;
+    }
+
+    /**
+     * @return the a2
+     */
+    public Atom getA2() {
+        return a2;
+    }
+
+    /**
+     * @return the a3
+     */
+    public Atom getA3() {
+        return a3;
+    }
 
 
 }//end class
