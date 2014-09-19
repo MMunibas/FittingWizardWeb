@@ -80,6 +80,8 @@ public final class PSF_generate extends PSF {
         this.writeAtomSection();
         this.writeBondSection();
         this.writeAngleSection();
+        this.writeDiheSection();
+        this.writeImprSection();
     }
 
     private void setFormats() {
@@ -166,6 +168,36 @@ public final class PSF_generate extends PSF {
                     angleList.get(ang).getA1().getCHARMMAtomID(), angleList.get(ang).getA2().getCHARMMAtomID(), angleList.get(ang).getA3().getCHARMMAtomID(),
                     angleList.get(++ang).getA1().getCHARMMAtomID(), angleList.get(ang).getA2().getCHARMMAtomID(), angleList.get(ang).getA3().getCHARMMAtomID(),
                     angleList.get(++ang).getA1().getCHARMMAtomID(), angleList.get(ang).getA2().getCHARMMAtomID(), angleList.get(ang).getA3().getCHARMMAtomID()
+            ));
+            writer.write("\n");
+        }
+        writer.write("\n");
+    }
+
+    private void writeDiheSection() throws IOException {
+        writer.write(String.format(format00, this.ntheta, " !NPHI: dihedrals\n"));
+        for (int dihe = 0; dihe < nphi; dihe++) {
+            writer.write(String.format(
+                    format03,
+                    diheList.get(dihe).getA1().getCHARMMAtomID(), diheList.get(dihe).getA2().getCHARMMAtomID(),
+                    diheList.get(dihe).getA3().getCHARMMAtomID(), diheList.get(dihe).getA4().getCHARMMAtomID(),
+                    diheList.get(++dihe).getA1().getCHARMMAtomID(), diheList.get(dihe).getA2().getCHARMMAtomID(),
+                    diheList.get(dihe).getA3().getCHARMMAtomID(), diheList.get(dihe).getA4().getCHARMMAtomID()
+            ));
+            writer.write("\n");
+        }
+        writer.write("\n");
+    }
+
+    private void writeImprSection() throws IOException {
+        writer.write(String.format(format00, this.nimphi, " !NIMPHI: impropers\n"));
+        for (int impr = 0; impr < nimphi; impr++) {
+            writer.write(String.format(
+                    format03,
+                    diheList.get(impr).getA1().getCHARMMAtomID(), diheList.get(impr).getA2().getCHARMMAtomID(),
+                    diheList.get(impr).getA3().getCHARMMAtomID(), diheList.get(impr).getA4().getCHARMMAtomID(),
+                    diheList.get(++impr).getA1().getCHARMMAtomID(), diheList.get(impr).getA2().getCHARMMAtomID(),
+                    diheList.get(impr).getA3().getCHARMMAtomID(), diheList.get(impr).getA4().getCHARMMAtomID()
             ));
             writer.write("\n");
         }

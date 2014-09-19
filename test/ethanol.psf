@@ -1,7 +1,7 @@
 PSF
        3 !NTITLE
 * PSF file for ethanol.xyz
-* generated on Thu Sep 18 15:08:37 CEST 2014
+* generated on Fri Sep 19 11:46:28 CEST 2014
 * by user hedin on machine Linux amd64 3.15.10-201.fc20.x86_64
 
        9 !NATOM
@@ -20,4 +20,8 @@ PSF
        2       3       2       7       2       8       3       9
 
        0 !NTHETA: angles
+
+       0 !NPHI: dihedrals
+
+       0 !NIMPHI: impropers
 
