@@ -175,7 +175,7 @@ public final class PSF_generate extends PSF {
     }
 
     private void writeDiheSection() throws IOException {
-        writer.write(String.format(format00, this.ntheta, " !NPHI: dihedrals\n"));
+        writer.write(String.format(format00, this.nphi, " !NPHI: dihedrals\n"));
         for (int dihe = 0; dihe < nphi; dihe++) {
             writer.write(String.format(
                     format03,
