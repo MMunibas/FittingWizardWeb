@@ -11,3 +11,5 @@
 /data
 /lib/jython/cachedir/
 /test/*.log
+/doc/charmm_doc
+
