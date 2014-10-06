@@ -35,7 +35,16 @@ public abstract class CHARMM_input {
     //nbxmod : for building nonbonded list
     //can be modified for adding more that 1,4 interactions
     protected int nbxmod;
-    // scalars for storing cutoff and cuton values
+    /*
+    scalars for storing cutoff and cuton values
+    cut_nb : Distance cutoff in generating the list of pairs
+    
+    cutoff_nb : Distance cut at which the switching function eliminates
+    all contributions from a pair in calculating energies.
+    
+    cuton_nb : Distance cut at which the smoothing function begins to reduce
+    a pair's contribution. This value is not used with SHFT.
+    */
     protected double cut_nb,cutoff_nb,cuton_nb;
     // a scaling factor for the no-bonded 1,4 interactions
     protected double epsilon14scalingFactor;
