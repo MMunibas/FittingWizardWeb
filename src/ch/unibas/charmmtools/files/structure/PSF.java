@@ -7,13 +7,13 @@
  *
  */
 
-package ch.unibas.charmmtools.files;
+package ch.unibas.charmmtools.files.structure;
 
-import ch.unibas.charmmtools.structures.Atom;
-import ch.unibas.charmmtools.structures.Angle;
-import ch.unibas.charmmtools.structures.Bond;
-import ch.unibas.charmmtools.structures.Dihedral;
-import ch.unibas.charmmtools.structures.Improper;
+import ch.unibas.charmmtools.internals.Atom;
+import ch.unibas.charmmtools.internals.Angle;
+import ch.unibas.charmmtools.internals.Bond;
+import ch.unibas.charmmtools.internals.Dihedral;
+import ch.unibas.charmmtools.internals.Improper;
 import java.util.List;
 
 /**

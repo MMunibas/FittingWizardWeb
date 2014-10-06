@@ -7,7 +7,7 @@
  *
  */
 
-package ch.unibas.charmmtools.files;
+package ch.unibas.charmmtools.files.coordinates;
 
 import java.io.BufferedWriter;
 import java.io.File;

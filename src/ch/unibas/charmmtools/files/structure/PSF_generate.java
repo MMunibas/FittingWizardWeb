@@ -7,10 +7,11 @@
  *
  */
 
-package ch.unibas.charmmtools.files;
+package ch.unibas.charmmtools.files.structure;
 
-import ch.unibas.charmmtools.structures.Atom;
-import ch.unibas.charmmtools.structures.Bond;
+import ch.unibas.charmmtools.files.topology.RTF;
+import ch.unibas.charmmtools.internals.Atom;
+import ch.unibas.charmmtools.internals.Bond;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;

@@ -7,7 +7,7 @@
  *
  */
 
-package ch.unibas.charmmtools.structures;
+package ch.unibas.charmmtools.internals;
 
 import java.util.ArrayList;
 import java.util.HashMap;

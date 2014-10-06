@@ -7,7 +7,7 @@
  *
  */
 
-package ch.unibas.charmmtools.structures;
+package ch.unibas.charmmtools.internals;
 
 import ch.unibas.charmmtools.utils.MathTools;
 import static java.lang.Math.acos;

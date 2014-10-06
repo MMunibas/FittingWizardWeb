@@ -8,10 +8,10 @@
  */
 package ch.unibas.charmmtools.test;
 
-import ch.unibas.charmmtools.files.PSF;
-import ch.unibas.charmmtools.files.PSF_generate;
-import ch.unibas.charmmtools.files.RTF;
-import ch.unibas.charmmtools.files.RTF_generate;
+import ch.unibas.charmmtools.files.structure.PSF;
+import ch.unibas.charmmtools.files.structure.PSF_generate;
+import ch.unibas.charmmtools.files.topology.RTF;
+import ch.unibas.charmmtools.files.topology.RTF_generate;
 import ch.unibas.fittingwizard.application.xyz.XyzFile;
 import ch.unibas.fittingwizard.application.xyz.XyzFileParser;
 import java.io.File;
