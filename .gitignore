@@ -12,4 +12,7 @@
 /lib/jython/cachedir/
 /test/*.log
 /doc/charmm_doc
+test/ethanol.psf
+test/ethanol.rtf
+test/test_coordinates.xyz.inp
 

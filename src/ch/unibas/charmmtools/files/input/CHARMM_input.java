@@ -8,6 +8,16 @@
  */
 package ch.unibas.charmmtools.files.input;
 
+import ch.unibas.charmmtools.files.input.NBONDS.add_elec;
+import ch.unibas.charmmtools.files.input.NBONDS.add_elec_opt;
+import ch.unibas.charmmtools.files.input.NBONDS.add_ewald;
+import ch.unibas.charmmtools.files.input.NBONDS.add_vdw;
+import ch.unibas.charmmtools.files.input.NBONDS.cut_type;
+import ch.unibas.charmmtools.files.input.NBONDS.nbonds_type;
+import ch.unibas.charmmtools.files.input.NBONDS.nbxmod_type;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -16,7 +26,11 @@ import java.util.Date;
  */
 public class CHARMM_input {
 
+    private BufferedWriter writer = null;
+
     private String title = "";
+
+    private Date d = new Date();
 
     /*
      * bomlev is the error level causing abortion of CHARMM
@@ -38,10 +52,24 @@ public class CHARMM_input {
 
     private NBONDS nbonds_params;
 
-    public CHARMM_input(String myname) {
-        //prepare title
-        Date d = new Date();
-        this.title += "* CHARMM input file for " + myname + "\n";
+    public CHARMM_input(String crdname, String topolname, String ffname) throws IOException {
+
+        writer = new BufferedWriter(new FileWriter(crdname + ".inp"));
+
+        //prepare and print title
+        this.print_title(crdname);
+
+        //prepare and print io section
+        this.print_iosection(topolname, ffname);
+
+        //prepare non bonded parameters line and print it
+        this.print_nbondsSection();
+
+        writer.close();
+    }
+
+    private void print_title(String crdfile) throws IOException {
+        this.title += "* CHARMM input file for " + crdfile + "\n";
         this.title += "* generated on " + d.toString() + "\n";
         this.title += "* by user " + System.getProperty("user.name") + " on machine "
                 + System.getProperty("os.name") + " " + System.getProperty("os.arch") + " "
@@ -49,22 +77,33 @@ public class CHARMM_input {
         this.title += "*\n";
 
         //then print it
-        System.out.println(this.title);
+        writer.write(this.title + "\n");
 
         //print error level and print level
-        System.out.println("bomlev " + this.bomlev);
-        System.out.println("prnlev " + this.prnlev + "\n");
+        writer.write("bomlev " + this.bomlev + "\n");
+        writer.write("prnlev " + this.prnlev + "\n\n");
+    }
 
-        //prepare non bonded parameters line and print it
-        NBONDS.nbonds_type nbtype = NBONDS.nbonds_type.ATOM;
-        NBONDS.add_elec electype = NBONDS.add_elec.ELEC;
-        NBONDS.add_vdw vdwtype = NBONDS.add_vdw.VDW;
-        NBONDS.add_ewald ewaldtype = NBONDS.add_ewald.NOEWald;
-        NBONDS.add_elec_opt elecopt = NBONDS.add_elec_opt.CDIElec;
-        NBONDS.cut_type cuttype = NBONDS.cut_type.SHIFted;
-        NBONDS.nbxmod_type nbxmod = NBONDS.nbxmod_type.PRESERVE;
-        NBONDS nbstring = new NBONDS(nbtype, electype, vdwtype, ewaldtype, elecopt, cuttype, nbxmod);
-        System.out.println(nbstring.getNB_params() + "\n");
+    private void print_iosection(String topol, String par) throws IOException {
+        //print commands for reading forcefield parameters and topology file
+        writer.write("! read parameters and coordinates" + "\n");
+        writer.write("read rtf card name -" + "\n");
+        writer.write("   ./" + topol + "\n");
+        writer.write("read param card name -" + "\n");
+        writer.write("   ./" + par + "\n\n");
+    }
+
+    private void print_nbondsSection() throws IOException {
+        nbonds_type nbtype = nbonds_type.ATOM;
+        add_elec electype = add_elec.ELEC;
+        add_vdw vdwtype = add_vdw.VDW;
+        add_ewald ewaldtype = add_ewald.NOEWald;
+        add_elec_opt elecopt = add_elec_opt.CDIElec;
+        cut_type cuttype = cut_type.SHIFted;
+        nbxmod_type nbxmod = nbxmod_type.PRESERVE;
+        nbonds_params = new NBONDS(nbtype, electype, vdwtype, ewaldtype, elecopt, cuttype, nbxmod);
+        writer.write("! Non bonded parameters" + "\n");
+        writer.write(nbonds_params.getNB_params() + "\n\n");
     }
 
 }//end of class
