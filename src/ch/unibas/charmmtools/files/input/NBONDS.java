@@ -221,6 +221,7 @@ public class NBONDS {
         NB_params += cuttype.getKey() + " ";
         NB_params += "NBXMod " + nbxmod.getValue() + " ";
 
+        NB_params += "\n";
     }
 
     /**
