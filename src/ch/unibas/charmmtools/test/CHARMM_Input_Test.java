@@ -23,6 +23,7 @@ public class CHARMM_Input_Test {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+
         try {
             // TODO code application logic here
 

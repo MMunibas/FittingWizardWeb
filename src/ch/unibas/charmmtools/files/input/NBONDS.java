@@ -225,7 +225,8 @@ public class NBONDS {
     }
 
     /**
-     * @return the NB_params
+     * @return the NB_params string
+     *
      */
     public String getNB_params() {
         return NB_params;
