@@ -15,4 +15,5 @@
 test/ethanol.psf
 test/ethanol.rtf
 test/test_coordinates.xyz.inp
-
+/html
+/latex
