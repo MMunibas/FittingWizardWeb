@@ -8,17 +8,13 @@
  */
 package ch.unibas.charmmtools.test;
 
-//import ch.unibas.charmmtools.files.input.CHARMM_input;
-//import java.io.IOException;
-//import java.util.logging.Level;
-//import java.util.logging.Logger;
-
+import ch.unibas.fittingwizard.Settings;
+import ch.unibas.fittingwizard.presentation.MoleculeListPage;
+import ch.unibas.fittingwizard.presentation.base.Wizard;
+import ch.unibas.fittingwizard.presentation.base.WizardPageFactory;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
@@ -31,6 +27,8 @@ public class CHARMM_Input_Test extends Application {
 
     private static final Logger logger = Logger.getLogger(CHARMM_Input_Test.class);
 
+//    private Settings settings;
+
     public static void main(String[] args) {
         BasicConfigurator.configure();
         launch(args);
@@ -39,17 +37,36 @@ public class CHARMM_Input_Test extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        logger.info("Application starting.");
+        try {
+            logger.info("Application starting.");
 
-        primaryStage.setTitle("My CHARMM GUI");
-        primaryStage.show();
-    }
+            Parent root = this.setup(primaryStage);
+
+            Scene scene = new Scene(root, 1024, 768);
+//          this.loadStylesheets(scene);
+            primaryStage.setScene(scene);
+            primaryStage.setTitle("My CHARMM GUI");
+            primaryStage.show();
+        } catch (Exception e) {
+            logger.error("Error in application startup application.", e);
+            throw e;
+        }
+
+    }//end start
 
     @Override
     public void stop() throws Exception {
         super.stop();
         logger.info("Application stopped.");
         System.exit(0);
+    }
+
+    private Parent setup(Stage primaryStage) {
+        WizardPageFactory factory = new WizardPageFactory(primaryStage);
+        Wizard wizard = new Wizard(factory);
+        wizard.navigateTo(MoleculeListPage.class, null);
+//        this.settings = factory.getSettings();
+        return wizard;
     }
 
 } //end of class
