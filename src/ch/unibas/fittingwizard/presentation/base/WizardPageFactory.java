@@ -51,6 +51,7 @@ import ch.unibas.fittingwizard.mocks.MockFitMtpScript;
 import ch.unibas.fittingwizard.mocks.MockFittabMarkerScript;
 import ch.unibas.fittingwizard.mocks.MockLRAScript;
 import ch.unibas.fittingwizard.mocks.MockMultipoleGaussScript;
+import ch.unibas.fittingwizard.presentation.CHARMM_Input_Page;
 import ch.unibas.fittingwizard.presentation.MoleculeListPage;
 import ch.unibas.fittingwizard.presentation.addmolecule.AtomChargesDto;
 import ch.unibas.fittingwizard.presentation.addmolecule.AtomTypeChargePage;
@@ -175,6 +176,7 @@ public class WizardPageFactory {
 
     public <T extends WizardPage> WizardPage create(Class<T> type, Object parameter) {
         WizardPage page;
+        logger.info("Type is : " + type.toString());
         try {
             if (type == MoleculeListPage.class) {
                 page = new MoleculeListPage(visualization,
@@ -199,7 +201,7 @@ public class WizardPageFactory {
                 GaussCalculationDto dto = throwIfParameterIsNull(parameter);
                 page = new GaussCalculationPage(runGaussianWorkflow, dto);
             }
-            // FITTING PAGES
+            // GAUSSIAN FITTING PAGES
             else if (type == FittingParameterPage.class) {
                 FitMtpInput dto = (FitMtpInput) parameter;
                 page = new FittingParameterPage(fitRepository,
@@ -217,8 +219,10 @@ public class WizardPageFactory {
                         visualization,
                         exportFitWorkflow,
                         vmdDisplayWorkflow);
-            }
-            // MISC
+            } // CHARMM FITTING PAGES
+            else if (type == CHARMM_Input_Page.class) {
+                page = new CHARMM_Input_Page(visualization, "My CHARMM Title");
+            } // MISC
             else {
                 page = type.newInstance();
             }
