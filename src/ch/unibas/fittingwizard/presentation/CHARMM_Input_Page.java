@@ -8,22 +8,24 @@
  */
 package ch.unibas.fittingwizard.presentation;
 
-import ch.unibas.fittingwizard.application.Visualization;
-import ch.unibas.fittingwizard.presentation.base.WizardPageWithVisualization;
+import ch.unibas.fittingwizard.presentation.base.WizardPage;
+
 
 /**
+ * FXML Controller class
  *
  * @author hedin
  */
-public class CHARMM_Input_Page extends WizardPageWithVisualization {
+public class CHARMM_Input_Page extends WizardPage {
 
-    public CHARMM_Input_Page(Visualization visualization, String title) {
-        super(visualization, title);
+    public CHARMM_Input_Page(String title) {
+        super(title);
     }
 
     @Override
     protected void fillButtonBar() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
 
 }

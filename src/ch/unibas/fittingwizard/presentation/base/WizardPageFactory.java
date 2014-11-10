@@ -221,7 +221,7 @@ public class WizardPageFactory {
                         vmdDisplayWorkflow);
             } // CHARMM FITTING PAGES
             else if (type == CHARMM_Input_Page.class) {
-                page = new CHARMM_Input_Page(visualization, "My CHARMM Title");
+                page = new CHARMM_Input_Page("My CHARMM Title");
             } // MISC
             else {
                 page = type.newInstance();
