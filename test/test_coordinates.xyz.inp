@@ -1,0 +1,18 @@
+* CHARMM input file for test_coordinates.xyz
+* generated on Thu Oct 30 15:49:30 CET 2014
+* by user hedin on machine Linux amd64 3.16.6-200.fc20.x86_64
+*
+
+bomlev 0
+prnlev 2
+
+! read parameters and coordinates
+read rtf card name -
+   ./test_topol.rtf
+read param card name -
+   ./test_params.par
+
+! Non bonded parameters
+NBONDS ATOM ELEC VDW NOEW CDIE SHIF NBXMod 0 
+
+
