@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unibas.charmmtools.test.gui.CHARMM_Input_Simple_fxmlController">
+    <stylesheets>
+        <URL value="@charmm_input_simple_fxml.css" />
+    </stylesheets>
+   <children>
+      <TableView layoutX="79.0" layoutY="14.0" prefHeight="228.0" prefWidth="426.0">
+        <columns>
+          <TableColumn prefWidth="75.0" text="C1" />
+          <TableColumn prefWidth="75.0" text="C2" />
+            <TableColumn prefWidth="147.0" text="Column X" />
+            <TableColumn prefWidth="75.0" text="Column X" />
+        </columns>
+      </TableView>
+      <TreeView layoutX="39.0" layoutY="264.0" prefHeight="111.0" prefWidth="184.0" />
+      <Text layoutX="388.0" layoutY="324.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+   </children>
+</AnchorPane>

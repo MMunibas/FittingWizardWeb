@@ -51,7 +51,7 @@ import ch.unibas.fittingwizard.mocks.MockFitMtpScript;
 import ch.unibas.fittingwizard.mocks.MockFittabMarkerScript;
 import ch.unibas.fittingwizard.mocks.MockLRAScript;
 import ch.unibas.fittingwizard.mocks.MockMultipoleGaussScript;
-import ch.unibas.fittingwizard.presentation.CHARMM_Input_Page;
+//import ch.unibas.fittingwizard.presentation.CHARMM_Input_Page;
 import ch.unibas.fittingwizard.presentation.MoleculeListPage;
 import ch.unibas.fittingwizard.presentation.addmolecule.AtomChargesDto;
 import ch.unibas.fittingwizard.presentation.addmolecule.AtomTypeChargePage;
@@ -219,10 +219,10 @@ public class WizardPageFactory {
                         visualization,
                         exportFitWorkflow,
                         vmdDisplayWorkflow);
-            } // CHARMM FITTING PAGES
-            else if (type == CHARMM_Input_Page.class) {
-                page = new CHARMM_Input_Page("My CHARMM Title");
-            } // MISC
+            } //            // CHARMM FITTING PAGES
+            //            else if (type == CHARMM_Input_Page.class) {
+            //                page = new CHARMM_Input_Page("My CHARMM Title");
+            //            } // MISC
             else {
                 page = type.newInstance();
             }

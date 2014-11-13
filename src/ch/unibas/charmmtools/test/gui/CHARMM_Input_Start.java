@@ -6,10 +6,10 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.test;
+package ch.unibas.charmmtools.test.gui;
 
 import ch.unibas.fittingwizard.Settings;
-import ch.unibas.fittingwizard.presentation.CHARMM_Input_Page;
+//import ch.unibas.fittingwizard.presentation.CHARMM_Input_Page;
 import ch.unibas.fittingwizard.presentation.MoleculeListPage;
 import ch.unibas.fittingwizard.presentation.base.Wizard;
 import ch.unibas.fittingwizard.presentation.base.WizardPageFactory;
@@ -24,9 +24,9 @@ import org.apache.log4j.Logger;
  *
  * @author hedin
  */
-public class CHARMM_Input_Test extends Application {
+public class CHARMM_Input_Start extends Application {
 
-    private static final Logger logger = Logger.getLogger(CHARMM_Input_Test.class);
+    private static final Logger logger = Logger.getLogger(CHARMM_Input_Start.class);
 
 //    private Settings settings;
 
@@ -66,7 +66,7 @@ public class CHARMM_Input_Test extends Application {
         WizardPageFactory factory = new WizardPageFactory(primaryStage);
         Wizard wizard = new Wizard(factory);
 //        wizard.navigateTo(MoleculeListPage.class, null);
-        wizard.navigateTo(CHARMM_Input_Page.class, null);
+//        wizard.navigateTo(CHARMM_Input_Page.class, null);
 //        this.settings = factory.getSettings();
         return wizard;
     }
@@ -83,7 +83,7 @@ public class CHARMM_Input_Test extends Application {
 //
 //            CHARMM_input input = new CHARMM_input("test_coordinates.xyz", "test_topol.rtf", "test_params.par");
 //        } catch (IOException ex) {
-//            Logger.getLogger(CHARMM_Input_Test.class.getName()).log(Level.SEVERE, null, ex);
+//            Logger.getLogger(CHARMM_Input_Start.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //
 //    }
