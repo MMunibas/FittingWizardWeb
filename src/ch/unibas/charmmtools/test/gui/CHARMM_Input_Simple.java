@@ -34,7 +34,7 @@ public class CHARMM_Input_Simple extends Application {
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("CHARMM_Input_Simple_fxml.fxml"));
 
-        Scene scene = new Scene(root, 300, 275);
+        Scene scene = new Scene(root, 1024, 768);
 
         stage.setTitle("FXML Welcome");
         stage.setScene(scene);
