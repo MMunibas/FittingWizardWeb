@@ -16,8 +16,11 @@ import ch.unibas.charmmtools.files.input.NBONDS.cut_type;
 import ch.unibas.charmmtools.files.input.NBONDS.nbonds_type;
 import ch.unibas.charmmtools.files.input.NBONDS.nbxmod_type;
 import java.io.BufferedWriter;
+import java.io.CharArrayWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.Date;
 
 /**
@@ -26,7 +29,7 @@ import java.util.Date;
  */
 public class CHARMM_input {
 
-    private BufferedWriter writer = null;
+    private Writer writer = null;
 
     private String title = "";
 
@@ -52,9 +55,41 @@ public class CHARMM_input {
 
     private NBONDS nbonds_params;
 
+    /**
+     * If content of the field has to be retrieved later on it is stored on an internal CharArrayWriter within this class
+     *
+     * @param crdname
+     * @param topolname
+     * @param ffname
+     * @throws java.io.IOException
+     */
     public CHARMM_input(String crdname, String topolname, String ffname) throws IOException {
 
-        writer = new BufferedWriter(new FileWriter(crdname + ".inp"));
+        writer = new CharArrayWriter();
+
+        //prepare and print title
+        this.print_title(crdname);
+
+        //prepare and print io section
+        this.print_iosection(topolname, ffname);
+
+        //prepare non bonded parameters line and print it
+        this.print_nbondsSection();
+
+    }
+
+    /**
+     * If content of the field has to be directly written to a file we use a BufferedWriter type
+     *
+     * @param crdname
+     * @param topolname
+     * @param ffname
+     * @param outfile
+     * @throws java.io.IOException
+     */
+    public CHARMM_input(String crdname, String topolname, String ffname, File outfile) throws IOException {
+
+        writer = new BufferedWriter(new FileWriter(outfile));
 
         //prepare and print title
         this.print_title(crdname);
@@ -68,6 +103,12 @@ public class CHARMM_input {
         writer.close();
     }
 
+    /**
+     * Creates the header part of charmm input file, i.e. containing a title and bomlev and prnlev parameters
+     *
+     * @param crdfile The name of the coordinates file in CHARMM format
+     * @throws IOException
+     */
     private void print_title(String crdfile) throws IOException {
         this.title += "* CHARMM input file for " + crdfile + "\n";
         this.title += "* generated on " + d.toString() + "\n";
@@ -84,15 +125,27 @@ public class CHARMM_input {
         writer.write("prnlev " + this.prnlev + "\n\n");
     }
 
+    /**
+     * Creates the section where topology and parameter files are loaded
+     *
+     * @param topol The name of the topology file in CHARMM format
+     * @param par The name of the parameters file in CHARMM format
+     * @throws IOException
+     */
     private void print_iosection(String topol, String par) throws IOException {
         //print commands for reading forcefield parameters and topology file
         writer.write("! read parameters and coordinates" + "\n");
         writer.write("read rtf card name -" + "\n");
-        writer.write("   ./" + topol + "\n");
+        writer.write(topol + "\n");
         writer.write("read param card name -" + "\n");
-        writer.write("   ./" + par + "\n\n");
+        writer.write(par + "\n\n");
     }
 
+    /**
+     * Creates the section where nonbonded parameters are defined
+     *
+     * @throws IOException
+     */
     private void print_nbondsSection() throws IOException {
         nbonds_type nbtype = nbonds_type.ATOM;
         add_elec electype = add_elec.ELEC;
@@ -106,4 +159,12 @@ public class CHARMM_input {
         writer.write(nbonds_params.getNB_params() + "\n\n");
     }
 
+    /**
+     * Returns a long String which is a CHARMM input file ready for use.
+     *
+     * @return The content of the built input file, for example for editing purposes
+     */
+    public String getContentOfInputFile() {
+        return writer.toString();
+    }
 }//end of class
