@@ -5,17 +5,25 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
+import javafx.util.Callback;
 import org.apache.log4j.Logger;
 
 /**
@@ -41,19 +49,26 @@ public class CHARMM_Input_Assistant implements Initializable {
      * Everything related to the tab Step1
      */
     @FXML
-    private Button button_open_PAR, button_open_RTF, button_open_XYZ;
+    private CheckBox later_PAR, later_RTF, later_COR;
 
     @FXML
-    private TextArea inpfile_TextArea;
+    private ComboBox<String> coor_type;
+    private ObservableList<String> avail_coor_types = FXCollections.observableArrayList();
 
     @FXML
-    private TextField textfield_PAR, textfield_RTF, textfield_XYZ;
+    private Button button_open_PAR, button_open_RTF, button_open_COR;
+
+    @FXML
+    private TextField textfield_PAR, textfield_RTF, textfield_COR;
 
     @FXML
     private Label RedLabel_Notice;
 
     @FXML
     private Button button_generate;
+
+    @FXML
+    private TextArea inpfile_TextArea;
 
     @FXML
     private Button button_reset, button_click_to_edit;
@@ -64,10 +79,10 @@ public class CHARMM_Input_Assistant implements Initializable {
     /**
      * Internal variables
      */
-    private boolean PAR_selected = false, RTF_selected = false, XYZ_selected = false;
+    private boolean PAR_selected = false, RTF_selected = false, COR_selected = false;
 
     /**
-     * Here we can add actions done just before showing the window, e.g. disableing some tabs
+     * Here we can add actions done just before showing the window, e.g. disabling some tabs
      *
      * @param location
      * @param resources
@@ -75,6 +90,25 @@ public class CHARMM_Input_Assistant implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Tab_Pane.getTabs().remove(Tab_Step2);
+
+        later_PAR.setAllowIndeterminate(false);
+        later_RTF.setAllowIndeterminate(false);
+        later_COR.setAllowIndeterminate(false);
+
+        avail_coor_types.addAll("*.xyz", "*.cor");
+        coor_type.setItems(avail_coor_types);
+
+    }
+
+    /**
+     * Enable or Disable the button_generate if required
+     */
+    private void validateButtonGenerate() {
+        button_generate.setDisable(true);
+
+        if (PAR_selected == true && RTF_selected == true && COR_selected == true) {
+            button_generate.setDisable(false);
+        }
     }
 
     /**
@@ -107,20 +141,18 @@ public class CHARMM_Input_Assistant implements Initializable {
                 textfield_RTF.setText(selectedFile.getPath());
                 RTF_selected = true;
             }
-        } else if (event.getSource().equals(button_open_XYZ)) {
-            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XYZ coordinates file", "*.xyz"));
+        } else if (event.getSource().equals(button_open_COR)) {
+            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("COR coordinates file", coor_type.getValue()));
             selectedFile = chooser.showOpenDialog(myParent);
             if (selectedFile != null) {
-                textfield_XYZ.setText(selectedFile.getPath());
-                XYZ_selected = true;
+                textfield_COR.setText(selectedFile.getPath());
+                COR_selected = true;
             }
         } else {
             throw new UnknownError("Unknown Event");
         }
 
-        if (PAR_selected == true && RTF_selected == true && XYZ_selected == true) {
-            button_generate.setDisable(false);
-        }
+        this.validateButtonGenerate();
 
     }//end of OpenButtonPressed action
 
@@ -134,7 +166,7 @@ public class CHARMM_Input_Assistant implements Initializable {
 
         CHARMM_input inp = null;
         try {
-            inp = new CHARMM_input(textfield_XYZ.getText(), textfield_RTF.getText(), textfield_PAR.getText());
+            inp = new CHARMM_input(textfield_COR.getText(), textfield_RTF.getText(), textfield_PAR.getText());
             inpfile_TextArea.setText(inp.getContentOfInputFile());
             RedLabel_Notice.setVisible(true);
         } catch (IOException ex) {
@@ -149,6 +181,34 @@ public class CHARMM_Input_Assistant implements Initializable {
     }
 
     /**
+     * Handles the event when one of the 3 checkBox is selected. If 3 check box are set to true button_generate is enabled as the 3 required files will be chosen later
+     *
+     * @param event
+     */
+    @FXML
+    protected void CheckBoxActions(ActionEvent event) {
+
+        if (event.getSource().equals(later_PAR)) {
+            PAR_selected = later_PAR.isSelected();
+            button_open_PAR.setDisable(later_PAR.isSelected());
+            textfield_PAR.setDisable(later_PAR.isSelected());
+        } else if (event.getSource().equals(later_RTF)) {
+            RTF_selected = later_RTF.isSelected();
+            button_open_RTF.setDisable(later_RTF.isSelected());
+            textfield_RTF.setDisable(later_RTF.isSelected());
+        } else if (event.getSource().equals(later_COR)) {
+            COR_selected = later_COR.isSelected();
+            button_open_COR.setDisable(later_COR.isSelected());
+            textfield_COR.setDisable(later_COR.isSelected());
+            coor_type.setDisable(later_COR.isSelected());
+        } else {
+            throw new UnknownError("Unknown Event");
+        }
+
+        this.validateButtonGenerate();
+    }
+
+    /**
      *
      * @param event
      */
@@ -158,12 +218,23 @@ public class CHARMM_Input_Assistant implements Initializable {
         inpfile_TextArea.clear();
         textfield_PAR.clear();
         textfield_RTF.clear();
-        textfield_XYZ.clear();
+        textfield_COR.clear();
 
         //disable elements of tab 1
         PAR_selected = false;
         RTF_selected = false;
-        XYZ_selected = false;
+        COR_selected = false;
+        later_PAR.setSelected(false);
+        button_open_PAR.setDisable(later_PAR.isSelected());
+        textfield_PAR.setDisable(later_PAR.isSelected());
+        later_RTF.setSelected(false);
+        button_open_RTF.setDisable(later_RTF.isSelected());
+        textfield_RTF.setDisable(later_RTF.isSelected());
+        later_COR.setSelected(false);
+        button_open_COR.setDisable(later_COR.isSelected());
+        textfield_COR.setDisable(later_COR.isSelected());
+        coor_type.setDisable(later_COR.isSelected());
+
         RedLabel_Notice.setVisible(false);
         button_generate.setDisable(true);
         button_click_to_edit.setDisable(true);
