@@ -20,9 +20,9 @@ import org.apache.log4j.Logger;
  */
 
 
-public class CHARMM_Input_Start_fxmlController{
+public class CHARMM_Input_Step1{
 
-    private static final Logger logger = Logger.getLogger(CHARMM_Input_Start_fxmlController.class);
+    private static final Logger logger = Logger.getLogger(CHARMM_Input_Step1.class);
 
     @FXML
     private Button button_open_PAR, button_open_RTF, button_open_XYZ;
@@ -37,6 +37,10 @@ public class CHARMM_Input_Start_fxmlController{
     private Label RedLabel_Notice;
 
     @FXML
+    private Button button_generate;
+    private boolean PAR_selected = false, RTF_selected = false, XYZ_selected = false;
+
+    @FXML
     protected void OpenButtonPressed(ActionEvent event) {
 
         Window myParent = inpfile_TextArea.getScene().getWindow();
@@ -44,22 +48,34 @@ public class CHARMM_Input_Start_fxmlController{
         File selectedFile = null;
 
         chooser.setTitle("Open File");
-        //chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All Files", "*.*"));
 
         if (event.getSource().equals(button_open_PAR)) {
             chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CHARMM FF parameters file", "*.inp", "*.par", "*.prm"));
             selectedFile = chooser.showOpenDialog(myParent);
-            textfield_PAR.setText(selectedFile.getAbsolutePath());
+            if (selectedFile != null) {
+                textfield_PAR.setText(selectedFile.getAbsolutePath());
+                PAR_selected = true;
+            }
         } else if (event.getSource().equals(button_open_RTF)) {
             chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CHARMM FF topology file", "*.top", "*.rtf"));
             selectedFile = chooser.showOpenDialog(myParent);
-            textfield_RTF.setText(selectedFile.getAbsolutePath());
+            if (selectedFile != null) {
+                textfield_RTF.setText(selectedFile.getAbsolutePath());
+                RTF_selected = true;
+            }
         } else if (event.getSource().equals(button_open_XYZ)) {
             chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XYZ coordinates file", "*.xyz"));
             selectedFile = chooser.showOpenDialog(myParent);
-            textfield_XYZ.setText(selectedFile.getAbsolutePath());
+            if (selectedFile != null) {
+                textfield_XYZ.setText(selectedFile.getAbsolutePath());
+                XYZ_selected = true;
+            }
         } else {
             throw new UnknownError("Unknown Event");
+        }
+
+        if (PAR_selected == true && RTF_selected == true && XYZ_selected == true) {
+            button_generate.setDisable(false);
         }
 
     }//end of OpenButtonPressed action

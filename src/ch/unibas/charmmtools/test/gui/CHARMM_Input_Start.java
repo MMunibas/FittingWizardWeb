@@ -27,18 +27,17 @@ public class CHARMM_Input_Start extends Application {
     public static void main(String[] args) {
         BasicConfigurator.configure();
         launch(args);
-//        CHARMM_input input = new CHARMM_input("test_coordinates.xyz", "test_topol.rtf", "test_params.par");
     }
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("CHARMM_Input_Start_fxml.fxml"));
-
-        Scene scene = new Scene(root, 800, 600);
+        Parent root = FXMLLoader.load(getClass().getResource("CHARMM_Input_Step1.fxml"));
+        Scene scene = new Scene(root, 1280, 800);
         scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-
         stage.setTitle("CHARMM input file assistant");
         stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.setResizable(false);
         stage.show();
     }
 
