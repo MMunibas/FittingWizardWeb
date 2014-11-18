@@ -1,4 +1,12 @@
-package ch.unibas.charmmtools.test.gui;
+/*
+ * Copyright (c) 2014, Florent Hedin, Markus Meuwly, and the University of Basel
+ * All rights reserved.
+ *
+ * The 3-clause BSD license is applied to this software.
+ * see LICENSE.txt
+ *
+ */
+package ch.unibas.charmmtools.gui;
 
 import ch.unibas.charmmtools.files.input.CHARMM_input;
 import java.io.File;
@@ -7,7 +15,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,15 +22,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
-import javafx.util.Callback;
 import org.apache.log4j.Logger;
 
 /**

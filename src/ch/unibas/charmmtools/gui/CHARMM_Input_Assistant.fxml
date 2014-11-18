@@ -10,9 +10,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<TabPane fx:id="Tab_Pane" minHeight="600.0" minWidth="800.0" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unibas.charmmtools.test.gui.CHARMM_Input_Assistant">
+<TabPane fx:id="Tab_Pane" minHeight="600.0" minWidth="800.0" prefHeight="768.0" prefWidth="1024.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unibas.charmmtools.gui.CHARMM_Input_Assistant">
     <tabs>
-        <Tab fx:id="Tab_Step1" closable="false" text="Step [1] : Choose Files">
+        <Tab fx:id="Tab_Step1" text="Step [1] : Choose Files">
             <content>
                 <BorderPane>
                     <top>

@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.test.gui;
+package ch.unibas.charmmtools.gui;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -32,7 +32,7 @@ public class CHARMM_Input_Start extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("CHARMM_Input_Assistant.fxml"));
-        Scene scene = new Scene(root, 1280, 800);
+        Scene scene = new Scene(root, 1200, 700);
         //scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
         stage.setTitle("CHARMM input file assistant");
         stage.setScene(scene);
