@@ -8,6 +8,7 @@
  */
 package ch.unibas.fittingwizard;
 
+import ch.unibas.charmmtools.gui.CHARMM_Input_Assistant;
 import ch.unibas.fittingwizard.presentation.base.Wizard;
 import ch.unibas.fittingwizard.presentation.base.WizardPageFactory;
 import ch.unibas.fittingwizard.presentation.MoleculeListPage;
@@ -110,7 +111,8 @@ public class WizardApplication extends Application {
     private Parent setupWizard(Stage primaryStage) {
         WizardPageFactory factory = new WizardPageFactory(primaryStage);
         Wizard wizard = new Wizard(factory);
-        wizard.navigateTo(MoleculeListPage.class, null);
+        //wizard.navigateTo(MoleculeListPage.class, null);
+        wizard.navigateTo(CHARMM_Input_Assistant.class, null);
         this.settings = factory.getSettings();
         return wizard;
     }

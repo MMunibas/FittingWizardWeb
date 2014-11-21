@@ -8,6 +8,7 @@
  */
 package ch.unibas.fittingwizard.presentation.base;
 
+import ch.unibas.charmmtools.gui.CHARMM_Input_Assistant;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -68,9 +69,7 @@ import ch.unibas.fittingwizard.presentation.fitting.FittingParameterPage;
 import ch.unibas.fittingwizard.presentation.fitting.RunningFitPage;
 
 /**
- * User: mhelmer
- * Date: 26.11.13
- * Time: 11:31
+ * User: mhelmer Date: 26.11.13 Time: 11:31
  */
 public class WizardPageFactory {
 
@@ -131,7 +130,7 @@ public class WizardPageFactory {
         File moleculeTestdataDir = settings.getMoleculeTestdataDir();
         File outputDir = new File(sessionDir, RealFitScript.OutputDirName);
 
-        if (settings.getValue("mocks.enabled").equals("false")){
+        if (settings.getValue("mocks.enabled").equals("false")) {
             babelScript = new RealBabelScript(moleculeDestination);
             lraScript = new RealLRAScript(settings);
             fittabMarkerScript = new RealFittabMarkerScript(moleculeDestination, settings);
@@ -170,7 +169,7 @@ public class WizardPageFactory {
                 fittabMarkerScript,
                 new GaussianLogModifier(),
                 notifications);
-        
+
         vmdDisplayWorkflow = new RunVmdDisplayWorkflow(vmdScript, sessionDir);
     }
 
@@ -183,8 +182,7 @@ public class WizardPageFactory {
                         moleculeRepository,
                         fitRepository,
                         moleculesDir);
-            }
-            // ADD MOLECULE PAGES
+            } // ADD MOLECULE PAGES
             else if (type == SelectCoordinateFilePage.class) {
                 File dto = (File) parameter;
                 page = new SelectCoordinateFilePage(dto);
@@ -200,8 +198,7 @@ public class WizardPageFactory {
             } else if (type == GaussCalculationPage.class) {
                 GaussCalculationDto dto = throwIfParameterIsNull(parameter);
                 page = new GaussCalculationPage(runGaussianWorkflow, dto);
-            }
-            // GAUSSIAN FITTING PAGES
+            } // GAUSSIAN FITTING PAGES
             else if (type == FittingParameterPage.class) {
                 FitMtpInput dto = (FitMtpInput) parameter;
                 page = new FittingParameterPage(fitRepository,
@@ -220,9 +217,9 @@ public class WizardPageFactory {
                         exportFitWorkflow,
                         vmdDisplayWorkflow);
             } //            // CHARMM FITTING PAGES
-            //            else if (type == CHARMM_Input_Page.class) {
-            //                page = new CHARMM_Input_Page("My CHARMM Title");
-            //            } // MISC
+            else if (type == CHARMM_Input_Assistant.class) {
+                page = new CHARMM_Input_Assistant("My CHARMM Title");
+            } // MISC
             else {
                 page = type.newInstance();
             }
@@ -247,8 +244,9 @@ public class WizardPageFactory {
 
         boolean directoryCreated = sessionDir.mkdirs();
 
-        if (!directoryCreated)
+        if (!directoryCreated) {
             throw new RuntimeException("Could not create session directory.");
+        }
 
         return sessionDir;
     }
