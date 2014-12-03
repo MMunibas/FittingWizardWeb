@@ -42,7 +42,7 @@ import org.apache.log4j.Logger;
  */
 
 
-public class CHARMM_Input_Assistant extends WizardPage implements Initializable {
+public class CHARMM_Input_Assistant implements Initializable {
 
     private static final Logger logger = Logger.getLogger(CHARMM_Input_Assistant.class);
 
@@ -90,9 +90,9 @@ public class CHARMM_Input_Assistant extends WizardPage implements Initializable 
      */
     private boolean PAR_selected = false, RTF_selected = false, COR_selected = false;
 
-    public CHARMM_Input_Assistant(String my_CHARMM_Title) {
-        super(my_CHARMM_Title);
-    }
+//    public CHARMM_Input_Assistant(String my_CHARMM_Title) {
+//        super(my_CHARMM_Title);
+//    }
 
     /**
      * Here we can add actions done just before showing the window, e.g. disabling some tabs
@@ -278,21 +278,21 @@ public class CHARMM_Input_Assistant extends WizardPage implements Initializable 
         Tab_Pane.getSelectionModel().select(Tab_Step2);
     }
 
-    @Override
-    protected void fillButtonBar() {
-    }
-
-    @Override
-    protected Parent getContent() {
-        Parent par = null;
-
-        try {
-            par = FXMLLoader.load(getClass().getResource("CHARMM_Input_Assistant.fxml"));
-        } catch (IOException ex) {
-            logger.error("Error when building CHARMM_Input window in getContent()" + ex.getMessage());
-        }
-
-        return par;
-    }
+//    @Override
+//    protected void fillButtonBar() {
+//    }
+//
+//    @Override
+//    protected Parent getContent() {
+//        Parent par = null;
+//
+//        try {
+//            par = FXMLLoader.load(getClass().getResource("CHARMM_Input_Assistant.fxml"));
+//        } catch (IOException ex) {
+//            logger.error("Error when building CHARMM_Input window in getContent()" + ex.getMessage());
+//        }
+//
+//        return par;
+//    }
 
 }//end of controller class
