@@ -18,8 +18,8 @@
                     <top>
                         <GridPane BorderPane.alignment="CENTER">
                             <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="208.0" minWidth="10.0" prefWidth="190.0" />
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="347.0" minWidth="10.0" prefWidth="210.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="208.0" minWidth="10.0" prefWidth="181.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="347.0" minWidth="10.0" prefWidth="217.0" />
                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="381.0" minWidth="10.0" prefWidth="362.0" />
                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="164.0" minWidth="10.0" prefWidth="125.0" />
                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="218.0" minWidth="10.0" prefWidth="140.0" />
@@ -31,6 +31,7 @@
                                 <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                                 <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                                 <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
@@ -51,7 +52,7 @@
                            <GridPane.margin>
                               <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                            </GridPane.margin></Label>
-                                <Label text="Name of topology RTF file :" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="4">
+                                <Label text="Name of topology RTF|TOP file :" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="4">
                            <GridPane.margin>
                               <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                            </GridPane.margin></Label>
@@ -66,8 +67,8 @@
                                 <Button fx:id="button_open_PAR" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
                                 <Button fx:id="button_open_RTF" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
                                 <Button fx:id="button_open_COR" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
-                                <Button fx:id="button_generate" disable="true" mnemonicParsing="false" onAction="#GenerateInputFile" text="Generate input file" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
-                                <Label fx:id="RedLabel_Notice" text="Basic input file generated below" textFill="#e11212" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                                <Button fx:id="button_generate" disable="true" mnemonicParsing="false" onAction="#GenerateInputFile" text="Generate input file" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
+                                <Label fx:id="RedLabel_Notice" text="Basic input file generated below" textFill="#e11212" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="8">
                                     <font>
                                         <Font size="18.0" />
                                     </font>
@@ -92,6 +93,18 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </GridPane.margin>
                         </ComboBox>
+                        <Label text="Name of LPUN file :" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="6">
+                           <GridPane.margin>
+                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <TextField fx:id="textfield_LPUN" promptText="Please select a file ..." GridPane.columnIndex="2" GridPane.rowIndex="6">
+                           <GridPane.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </GridPane.margin>
+                        </TextField>
+                        <Button fx:id="button_open_LPUN" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+                        <CheckBox fx:id="later_LPUN" mnemonicParsing="false" onAction="#CheckBoxActions" text="Choose later" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
                             </children>
                      <BorderPane.margin>
                         <Insets />
@@ -128,7 +141,7 @@
             <content>
                 <BorderPane prefHeight="200.0" prefWidth="200.0">
                     <center>
-                        <TextArea prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+                        <TextArea fx:id="inpfile_TextArea_Tab2" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
                     </center>
                     <bottom>
                         <GridPane BorderPane.alignment="CENTER">
@@ -146,7 +159,7 @@
                             </rowConstraints>
                             <children>
                                 <Button fx:id="button_back_Step2" mnemonicParsing="false" onAction="#GoToStep1" text="Back..." GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                                <Button mnemonicParsing="false" text="Next..." GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                                <Button fx:id="button_next_Step2" mnemonicParsing="false" text="Next..." GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                             </children>
                         </GridPane>
                     </bottom>

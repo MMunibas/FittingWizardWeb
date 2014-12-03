@@ -217,9 +217,9 @@ public class WizardPageFactory {
                         exportFitWorkflow,
                         vmdDisplayWorkflow);
             } //            // CHARMM FITTING PAGES
-            else if (type == CHARMM_Input_Assistant.class) {
-                page = new CHARMM_Input_Assistant("My CHARMM Title");
-            } // MISC
+            //else if (type == CHARMM_Input_Assistant.class) {
+            //    page = new CHARMM_Input_Assistant("My CHARMM Title");
+            //} // MISC
             else {
                 page = type.newInstance();
             }
