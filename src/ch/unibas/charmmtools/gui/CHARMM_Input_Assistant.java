@@ -301,9 +301,9 @@ public class CHARMM_Input_Assistant implements Initializable {
         //Tab_Step2.setDisable(false);
         //Tab_Pane.getTabs().addAll(Tab_Step2);
         Tab_Pane.getSelectionModel().select(Tab_Step2);
-
-        inpfile_TextArea_Step2 = new TextArea("HELLO");
-        inpfile_TextArea_Step2.setText("HELLO");
+        //Tab_Step2.
+//        inpfile_TextArea_Step2 = new TextArea("HELLO");
+//        inpfile_TextArea_Step2.setText("HELLO");
         //inpfile_TextArea_Step2.setEditable(true);
 
     }
