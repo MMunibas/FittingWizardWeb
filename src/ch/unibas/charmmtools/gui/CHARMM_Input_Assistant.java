@@ -9,10 +9,13 @@
 package ch.unibas.charmmtools.gui;
 
 import ch.unibas.charmmtools.files.input.CHARMM_input;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -44,10 +47,10 @@ public class CHARMM_Input_Assistant implements Initializable {
     /**
      * The TabPane in which several tabs are added
      */
-    @FXML
-    private TabPane Tab_Pane;
-    @FXML
-    private Tab Tab_Step1, Tab_Step2;
+//    @FXML
+//    private TabPane Tab_Pane;
+//    @FXML
+//    private Tab Tab_Step1, Tab_Step2;
 
     /**
      * Everything related to the tab Step1
@@ -75,7 +78,7 @@ public class CHARMM_Input_Assistant implements Initializable {
     private TextArea inpfile_TextArea;
 
     @FXML
-    private Button button_reset, button_click_to_edit;
+    private Button button_reset, button_save_to_file;
 
     /**
      * Everything related to the tab Step2
@@ -83,8 +86,8 @@ public class CHARMM_Input_Assistant implements Initializable {
     @FXML
     private TextArea inpfile_TextArea_Step2;
 
-    @FXML
-    private Button button_back_Step2, button_next_Step2;
+    //@FXML
+    //private Button button_back_Step2, button_next_Step2;
     /**
      * Internal variables
      */
@@ -201,7 +204,7 @@ public class CHARMM_Input_Assistant implements Initializable {
         /**
          * If success enable button for going to step2 tab
          */
-        button_click_to_edit.setDisable(false);
+        button_save_to_file.setDisable(false);
 
     }
 
@@ -275,11 +278,11 @@ public class CHARMM_Input_Assistant implements Initializable {
 
         RedLabel_Notice.setVisible(false);
         button_generate.setDisable(true);
-        button_click_to_edit.setDisable(true);
+        button_save_to_file.setDisable(true);
 
         // related to tab2
-        //Tab_Step2.setDisable(true);
-        Tab_Pane.getTabs().removeAll(Tab_Step2);
+//        Tab_Step2.setDisable(true);
+//        Tab_Pane.getTabs().removeAll(Tab_Step2);
     }
 
     /**
@@ -288,8 +291,8 @@ public class CHARMM_Input_Assistant implements Initializable {
      */
     @FXML
     protected void GoToStep1(ActionEvent event) {
-        Tab_Pane.getSelectionModel().select(Tab_Step1);
-        //Tab_Step2.setDisable(true);
+//        Tab_Pane.getSelectionModel().select(Tab_Step1);
+//        Tab_Step2.setDisable(true);
     }
 
     /**
@@ -298,14 +301,39 @@ public class CHARMM_Input_Assistant implements Initializable {
      */
     @FXML
     protected void GoToStep2(ActionEvent event) {
-        //Tab_Step2.setDisable(false);
-        //Tab_Pane.getTabs().addAll(Tab_Step2);
-        Tab_Pane.getSelectionModel().select(Tab_Step2);
-        //Tab_Step2.
-//        inpfile_TextArea_Step2 = new TextArea("HELLO");
+//        Tab_Step2.setDisable(false);
+//        Tab_Pane.getTabs().addAll(Tab_Step2);
+//        Tab_Pane.getSelectionModel().select(Tab_Step2);
+//        Tab_Step2.inpfile_TextArea_Step2 = new TextArea("HELLO");
 //        inpfile_TextArea_Step2.setText("HELLO");
-        //inpfile_TextArea_Step2.setEditable(true);
+//        inpfile_TextArea_Step2.setEditable(true);
 
+    }
+
+    @FXML
+    protected void SaveToFile(ActionEvent event) {
+        Window myParent = button_save_to_file.getScene().getWindow();
+        FileChooser chooser = new FileChooser();
+        chooser.setInitialDirectory(new File("./test"));
+        File selectedFile = null;
+
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CHARMM input file", "*.inp"));
+
+        selectedFile = chooser.showSaveDialog(myParent);
+
+        BufferedWriter buffw = null;
+
+        if (selectedFile != null) {
+            try {
+                buffw = new BufferedWriter(new FileWriter(selectedFile));
+                buffw.write(inpfile_TextArea.getText());
+                buffw.close();
+            } catch (IOException ex) {
+                logger.error("IOException raised whene generating CHARMM inputfile : " + ex.getMessage());
+            }
+        } else {
+            logger.error("Error while setting file name or save path for CHARMM input file.");
+        }
     }
 
 //    @Override

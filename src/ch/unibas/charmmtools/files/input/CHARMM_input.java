@@ -277,4 +277,8 @@ public class CHARMM_input {
     public String getContentOfInputFile() {
         return writer.toString();
     }
+
+//    public File saveInputFile() {
+//        FileWriter of = new FileWriter
+//    }
 }//end of class
