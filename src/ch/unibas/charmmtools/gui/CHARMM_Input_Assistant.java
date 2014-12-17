@@ -9,6 +9,8 @@
 package ch.unibas.charmmtools.gui;
 
 import ch.unibas.charmmtools.files.input.CHARMM_input;
+import ch.unibas.charmmtools.files.input.CHARMM_input_GasPhase;
+import ch.unibas.charmmtools.files.input.CHARMM_input_PureLiquid;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -25,10 +27,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import org.apache.log4j.Logger;
@@ -60,7 +64,8 @@ public class CHARMM_Input_Assistant implements Initializable {
 
     @FXML
     private ComboBox<String> coor_type;
-    private ObservableList<String> avail_coor_types = FXCollections.observableArrayList();
+    
+    private ObservableList<String> avail_coor_types;
 
     @FXML
     private Button button_open_PAR, button_open_RTF, button_open_COR, button_open_LPUN;
@@ -76,22 +81,29 @@ public class CHARMM_Input_Assistant implements Initializable {
 
     @FXML
     private TextArea inpfile_TextArea;
-
+    
+    @FXML
+    private RadioButton radio_dens_DHVap, radio_DG_hydration;
+    @FXML
+    private ToggleGroup toggle_radio;
+    
     @FXML
     private Button button_reset, button_save_to_file;
 
     /**
      * Everything related to the tab Step2
      */
-    @FXML
-    private TextArea inpfile_TextArea_Step2;
+//    @FXML
+//    private TextArea inpfile_TextArea_Step2;
 
     //@FXML
     //private Button button_back_Step2, button_next_Step2;
     /**
      * Internal variables
      */
-    private boolean PAR_selected = false, RTF_selected = false, COR_selected = false, LPUN_selected = false;
+    private boolean PAR_selected, RTF_selected, COR_selected, LPUN_selected;
+    //type of simulation asked by user
+    private boolean dens_DHVap_required, DG_hydration_required;
 
 //    public CHARMM_Input_Assistant(String my_CHARMM_Title) {
 //        super(my_CHARMM_Title);
@@ -113,11 +125,22 @@ public class CHARMM_Input_Assistant implements Initializable {
         later_COR.setAllowIndeterminate(false);
         later_LPUN.setAllowIndeterminate(false);
 
-        avail_coor_types.addAll("*.xyz", "*.cor", "*.pdb");
+        avail_coor_types = FXCollections.observableArrayList();
+        avail_coor_types.addAll(/*"*.xyz", "*.cor", */"*.pdb");
         coor_type.setItems(avail_coor_types);
 
         coor_type.setValue("*.pdb");
+        
+        // put in the same toggle group the radio buttons
+        // this toggle groups manages the selection of only one radio button at a given time
+        radio_dens_DHVap.setToggleGroup(toggle_radio);
+        //radio_dens_DHVap.requestFocus();
+        radio_DG_hydration.setToggleGroup(toggle_radio);
 
+        // set to false those booleans indicating if a file has been selected
+        PAR_selected = false; RTF_selected = false; COR_selected = false; LPUN_selected = false;
+        dens_DHVap_required = radio_dens_DHVap.isSelected();
+        DG_hydration_required = radio_DG_hydration.isSelected();
     }
 
     /**
@@ -176,7 +199,7 @@ public class CHARMM_Input_Assistant implements Initializable {
                 LPUN_selected = true;
             }
         } else {
-            throw new UnknownError("Unknown Event");
+            throw new UnknownError("Unknown Event in OpenButtonPressed(ActionEvent event)");
         }
 
         this.validateButtonGenerate();
@@ -185,18 +208,29 @@ public class CHARMM_Input_Assistant implements Initializable {
 
     /**
      * Try to generate an input file with standard parameters, it can be edited later
-     *
-     * @param event
      */
     @FXML
-    protected void GenerateInputFile(ActionEvent event) {
+    protected void GenerateInputFile() {
 
         CHARMM_input inp = null;
         try {
-            inp = new CHARMM_input(textfield_COR.getText(), textfield_RTF.getText(), textfield_PAR.getText(), textfield_LPUN.getText());
+            
+            dens_DHVap_required   = toggle_radio.getSelectedToggle().equals(radio_dens_DHVap);
+            DG_hydration_required = toggle_radio.getSelectedToggle().equals(radio_DG_hydration);
+            
+            if(dens_DHVap_required)
+                inp = new CHARMM_input_GasPhase(textfield_COR.getText(), textfield_RTF.getText(), textfield_PAR.getText(), textfield_LPUN.getText());
+            else if(DG_hydration_required)
+                inp = new CHARMM_input_PureLiquid(textfield_COR.getText(), textfield_RTF.getText(), textfield_PAR.getText(), textfield_LPUN.getText());
+            else{
+                logger.error("The impossible happened : unable to determine which radio button was selected !");
+                throw new UnknownError("Unknown error related to selection of radio buttons.");
+            }
+                
             inpfile_TextArea.setText(inp.getContentOfInputFile());
             //System.err.println(inpfile_TextArea.getText());
             RedLabel_Notice.setVisible(true);
+            
         } catch (IOException ex) {
             logger.error(ex);
         }

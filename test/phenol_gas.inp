@@ -1,6 +1,7 @@
-* CHARMM input file for /home/hedin/progra/workflowopt/test/solute_0.01.pdb
-* generated on Mon Dec 08 15:17:51 CET 2014
-* by user hedin on machine Linux amd64 3.17.4-200.fc20.x86_64
+* CHARMM input file for /home/hedin/progra/workflowopt/test/phenol.pdb
+* Gas Phase simulation with MTPs 
+* generated on Wed Dec 17 14:01:24 CET 2014
+* by user hedin on machine Linux amd64 3.17.6-200.fc20.x86_64
 *
 
 bomlev 0
@@ -13,14 +14,12 @@ read param card name -
 	/home/hedin/progra/workflowopt/test/phenol_cgenff.par
 
 OPEN UNIT 10 CARD READ NAME -
-	/home/hedin/progra/workflowopt/test/solute_0.01.pdb
+	/home/hedin/progra/workflowopt/test/phenol.pdb
 READ SEQUENCE PDB UNIT 10
 GENERATE SOLU
 REWIND UNIT 10
 READ COOR PDB UNIT 10
 CLOSE UNIT 10
-
-!comment
 
 ! Non bonded parameters
 NBONDS NBXMOD 5 ATOM CDIEL EPS 1.0 SHIFT VATOM VDISTANCE -

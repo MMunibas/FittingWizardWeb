@@ -32,14 +32,14 @@ public class CHARMM_Input_Start extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("CHARMM_Input_Assistant.fxml"));
-        Scene scene = new Scene(root, 1200, 700);
+        Scene scene = new Scene(root, 1280, 800);
         //scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
         stage.setTitle("CHARMM input file assistant");
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.setMinWidth(800);
         stage.setMinHeight(600);
-        stage.setResizable(false);
+        stage.setResizable(true);
         stage.show();
     }
 

@@ -8,178 +8,89 @@
  */
 package ch.unibas.charmmtools.files.input;
 
-import java.io.BufferedWriter;
-import java.io.CharArrayWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
-import java.util.Date;
 
 /**
- *
+ * gas_phase charmm calculation
+ * extends the abstract CHARMM_input class
  * @author hedin
  */
-public abstract class CHARMM_input {
-    protected Writer writer = null;
-    protected String title = "";
-    protected Date d = new Date();
-    /*
-     * bomlev is the error level causing abortion of CHARMM
-     * prnlev regulates the level of output from CHARMM
-     * we set here those variable to 2 "decent" values
+public class CHARMM_input_PureLiquid extends CHARMM_input {
+
+
+    /**
+     * If content of the field has to be retrieved later on it is stored on an internal CharArrayWriter within this class
+     *
+     * @param crdname
+     * @param topolname
+     * @param ffname
+     * @throws java.io.IOException
      */
-    protected int bomlev = 0;
-    protected int prnlev = 2;
+    public CHARMM_input_PureLiquid(String crdname, String topolname, String ffname) throws IOException {
+
+        super(crdname,topolname,ffname);
+
+    }
+
+    /**
+     * If content of the field has to be directly written to a file we use a BufferedWriter type
+     *
+     * @param crdname
+     * @param topolname
+     * @param ffname
+     * @param outfile
+     * @throws java.io.IOException
+     */
+    public CHARMM_input_PureLiquid(String crdname, String topolname, String ffname, File outfile) throws IOException {
+
+        super(crdname,topolname,ffname,outfile);
+
+    }
+
+    /**
+     * If content of the field has to be retrieved later on it is stored on an internal CharArrayWriter within this class
+     * Requires also a lpun file when MTP module is used
+     * 
+     * @param crdname
+     * @param topolname
+     * @param ffname
+     * @param lpunname
+     * @throws java.io.IOException
+     */
+    public CHARMM_input_PureLiquid(String crdname, String topolname, String ffname, String lpunname) throws IOException {
+
+        super(crdname,topolname,ffname,lpunname);
+
+    }
+
+    /**
+     * If content of the field has to be directly written to a file we use a BufferedWriter type
+     * Requires also a lpun file when MTP module is used
+     * 
+     * @param crdname
+     * @param topolname
+     * @param ffname
+     * @param lpunname
+     * @param outfile
+     * @throws java.io.IOException
+     */
+    public CHARMM_input_PureLiquid(String crdname, String topolname, String ffname, String lpunname, File outfile) throws IOException {
+
+        super(crdname,topolname,ffname,lpunname,outfile);
+
+    }
     
-    /**
-     * If content of the field has to be retrieved later on it is stored on an internal CharArrayWriter within this class
-     *
-     * @param crdname
-     * @param topolname
-     * @param ffname
-     * @throws java.io.IOException
-     */
-    public CHARMM_input(String crdname, String topolname, String ffname) throws IOException {
-        
-        writer = new CharArrayWriter();
-
-        //prepare and print title
-        this.print_title(crdname);
-
-        //prepare and print io section
-        this.print_ioSection(topolname, ffname);
-
-        this.print_crdSection(crdname);
-
-        //prepare non bonded parameters line and print it
-        this.print_nbondsSection();
-
-        this.print_ShakeSection();
-
-        this.print_MiniSection();
-        this.print_DynaSection();
-        this.print_StopSection();
-
-    }
-
-    /**
-     * If content of the field has to be directly written to a file we use a BufferedWriter type
-     *
-     * @param crdname
-     * @param topolname
-     * @param ffname
-     * @param outfile
-     * @throws java.io.IOException
-     */
-    public CHARMM_input(String crdname, String topolname, String ffname, File outfile) throws IOException {
-        
-        writer = new BufferedWriter(new FileWriter(outfile));
-
-        //prepare and print title
-        this.print_title(crdname);
-
-        //prepare and print io section
-        this.print_ioSection(topolname, ffname);
-
-        this.print_crdSection(crdname);
-
-        //prepare non bonded parameters line and print it
-        this.print_nbondsSection();
-
-        this.print_ShakeSection();
-
-        this.print_MiniSection();
-        this.print_DynaSection();
-        this.print_StopSection();
-
-        writer.close();
-
-    }
-
-    /**
-     * If content of the field has to be retrieved later on it is stored on an internal CharArrayWriter within this class
-     * Requires also a lpun file when MTP module is used
-     * 
-     * @param crdname
-     * @param topolname
-     * @param ffname
-     * @param lpunname
-     * @throws java.io.IOException
-     */
-    public CHARMM_input(String crdname, String topolname, String ffname, String lpunname) throws IOException {
-
-        writer = new CharArrayWriter();
-
-        //prepare and print title
-        this.print_title(crdname);
-
-        //prepare and print io section
-        this.print_ioSection(topolname, ffname);
-
-        this.print_crdSection(crdname);
-
-        //prepare non bonded parameters line and print it
-        this.print_nbondsSection();
-
-        this.print_ShakeSection();
-
-        //add section with lpun file
-        this.print_lpunfile(lpunname);
-
-        this.print_MiniSection();
-        this.print_DynaSection();
-        this.print_StopSection();
-
-    }
-
-    /**
-     * If content of the field has to be directly written to a file we use a BufferedWriter type
-     * Requires also a lpun file when MTP module is used
-     * 
-     * @param crdname
-     * @param topolname
-     * @param ffname
-     * @param lpunname
-     * @param outfile
-     * @throws java.io.IOException
-     */
-    public CHARMM_input(String crdname, String topolname, String ffname, String lpunname, File outfile) throws IOException {
-
-        writer = new BufferedWriter(new FileWriter(outfile));
-
-        //prepare and print title
-        this.print_title(crdname);
-
-        //prepare and print io section
-        this.print_ioSection(topolname, ffname);
-
-        this.print_crdSection(crdname);
-
-        //prepare non bonded parameters line and print it
-        this.print_nbondsSection();
-
-        this.print_ShakeSection();
-
-        //add section with lpun file
-        this.print_lpunfile(lpunname);
-
-        this.print_MiniSection();
-        this.print_DynaSection();
-        this.print_StopSection();
-
-        writer.close();
-
-    }
-
     /**
      * Creates the header part of charmm input file, i.e. containing a title and bomlev and prnlev parameters
      *
      * @param crdfile The name of the coordinates file in CHARMM format
      * @throws IOException
      */
+    @Override
     protected void print_title(String crdfile) throws IOException {
         this.title += "* CHARMM input file for " + crdfile + "\n";
+        this.title += "* Pure Liquid simulation with MTPs \n";
         this.title += "* generated on " + d.toString() + "\n";
         this.title += "* by user " + System.getProperty("user.name") + " on machine " + System.getProperty("os.name") + " " + System.getProperty("os.arch") + " " + System.getProperty("os.version") + "\n";
         this.title += "*\n";
@@ -197,6 +108,7 @@ public abstract class CHARMM_input {
      * @param par The name of the parameters file in CHARMM format
      * @throws IOException
      */
+    @Override
     protected void print_ioSection(String topol, String par) throws IOException {
         //print commands for reading forcefield parameters and topology file
         writer.write("! read parameters and coordinates" + "\n");
@@ -206,6 +118,7 @@ public abstract class CHARMM_input {
         writer.write("\t" + par + "\n\n");
     }
 
+    @Override
     protected void print_crdSection(String crdfile) throws IOException {
         writer.write("OPEN UNIT 10 CARD READ NAME -" + "\n");
         writer.write("\t" + crdfile + "\n");
@@ -221,6 +134,7 @@ public abstract class CHARMM_input {
      *
      * @throws IOException
      */
+    @Override
     protected void print_nbondsSection() throws IOException {
         //        nbonds_type nbtype = nbonds_type.ATOM;
         //        add_elec electype = add_elec.ELEC;
@@ -236,10 +150,12 @@ public abstract class CHARMM_input {
         writer.write("\t" + "VSWITCH CUTNB 99.0 CTOFNB 98.0 CTONNB 97. E14FAC 1.0" + "\n\n");
     }
 
+    @Override
     protected void print_ShakeSection() throws IOException {
         writer.write("SHAKE BONH PARA SELE ALL END" + "\n\n");
     }
 
+    @Override
     protected void print_lpunfile(String lpunname) throws IOException {
         writer.write("OPEN UNIT 40 CARD READ NAME -" + "\n");
         writer.write(lpunname + "\n");
@@ -247,10 +163,12 @@ public abstract class CHARMM_input {
         writer.write("CLOSE UNIT 40" + "\n\n");
     }
 
+    @Override
     protected void print_MiniSection() throws IOException {
         writer.write("mini sd nstep 500 print 10" + "\n\n");
     }
 
+    @Override
     protected void print_DynaSection() throws IOException {
         writer.write("DYNA LEAP STRT NSTEP 20000 TIMESTEP 0.001 -" + "\n");
         writer.write("\t" + "NTRFRQ 100 -" + "\n");
@@ -259,6 +177,7 @@ public abstract class CHARMM_input {
         writer.write("\t" + "NPRINT 1000 NSAVC -1" + "\n\n");
     }
 
+    @Override
     protected void print_StopSection() throws IOException {
         writer.write("STOP" + "\n\n");
     }
@@ -268,8 +187,9 @@ public abstract class CHARMM_input {
      *
      * @return The content of the built input file, for example for editing purposes
      */
+    @Override
     public String getContentOfInputFile() {
         return writer.toString();
     }
-    
-}
+
+}//end of class
