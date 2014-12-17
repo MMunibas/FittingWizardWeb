@@ -8,10 +8,6 @@
  */
 package ch.unibas.charmmtools.files.input;
 
-import java.io.BufferedWriter;
-import java.io.CharArrayWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
@@ -31,146 +27,6 @@ public abstract class CHARMM_input {
      */
     protected int bomlev = 0;
     protected int prnlev = 2;
-    
-    /**
-     * If content of the field has to be retrieved later on it is stored on an internal CharArrayWriter within this class
-     *
-     * @param crdname
-     * @param topolname
-     * @param ffname
-     * @throws java.io.IOException
-     */
-    public CHARMM_input(String crdname, String topolname, String ffname) throws IOException {
-        
-        writer = new CharArrayWriter();
-
-        //prepare and print title
-        this.print_title(crdname);
-
-        //prepare and print io section
-        this.print_ioSection(topolname, ffname);
-
-        this.print_crdSection(crdname);
-
-        //prepare non bonded parameters line and print it
-        this.print_nbondsSection();
-
-        this.print_ShakeSection();
-
-        this.print_MiniSection();
-        this.print_DynaSection();
-        this.print_StopSection();
-
-    }
-
-    /**
-     * If content of the field has to be directly written to a file we use a BufferedWriter type
-     *
-     * @param crdname
-     * @param topolname
-     * @param ffname
-     * @param outfile
-     * @throws java.io.IOException
-     */
-    public CHARMM_input(String crdname, String topolname, String ffname, File outfile) throws IOException {
-        
-        writer = new BufferedWriter(new FileWriter(outfile));
-
-        //prepare and print title
-        this.print_title(crdname);
-
-        //prepare and print io section
-        this.print_ioSection(topolname, ffname);
-
-        this.print_crdSection(crdname);
-
-        //prepare non bonded parameters line and print it
-        this.print_nbondsSection();
-
-        this.print_ShakeSection();
-
-        this.print_MiniSection();
-        this.print_DynaSection();
-        this.print_StopSection();
-
-        writer.close();
-
-    }
-
-    /**
-     * If content of the field has to be retrieved later on it is stored on an internal CharArrayWriter within this class
-     * Requires also a lpun file when MTP module is used
-     * 
-     * @param crdname
-     * @param topolname
-     * @param ffname
-     * @param lpunname
-     * @throws java.io.IOException
-     */
-    public CHARMM_input(String crdname, String topolname, String ffname, String lpunname) throws IOException {
-
-        writer = new CharArrayWriter();
-
-        //prepare and print title
-        this.print_title(crdname);
-
-        //prepare and print io section
-        this.print_ioSection(topolname, ffname);
-
-        this.print_crdSection(crdname);
-
-        //prepare non bonded parameters line and print it
-        this.print_nbondsSection();
-
-        this.print_ShakeSection();
-
-        //add section with lpun file
-        this.print_lpunfile(lpunname);
-
-        this.print_MiniSection();
-        this.print_DynaSection();
-        this.print_StopSection();
-
-    }
-
-    /**
-     * If content of the field has to be directly written to a file we use a BufferedWriter type
-     * Requires also a lpun file when MTP module is used
-     * 
-     * @param crdname
-     * @param topolname
-     * @param ffname
-     * @param lpunname
-     * @param outfile
-     * @throws java.io.IOException
-     */
-    public CHARMM_input(String crdname, String topolname, String ffname, String lpunname, File outfile) throws IOException {
-
-        writer = new BufferedWriter(new FileWriter(outfile));
-
-        //prepare and print title
-        this.print_title(crdname);
-
-        //prepare and print io section
-        this.print_ioSection(topolname, ffname);
-
-        this.print_crdSection(crdname);
-
-        //prepare non bonded parameters line and print it
-        this.print_nbondsSection();
-
-        this.print_ShakeSection();
-
-        //add section with lpun file
-        this.print_lpunfile(lpunname);
-
-        this.print_MiniSection();
-        this.print_DynaSection();
-        this.print_StopSection();
-
-        writer.close();
-
-    }
 
     /**
      * Creates the header part of charmm input file, i.e. containing a title and bomlev and prnlev parameters
@@ -206,58 +62,26 @@ public abstract class CHARMM_input {
         writer.write("\t" + par + "\n\n");
     }
 
-    protected void print_crdSection(String crdfile) throws IOException {
-        writer.write("OPEN UNIT 10 CARD READ NAME -" + "\n");
-        writer.write("\t" + crdfile + "\n");
-        writer.write("READ SEQUENCE PDB UNIT 10" + "\n");
-        writer.write("GENERATE SOLU" + "\n");
-        writer.write("REWIND UNIT 10" + "\n");
-        writer.write("READ COOR PDB UNIT 10" + "\n");
-        writer.write("CLOSE UNIT 10" + "\n\n");
-    }
+    protected abstract void print_crdSection(String crdfile) throws IOException;
 
+    protected void print_crystalSection() throws IOException{}
+    
     /**
      * Creates the section where nonbonded parameters are defined
      *
      * @throws IOException
      */
-    protected void print_nbondsSection() throws IOException {
-        //        nbonds_type nbtype = nbonds_type.ATOM;
-        //        add_elec electype = add_elec.ELEC;
-        //        add_vdw vdwtype = add_vdw.VDW;
-        //        add_ewald ewaldtype = add_ewald.NOEWald;
-        //        add_elec_opt elecopt = add_elec_opt.CDIElec;
-        //        cut_type cuttype = cut_type.SHIFted;
-        //        nbxmod_type nbxmod = nbxmod_type.PRESERVE;
-        //        nbonds_params = new NBONDS(nbtype, electype, vdwtype, ewaldtype, elecopt, cuttype, nbxmod);
-        writer.write("! Non bonded parameters" + "\n");
-        //        writer.write(nbonds_params.getNB_params() + "\n\n");
-        writer.write("NBONDS NBXMOD 5 ATOM CDIEL EPS 1.0 SHIFT VATOM VDISTANCE -" + "\n");
-        writer.write("\t" + "VSWITCH CUTNB 99.0 CTOFNB 98.0 CTONNB 97. E14FAC 1.0" + "\n\n");
-    }
+    protected abstract void print_nbondsSection() throws IOException;
 
     protected void print_ShakeSection() throws IOException {
         writer.write("SHAKE BONH PARA SELE ALL END" + "\n\n");
     }
 
-    protected void print_lpunfile(String lpunname) throws IOException {
-        writer.write("OPEN UNIT 40 CARD READ NAME -" + "\n");
-        writer.write(lpunname + "\n");
-        writer.write("MTPL MTPUNIT 40" + "\n");
-        writer.write("CLOSE UNIT 40" + "\n\n");
-    }
+    protected abstract void print_lpunfile(String lpunname) throws IOException;
 
-    protected void print_MiniSection() throws IOException {
-        writer.write("mini sd nstep 500 print 10" + "\n\n");
-    }
+    protected abstract void print_MiniSection() throws IOException;
 
-    protected void print_DynaSection() throws IOException {
-        writer.write("DYNA LEAP STRT NSTEP 20000 TIMESTEP 0.001 -" + "\n");
-        writer.write("\t" + "NTRFRQ 100 -" + "\n");
-        writer.write("\t" + "IPRFRQ 0 INBFRQ -1 IMGFRQ 250 -" + "\n");
-        writer.write("\t" + "TBATH 0. RBUF 0. ILBFRQ 10 FIRSTT 0. -" + "\n");
-        writer.write("\t" + "NPRINT 1000 NSAVC -1" + "\n\n");
-    }
+    protected abstract void print_DynaSection() throws IOException;
 
     protected void print_StopSection() throws IOException {
         writer.write("STOP" + "\n\n");

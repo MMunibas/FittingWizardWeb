@@ -143,7 +143,7 @@
                         <ToggleGroup fx:id="toggle_radio" />
                      </toggleGroup>
                   </RadioButton>
-                  <RadioButton fx:id="radio_DG_hydration" mnemonicParsing="false" text="DeltaG Hydration " GridPane.columnIndex="1" GridPane.halignment="CENTER">
+                  <RadioButton fx:id="radio_DG_hydration" mnemonicParsing="false" text="DeltaG Hydration" GridPane.columnIndex="1" GridPane.halignment="CENTER">
                      <GridPane.margin>
                         <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                      </GridPane.margin>
