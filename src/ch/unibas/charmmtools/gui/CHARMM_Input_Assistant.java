@@ -11,11 +11,14 @@ package ch.unibas.charmmtools.gui;
 import ch.unibas.charmmtools.files.input.CHARMM_input;
 import ch.unibas.charmmtools.files.input.CHARMM_input_GasPhase;
 import ch.unibas.charmmtools.files.input.CHARMM_input_PureLiquid;
+import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import javafx.collections.FXCollections;
@@ -83,12 +86,12 @@ public class CHARMM_Input_Assistant implements Initializable {
     private TextArea inpfile_TextArea;
     
     @FXML
-    private RadioButton radio_dens_DHVap, radio_DG_hydration;
+    private RadioButton  radio_dens, radio_DHVap, radio_DG_hydration;
     @FXML
     private ToggleGroup toggle_radio;
     
     @FXML
-    private Button button_reset, button_save_to_file;
+    private Button button_reset, button_save_to_file, button_run_CHARMM;
 
     /**
      * Everything related to the tab Step2
@@ -103,7 +106,9 @@ public class CHARMM_Input_Assistant implements Initializable {
      */
     private boolean PAR_selected, RTF_selected, COR_selected, LPUN_selected;
     //type of simulation asked by user
-    private boolean dens_DHVap_required, DG_hydration_required;
+    private boolean dens_required, DHVap_required, DG_hydration_required;
+    
+    private File CHARMM_saved_file;
 
 //    public CHARMM_Input_Assistant(String my_CHARMM_Title) {
 //        super(my_CHARMM_Title);
@@ -133,13 +138,15 @@ public class CHARMM_Input_Assistant implements Initializable {
         
         // put in the same toggle group the radio buttons
         // this toggle groups manages the selection of only one radio button at a given time
-        radio_dens_DHVap.setToggleGroup(toggle_radio);
+        //radio_dens.setToggleGroup(toggle_radio);
+        //radio_DHVap.setToggleGroup(toggle_radio);
         //radio_dens_DHVap.requestFocus();
-        radio_DG_hydration.setToggleGroup(toggle_radio);
+        //radio_DG_hydration.setToggleGroup(toggle_radio);
 
         // set to false those booleans indicating if a file has been selected
         PAR_selected = false; RTF_selected = false; COR_selected = false; LPUN_selected = false;
-        dens_DHVap_required = radio_dens_DHVap.isSelected();
+        dens_required = radio_dens.isSelected();
+        DHVap_required = radio_DHVap.isSelected();
         DG_hydration_required = radio_DG_hydration.isSelected();
     }
 
@@ -165,7 +172,7 @@ public class CHARMM_Input_Assistant implements Initializable {
 
         Window myParent = inpfile_TextArea.getScene().getWindow();
         FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(new File("./test"));
+        chooser.setInitialDirectory(new File("test"));
         File selectedFile = null;
 
         chooser.setTitle("Open File");
@@ -174,28 +181,28 @@ public class CHARMM_Input_Assistant implements Initializable {
             chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CHARMM FF parameters file", "*.inp", "*.par", "*.prm"));
             selectedFile = chooser.showOpenDialog(myParent);
             if (selectedFile != null) {
-                textfield_PAR.setText(selectedFile.getPath());
+                textfield_PAR.setText(selectedFile.getAbsolutePath());
                 PAR_selected = true;
             }
         } else if (event.getSource().equals(button_open_RTF)) {
             chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CHARMM FF topology file", "*.top", "*.rtf"));
             selectedFile = chooser.showOpenDialog(myParent);
             if (selectedFile != null) {
-                textfield_RTF.setText(selectedFile.getPath());
+                textfield_RTF.setText(selectedFile.getAbsolutePath());
                 RTF_selected = true;
             }
         } else if (event.getSource().equals(button_open_COR)) {
             chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Coordinates file " + coor_type.getValue(), coor_type.getValue()));
             selectedFile = chooser.showOpenDialog(myParent);
             if (selectedFile != null) {
-                textfield_COR.setText(selectedFile.getPath());
+                textfield_COR.setText(selectedFile.getAbsolutePath());
                 COR_selected = true;
             }
         } else if (event.getSource().equals(button_open_LPUN)) {
             chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("LPUN file", "*.lpun"));
             selectedFile = chooser.showOpenDialog(myParent);
             if (selectedFile != null) {
-                textfield_LPUN.setText(selectedFile.getPath());
+                textfield_LPUN.setText(selectedFile.getAbsolutePath());
                 LPUN_selected = true;
             }
         } else {
@@ -215,13 +222,33 @@ public class CHARMM_Input_Assistant implements Initializable {
         CHARMM_input inp = null;
         try {
             
-            dens_DHVap_required   = toggle_radio.getSelectedToggle().equals(radio_dens_DHVap);
+            // get filenames
+            String corname = textfield_COR.getText();
+            String rtfname = textfield_RTF.getText();
+            String parname = textfield_PAR.getText();
+            String lpunname = textfield_LPUN.getText();
+            
+            //transform it to relative path instead as we have to send data to clusters later
+            String folderPath = new File("test").getAbsolutePath();
+            corname = CHARMM_Input_Assistant.getRelativePath(corname,folderPath);
+            rtfname = CHARMM_Input_Assistant.getRelativePath(rtfname,folderPath);
+            parname = CHARMM_Input_Assistant.getRelativePath(parname,folderPath);
+            lpunname = CHARMM_Input_Assistant.getRelativePath(lpunname,folderPath);
+            
+            // if empty filenames print a pattern user should modify
+            corname = corname.length()==0?"ADD_HERE_PATH_TO_COORDINATES_FILE":corname;
+            rtfname = rtfname.length()==0?"ADD_HERE_PATH_TO_TOPOLOGY_FILE":rtfname;
+            parname = parname.length()==0?"ADD_HERE_PATH_TO_PARAMETERS_FILE":parname;
+            lpunname = lpunname.length()==0?"ADD_HERE_PATH_TO_LPUN_FILE":lpunname;
+            
+            dens_required   = toggle_radio.getSelectedToggle().equals(radio_dens);
+            DHVap_required   = toggle_radio.getSelectedToggle().equals(radio_DHVap);
             DG_hydration_required = toggle_radio.getSelectedToggle().equals(radio_DG_hydration);
             
-            if(dens_DHVap_required)
-                inp = new CHARMM_input_GasPhase(textfield_COR.getText(), textfield_RTF.getText(), textfield_PAR.getText(), textfield_LPUN.getText());
-            else if(DG_hydration_required)
-                inp = new CHARMM_input_PureLiquid(textfield_COR.getText(), textfield_RTF.getText(), textfield_PAR.getText(), textfield_LPUN.getText());
+            if(dens_required)
+                inp = new CHARMM_input_GasPhase(corname, rtfname, parname, lpunname);
+            else if(DHVap_required)
+                inp = new CHARMM_input_PureLiquid(corname, rtfname, parname, lpunname);
             else{
                 logger.error("The impossible happened : unable to determine which radio button was selected !");
                 throw new UnknownError("Unknown error related to selection of radio buttons.");
@@ -239,6 +266,11 @@ public class CHARMM_Input_Assistant implements Initializable {
          * If success enable button for going to step2 tab
          */
         button_save_to_file.setDisable(false);
+        
+        /**
+         * Allow running charmm script
+         */
+        //button_run_CHARMM.setDisable(false);
 
     }
 
@@ -313,7 +345,7 @@ public class CHARMM_Input_Assistant implements Initializable {
         RedLabel_Notice.setVisible(false);
         button_generate.setDisable(true);
         button_save_to_file.setDisable(true);
-
+        button_run_CHARMM.setDisable(true);
         // related to tab2
 //        Tab_Step2.setDisable(true);
 //        Tab_Pane.getTabs().removeAll(Tab_Step2);
@@ -348,7 +380,7 @@ public class CHARMM_Input_Assistant implements Initializable {
     protected void SaveToFile(ActionEvent event) {
         Window myParent = button_save_to_file.getScene().getWindow();
         FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(new File("./test"));
+        chooser.setInitialDirectory(new File("test"));
         File selectedFile = null;
 
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CHARMM input file", "*.inp"));
@@ -368,6 +400,12 @@ public class CHARMM_Input_Assistant implements Initializable {
         } else {
             logger.error("Error while setting file name or save path for CHARMM input file.");
         }
+        
+        //now that it is saved it may be runned
+        this.RedLabel_Notice.setText("You can now try to run the simulation");
+        this.button_run_CHARMM.setDisable(false);
+        
+        this.CHARMM_saved_file = selectedFile;
     }
 
 //    @Override
@@ -387,4 +425,39 @@ public class CHARMM_Input_Assistant implements Initializable {
 //        return par;
 //    }
 
+    // returns null if file isn't relative to folder
+    public static String getRelativePath(String filePath, String folderPath) {
+        //logger.info(filePath + "\t" + folderPath );
+        if (filePath.startsWith(folderPath)) {
+            return filePath.substring(folderPath.length() + 1);
+        } else {
+            return "";
+        }
+    }
+    
+    @FXML
+    protected void runCHARMM(ActionEvent event) {
+        
+//        if(!PythonScriptRunner.isAvailable())
+//        {
+//            return;
+//        }
+        
+        PythonScriptRunner runner = new PythonScriptRunner();
+        runner.setWorkingDir(new File("test"));
+        
+        final String scriptDir = "scripts";
+        final String scriptName = "submit-remote-charmm.py";
+        
+        List<String> args = new ArrayList<>();
+        args.add("-inp");   args.add(CHARMM_Input_Assistant.getRelativePath(this.CHARMM_saved_file.getAbsolutePath(), runner.getWorkingDir().getAbsolutePath()));
+        args.add("-par");   args.add(CHARMM_Input_Assistant.getRelativePath(this.CHARMM_saved_file.getAbsolutePath(), runner.getWorkingDir().getAbsolutePath()));
+        args.add("-top");  
+        args.add("-lpun");  
+        args.add("-np");  
+        
+        runner.exec(new File(scriptDir, scriptName), args, new File("test","pythonOutput.out"));
+//        runner.exec(new File(scriptDir, scriptName), args);
+    }
+    
 }//end of controller class

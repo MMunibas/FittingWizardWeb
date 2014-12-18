@@ -1,6 +1,6 @@
-* CHARMM input file for 
+* CHARMM input file for ethanol.pdb
 * Gas Phase simulation with MTPs 
-* generated on Wed Dec 17 16:39:29 CET 2014
+* generated on Thu Dec 18 18:44:54 CET 2014
 * by user hedin on machine Linux amd64 3.17.6-200.fc20.x86_64
 *
 
@@ -9,12 +9,12 @@ prnlev 2
 
 ! read parameters and coordinates
 read rtf card name -
-	
+	phenol_cgenff_mtp_0.01.top
 read param card name -
-	
+	phenol_cgenff.par
 
 OPEN UNIT 10 CARD READ NAME -
-	
+	ethanol.pdb
 READ SEQUENCE PDB UNIT 10
 GENERATE SOLU
 REWIND UNIT 10
@@ -28,7 +28,7 @@ NBONDS NBXMOD 5 ATOM CDIEL EPS 1.0 SHIFT VATOM VDISTANCE -
 SHAKE BONH PARA SELE ALL END
 
 OPEN UNIT 40 CARD READ NAME -
-
+phenol_cgenff_mtp_0.01.lpun
 MTPL MTPUNIT 40
 CLOSE UNIT 40
 
