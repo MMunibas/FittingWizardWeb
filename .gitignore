@@ -1,6 +1,7 @@
 /data
 /doc/html
-/lib/jython/cachedir/
-/nbproject/private/
-/build/
-/dist/
+/lib/jython/cachedir
+/nbproject/private
+/build
+/dist
+/test/pythonOutput.out

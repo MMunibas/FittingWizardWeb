@@ -6,13 +6,13 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.files.input;
+package ch.unibas.charmmtools.scripts;
 
 /**
  *
  * @author hedin
  */
-public class NBONDS {
+class NBONDS {
 
     //--------------------------------------------------------------------------
     //          PUBLIC ENUMerations

@@ -11,7 +11,6 @@ package ch.unibas.fittingwizard;
 import ch.unibas.charmmtools.gui.CHARMM_Input_Assistant;
 import ch.unibas.fittingwizard.presentation.base.Wizard;
 import ch.unibas.fittingwizard.presentation.base.WizardPageFactory;
-import ch.unibas.fittingwizard.presentation.MoleculeListPage;
 import ch.unibas.fittingwizard.presentation.base.ui.MainWindow;
 import javafx.scene.Parent;
 import org.apache.log4j.BasicConfigurator;
@@ -29,20 +28,22 @@ import java.util.jar.Manifest;
 
 /**
  * This is the main entry point of the application.
+ *
  * @author mhelmer
  *
  */
 public class WizardApplication extends Application {
-	
-	private static final Logger logger = Logger.getLogger(WizardApplication.class);
 
-	/**
-	 * For checking that there is a config file and that it contains proper keywords
-	 */
+    private static final Logger logger = Logger.getLogger(WizardApplication.class);
+
+    /**
+     * For checking that there is a config file and that it contains proper
+     * keywords
+     */
     private Settings settings;
 
-	@Override
-	public void start(Stage primaryStage) {
+    @Override
+    public void start(Stage primaryStage) {
         setupConsoleLogger();
         MainWindow.setPrimaryStage(primaryStage);
 
@@ -50,12 +51,12 @@ public class WizardApplication extends Application {
         try {
             Parent root = this.setupWizard(primaryStage);
 
-            Scene scene = new Scene(root,1350,900);
+            Scene scene = new Scene(root, 1350, 900);
             primaryStage.centerOnScreen();
             primaryStage.setMinWidth(1024);
             primaryStage.setMinHeight(600);
             primaryStage.setResizable(true);
-            
+
             this.loadStylesheets(scene);
             primaryStage.setScene(scene);
             String version = this.getVersionFromManifest();
@@ -73,11 +74,11 @@ public class WizardApplication extends Application {
                 System.exit(1);
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             logger.error("Error in application startup application.", e);
             throw e;
         }
-	}
+    }
 
     private String getVersionFromManifest() {
         Class clazz = WizardApplication.class;
@@ -86,8 +87,8 @@ public class WizardApplication extends Application {
         if (!classPath.startsWith("jar")) {
             return "no manifest found";
         }
-        String manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) +
-                "/META-INF/MANIFEST.MF";
+        String manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1)
+                + "/META-INF/MANIFEST.MF";
         Manifest manifest = null;
         try {
             manifest = new Manifest(new URL(manifestPath).openStream());
@@ -123,6 +124,6 @@ public class WizardApplication extends Application {
     }
 
     private static void setupConsoleLogger() {
-		BasicConfigurator.configure();
-	}
+        BasicConfigurator.configure();
+    }
 }

@@ -180,7 +180,7 @@
                 </rowConstraints>
                 <children>
                     <Button fx:id="button_reset" mnemonicParsing="false" onAction="#ResetFields" text="Reset" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                    <Button fx:id="button_save_to_file" disable="true" mnemonicParsing="false" onAction="#SaveToFile" text="Click to save ..." GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                    <Button fx:id="button_save_to_file" disable="true" mnemonicParsing="false" onAction="#SaveToFile" text="Click to save" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
             <Button fx:id="button_run_CHARMM" disable="true" mnemonicParsing="false" onAction="#runCHARMM" text="Run CHARMM" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                 </children>
             </GridPane>

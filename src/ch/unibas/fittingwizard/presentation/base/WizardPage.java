@@ -14,9 +14,6 @@ package ch.unibas.fittingwizard.presentation.base;
  * Time: 11:17
  */
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -27,9 +24,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.net.URL;
 
 /** basic wizard page class */
 public abstract class WizardPage<TParam> extends VBox {

@@ -24,6 +24,10 @@ public class ResourceUtils {
     public static String getRelativePath(File targetPath, File basePath) {
         return getRelativePath(targetPath.getAbsolutePath(), basePath.getAbsolutePath(), File.separator);
     }
+    
+    public static String getRelativePath(String targetPath, String basePath) {
+        return getRelativePath(targetPath, basePath, File.separator);
+    }
 
     /**
      * Get the relative path from one file to another, specifying the directory separator.

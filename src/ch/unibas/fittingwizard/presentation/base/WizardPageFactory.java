@@ -9,6 +9,8 @@
 package ch.unibas.fittingwizard.presentation.base;
 
 import ch.unibas.charmmtools.gui.CHARMM_Input_Assistant;
+import ch.unibas.charmmtools.scripts.ICHARMMScript;
+import ch.unibas.charmmtools.scripts.RealCHARMMScript;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -94,6 +96,7 @@ public class WizardPageFactory {
     private IFitMtpScript fitMtpScript;
     private IExportScript exportScript;
     private IVmdDisplayScript vmdScript;
+    private ICHARMMScript charmmScript;
 
     private RunFitWorkflow runFitWorkflow;
     private ExportFitWorkflow exportFitWorkflow;
@@ -152,6 +155,8 @@ public class WizardPageFactory {
         } else {
             gaussScript = new RealMultipoleGaussScript(moleculesDir, settings);
         }
+        
+        charmmScript = new RealCHARMMScript(sessionDir, settings);
 
     }
 
@@ -218,7 +223,7 @@ public class WizardPageFactory {
                         vmdDisplayWorkflow);
             } //            // CHARMM FITTING PAGES
             else if (type == CHARMM_Input_Assistant.class) {
-                page = new CHARMM_Input_Assistant(visualization,"My CHARMM Title");
+                page = new CHARMM_Input_Assistant(visualization);
             } // MISC
             else {
                 page = type.newInstance();

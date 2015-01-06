@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, Florent Hedin, Markus Meuwly, and the University of Basel
+ * Copyright (c) 2015, Florent Hedin, Markus Meuwly, and the University of Basel
  * All rights reserved.
  *
  * The 3-clause BSD license is applied to this software.
@@ -28,9 +28,7 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.log4j.Logger;
 
 /**
- * User: mhelmer
- * Date: 06.12.13
- * Time: 13:13
+ * User: mhelmer Date: 06.12.13 Time: 13:13
  */
 public class RealFitScript implements IFitMtpScript {
 
@@ -44,20 +42,20 @@ public class RealFitScript implements IFitMtpScript {
     public static final String FitResultFileName = "fit_results.txt";
     public static final String MtpfittabExtension = "_mtpfittab.txt";
 
-	private File sessionDir;
+    private File sessionDir;
     private final File moleculesDir;
 
     private final PythonScriptRunner runner;
     private File mtpFitScriptFile;
 
     public RealFitScript(File sessionDir, File moleculesDir, Settings settings) {
-    	this.sessionDir = sessionDir;
+        this.sessionDir = sessionDir;
         this.moleculesDir = moleculesDir;
         runner = new PythonScriptRunner();
         mtpFitScriptFile = new File(settings.getScriptsDir(), settings.getValue(MtpFitScriptNameKey));
-	}
+    }
 
-	@Override
+    @Override
     public FitMtpOutput execute(FitMtpInput input) {
         File outputDir = new File(sessionDir, OutputDirName);
         outputDir.mkdir();
@@ -115,7 +113,6 @@ public class RealFitScript implements IFitMtpScript {
     public static String getFileNameWithFitId(int fitId, String baseName) {
         return FitNamePrefix + fitId + "_" + baseName;
     }
-
 
     private List<File> getAllFitTabFiles(List<MoleculeId> moleculesForFit) {
         List<File> allFitTabFiles = getAllFitTabFiles(moleculesDir);

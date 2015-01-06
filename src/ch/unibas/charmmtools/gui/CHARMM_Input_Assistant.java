@@ -8,33 +8,28 @@
  */
 package ch.unibas.charmmtools.gui;
 
-import ch.unibas.charmmtools.files.input.CHARMM_input;
-import ch.unibas.charmmtools.files.input.CHARMM_input_GasPhase;
-import ch.unibas.charmmtools.files.input.CHARMM_input_PureLiquid;
+import ch.unibas.charmmtools.scripts.CHARMM_input;
+import ch.unibas.charmmtools.scripts.CHARMM_input_GasPhase;
+import ch.unibas.charmmtools.scripts.CHARMM_input_PureLiquid;
 import ch.unibas.fittingwizard.application.Visualization;
 import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
+import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
 import ch.unibas.fittingwizard.presentation.base.WizardPageWithVisualization;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -49,8 +44,9 @@ import org.apache.log4j.Logger;
  */
 
 
-public class CHARMM_Input_Assistant extends WizardPageWithVisualization implements Initializable {
+public class CHARMM_Input_Assistant extends WizardPageWithVisualization{
 
+    private static String title = "LJ fitting procedure : Step 1";
     private static final Logger logger = Logger.getLogger(CHARMM_Input_Assistant.class);
 
     /**
@@ -112,7 +108,7 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization implemen
     
     private File CHARMM_saved_file;
 
-    public CHARMM_Input_Assistant(Visualization visualization, String title) {
+    public CHARMM_Input_Assistant(Visualization visualization) {
         super(visualization, title);
     }
 
@@ -121,13 +117,10 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization implemen
 //    }
 
     /**
-     * Here we can add actions done just before showing the window, e.g. disabling some tabs
-     *
-     * @param location
-     * @param resources
+     * Here we can add actions done just before showing the window
      */
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize() {
         //Tab_Pane.getTabs().remove(Tab_Step2);
         //Tab_Step2.setDisable(true);
 
@@ -236,10 +229,10 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization implemen
             
             //transform it to relative path instead as we have to send data to clusters later
             String folderPath = new File("test").getAbsolutePath();
-            corname = CHARMM_Input_Assistant.getRelativePath(corname,folderPath);
-            rtfname = CHARMM_Input_Assistant.getRelativePath(rtfname,folderPath);
-            parname = CHARMM_Input_Assistant.getRelativePath(parname,folderPath);
-            lpunname = CHARMM_Input_Assistant.getRelativePath(lpunname,folderPath);
+            corname = ResourceUtils.getRelativePath(corname,folderPath);
+            rtfname = ResourceUtils.getRelativePath(rtfname,folderPath);
+            parname = ResourceUtils.getRelativePath(parname,folderPath);
+            lpunname = ResourceUtils.getRelativePath(lpunname,folderPath);
             
             // if empty filenames print a pattern user should modify
             corname = corname.length()==0?"ADD_HERE_PATH_TO_COORDINATES_FILE":corname;
@@ -276,8 +269,13 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization implemen
         /**
          * Allow running charmm script
          */
-        //button_run_CHARMM.setDisable(false);
+        button_run_CHARMM.setDisable(false);
 
+        RadioButton selected = (RadioButton) toggle_radio.getSelectedToggle();
+        String selText = selected.getText();
+        
+        button_save_to_file.setText("Click to save (" + selText + ")");
+        button_run_CHARMM.setText("Run CHARMM (" + selText + ")");
     }
 
     /**
@@ -352,6 +350,10 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization implemen
         button_generate.setDisable(true);
         button_save_to_file.setDisable(true);
         button_run_CHARMM.setDisable(true);
+        
+        button_save_to_file.setText("Click to save");
+        button_run_CHARMM.setText("Run CHARMM");
+        
         // related to tab2
 //        Tab_Step2.setDisable(true);
 //        Tab_Pane.getTabs().removeAll(Tab_Step2);
@@ -361,18 +363,18 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization implemen
      *
      * @param event
      */
-    @FXML
-    protected void GoToStep1(ActionEvent event) {
+//    @FXML
+//    protected void GoToStep1(ActionEvent event) {
 //        Tab_Pane.getSelectionModel().select(Tab_Step1);
 //        Tab_Step2.setDisable(true);
-    }
+//    }
 
     /**
      *
      * @param event
      */
-    @FXML
-    protected void GoToStep2(ActionEvent event) {
+//    @FXML
+//    protected void GoToStep2(ActionEvent event) {
 //        Tab_Step2.setDisable(false);
 //        Tab_Pane.getTabs().addAll(Tab_Step2);
 //        Tab_Pane.getSelectionModel().select(Tab_Step2);
@@ -380,7 +382,7 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization implemen
 //        inpfile_TextArea_Step2.setText("HELLO");
 //        inpfile_TextArea_Step2.setEditable(true);
 
-    }
+//    }
 
     @FXML
     protected void SaveToFile(ActionEvent event) {
@@ -414,56 +416,19 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization implemen
         this.CHARMM_saved_file = selectedFile;
     }
 
-//    @Override
-//    protected void fillButtonBar() {
-//    }
-//
-//    @Override
-//    protected Parent getContent() {
-//        Parent par = null;
-//
-//        try {
-//            par = FXMLLoader.load(getClass().getResource("CHARMM_Input_Assistant.fxml"));
-//        } catch (IOException ex) {
-//            logger.error("Error when building CHARMM_Input window in getContent()" + ex.getMessage());
-//        }
-//
-//        return par;
-//    }
-
     // returns null if file isn't relative to folder
-    public static String getRelativePath(String filePath, String folderPath) {
-        //logger.info(filePath + "\t" + folderPath );
-        if (filePath.startsWith(folderPath)) {
-            return filePath.substring(folderPath.length() + 1);
-        } else {
-            return "";
-        }
-    }
+//    public static String getRelativePath(String filePath, String folderPath) {
+//        //logger.info(filePath + "\t" + folderPath );
+//        if (filePath.startsWith(folderPath)) {
+//            return filePath.substring(folderPath.length() + 1);
+//        } else {
+//            return "";
+//        }
+//    }
     
     @FXML
     protected void runCHARMM(ActionEvent event) {
-        
-//        if(!PythonScriptRunner.isAvailable())
-//        {
-//            return;
-//        }
-        
-        PythonScriptRunner runner = new PythonScriptRunner();
-        runner.setWorkingDir(new File("test"));
-        
-        final String scriptDir = "scripts";
-        final String scriptName = "submit-remote-charmm.py";
-        
-        List<String> args = new ArrayList<>();
-        args.add("-inp");   args.add(CHARMM_Input_Assistant.getRelativePath(this.CHARMM_saved_file.getAbsolutePath(), runner.getWorkingDir().getAbsolutePath()));
-        args.add("-par");   args.add(CHARMM_Input_Assistant.getRelativePath(this.CHARMM_saved_file.getAbsolutePath(), runner.getWorkingDir().getAbsolutePath()));
-        args.add("-top");  
-        args.add("-lpun");  
-        args.add("-np");  
-        
-        runner.exec(new File(scriptDir, scriptName), args, new File("test","pythonOutput.out"));
-//        runner.exec(new File(scriptDir, scriptName), args);
+
     }
 
     @Override
