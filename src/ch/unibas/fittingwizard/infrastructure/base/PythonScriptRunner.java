@@ -20,6 +20,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import ch.unibas.fittingwizard.application.scripts.base.ScriptExecutionException;
+import java.util.HashMap;
 
 public class PythonScriptRunner {
 
@@ -27,6 +28,17 @@ public class PythonScriptRunner {
 
     private final static String ExecutableName = "python";
     private ProcessBuilder pb = new ProcessBuilder();
+    
+    public PythonScriptRunner(){
+        Map<String, String> env = new HashMap<>();
+        env.put("PYTHONPATH", "/usr/local/lib64/python2.7/site-packages/");
+        env.put("LD_LIBRARY_PATH", "/usr/local/lib/");
+        this.putEnvironment(env);
+    }
+    
+    public PythonScriptRunner(Map<String, String> env){
+        this.putEnvironment(env);
+    }
 
     public void setWorkingDir(File path) {
         logger.debug("Setting workdir: " + path);
