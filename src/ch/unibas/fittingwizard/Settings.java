@@ -85,6 +85,14 @@ public class Settings {
     public File getScriptsDir() {
         return new File(getValue(ScriptPathKey));
     }
+    
+    public File getPythonPath(){
+        return new File(getValue("scripts.pythonpath"));
+    }
+    
+    public File getLDLibraryPath(){
+        return new File(getValue("scripts.ld_library_path"));
+    }
 
     public String getValue(String key) {
         return props.getProperty(key, "No default in config_gui.ini");

@@ -8,6 +8,7 @@
  */
 package ch.unibas.fittingwizard.infrastructure.base;
 
+import ch.unibas.fittingwizard.Settings;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,15 +31,17 @@ public class PythonScriptRunner {
     private ProcessBuilder pb = new ProcessBuilder();
     
     public PythonScriptRunner(){
+        Settings settings = Settings.loadConfig();
+
         Map<String, String> env = new HashMap<>();
-        env.put("PYTHONPATH", "/usr/local/lib64/python2.7/site-packages/");
-        env.put("LD_LIBRARY_PATH", "/usr/local/lib/");
+        env.put("PYTHONPATH", settings.getPythonPath().toString());
+        env.put("LD_LIBRARY_PATH", settings.getLDLibraryPath().toString());
         this.putEnvironment(env);
     }
     
-    public PythonScriptRunner(Map<String, String> env){
-        this.putEnvironment(env);
-    }
+//    public PythonScriptRunner(Map<String, String> env){
+//        this.putEnvironment(env);
+//    }
 
     public void setWorkingDir(File path) {
         logger.debug("Setting workdir: " + path);
