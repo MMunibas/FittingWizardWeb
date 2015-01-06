@@ -50,11 +50,16 @@ public class WizardApplication extends Application {
         try {
             Parent root = this.setupWizard(primaryStage);
 
-            Scene scene = new Scene(root,1024,768);
+            Scene scene = new Scene(root,1350,900);
+            primaryStage.centerOnScreen();
+            primaryStage.setMinWidth(1024);
+            primaryStage.setMinHeight(600);
+            primaryStage.setResizable(true);
+            
             this.loadStylesheets(scene);
             primaryStage.setScene(scene);
             String version = this.getVersionFromManifest();
-            primaryStage.setTitle("Multipole-electrostatics fitting wizard - " + version);
+            primaryStage.setTitle("Multipole-electrostatics and Lennard-Jones fitting wizard - " + version);
             primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("Icon.png")));
 
             /**
@@ -111,8 +116,8 @@ public class WizardApplication extends Application {
     private Parent setupWizard(Stage primaryStage) {
         WizardPageFactory factory = new WizardPageFactory(primaryStage);
         Wizard wizard = new Wizard(factory);
-        wizard.navigateTo(MoleculeListPage.class, null);
-        //wizard.navigateTo(CHARMM_Input_Assistant.class, null);
+//        wizard.navigateTo(MoleculeListPage.class, null);
+        wizard.navigateTo(CHARMM_Input_Assistant.class, null);
         this.settings = factory.getSettings();
         return wizard;
     }

@@ -11,7 +11,9 @@ package ch.unibas.charmmtools.gui;
 import ch.unibas.charmmtools.files.input.CHARMM_input;
 import ch.unibas.charmmtools.files.input.CHARMM_input_GasPhase;
 import ch.unibas.charmmtools.files.input.CHARMM_input_PureLiquid;
+import ch.unibas.fittingwizard.application.Visualization;
 import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
+import ch.unibas.fittingwizard.presentation.base.WizardPageWithVisualization;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -47,7 +49,7 @@ import org.apache.log4j.Logger;
  */
 
 
-public class CHARMM_Input_Assistant implements Initializable {
+public class CHARMM_Input_Assistant extends WizardPageWithVisualization implements Initializable {
 
     private static final Logger logger = Logger.getLogger(CHARMM_Input_Assistant.class);
 
@@ -109,6 +111,10 @@ public class CHARMM_Input_Assistant implements Initializable {
     private boolean dens_required, DHVap_required, DG_hydration_required;
     
     private File CHARMM_saved_file;
+
+    public CHARMM_Input_Assistant(Visualization visualization, String title) {
+        super(visualization, title);
+    }
 
 //    public CHARMM_Input_Assistant(String my_CHARMM_Title) {
 //        super(my_CHARMM_Title);
@@ -458,6 +464,11 @@ public class CHARMM_Input_Assistant implements Initializable {
         
         runner.exec(new File(scriptDir, scriptName), args, new File("test","pythonOutput.out"));
 //        runner.exec(new File(scriptDir, scriptName), args);
+    }
+
+    @Override
+    protected void fillButtonBar() {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }//end of controller class
