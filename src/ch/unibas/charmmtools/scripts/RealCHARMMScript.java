@@ -9,7 +9,6 @@
 package ch.unibas.charmmtools.scripts;
 
 import ch.unibas.fittingwizard.Settings;
-import ch.unibas.fittingwizard.infrastructure.RealFitScript;
 import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
 import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
 import java.io.File;

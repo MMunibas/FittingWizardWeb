@@ -8,13 +8,9 @@
  */
 package ch.unibas.fittingwizard.presentation.base;
 
-import ch.unibas.charmmtools.gui.CHARMM_Input_Assistant;
-import ch.unibas.charmmtools.scripts.ICHARMMScript;
-import ch.unibas.charmmtools.scripts.RealCHARMMScript;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import javafx.stage.Stage;
 
 import org.apache.log4j.Logger;
@@ -54,7 +50,6 @@ import ch.unibas.fittingwizard.mocks.MockFitMtpScript;
 import ch.unibas.fittingwizard.mocks.MockFittabMarkerScript;
 import ch.unibas.fittingwizard.mocks.MockLRAScript;
 import ch.unibas.fittingwizard.mocks.MockMultipoleGaussScript;
-//import ch.unibas.fittingwizard.presentation.CHARMM_Input_Page;
 import ch.unibas.fittingwizard.presentation.MoleculeListPage;
 import ch.unibas.fittingwizard.presentation.addmolecule.AtomChargesDto;
 import ch.unibas.fittingwizard.presentation.addmolecule.AtomTypeChargePage;
@@ -69,6 +64,10 @@ import ch.unibas.fittingwizard.presentation.fitting.EditAtomTypeChargesDialog;
 import ch.unibas.fittingwizard.presentation.fitting.FitResultPage;
 import ch.unibas.fittingwizard.presentation.fitting.FittingParameterPage;
 import ch.unibas.fittingwizard.presentation.fitting.RunningFitPage;
+
+import ch.unibas.charmmtools.gui.CHARMM_Input_Assistant;
+import ch.unibas.charmmtools.scripts.ICHARMMScript;
+import ch.unibas.charmmtools.scripts.RealCHARMMScript;
 
 /**
  * User: mhelmer Date: 26.11.13 Time: 11:31
