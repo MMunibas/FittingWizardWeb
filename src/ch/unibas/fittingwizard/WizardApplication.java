@@ -9,6 +9,7 @@
 package ch.unibas.fittingwizard;
 
 import ch.unibas.charmmtools.gui.CHARMM_Input_Assistant;
+import ch.unibas.fittingwizard.presentation.MoleculeListPage;
 import ch.unibas.fittingwizard.presentation.base.Wizard;
 import ch.unibas.fittingwizard.presentation.base.WizardPageFactory;
 import ch.unibas.fittingwizard.presentation.base.ui.MainWindow;
