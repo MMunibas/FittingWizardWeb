@@ -23,7 +23,7 @@ public class RealCHARMMScript implements ICHARMMScript {
 
     public static final String ScriptNameKey = "scripts.submitCHARMM";
     public static final String OutputDirName = "test";
-    public static final String OutputFileName = "CHARMM_script_output.txt";
+    public static final String OutputFileName = "CHARMM_python_output.txt";
 
     private File sessionDir;
     private Settings settings;
@@ -59,7 +59,7 @@ public class RealCHARMMScript implements ICHARMMScript {
     }
 
     /**
-     * prepare python calls
+     * prepare python calls, output file has default name decided in python script
      * @param inpPath
      * @param parPath
      * @param topPath
@@ -76,4 +76,23 @@ public class RealCHARMMScript implements ICHARMMScript {
         args.add("-np");    args.add(Integer.toString(1));
     }
     
+    /**
+     * prepare python calls,output file name chosen from interface
+     * @param inpPath
+     * @param outPath
+     * @param parPath
+     * @param topPath
+     * @param lpunPath
+     */
+    @Override
+    public void preparePython(String inpPath, String outPath, String parPath, String topPath, String lpunPath) {
+        runner.setWorkingDir(new File(OutputDirName));
+        
+        args.add("-inp");   args.add(ResourceUtils.getRelativePath(inpPath, runner.getWorkingDir().getAbsolutePath()));
+        args.add("-out");   args.add(ResourceUtils.getRelativePath(outPath, runner.getWorkingDir().getAbsolutePath()));
+        args.add("-par");   args.add(ResourceUtils.getRelativePath(parPath, runner.getWorkingDir().getAbsolutePath()));
+        args.add("-top");   args.add(ResourceUtils.getRelativePath(topPath, runner.getWorkingDir().getAbsolutePath()));
+        args.add("-lpun");  args.add(ResourceUtils.getRelativePath(lpunPath, runner.getWorkingDir().getAbsolutePath()));
+        args.add("-np");    args.add(Integer.toString(1));
+    }
 }

@@ -11,7 +11,9 @@ package ch.unibas.charmmtools.gui;
 import ch.unibas.charmmtools.scripts.CHARMM_input;
 import ch.unibas.charmmtools.scripts.CHARMM_input_GasPhase;
 import ch.unibas.charmmtools.scripts.CHARMM_input_PureLiquid;
+import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.application.Visualization;
+import ch.unibas.fittingwizard.application.workflows.base.WorkflowContext;
 import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
 import ch.unibas.fittingwizard.presentation.base.WizardPageWithVisualization;
 import java.io.BufferedWriter;
@@ -104,9 +106,12 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization{
     private boolean dens_required, DHVap_required, DG_hydration_required;
     
     private File CHARMM_saved_file;
+    
+    private final RunCHARMMWorkflow charmmWorkflow;
 
-    public CHARMM_Input_Assistant(Visualization visualization) {
+    public CHARMM_Input_Assistant(Visualization visualization, RunCHARMMWorkflow chWflow) {
         super(visualization, title);
+        this.charmmWorkflow = chWflow;
     }
 
 //    public CHARMM_Input_Assistant(String my_CHARMM_Title) {
@@ -420,7 +425,7 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization{
     
     @FXML
     protected void runCHARMM(ActionEvent event) {
-
+        charmmWorkflow.execute(WorkflowContext.withInput(null));
     }
 
     @Override

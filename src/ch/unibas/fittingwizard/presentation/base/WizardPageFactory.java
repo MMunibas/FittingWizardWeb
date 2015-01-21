@@ -68,6 +68,7 @@ import ch.unibas.fittingwizard.presentation.fitting.RunningFitPage;
 import ch.unibas.charmmtools.gui.CHARMM_Input_Assistant;
 import ch.unibas.charmmtools.scripts.ICHARMMScript;
 import ch.unibas.charmmtools.scripts.RealCHARMMScript;
+import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 
 /**
  * User: mhelmer Date: 26.11.13 Time: 11:31
@@ -101,6 +102,7 @@ public class WizardPageFactory {
     private ExportFitWorkflow exportFitWorkflow;
     private RunGaussianWorkflow runGaussianWorkflow;
     private RunVmdDisplayWorkflow vmdDisplayWorkflow;
+    private RunCHARMMWorkflow charmmWorkflow;
 
     public WizardPageFactory(Stage primaryStage) {
         initializeDependencies(primaryStage);
@@ -175,6 +177,8 @@ public class WizardPageFactory {
                 notifications);
 
         vmdDisplayWorkflow = new RunVmdDisplayWorkflow(vmdScript, sessionDir);
+        
+        charmmWorkflow = new RunCHARMMWorkflow(charmmScript);
     }
 
     public <T extends WizardPage> WizardPage create(Class<T> type, Object parameter) {
@@ -222,7 +226,7 @@ public class WizardPageFactory {
                         vmdDisplayWorkflow);
             } //            // CHARMM FITTING PAGES
             else if (type == CHARMM_Input_Assistant.class) {
-                page = new CHARMM_Input_Assistant(visualization);
+                page = new CHARMM_Input_Assistant(visualization,charmmWorkflow);
             } // MISC
             else {
                 page = type.newInstance();

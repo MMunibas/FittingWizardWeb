@@ -20,6 +20,9 @@ public interface ICHARMMScript extends IScript<CHARMM_input, CHARMM_output> {
     // prepare all required data
     public void prepareData();
     
-    // prepare python call
+    // prepare python call -- implicit output file
     public void preparePython(String inpPath, String parPath, String topPath, String lpunPath);
+    
+    // prepare python call -- explicit output file
+    public void preparePython(String inpPath, String outPath, String parPath, String topPath, String lpunPath);
 }

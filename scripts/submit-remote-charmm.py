@@ -18,7 +18,7 @@ config.readfp(open('../scripts/config.ini'))
 ## Parse command-line options 
 parser = argparse.ArgumentParser(description=
   'Submit CHARMM calculations to remote cluster, then copy the results back',
-  epilog='Florent Hedin (2014) Tristan BEREAU (2013)')
+  epilog='Florent Hedin (2015) Tristan BEREAU (2013)')
   
 parser.add_argument('-inp',dest='inpF',type=str,required=True,
   help='CHARMM input file')
