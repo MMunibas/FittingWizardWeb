@@ -168,7 +168,7 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization{
 
         Window myParent = inpfile_TextArea.getScene().getWindow();
         FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(new File("test"));
+        chooser.setInitialDirectory(new File("."));
         File selectedFile = null;
 
         chooser.setTitle("Open File");
@@ -224,18 +224,13 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization{
             String parname = textfield_PAR.getText();
             String lpunname = textfield_LPUN.getText();
             
-            //transform it to relative path instead as we have to send data to clusters later
-            String folderPath = new File("test").getAbsolutePath();
-            corname = ResourceUtils.getRelativePath(corname,folderPath);
-            rtfname = ResourceUtils.getRelativePath(rtfname,folderPath);
-            parname = ResourceUtils.getRelativePath(parname,folderPath);
-            lpunname = ResourceUtils.getRelativePath(lpunname,folderPath);
-            
             // if empty filenames print a pattern user should modify
-            corname = corname.length()==0?"ADD_HERE_PATH_TO_COORDINATES_FILE":corname;
-            rtfname = rtfname.length()==0?"ADD_HERE_PATH_TO_TOPOLOGY_FILE":rtfname;
-            parname = parname.length()==0?"ADD_HERE_PATH_TO_PARAMETERS_FILE":parname;
-            lpunname = lpunname.length()==0?"ADD_HERE_PATH_TO_LPUN_FILE":lpunname;
+            //transform it to relative path instead as we have to send data to clusters later
+            String folderPath = new File(".").getAbsolutePath();
+            corname = corname.length()==0?"ADD_HERE_PATH_TO_COORDINATES_FILE":ResourceUtils.getRelativePath(corname,folderPath);
+            rtfname = rtfname.length()==0?"ADD_HERE_PATH_TO_TOPOLOGY_FILE":ResourceUtils.getRelativePath(rtfname,folderPath);
+            parname = parname.length()==0?"ADD_HERE_PATH_TO_PARAMETERS_FILE":ResourceUtils.getRelativePath(parname,folderPath);
+            lpunname = lpunname.length()==0?"ADD_HERE_PATH_TO_LPUN_FILE":ResourceUtils.getRelativePath(lpunname,folderPath);
             
             dens_required   = toggle_radio.getSelectedToggle().equals(radio_dens);
             DHVap_required   = toggle_radio.getSelectedToggle().equals(radio_DHVap);

@@ -12,6 +12,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.util.regex.Pattern;
+import org.apache.log4j.Logger;
 
 /**
  * Take from http://stackoverflow.com/questions/204784/how-to-construct-a-relative-path-in-java-from-two-absolute-paths-or-urls
@@ -21,11 +22,14 @@ import java.util.regex.Pattern;
  */
 public class ResourceUtils {
 
+    private final static Logger logger = Logger.getLogger(ResourceUtils.class);
+    
     public static String getRelativePath(File targetPath, File basePath) {
         return getRelativePath(targetPath.getAbsolutePath(), basePath.getAbsolutePath(), File.separator);
     }
     
     public static String getRelativePath(String targetPath, String basePath) {
+        logger.info(targetPath + "\tand\t" + basePath);
         return getRelativePath(targetPath, basePath, File.separator);
     }
 
