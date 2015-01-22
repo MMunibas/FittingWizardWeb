@@ -41,11 +41,11 @@ public class RunCHARMMWorkflow extends Workflow<CHARMM_input, CHARMM_output> {
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    public void prepare_python_script(String inpPath, String parPath, String topPath, String lpunPath){
-        charmmScript.preparePython(inpPath, parPath, topPath, lpunPath);
-    }
-    
-     public void prepare_python_script(String inpPath, String outPath, String parPath, String topPath, String lpunPath){
-         charmmScript.preparePython(inpPath, outPath, parPath, topPath, lpunPath);
-     }
+//    public void prepare_python_script(String inpPath, String parPath, String topPath, String lpunPath){
+//        charmmScript.preparePython(inpPath, parPath, topPath, lpunPath);
+//    }
+//    
+//     public void prepare_python_script(String inpPath, String outPath, String parPath, String topPath, String lpunPath){
+//         charmmScript.preparePython(inpPath, outPath, parPath, topPath, lpunPath);
+//     }
 }

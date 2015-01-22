@@ -428,7 +428,6 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization{
     
     @FXML
     protected void runCHARMM(ActionEvent event) {
-        charmmWorkflow.prepare_python_script(title, title, title, title, title);
         out = charmmWorkflow.execute(WorkflowContext.withInput(inp));
     }
 

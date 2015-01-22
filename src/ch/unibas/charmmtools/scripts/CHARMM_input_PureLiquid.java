@@ -24,22 +24,24 @@ public class CHARMM_input_PureLiquid extends CHARMM_input {
         /**
      * If content of the field has to be retrieved later on it is stored on an internal CharArrayWriter within this class
      *
-     * @param crdname
-     * @param topolname
-     * @param ffname
+     * @param _crd
+     * @param _top
+     * @param _par
      * @throws java.io.IOException
      */
-    public CHARMM_input_PureLiquid(String crdname, String topolname, String ffname) throws IOException {
+    public CHARMM_input_PureLiquid(String _crd, String _top, String _par) throws IOException {
+        
+        super(_crd, _top, _par);
         
         writer = new CharArrayWriter();
 
         //prepare and print title
-        this.print_title(crdname);
+        this.print_title();
 
         //prepare and print io section
-        this.print_ioSection(topolname, ffname);
+        this.print_ioSection();
 
-        this.print_crdSection(crdname);
+        this.print_crdSection();
         this.print_crystalSection();
 
         //prepare non bonded parameters line and print it
@@ -56,23 +58,25 @@ public class CHARMM_input_PureLiquid extends CHARMM_input {
     /**
      * If content of the field has to be directly written to a file we use a BufferedWriter type
      *
-     * @param crdname
-     * @param topolname
-     * @param ffname
-     * @param outfile
+     * @param _crd
+     * @param _top
+     * @param _par
+     * @param _outf
      * @throws java.io.IOException
      */
-    public CHARMM_input_PureLiquid(String crdname, String topolname, String ffname, File outfile) throws IOException {
+    public CHARMM_input_PureLiquid(String _crd, String _top, String _par, File _outf) throws IOException {
         
-        writer = new BufferedWriter(new FileWriter(outfile));
+        super(_crd, _top, _par, _outf);
+         
+        writer = new BufferedWriter(new FileWriter(_outf));
 
         //prepare and print title
-        this.print_title(crdname);
+        this.print_title();
 
         //prepare and print io section
-        this.print_ioSection(topolname, ffname);
+        this.print_ioSection();
 
-        this.print_crdSection(crdname);
+        this.print_crdSection();
         this.print_crystalSection();
         
         //prepare non bonded parameters line and print it
@@ -92,23 +96,25 @@ public class CHARMM_input_PureLiquid extends CHARMM_input {
      * If content of the field has to be retrieved later on it is stored on an internal CharArrayWriter within this class
      * Requires also a lpun file when MTP module is used
      * 
-     * @param crdname
-     * @param topolname
-     * @param ffname
-     * @param lpunname
+     * @param _crd
+     * @param _top
+     * @param _par
+     * @param _lpun
      * @throws java.io.IOException
      */
-    public CHARMM_input_PureLiquid(String crdname, String topolname, String ffname, String lpunname) throws IOException {
+    public CHARMM_input_PureLiquid(String _crd, String _top, String _par, String _lpun) throws IOException {
 
+        super(_crd, _top, _par, _lpun);
+        
         writer = new CharArrayWriter();
 
         //prepare and print title
-        this.print_title(crdname);
+        this.print_title();
 
         //prepare and print io section
-        this.print_ioSection(topolname, ffname);
+        this.print_ioSection();
 
-        this.print_crdSection(crdname);
+        this.print_crdSection();
         this.print_crystalSection();
         
         //prepare non bonded parameters line and print it
@@ -117,7 +123,7 @@ public class CHARMM_input_PureLiquid extends CHARMM_input {
         this.print_ShakeSection();
 
         //add section with lpun file
-        this.print_lpunfile(lpunname);
+        this.print_lpunfile();
 
         this.print_MiniSection();
         this.print_DynaSection();
@@ -128,25 +134,27 @@ public class CHARMM_input_PureLiquid extends CHARMM_input {
     /**
      * If content of the field has to be directly written to a file we use a BufferedWriter type
      * Requires also a lpun file when MTP module is used
-     * 
-     * @param crdname
-     * @param topolname
-     * @param ffname
-     * @param lpunname
-     * @param outfile
+     *
+     * @param _crd
+     * @param _top
+     * @param _par
+     * @param _lpun
+     * @param _outf
      * @throws java.io.IOException
      */
-    public CHARMM_input_PureLiquid(String crdname, String topolname, String ffname, String lpunname, File outfile) throws IOException {
+    public CHARMM_input_PureLiquid(String _crd, String _top, String _par, String _lpun, File _outf) throws IOException {
 
-        writer = new BufferedWriter(new FileWriter(outfile));
+        super(_crd, _top, _par, _lpun, _outf);
+        
+        writer = new BufferedWriter(new FileWriter(_outf));
 
         //prepare and print title
-        this.print_title(crdname);
+        this.print_title();
 
         //prepare and print io section
-        this.print_ioSection(topolname, ffname);
+        this.print_ioSection();
 
-        this.print_crdSection(crdname);
+        this.print_crdSection();
         this.print_crystalSection();
 
         //prepare non bonded parameters line and print it
@@ -155,7 +163,7 @@ public class CHARMM_input_PureLiquid extends CHARMM_input {
         this.print_ShakeSection();
 
         //add section with lpun file
-        this.print_lpunfile(lpunname);
+        this.print_lpunfile();
 
         this.print_MiniSection();
         this.print_DynaSection();
@@ -172,8 +180,8 @@ public class CHARMM_input_PureLiquid extends CHARMM_input {
      * @throws IOException
      */
     @Override
-    protected void print_title(String crdfile) throws IOException {
-        this.title += "* CHARMM input file for " + crdfile + "\n";
+    protected void print_title() throws IOException {
+        this.title += "* CHARMM input file for " + crd + "\n";
         this.title += "* Pure Liquid simulation with MTPs \n";
         this.title += "* generated on " + d.toString() + "\n";
         this.title += "* by user " + System.getProperty("user.name") + " on machine " + System.getProperty("os.name") + " " + System.getProperty("os.arch") + " " + System.getProperty("os.version") + "\n";
@@ -186,9 +194,9 @@ public class CHARMM_input_PureLiquid extends CHARMM_input {
     }
 
     @Override
-    protected void print_crdSection(String crdfile) throws IOException {
+    protected void print_crdSection() throws IOException {
         writer.write("OPEN UNIT 10 CARD READ NAME -" + "\n");
-        writer.write("\t" + crdfile + "\n");
+        writer.write("\t" + crd + "\n");
 //        writer.write("READ SEQUENCE PDB UNIT 10" + "\n");
 //        writer.write("GENERATE SOLU" + "\n");
 //        writer.write("REWIND UNIT 10" + "\n");
@@ -220,9 +228,9 @@ public class CHARMM_input_PureLiquid extends CHARMM_input {
     }
 
     @Override
-    protected void print_lpunfile(String lpunname) throws IOException {
+    protected void print_lpunfile() throws IOException {
         writer.write("OPEN UNIT 40 CARD READ NAME -" + "\n");
-        writer.write(lpunname + "\n");
+        writer.write(lpun + "\n");
         writer.write("MTPL MTPUNIT 40 ron2 10 roff2 12 ron3 9 roff3 11 -" + "\n");
         writer.write("\t" + "ron4 8 roff4 10 ron5 7 roff5 9" + "\n");
         writer.write("CLOSE UNIT 40" + "\n\n");
