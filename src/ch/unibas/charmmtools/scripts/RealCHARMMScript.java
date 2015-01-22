@@ -95,4 +95,13 @@ public class RealCHARMMScript implements ICHARMMScript {
         args.add("-lpun");  args.add(ResourceUtils.getRelativePath(lpunPath, runner.getWorkingDir().getAbsolutePath()));
         args.add("-np");    args.add(Integer.toString(1));
     }
+
+    /**
+     * @return the ScriptFile name
+     */
+    @Override
+    public String getScriptFileName() {
+        return ScriptFile.getName();
+    }
+    
 }

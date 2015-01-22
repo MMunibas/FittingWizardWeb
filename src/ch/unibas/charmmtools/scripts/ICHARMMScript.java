@@ -25,4 +25,9 @@ public interface ICHARMMScript extends IScript<CHARMM_input, CHARMM_output> {
     
     // prepare python call -- explicit output file
     public void preparePython(String inpPath, String outPath, String parPath, String topPath, String lpunPath);
+    
+    /**
+     * @return the ScriptFile name
+     */
+    public String getScriptFileName();
 }

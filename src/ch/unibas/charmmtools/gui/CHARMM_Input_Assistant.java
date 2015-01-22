@@ -11,6 +11,7 @@ package ch.unibas.charmmtools.gui;
 import ch.unibas.charmmtools.scripts.CHARMM_input;
 import ch.unibas.charmmtools.scripts.CHARMM_input_GasPhase;
 import ch.unibas.charmmtools.scripts.CHARMM_input_PureLiquid;
+import ch.unibas.charmmtools.scripts.CHARMM_output;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.application.Visualization;
 import ch.unibas.fittingwizard.application.workflows.base.WorkflowContext;
@@ -105,9 +106,11 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization{
     //type of simulation asked by user
     private boolean dens_required, DHVap_required, DG_hydration_required;
     
-    private File CHARMM_saved_file;
+    private File CHARMM_file;
     
     private final RunCHARMMWorkflow charmmWorkflow;
+    private CHARMM_input inp;
+    private CHARMM_output out;
 
     public CHARMM_Input_Assistant(Visualization visualization, RunCHARMMWorkflow chWflow) {
         super(visualization, title);
@@ -220,7 +223,7 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization{
     @FXML
     protected void GenerateInputFile() {
 
-        CHARMM_input inp = null;
+        inp = null;
         try {
             
             // get filenames
@@ -410,7 +413,7 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization{
         this.RedLabel_Notice.setText("You can now try to run the simulation");
         this.button_run_CHARMM.setDisable(false);
         
-        this.CHARMM_saved_file = selectedFile;
+        this.CHARMM_file = selectedFile;
     }
 
     // returns null if file isn't relative to folder
@@ -425,7 +428,8 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization{
     
     @FXML
     protected void runCHARMM(ActionEvent event) {
-        charmmWorkflow.execute(WorkflowContext.withInput(null));
+        charmmWorkflow.prepare_python_script(title, title, title, title, title);
+        out = charmmWorkflow.execute(WorkflowContext.withInput(inp));
     }
 
     @Override
