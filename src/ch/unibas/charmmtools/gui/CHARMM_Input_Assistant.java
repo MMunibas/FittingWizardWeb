@@ -176,7 +176,7 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization{
 
         Window myParent = inpfile_TextArea.getScene().getWindow();
         FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(new File("."));
+        chooser.setInitialDirectory(new File("test"));
         File selectedFile = null;
 
         chooser.setTitle("Open File");
@@ -266,16 +266,17 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization{
          */
         button_save_to_file.setDisable(false);
         
-        /**
-         * Allow running charmm script
-         */
-        button_run_CHARMM.setDisable(false);
 
         RadioButton selected = (RadioButton) toggle_radio.getSelectedToggle();
         String selText = selected.getText();
         
         button_save_to_file.setText("Click to save (" + selText + ")");
         button_run_CHARMM.setText("Run CHARMM (" + selText + ")");
+        
+        /**
+         * Allow running charmm script
+         */
+        button_run_CHARMM.setDisable(false);
     }
 
     /**
@@ -414,6 +415,7 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization{
         this.button_run_CHARMM.setDisable(false);
         
         this.CHARMM_file = selectedFile;
+        
     }
 
     // returns null if file isn't relative to folder
@@ -427,8 +429,16 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization{
 //    }
     
     @FXML
-    protected void runCHARMM(ActionEvent event) {
-        out = charmmWorkflow.execute(WorkflowContext.withInput(inp));
+    protected void runCHARMM(ActionEvent event) { 
+        if(this.CHARMM_file.exists()){
+            this.inp.setInp(CHARMM_file);
+            this.out = charmmWorkflow.execute(WorkflowContext.withInput(this.inp));
+        }
+        else
+        {
+            this.out = charmmWorkflow.execute(WorkflowContext.withInput(this.inp));
+        }
+            
     }
 
     @Override

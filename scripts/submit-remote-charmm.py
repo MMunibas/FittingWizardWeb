@@ -20,11 +20,11 @@ parser = argparse.ArgumentParser(description=
   'Submit CHARMM calculations to remote cluster, then copy the results back',
   epilog='Florent Hedin (2015) Tristan BEREAU (2013)')
   
-parser.add_argument('-inp',dest='inpF',type=str,required=True,
-  help='CHARMM input file')
+parser.add_argument('-inp',dest='inpF',type=str,
+  required=True, help='CHARMM input file')
   
 parser.add_argument('-out',dest='outF',type=str,
-  default="charmm.out", help='CHARMM output file')
+  required=True, help='CHARMM output file')
   
 parser.add_argument('-par',dest='parF',type=str,
   required=True, help='CHARMM FF parameters file')
@@ -40,6 +40,15 @@ parser.add_argument('-np',dest='numCores',type=int,
 
 args = parser.parse_args()
 
+print parser
+
+print args.inpF
+print args.outF
+print args.parF
+print args.topF
+print args.lpunF
+print args.numCores
+
 # Test SSH connection
 print "Establishing connection"
 sshuser = config.get('remote','user').strip('\'')
@@ -51,6 +60,7 @@ if process != 0:
   print "Error. Can't connect to remote computer."
   exit(1)
   
+
 
 ## Create directory for calculations
 #workdir = config.get('remote','workdir').strip('\'')

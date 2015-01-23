@@ -34,6 +34,7 @@ public class RunCHARMMWorkflow extends Workflow<CHARMM_input, CHARMM_output> {
         
         logger.info("Executing CHARMM workflow ...");
         status.setCurrentStatus("Executing " + charmmScript.getScriptFileName() + " ...");
+        
         CHARMM_output out = charmmScript.execute(status.getParameter());
         
         return out;

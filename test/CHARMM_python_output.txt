@@ -1,0 +1,8 @@
+ArgumentParser(prog='submit-remote-charmm.py', usage=None, description='Submit CHARMM calculations to remote cluster, then copy the results back', version=None, formatter_class=<class 'argparse.HelpFormatter'>, conflict_handler='error', add_help=True)
+/home/hedin/progra/fittingWizard/test/density.inp
+/home/hedin/progra/fittingWizard/test/charmm.out
+test/phenol_cgenff_mtp_0.01.top
+test/phenol_cgenff.par
+test/phenol_cgenff_mtp_0.01.lpun
+1
+Establishing connection

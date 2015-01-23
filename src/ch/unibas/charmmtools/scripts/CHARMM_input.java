@@ -30,6 +30,7 @@ public abstract class CHARMM_input {
     protected int prnlev = 2;
     
     protected String par,top,lpun,crd;
+    protected File inp;
     protected File out;
     
     protected CHARMM_input(String _crd, String _top, String _par)
@@ -161,6 +162,20 @@ public abstract class CHARMM_input {
      */
     public File getOut() {
         return out;
+    }
+
+    /**
+     * @return the inp
+     */
+    public File getInp() {
+        return inp;
+    }
+
+    /**
+     * @param inp the inp to set
+     */
+    public void setInp(File inp) {
+        this.inp = inp;
     }
     
 }

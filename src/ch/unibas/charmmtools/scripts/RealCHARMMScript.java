@@ -47,6 +47,10 @@ public class RealCHARMMScript implements ICHARMMScript {
     @Override
     public CHARMM_output execute(CHARMM_input input) {
 
+        
+        this.preparePython(input.getInp().getAbsolutePath(),new File(OutputDirName,"charmm.out").getAbsolutePath(),
+                input.getPar(), input.getTop(), input.getLpun());
+        
         runner.exec(this.ScriptFile, this.args, new File(OutputDirName,OutputFileName));
         
         CHARMM_output out = new CHARMM_output();
@@ -67,12 +71,13 @@ public class RealCHARMMScript implements ICHARMMScript {
      */
     @Override
     public void preparePython(String inpPath, String parPath, String topPath, String lpunPath) {
+        
         runner.setWorkingDir(new File(OutputDirName));
         
-        args.add("-inp");   args.add(ResourceUtils.getRelativePath(inpPath, runner.getWorkingDir().getAbsolutePath()));
-        args.add("-par");   args.add(ResourceUtils.getRelativePath(parPath, runner.getWorkingDir().getAbsolutePath()));
-        args.add("-top");   args.add(ResourceUtils.getRelativePath(topPath, runner.getWorkingDir().getAbsolutePath()));
-        args.add("-lpun");  args.add(ResourceUtils.getRelativePath(lpunPath, runner.getWorkingDir().getAbsolutePath()));
+        args.add("-inp");   args.add(inpPath);
+        args.add("-par");   args.add(parPath);
+        args.add("-top");   args.add(topPath);
+        args.add("-lpun");  args.add(lpunPath);
         args.add("-np");    args.add(Integer.toString(1));
     }
     
@@ -86,13 +91,14 @@ public class RealCHARMMScript implements ICHARMMScript {
      */
     @Override
     public void preparePython(String inpPath, String outPath, String parPath, String topPath, String lpunPath) {
+        
         runner.setWorkingDir(new File(OutputDirName));
         
-        args.add("-inp");   args.add(ResourceUtils.getRelativePath(inpPath, runner.getWorkingDir().getAbsolutePath()));
-        args.add("-out");   args.add(ResourceUtils.getRelativePath(outPath, runner.getWorkingDir().getAbsolutePath()));
-        args.add("-par");   args.add(ResourceUtils.getRelativePath(parPath, runner.getWorkingDir().getAbsolutePath()));
-        args.add("-top");   args.add(ResourceUtils.getRelativePath(topPath, runner.getWorkingDir().getAbsolutePath()));
-        args.add("-lpun");  args.add(ResourceUtils.getRelativePath(lpunPath, runner.getWorkingDir().getAbsolutePath()));
+        args.add("-inp");   args.add(inpPath);
+        args.add("-out");   args.add(outPath);
+        args.add("-par");   args.add(parPath);
+        args.add("-top");   args.add(topPath);
+        args.add("-lpun");  args.add(lpunPath);
         args.add("-np");    args.add(Integer.toString(1));
     }
 
