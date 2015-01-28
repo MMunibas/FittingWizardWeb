@@ -15,6 +15,8 @@ import ch.unibas.charmmtools.scripts.CHARMM_output;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.application.workflows.base.WorkflowContext;
 import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
+import ch.unibas.fittingwizard.presentation.MoleculeListPage;
+import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import ch.unibas.fittingwizard.presentation.base.WizardPage;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -23,6 +25,7 @@ import java.io.IOException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -79,7 +82,7 @@ public class CHARMM_Input_Assistant extends WizardPage{
     @FXML
     private ToggleGroup toggle_radio;
     
-    @FXML
+    // those buttons are NOT exposed to FXML but handles locally with fillbuttonbar
     private Button button_reset, button_save_to_file, button_run_CHARMM;
 
     /**
@@ -285,7 +288,6 @@ public class CHARMM_Input_Assistant extends WizardPage{
      *
      * @param event
      */
-    @FXML
     protected void ResetFields(ActionEvent event) {
         //clear textcontent
         inpfile_TextArea.clear();
@@ -327,7 +329,6 @@ public class CHARMM_Input_Assistant extends WizardPage{
         
     }
 
-    @FXML
     protected void SaveToFile(ActionEvent event) {
         Window myParent = button_save_to_file.getScene().getWindow();
         FileChooser chooser = new FileChooser();
@@ -360,7 +361,6 @@ public class CHARMM_Input_Assistant extends WizardPage{
         
     }
     
-    @FXML
     protected void runCHARMM(ActionEvent event) { 
         if(this.CHARMM_file.exists()){
             this.inp.setInp(CHARMM_file);
@@ -375,7 +375,34 @@ public class CHARMM_Input_Assistant extends WizardPage{
 
     @Override
     protected void fillButtonBar() {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        button_reset = ButtonFactory.createButtonBarButton("Reset", new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                logger.info("Resetting all fields.");
+                ResetFields(actionEvent);
+            }
+        });
+        addButtonToButtonBar(button_reset);
+        
+        button_save_to_file = ButtonFactory.createButtonBarButton("Click to save", new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                logger.info("Saving CHARMM input script to a file.");
+                SaveToFile(actionEvent);
+            }
+        });
+        addButtonToButtonBar(button_save_to_file);
+        
+        button_run_CHARMM = ButtonFactory.createButtonBarButton("Run CHARMM", new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                logger.info("Running CHARMM input script.");
+                runCHARMM(actionEvent);
+            }
+        });
+        addButtonToButtonBar(button_run_CHARMM);
+        
     }
     
 }//end of controller class
