@@ -226,7 +226,7 @@ public class WizardPageFactory {
                         vmdDisplayWorkflow);
             } //            // CHARMM FITTING PAGES
             else if (type == CHARMM_Input_Assistant.class) {
-                page = new CHARMM_Input_Assistant(visualization,charmmWorkflow);
+                page = new CHARMM_Input_Assistant(charmmWorkflow);
             } // MISC
             else {
                 page = type.newInstance();

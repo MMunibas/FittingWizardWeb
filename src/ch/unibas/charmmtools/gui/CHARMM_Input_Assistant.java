@@ -13,10 +13,9 @@ import ch.unibas.charmmtools.scripts.CHARMM_input_GasPhase;
 import ch.unibas.charmmtools.scripts.CHARMM_input_PureLiquid;
 import ch.unibas.charmmtools.scripts.CHARMM_output;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
-import ch.unibas.fittingwizard.application.Visualization;
 import ch.unibas.fittingwizard.application.workflows.base.WorkflowContext;
 import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
-import ch.unibas.fittingwizard.presentation.base.WizardPageWithVisualization;
+import ch.unibas.fittingwizard.presentation.base.WizardPage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -44,21 +43,13 @@ import org.apache.log4j.Logger;
  */
 
 
-public class CHARMM_Input_Assistant extends WizardPageWithVisualization{
+public class CHARMM_Input_Assistant extends WizardPage{
 
     private static String title = "LJ fitting procedure : Step 1";
     private static final Logger logger = Logger.getLogger(CHARMM_Input_Assistant.class);
 
     /**
-     * The TabPane in which several tabs are added
-     */
-//    @FXML
-//    private TabPane Tab_Pane;
-//    @FXML
-//    private Tab Tab_Step1, Tab_Step2;
-
-    /**
-     * Everything related to the tab Step1
+     * All FXML variables
      */
     @FXML
     private CheckBox later_PAR, later_RTF, later_COR, later_LPUN;
@@ -92,14 +83,6 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization{
     private Button button_reset, button_save_to_file, button_run_CHARMM;
 
     /**
-     * Everything related to the tab Step2
-     */
-//    @FXML
-//    private TextArea inpfile_TextArea_Step2;
-
-    //@FXML
-    //private Button button_back_Step2, button_next_Step2;
-    /**
      * Internal variables
      */
     private boolean PAR_selected, RTF_selected, COR_selected, LPUN_selected;
@@ -112,22 +95,16 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization{
     private CHARMM_input inp;
     private CHARMM_output out;
 
-    public CHARMM_Input_Assistant(Visualization visualization, RunCHARMMWorkflow chWflow) {
-        super(visualization, title);
+    public CHARMM_Input_Assistant(RunCHARMMWorkflow chWflow) {
+        super(title);
         this.charmmWorkflow = chWflow;
     }
-
-//    public CHARMM_Input_Assistant(String my_CHARMM_Title) {
-//        super(my_CHARMM_Title);
-//    }
 
     /**
      * Here we can add actions done just before showing the window
      */
     @Override
     public void initialize() {
-        //Tab_Pane.getTabs().remove(Tab_Step2);
-        //Tab_Step2.setDisable(true);
 
         later_PAR.setAllowIndeterminate(false);
         later_RTF.setAllowIndeterminate(false);
@@ -139,13 +116,6 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization{
         coor_type.setItems(avail_coor_types);
 
         coor_type.setValue("*.pdb");
-        
-        // put in the same toggle group the radio buttons
-        // this toggle groups manages the selection of only one radio button at a given time
-        //radio_dens.setToggleGroup(toggle_radio);
-        //radio_DHVap.setToggleGroup(toggle_radio);
-        //radio_dens_DHVap.requestFocus();
-        //radio_DG_hydration.setToggleGroup(toggle_radio);
 
         // set to false those booleans indicating if a file has been selected
         PAR_selected = false; RTF_selected = false; COR_selected = false; LPUN_selected = false;
@@ -262,7 +232,7 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization{
         }
 
         /**
-         * If success enable button for going to step2 tab
+         * If success enable button for saving
          */
         button_save_to_file.setDisable(false);
         
@@ -324,7 +294,7 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization{
         textfield_COR.clear();
         textfield_LPUN.clear();
 
-        //disable elements of tab 1
+        //disable some elements 
         PAR_selected = false;
         RTF_selected = false;
         COR_selected = false;
@@ -355,35 +325,7 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization{
         button_save_to_file.setText("Click to save");
         button_run_CHARMM.setText("Run CHARMM");
         
-        // related to tab2
-//        Tab_Step2.setDisable(true);
-//        Tab_Pane.getTabs().removeAll(Tab_Step2);
     }
-
-    /**
-     *
-     * @param event
-     */
-//    @FXML
-//    protected void GoToStep1(ActionEvent event) {
-//        Tab_Pane.getSelectionModel().select(Tab_Step1);
-//        Tab_Step2.setDisable(true);
-//    }
-
-    /**
-     *
-     * @param event
-     */
-//    @FXML
-//    protected void GoToStep2(ActionEvent event) {
-//        Tab_Step2.setDisable(false);
-//        Tab_Pane.getTabs().addAll(Tab_Step2);
-//        Tab_Pane.getSelectionModel().select(Tab_Step2);
-//        Tab_Step2.inpfile_TextArea_Step2 = new TextArea("HELLO");
-//        inpfile_TextArea_Step2.setText("HELLO");
-//        inpfile_TextArea_Step2.setEditable(true);
-
-//    }
 
     @FXML
     protected void SaveToFile(ActionEvent event) {
@@ -417,16 +359,6 @@ public class CHARMM_Input_Assistant extends WizardPageWithVisualization{
         this.CHARMM_file = selectedFile;
         
     }
-
-    // returns null if file isn't relative to folder
-//    public static String getRelativePath(String filePath, String folderPath) {
-//        //logger.info(filePath + "\t" + folderPath );
-//        if (filePath.startsWith(folderPath)) {
-//            return filePath.substring(folderPath.length() + 1);
-//        } else {
-//            return "";
-//        }
-//    }
     
     @FXML
     protected void runCHARMM(ActionEvent event) { 
