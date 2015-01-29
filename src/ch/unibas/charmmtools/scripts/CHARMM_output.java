@@ -26,6 +26,9 @@ public class CHARMM_output implements CHARMM_inout{
     
     private File fileOut;
     
+    private Boolean errorOccured = false;
+    private final String hasFailed = "NORMAL TERMINATION BY NORMAL STOP";
+    
     public CHARMM_output(File charmmout){
         
         fileOut = charmmout;
@@ -37,6 +40,10 @@ public class CHARMM_output implements CHARMM_inout{
             );
         } catch (IOException ex) {
             logger.error("Error when loading the CHARMM output file " + fileOut.getAbsolutePath());
+        }
+        
+        if (!textOut.contains(hasFailed)){
+            errorOccured=true;
         }
         
     }// ctor
@@ -65,6 +72,13 @@ public class CHARMM_output implements CHARMM_inout{
      */
     public File getFileOut() {
         return fileOut;
+    }
+
+    /**
+     * @return the errorOccured
+     */
+    public Boolean getErrorOccured() {
+        return errorOccured;
     }
   
 }

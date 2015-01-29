@@ -9,8 +9,10 @@
 package ch.unibas.charmmtools.gui;
 
 import ch.unibas.charmmtools.scripts.CHARMM_inout;
+import ch.unibas.charmmtools.scripts.CHARMM_input;
 import ch.unibas.charmmtools.scripts.CHARMM_input_GasPhase;
 import ch.unibas.charmmtools.scripts.CHARMM_input_PureLiquid;
+import ch.unibas.charmmtools.scripts.CHARMM_output;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.application.workflows.base.WorkflowContext;
 import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
@@ -87,6 +89,43 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
     public CHARMM_GUI_Step1(RunCHARMMWorkflow chWflow) {
         super(title,chWflow);
     }
+    
+    public CHARMM_GUI_Step1(RunCHARMMWorkflow chWflow, List<CHARMM_inout> ioList) {
+        super(title,chWflow);
+        this.inp = (CHARMM_input)  ioList.get(0);
+        
+        inpfile_TextArea.setText(inp.getContentOfInputFile());
+        inpfile_TextArea.setEditable(true);
+        
+        RedLabel_Notice.setText("Error while running CHARMM ! Please modify input file");
+        RedLabel_Notice.setVisible(true);
+        
+        button_save_to_file.setDisable(false);
+        
+        textfield_PAR.setDisable(true);
+        textfield_RTF.setDisable(true);
+        textfield_COR.setDisable(true);
+        textfield_LPUN.setDisable(true);
+        
+        radio_dens.setDisable(true); 
+        radio_DHVap.setDisable(true); 
+//        radio_DG_hydration.setDisable(true);
+        
+        button_generate.setDisable(true);
+        
+        button_open_PAR.setDisable(true);
+        button_open_RTF.setDisable(true);
+        button_open_COR.setDisable(true);
+        button_open_LPUN.setDisable(true);
+        
+        coor_type.setDisable(true);
+        
+        later_PAR.setDisable(true); 
+        later_RTF.setDisable(true); 
+        later_COR.setDisable(true); 
+        later_LPUN.setDisable(true);
+        
+    }
 
     /**
      * Here we can add actions done just before showing the window
@@ -145,7 +184,7 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
         chooser.setTitle("Open File");
 
         if (event.getSource().equals(button_open_PAR)) {
-            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CHARMM FF parameters file", "*.inp", "*.par", "*.prm"));
+            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CHARMM FF parameters file", /*"*.inp",*/ "*.par", "*.prm"));
             selectedFile = chooser.showOpenDialog(myParent);
             if (selectedFile != null) {
                 textfield_PAR.setText(selectedFile.getAbsolutePath());
@@ -275,6 +314,12 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
      * @param event
      */
     protected void ResetFields(ActionEvent event) {
+        
+        later_PAR.setDisable(false);
+        later_RTF.setDisable(false); 
+        later_COR.setDisable(false); 
+        later_LPUN.setDisable(false);
+        
         //clear textcontent
         inpfile_TextArea.clear();
         textfield_PAR.clear();
@@ -312,6 +357,26 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
         
         button_save_to_file.setText("Click to save");
         button_run_CHARMM.setText("Run CHARMM");
+        
+//        textfield_PAR.setDisable(false);
+//        textfield_RTF.setDisable(false);
+//        textfield_COR.setDisable(false);
+//        textfield_LPUN.setDisable(false);
+        
+        radio_dens.setDisable(false); 
+        radio_DHVap.setDisable(false); 
+//        radio_DG_hydration.setDisable(false);
+        
+//        button_generate.setDisable(true);
+        
+//        button_open_PAR.setDisable(true);
+//        button_open_RTF.setDisable(true);
+//        button_open_COR.setDisable(true);
+//        button_open_LPUN.setDisable(true);
+        
+//        coor_type.setDisable(true);
+        
+
         
     }
 
@@ -354,17 +419,12 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
     
     protected void runCHARMM(ActionEvent event) { 
 
-        this.inp.setInp(CHARMM_inFile);
-        
-        this.out = charmmWorkflow.execute(WorkflowContext.withInput(this.inp));
-        
-        CHARMM_outFile = out.getFileOut();
-        logger.info(out.getTextOut());
+        inp.setInp(CHARMM_inFile);
     
         List<CHARMM_inout> myList = new ArrayList<CHARMM_inout>();
         myList.add(0, inp);
         myList.add(1, out);
-        navigateTo(CHARMM_GUI_Step2.class, myList);
+        navigateTo(RunningCHARMM.class, myList);
         
     }
 

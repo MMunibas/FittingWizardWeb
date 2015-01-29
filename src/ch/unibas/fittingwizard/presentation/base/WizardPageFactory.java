@@ -67,6 +67,7 @@ import ch.unibas.fittingwizard.presentation.fitting.RunningFitPage;
 
 import ch.unibas.charmmtools.gui.CHARMM_GUI_Step1;
 import ch.unibas.charmmtools.gui.CHARMM_GUI_Step2;
+import ch.unibas.charmmtools.gui.RunningCHARMM;
 import ch.unibas.charmmtools.scripts.CHARMM_inout;
 import ch.unibas.charmmtools.scripts.ICHARMMScript;
 import ch.unibas.charmmtools.scripts.RealCHARMMScript;
@@ -230,8 +231,18 @@ public class WizardPageFactory {
             } 
             // CHARMM FITTING PAGES
             else if (type == CHARMM_GUI_Step1.class) {
-                page = new CHARMM_GUI_Step1(charmmWorkflow);
+                if(parameter==null)
+                    page = new CHARMM_GUI_Step1(charmmWorkflow);
+                else{
+                    List<CHARMM_inout> ioList = throwIfParameterIsNull(parameter);
+                    page = new CHARMM_GUI_Step1(charmmWorkflow,ioList);
+                }
             } 
+            else if (type == RunningCHARMM.class) {
+                List<CHARMM_inout> ioList = throwIfParameterIsNull(parameter);
+                page = new RunningCHARMM(charmmWorkflow,ioList);
+                
+            }
             else if (type == CHARMM_GUI_Step2.class) {
                 List<CHARMM_inout> ioList = throwIfParameterIsNull(parameter);
                 page = new CHARMM_GUI_Step2(charmmWorkflow,ioList);

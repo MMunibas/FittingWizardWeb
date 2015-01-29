@@ -40,30 +40,30 @@ public abstract class CHARMM_input implements CHARMM_inout{
     protected CHARMM_input(String _crd, String _top, String _par)
     {
         this.crd = _crd;
-        this.par = _top;
-        this.top = _par;
+        this.top = _top;
+        this.par = _par;
     }
     
     public CHARMM_input(String _crd, String _top, String _par, File _outf){
         this.crd = _crd;
-        this.par = _top;
-        this.top = _par;
+        this.top = _top;
+        this.par = _par;
         this.out = _outf;
     }
 
     protected CHARMM_input(String _crd, String _top, String _par, String _lpun)
     {
         this.crd = _crd;
-        this.par = _top;
-        this.top = _par;
+        this.top = _top;
+        this.par = _par;
         this.lpun = _lpun;
     }
     
     protected CHARMM_input(String _crd, String _top, String _par, String _lpun, File _outf)
     {
         this.crd = _crd;
-        this.par = _top;
-        this.top = _par;
+        this.top = _top;
+        this.par = _par;
         this.lpun = _lpun;
         this.out = _outf;
     }
