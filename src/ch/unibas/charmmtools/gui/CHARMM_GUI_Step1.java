@@ -8,6 +8,7 @@
  */
 package ch.unibas.charmmtools.gui;
 
+import ch.unibas.charmmtools.scripts.CHARMM_inout;
 import ch.unibas.charmmtools.scripts.CHARMM_input_GasPhase;
 import ch.unibas.charmmtools.scripts.CHARMM_input_PureLiquid;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
@@ -18,6 +19,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -36,9 +39,9 @@ import javafx.stage.Window;
 
 
 
-public class CHARMM_Input_Assistant extends CHARMM_Input_base{
+public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
 
-    private static final String title = "LJ fitting procedure : preparing CHARMM input file";
+    private static final String title = "LJ fitting procedure Step 1 : preparing CHARMM input file";
     
     /**
      * All FXML variables
@@ -81,9 +84,8 @@ public class CHARMM_Input_Assistant extends CHARMM_Input_base{
     //type of simulation asked by user
     private boolean dens_required, DHVap_required, DG_hydration_required;
       
-    public CHARMM_Input_Assistant(RunCHARMMWorkflow chWflow) {
+    public CHARMM_GUI_Step1(RunCHARMMWorkflow chWflow) {
         super(title,chWflow);
-        this.charmmWorkflow = chWflow;
     }
 
     /**
@@ -195,7 +197,7 @@ public class CHARMM_Input_Assistant extends CHARMM_Input_base{
             
             // if empty filenames print a pattern user should modify
             //transform it to relative path instead as we have to send data to clusters later
-            String folderPath = new File(".").getAbsolutePath();
+            String folderPath = new File("test").getAbsolutePath();
             corname = corname.length()==0?"ADD_HERE_PATH_TO_COORDINATES_FILE":ResourceUtils.getRelativePath(corname,folderPath);
             rtfname = rtfname.length()==0?"ADD_HERE_PATH_TO_TOPOLOGY_FILE":ResourceUtils.getRelativePath(rtfname,folderPath);
             parname = parname.length()==0?"ADD_HERE_PATH_TO_PARAMETERS_FILE":ResourceUtils.getRelativePath(parname,folderPath);
@@ -353,11 +355,17 @@ public class CHARMM_Input_Assistant extends CHARMM_Input_base{
     protected void runCHARMM(ActionEvent event) { 
 
         this.inp.setInp(CHARMM_inFile);
+        
         this.out = charmmWorkflow.execute(WorkflowContext.withInput(this.inp));
         
         CHARMM_outFile = out.getFileOut();
         logger.info(out.getTextOut());
     
+        List<CHARMM_inout> myList = new ArrayList<CHARMM_inout>();
+        myList.add(0, inp);
+        myList.add(1, out);
+        navigateTo(CHARMM_GUI_Step2.class, myList);
+        
     }
 
     @Override

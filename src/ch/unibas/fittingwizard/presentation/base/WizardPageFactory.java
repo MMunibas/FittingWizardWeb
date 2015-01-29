@@ -65,10 +65,13 @@ import ch.unibas.fittingwizard.presentation.fitting.FitResultPage;
 import ch.unibas.fittingwizard.presentation.fitting.FittingParameterPage;
 import ch.unibas.fittingwizard.presentation.fitting.RunningFitPage;
 
-import ch.unibas.charmmtools.gui.CHARMM_Input_Assistant;
+import ch.unibas.charmmtools.gui.CHARMM_GUI_Step1;
+import ch.unibas.charmmtools.gui.CHARMM_GUI_Step2;
+import ch.unibas.charmmtools.scripts.CHARMM_inout;
 import ch.unibas.charmmtools.scripts.ICHARMMScript;
 import ch.unibas.charmmtools.scripts.RealCHARMMScript;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
+import java.util.List;
 
 /**
  * User: mhelmer Date: 26.11.13 Time: 11:31
@@ -224,10 +227,16 @@ public class WizardPageFactory {
                         visualization,
                         exportFitWorkflow,
                         vmdDisplayWorkflow);
-            } //            // CHARMM FITTING PAGES
-            else if (type == CHARMM_Input_Assistant.class) {
-                page = new CHARMM_Input_Assistant(charmmWorkflow);
-            } // MISC
+            } 
+            // CHARMM FITTING PAGES
+            else if (type == CHARMM_GUI_Step1.class) {
+                page = new CHARMM_GUI_Step1(charmmWorkflow);
+            } 
+            else if (type == CHARMM_GUI_Step2.class) {
+                List<CHARMM_inout> ioList = throwIfParameterIsNull(parameter);
+                page = new CHARMM_GUI_Step2(charmmWorkflow,ioList);
+            } 
+            // MISC
             else {
                 page = type.newInstance();
             }
