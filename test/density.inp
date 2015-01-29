@@ -1,6 +1,6 @@
-* CHARMM input file for test/phenol.pdb
+* CHARMM input file for ADD_HERE_PATH_TO_COORDINATES_FILE
 * Gas Phase simulation with MTPs 
-* generated on Wed Jan 28 17:58:49 CET 2015
+* generated on Thu Jan 29 12:11:49 CET 2015
 * by user hedin on machine Linux amd64 3.17.8-200.fc20.x86_64
 *
 
@@ -9,12 +9,12 @@ prnlev 2
 
 ! read parameters and coordinates
 read rtf card name -
-	test/phenol_cgenff.par
+	ADD_HERE_PATH_TO_PARAMETERS_FILE
 read param card name -
-	test/phenol_cgenff_mtp_0.01.top
+	ADD_HERE_PATH_TO_TOPOLOGY_FILE
 
 OPEN UNIT 10 CARD READ NAME -
-	test/phenol.pdb
+	ADD_HERE_PATH_TO_COORDINATES_FILE
 READ SEQUENCE PDB UNIT 10
 GENERATE SOLU
 REWIND UNIT 10
@@ -28,7 +28,7 @@ NBONDS NBXMOD 5 ATOM CDIEL EPS 1.0 SHIFT VATOM VDISTANCE -
 SHAKE BONH PARA SELE ALL END
 
 OPEN UNIT 40 CARD READ NAME -
-test/phenol_cgenff_mtp_0.01.lpun
+ADD_HERE_PATH_TO_LPUN_FILE
 MTPL MTPUNIT 40
 CLOSE UNIT 40
 

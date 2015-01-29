@@ -1,6 +1,6 @@
-* CHARMM input file for test/phenol.pdb
+* CHARMM input file for ADD_HERE_PATH_TO_COORDINATES_FILE
 * Pure Liquid simulation with MTPs 
-* generated on Wed Jan 28 17:58:59 CET 2015
+* generated on Thu Jan 29 12:23:12 CET 2015
 * by user hedin on machine Linux amd64 3.17.8-200.fc20.x86_64
 *
 
@@ -9,12 +9,12 @@ prnlev 2
 
 ! read parameters and coordinates
 read rtf card name -
-	test/phenol_cgenff.par
+	ADD_HERE_PATH_TO_PARAMETERS_FILE
 read param card name -
-	test/phenol_cgenff_mtp_0.01.top
+	ADD_HERE_PATH_TO_TOPOLOGY_FILE
 
 OPEN UNIT 10 CARD READ NAME -
-	test/phenol.pdb
+	ADD_HERE_PATH_TO_COORDINATES_FILE
 READ COOR CARD UNIT 10
 CLOSE UNIT 10
 
@@ -32,7 +32,7 @@ NBONDS ATOM EWALD PMEWALD KAPPA 0.43  -
 SHAKE BONH PARA SELE ALL END
 
 OPEN UNIT 40 CARD READ NAME -
-test/phenol_cgenff_mtp_0.01.lpun
+ADD_HERE_PATH_TO_LPUN_FILE
 MTPL MTPUNIT 40 ron2 10 roff2 12 ron3 9 roff3 11 -
 	ron4 8 roff4 10 ron5 7 roff5 9
 CLOSE UNIT 40

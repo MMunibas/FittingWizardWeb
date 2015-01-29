@@ -24,7 +24,7 @@ parser.add_argument('-inp',dest='inpF',type=str,
   required=True, help='CHARMM input file')
   
 parser.add_argument('-out',dest='outF',type=str,
-  required=True, help='CHARMM output file')
+  default="charmm.out", help='CHARMM output file')
   
 parser.add_argument('-par',dest='parF',type=str,
   required=True, help='CHARMM FF parameters file')
@@ -60,7 +60,13 @@ if process != 0:
   print "Error. Can't connect to remote computer."
   exit(1)
   
-
+# charmm test locally
+bashCmd = "./charmm -i " + args.inpF + " -o " + args.outF
+print bashCmd.split()
+process = subprocess.call(bashCmd.split())
+if process != 0:
+  print "Problem with the CHARMM calculation, check the output file."
+  exit(0)
 
 ## Create directory for calculations
 #workdir = config.get('remote','workdir').strip('\'')

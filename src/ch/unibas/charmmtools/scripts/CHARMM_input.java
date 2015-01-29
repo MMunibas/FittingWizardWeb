@@ -12,12 +12,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author hedin
  */
 public abstract class CHARMM_input {
+    
+    private static final Logger logger = Logger.getLogger(CHARMM_input.class);
+    
     protected Writer writer = null;
     protected String title = "";
     protected Date d = new Date();

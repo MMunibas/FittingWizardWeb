@@ -30,11 +30,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import org.apache.log4j.Logger;
@@ -48,7 +51,7 @@ import org.apache.log4j.Logger;
 
 public class CHARMM_Input_Assistant extends WizardPage{
 
-    private static String title = "LJ fitting procedure : Step 1";
+    private static String title = "LJ fitting procedure : preparing CHARMM input file";
     private static final Logger logger = Logger.getLogger(CHARMM_Input_Assistant.class);
 
     /**
@@ -125,6 +128,11 @@ public class CHARMM_Input_Assistant extends WizardPage{
         dens_required = radio_dens.isSelected();
         DHVap_required = radio_DHVap.isSelected();
         DG_hydration_required = radio_DG_hydration.isSelected();
+        
+//        inpfile_TextArea.getContextMenu().getItems().add(new MenuItem("Test"));
+//        ContextMenu cm = new ContextMenu((MenuItem[]) inpfile_TextArea.getContextMenu().getItems().toArray());
+//        cm.getItems().add(new MenuItem("Test"));
+//        inpfile_TextArea.setContextMenu(cm);
     }
 
     /**
@@ -246,10 +254,6 @@ public class CHARMM_Input_Assistant extends WizardPage{
         button_save_to_file.setText("Click to save (" + selText + ")");
         button_run_CHARMM.setText("Run CHARMM (" + selText + ")");
         
-        /**
-         * Allow running charmm script
-         */
-        button_run_CHARMM.setDisable(false);
     }
 
     /**
@@ -359,6 +363,11 @@ public class CHARMM_Input_Assistant extends WizardPage{
         
         this.CHARMM_file = selectedFile;
         
+        /**
+         * Allow running charmm script
+         */
+        button_run_CHARMM.setDisable(false);
+        
     }
     
     protected void runCHARMM(ActionEvent event) { 
@@ -370,6 +379,12 @@ public class CHARMM_Input_Assistant extends WizardPage{
         {
             this.out = charmmWorkflow.execute(WorkflowContext.withInput(this.inp));
         }
+        
+//        this.inpfile_TextArea.clear();
+//        this.inpfile_TextArea.setText(out.getTextOut());
+        logger.info(out.getTextOut());
+        
+        
             
     }
 
@@ -393,6 +408,7 @@ public class CHARMM_Input_Assistant extends WizardPage{
             }
         });
         addButtonToButtonBar(button_save_to_file);
+        button_save_to_file.setDisable(true);
         
         button_run_CHARMM = ButtonFactory.createButtonBarButton("Run CHARMM", new EventHandler<ActionEvent>(){
             @Override
@@ -402,7 +418,7 @@ public class CHARMM_Input_Assistant extends WizardPage{
             }
         });
         addButtonToButtonBar(button_run_CHARMM);
-        
+        button_run_CHARMM.setDisable(true);
     }
     
 }//end of controller class

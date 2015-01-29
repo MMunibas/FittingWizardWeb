@@ -10,7 +10,6 @@ package ch.unibas.charmmtools.scripts;
 
 import ch.unibas.fittingwizard.Settings;
 import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
-import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +22,12 @@ public class RealCHARMMScript implements ICHARMMScript {
 
     public static final String ScriptNameKey = "scripts.submitCHARMM";
     public static final String OutputDirName = "test";
-    public static final String OutputFileName = "CHARMM_python_output.txt";
+//    public static final String OutputFileName = "CHARMM_python_output.txt";
 
-    private File sessionDir;
-    private Settings settings;
-    private PythonScriptRunner runner;
-    private File ScriptFile;
+    private final File sessionDir;
+    private final Settings settings;
+    private final PythonScriptRunner runner;
+    private final File ScriptFile;
     
     List<String> args = new ArrayList<>();
     
@@ -47,13 +46,16 @@ public class RealCHARMMScript implements ICHARMMScript {
     @Override
     public CHARMM_output execute(CHARMM_input input) {
 
+        File charmmout = new File(OutputDirName,"charmm.out");
         
-        this.preparePython(input.getInp().getAbsolutePath(),new File(OutputDirName,"charmm.out").getAbsolutePath(),
+        this.preparePython(input.getInp().getAbsolutePath(),charmmout.getAbsolutePath(),
                 input.getPar(), input.getTop(), input.getLpun());
         
-        runner.exec(this.ScriptFile, this.args, new File(OutputDirName,OutputFileName));
+//        runner.exec(this.ScriptFile, this.args, new File(OutputDirName,OutputFileName));
+        runner.exec(this.ScriptFile, this.args);
         
-        CHARMM_output out = new CHARMM_output();
+        // Object representation of the charmm output file
+        CHARMM_output out = new CHARMM_output(charmmout);
 
         return out;
     }
