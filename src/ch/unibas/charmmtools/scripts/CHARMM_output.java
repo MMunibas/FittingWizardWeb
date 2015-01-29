@@ -24,16 +24,19 @@ public class CHARMM_output {
     
     private String textOut;
     
+    private File fileOut;
+    
     public CHARMM_output(File charmmout){
         
+        fileOut = charmmout;
         try {
             textOut = new String(
                     Files.readAllBytes(
-                            Paths.get(charmmout.getAbsolutePath())
+                            Paths.get(fileOut.getAbsolutePath())
                     )
             );
         } catch (IOException ex) {
-            logger.error("Error when loading the CHARMM output file " + charmmout.getAbsolutePath());
+            logger.error("Error when loading the CHARMM output file " + fileOut.getAbsolutePath());
         }
         
     }// ctor
@@ -45,6 +48,8 @@ public class CHARMM_output {
         return textOut;
     }
     
+    
+    
 //    public static void main(String args[]){
 //        File choutf = new File("density.out");
 //        
@@ -54,6 +59,12 @@ public class CHARMM_output {
 //        
 //        System.out.println(outs);
 //    }
-    
-    
+
+    /**
+     * @return the fileOut
+     */
+    public File getFileOut() {
+        return fileOut;
+    }
+  
 }

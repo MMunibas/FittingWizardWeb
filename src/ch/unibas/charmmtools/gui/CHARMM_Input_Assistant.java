@@ -8,16 +8,12 @@
  */
 package ch.unibas.charmmtools.gui;
 
-import ch.unibas.charmmtools.scripts.CHARMM_input;
 import ch.unibas.charmmtools.scripts.CHARMM_input_GasPhase;
 import ch.unibas.charmmtools.scripts.CHARMM_input_PureLiquid;
-import ch.unibas.charmmtools.scripts.CHARMM_output;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.application.workflows.base.WorkflowContext;
 import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
-import ch.unibas.fittingwizard.presentation.MoleculeListPage;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
-import ch.unibas.fittingwizard.presentation.base.WizardPage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -30,30 +26,20 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
-import org.apache.log4j.Logger;
-
-/**
- * FXML Controller class
- *
- * @author hedin
- */
 
 
-public class CHARMM_Input_Assistant extends WizardPage{
 
-    private static String title = "LJ fitting procedure : preparing CHARMM input file";
-    private static final Logger logger = Logger.getLogger(CHARMM_Input_Assistant.class);
+public class CHARMM_Input_Assistant extends CHARMM_Input_base{
 
+    private static final String title = "LJ fitting procedure : preparing CHARMM input file";
+    
     /**
      * All FXML variables
      */
@@ -94,15 +80,9 @@ public class CHARMM_Input_Assistant extends WizardPage{
     private boolean PAR_selected, RTF_selected, COR_selected, LPUN_selected;
     //type of simulation asked by user
     private boolean dens_required, DHVap_required, DG_hydration_required;
-    
-    private File CHARMM_file;
-    
-    private final RunCHARMMWorkflow charmmWorkflow;
-    private CHARMM_input inp;
-    private CHARMM_output out;
-
+      
     public CHARMM_Input_Assistant(RunCHARMMWorkflow chWflow) {
-        super(title);
+        super(title,chWflow);
         this.charmmWorkflow = chWflow;
     }
 
@@ -361,7 +341,7 @@ public class CHARMM_Input_Assistant extends WizardPage{
         this.RedLabel_Notice.setText("You can now try to run the simulation");
         this.button_run_CHARMM.setDisable(false);
         
-        this.CHARMM_file = selectedFile;
+        this.CHARMM_inFile = selectedFile;
         
         /**
          * Allow running charmm script
@@ -371,21 +351,13 @@ public class CHARMM_Input_Assistant extends WizardPage{
     }
     
     protected void runCHARMM(ActionEvent event) { 
-        if(this.CHARMM_file.exists()){
-            this.inp.setInp(CHARMM_file);
-            this.out = charmmWorkflow.execute(WorkflowContext.withInput(this.inp));
-        }
-        else
-        {
-            this.out = charmmWorkflow.execute(WorkflowContext.withInput(this.inp));
-        }
+
+        this.inp.setInp(CHARMM_inFile);
+        this.out = charmmWorkflow.execute(WorkflowContext.withInput(this.inp));
         
-//        this.inpfile_TextArea.clear();
-//        this.inpfile_TextArea.setText(out.getTextOut());
+        CHARMM_outFile = out.getFileOut();
         logger.info(out.getTextOut());
-        
-        
-            
+    
     }
 
     @Override
