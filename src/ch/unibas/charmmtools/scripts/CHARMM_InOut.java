@@ -12,6 +12,6 @@ package ch.unibas.charmmtools.scripts;
  *
  * @author hedin
  */
-public interface CHARMM_inout {
+public interface CHARMM_InOut {
     
 }

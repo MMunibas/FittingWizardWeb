@@ -15,7 +15,7 @@ import ch.unibas.fittingwizard.application.scripts.base.IScript;
  *
  * @author hedin
  */
-public interface ICHARMMScript extends IScript<CHARMM_input, CHARMM_output> {
+public interface ICHARMMScript extends IScript<CHARMM_Input, CHARMM_Output> {
     
     // prepare all required data
     public void prepareData();

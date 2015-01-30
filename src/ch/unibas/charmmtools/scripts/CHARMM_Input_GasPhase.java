@@ -16,10 +16,10 @@ import java.io.IOException;
 
 /**
  * gas_phase charmm calculation
- * extends the abstract CHARMM_input class
+ extends the abstract CHARMM_Input class
  * @author hedin
  */
-public class CHARMM_input_GasPhase extends CHARMM_input {
+public class CHARMM_Input_GasPhase extends CHARMM_Input {
 
 
      /**
@@ -30,7 +30,7 @@ public class CHARMM_input_GasPhase extends CHARMM_input {
      * @param _par
      * @throws java.io.IOException
      */
-    public CHARMM_input_GasPhase(String _crd, String _top, String _par) throws IOException {
+    public CHARMM_Input_GasPhase(String _crd, String _top, String _par) throws IOException {
         
         super(_crd, _top, _par);
         
@@ -64,7 +64,7 @@ public class CHARMM_input_GasPhase extends CHARMM_input {
      * @param _outf
      * @throws java.io.IOException
      */
-    public CHARMM_input_GasPhase(String _crd, String _top, String _par, File _outf) throws IOException {
+    public CHARMM_Input_GasPhase(String _crd, String _top, String _par, File _outf) throws IOException {
         
         super(_crd, _top, _par, _outf);
         
@@ -101,7 +101,7 @@ public class CHARMM_input_GasPhase extends CHARMM_input {
      * @param _lpun
      * @throws java.io.IOException
      */
-    public CHARMM_input_GasPhase(String _crd, String _top, String _par, String _lpun) throws IOException {
+    public CHARMM_Input_GasPhase(String _crd, String _top, String _par, String _lpun) throws IOException {
 
         super(_crd, _top, _par, _lpun);
         
@@ -140,7 +140,7 @@ public class CHARMM_input_GasPhase extends CHARMM_input {
      * @param _outf
      * @throws java.io.IOException
      */
-    public CHARMM_input_GasPhase(String _crd, String _top, String _par, String _lpun, File _outf) throws IOException {
+    public CHARMM_Input_GasPhase(String _crd, String _top, String _par, String _lpun, File _outf) throws IOException {
 
         super(_crd, _top, _par, _lpun, _outf);
         

@@ -22,7 +22,6 @@ public class RealCHARMMScript implements ICHARMMScript {
 
     public static final String ScriptNameKey = "scripts.submitCHARMM";
     public static final String OutputDirName = "test";
-//    public static final String OutputFileName = "CHARMM_python_output.txt";
 
     private final File sessionDir;
     private final Settings settings;
@@ -41,10 +40,10 @@ public class RealCHARMMScript implements ICHARMMScript {
     
     /**
      * @param input
-     * @return CHARMM_output
+     * @return CHARMM_Output
      */
     @Override
-    public CHARMM_output execute(CHARMM_input input) {
+    public CHARMM_Output execute(CHARMM_Input input) {
 
         File charmmout = new File(OutputDirName,"charmm.out");
         
@@ -55,7 +54,7 @@ public class RealCHARMMScript implements ICHARMMScript {
         runner.exec(this.ScriptFile, this.args);
         
         // Object representation of the charmm output file
-        CHARMM_output out = new CHARMM_output(charmmout);
+        CHARMM_Output out = new CHARMM_Output(charmmout);
 
         return out;
     }

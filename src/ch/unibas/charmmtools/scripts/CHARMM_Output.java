@@ -18,9 +18,9 @@ import org.apache.log4j.Logger;
  *
  * @author hedin
  */
-public class CHARMM_output implements CHARMM_inout{
+public class CHARMM_Output implements CHARMM_InOut{
     
-    private final static Logger logger = Logger.getLogger(CHARMM_output.class);
+    private final static Logger logger = Logger.getLogger(CHARMM_Output.class);
     
     private String textOut;
     
@@ -29,7 +29,7 @@ public class CHARMM_output implements CHARMM_inout{
     private Boolean errorOccured = false;
     private final String hasFailed = "NORMAL TERMINATION BY NORMAL STOP";
     
-    public CHARMM_output(File charmmout){
+    public CHARMM_Output(File charmmout){
         
         fileOut = charmmout;
         try {
@@ -54,18 +54,6 @@ public class CHARMM_output implements CHARMM_inout{
     public String getTextOut() {
         return textOut;
     }
-    
-    
-    
-//    public static void main(String args[]){
-//        File choutf = new File("density.out");
-//        
-//        CHARMM_output out = new CHARMM_output(choutf);
-//        
-//        String outs = out.getTextOut();
-//        
-//        System.out.println(outs);
-//    }
 
     /**
      * @return the fileOut

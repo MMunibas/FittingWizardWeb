@@ -8,13 +8,11 @@
  */
 package ch.unibas.charmmtools.gui;
 
-import ch.unibas.charmmtools.scripts.CHARMM_inout;
-import ch.unibas.charmmtools.scripts.CHARMM_input;
-import ch.unibas.charmmtools.scripts.CHARMM_input_GasPhase;
-import ch.unibas.charmmtools.scripts.CHARMM_input_PureLiquid;
-import ch.unibas.charmmtools.scripts.CHARMM_output;
+import ch.unibas.charmmtools.scripts.CHARMM_InOut;
+import ch.unibas.charmmtools.scripts.CHARMM_Input;
+import ch.unibas.charmmtools.scripts.CHARMM_Input_GasPhase;
+import ch.unibas.charmmtools.scripts.CHARMM_Input_PureLiquid;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
-import ch.unibas.fittingwizard.application.workflows.base.WorkflowContext;
 import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import java.io.BufferedWriter;
@@ -90,9 +88,9 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
         super(title,chWflow);
     }
     
-    public CHARMM_GUI_Step1(RunCHARMMWorkflow chWflow, List<CHARMM_inout> ioList) {
+    public CHARMM_GUI_Step1(RunCHARMMWorkflow chWflow, List<CHARMM_InOut> ioList) {
         super(title,chWflow);
-        this.inp = (CHARMM_input)  ioList.get(0);
+        this.inp = (CHARMM_Input)  ioList.get(0);
         
         inpfile_TextArea.setText(inp.getContentOfInputFile());
         inpfile_TextArea.setEditable(true);
@@ -149,11 +147,6 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
         dens_required = radio_dens.isSelected();
         DHVap_required = radio_DHVap.isSelected();
         DG_hydration_required = radio_DG_hydration.isSelected();
-        
-//        inpfile_TextArea.getContextMenu().getItems().add(new MenuItem("Test"));
-//        ContextMenu cm = new ContextMenu((MenuItem[]) inpfile_TextArea.getContextMenu().getItems().toArray());
-//        cm.getItems().add(new MenuItem("Test"));
-//        inpfile_TextArea.setContextMenu(cm);
     }
 
     /**
@@ -247,16 +240,15 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
             DG_hydration_required = toggle_radio.getSelectedToggle().equals(radio_DG_hydration);
             
             if(dens_required)
-                inp = new CHARMM_input_GasPhase(corname, rtfname, parname, lpunname);
+                inp = new CHARMM_Input_GasPhase(corname, rtfname, parname, lpunname);
             else if(DHVap_required)
-                inp = new CHARMM_input_PureLiquid(corname, rtfname, parname, lpunname);
+                inp = new CHARMM_Input_PureLiquid(corname, rtfname, parname, lpunname);
             else{
                 logger.error("The impossible happened : unable to determine which radio button was selected !");
                 throw new UnknownError("Unknown error related to selection of radio buttons.");
             }
                 
             inpfile_TextArea.setText(inp.getContentOfInputFile());
-            //System.err.println(inpfile_TextArea.getText());
             RedLabel_Notice.setVisible(true);
             
         } catch (IOException ex) {
@@ -358,23 +350,10 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
         button_save_to_file.setText("Click to save");
         button_run_CHARMM.setText("Run CHARMM");
         
-//        textfield_PAR.setDisable(false);
-//        textfield_RTF.setDisable(false);
-//        textfield_COR.setDisable(false);
-//        textfield_LPUN.setDisable(false);
-        
         radio_dens.setDisable(false); 
         radio_DHVap.setDisable(false); 
 //        radio_DG_hydration.setDisable(false);
-        
-//        button_generate.setDisable(true);
-        
-//        button_open_PAR.setDisable(true);
-//        button_open_RTF.setDisable(true);
-//        button_open_COR.setDisable(true);
-//        button_open_LPUN.setDisable(true);
-        
-//        coor_type.setDisable(true);
+
         
 
         
@@ -421,7 +400,7 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
 
         inp.setInp(CHARMM_inFile);
     
-        List<CHARMM_inout> myList = new ArrayList<CHARMM_inout>();
+        List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
         myList.add(0, inp);
         myList.add(1, out);
         navigateTo(RunningCHARMM.class, myList);

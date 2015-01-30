@@ -8,9 +8,9 @@
  */
 package ch.unibas.charmmtools.gui;
 
-import ch.unibas.charmmtools.scripts.CHARMM_inout;
-import ch.unibas.charmmtools.scripts.CHARMM_input;
-import ch.unibas.charmmtools.scripts.CHARMM_output;
+import ch.unibas.charmmtools.scripts.CHARMM_InOut;
+import ch.unibas.charmmtools.scripts.CHARMM_Input;
+import ch.unibas.charmmtools.scripts.CHARMM_Output;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import java.util.ArrayList;
@@ -39,27 +39,17 @@ public class CHARMM_GUI_Step2 extends CHARMM_GUI_base {
     
     private Button backStep1;
     
-//    public CHARMM_GUI_Step2(RunCHARMMWorkflow flow, CHARMM_input in, CHARMM_output ou) {
-//        super(title, flow);
-//        this.inp = in;
-//        this.out = ou;
-//    }
-    
-    public CHARMM_GUI_Step2(RunCHARMMWorkflow flow, List<CHARMM_inout> ioList)
+    public CHARMM_GUI_Step2(RunCHARMMWorkflow flow, List<CHARMM_InOut> ioList)
     {
         super(title, flow);
-        this.inp = (CHARMM_input)  ioList.get(0);
-        this.out = (CHARMM_output) ioList.get(1);
-//        logger.info("CHARMM_input object  : " + inp.toString() + inp.getContentOfInputFile());
-//        logger.info("CHARMM_output object : " + out.toString() + out.getTextOut());
+        this.inp = (CHARMM_Input)  ioList.get(0);
+        this.out = (CHARMM_Output) ioList.get(1);
+//        logger.info("CHARMM_Input object  : " + inp.toString() + inp.getContentOfInputFile());
+//        logger.info("CHARMM_Output object : " + out.toString() + out.getTextOut());
         
         if (out.getErrorOccured())
             errorLabel.setVisible(true);
     }
-
-//    @Override
-//    public void initialize() {
-//    }
     
     @Override
     public void initializeData() {
@@ -75,7 +65,7 @@ public class CHARMM_GUI_Step2 extends CHARMM_GUI_base {
         backStep1 = ButtonFactory.createButtonBarButton("Back to INPUT file build (Step 1)", new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent actionEvent) {
-                List<CHARMM_inout> myList = new ArrayList<CHARMM_inout>();
+                List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
                 myList.add(0, inp);
                 myList.add(1, out);
                 logger.info("Going back to CHARMM input assistant Step1.");

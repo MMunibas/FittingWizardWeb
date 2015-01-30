@@ -8,9 +8,9 @@
  */
 package ch.unibas.charmmtools.gui;
 
-import ch.unibas.charmmtools.scripts.CHARMM_inout;
-import ch.unibas.charmmtools.scripts.CHARMM_input;
-import ch.unibas.charmmtools.scripts.CHARMM_output;
+import ch.unibas.charmmtools.scripts.CHARMM_InOut;
+import ch.unibas.charmmtools.scripts.CHARMM_Input;
+import ch.unibas.charmmtools.scripts.CHARMM_Output;
 import ch.unibas.charmmtools.scripts.RealCHARMMScript;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.application.workflows.base.WorkflowContext;
@@ -26,19 +26,19 @@ import java.util.List;
 public class RunningCHARMM extends ProgressPage{
 
     private final RunCHARMMWorkflow cflow;
-    private CHARMM_input  inp;
-    private CHARMM_output out;
+    private CHARMM_Input  inp;
+    private CHARMM_Output out;
     
-    public RunningCHARMM(RunCHARMMWorkflow charmmWorkflow, List<CHARMM_inout> myList) {
+    public RunningCHARMM(RunCHARMMWorkflow charmmWorkflow, List<CHARMM_InOut> myList) {
         super("Running CHARMM calculation");
         this.cflow = charmmWorkflow;
-        this.inp = (CHARMM_input)  myList.get(0);
-        this.out = (CHARMM_output) myList.get(1);  
+        this.inp = (CHARMM_Input)  myList.get(0);
+        this.out = (CHARMM_Output) myList.get(1);  
     }
 
     @Override
     protected boolean run(Context ctx) throws Exception {
-        out = cflow.execute(new WorkflowContext<CHARMM_input>() {
+        out = cflow.execute(new WorkflowContext<CHARMM_Input>() {
 
             @Override
             public void setCurrentStatus(String status) {
@@ -46,20 +46,18 @@ public class RunningCHARMM extends ProgressPage{
             }
 
             @Override
-            public CHARMM_input getParameter() {
+            public CHARMM_Input getParameter() {
                 return inp;
             }
 
         });
-        
-//        Thread.sleep(2000);
         
         return true;
     }
 
     @Override
     protected void handleCanceled() {
-        List<CHARMM_inout> myList = new ArrayList<CHARMM_inout>();
+        List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
         myList.add(0, inp);
         myList.add(1, out);
         
@@ -69,7 +67,7 @@ public class RunningCHARMM extends ProgressPage{
 
     @Override
     protected void handleFinishedRun(boolean successful) {
-        List<CHARMM_inout> myList = new ArrayList<CHARMM_inout>();
+        List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
         myList.add(0, inp);
         myList.add(1, out);
         
