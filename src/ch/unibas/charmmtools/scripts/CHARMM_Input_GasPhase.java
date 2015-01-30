@@ -21,28 +21,31 @@ import java.io.IOException;
  */
 public class CHARMM_Input_GasPhase extends CHARMM_Input {
 
+    private final String expectedFormat=".pdb";
 
      /**
      * If content of the field has to be retrieved later on it is stored on an internal CharArrayWriter within this class
      *
-     * @param _crd
+     * @param _cor
      * @param _top
      * @param _par
      * @throws java.io.IOException
      */
-    public CHARMM_Input_GasPhase(String _crd, String _top, String _par) throws IOException {
+    public CHARMM_Input_GasPhase(String _cor, String _top, String _par) throws IOException {
         
-        super(_crd, _top, _par);
+        super(_cor, _top, _par);
         
         writer = new CharArrayWriter();
-
+        
         //prepare and print title
         this.print_title();
 
         //prepare and print io section
         this.print_ioSection();
-
-        this.print_crdSection();
+        
+        //if necessary convert coordinates file before
+        this.convertCoordinates();
+        this.print_corSection();
 
         //prepare non bonded parameters line and print it
         this.print_nbondsSection();
@@ -58,25 +61,30 @@ public class CHARMM_Input_GasPhase extends CHARMM_Input {
     /**
      * If content of the field has to be directly written to a file we use a BufferedWriter type
      *
-     * @param _crd
+     * @param _cor
      * @param _top
      * @param _par
      * @param _outf
      * @throws java.io.IOException
      */
-    public CHARMM_Input_GasPhase(String _crd, String _top, String _par, File _outf) throws IOException {
+    public CHARMM_Input_GasPhase(String _cor, String _top, String _par, File _outf) throws IOException {
         
-        super(_crd, _top, _par, _outf);
+        super(_cor, _top, _par, _outf);
         
         writer = new BufferedWriter(new FileWriter(_outf));
 
+        //if necessary convert coordinates file before
+        this.convertCoordinates();
+        
         //prepare and print title
         this.print_title();
 
         //prepare and print io section
         this.print_ioSection();
 
-        this.print_crdSection();
+        //if necessary convert coordinates file before
+        this.convertCoordinates();
+        this.print_corSection();
 
         //prepare non bonded parameters line and print it
         this.print_nbondsSection();
@@ -95,25 +103,30 @@ public class CHARMM_Input_GasPhase extends CHARMM_Input {
      * If content of the field has to be retrieved later on it is stored on an internal CharArrayWriter within this class
      * Requires also a lpun file when MTP module is used
      * 
-     * @param _crd
+     * @param _cor
      * @param _top
      * @param _par
      * @param _lpun
      * @throws java.io.IOException
      */
-    public CHARMM_Input_GasPhase(String _crd, String _top, String _par, String _lpun) throws IOException {
+    public CHARMM_Input_GasPhase(String _cor, String _top, String _par, String _lpun) throws IOException {
 
-        super(_crd, _top, _par, _lpun);
+        super(_cor, _top, _par, _lpun);
         
         writer = new CharArrayWriter();
 
+        //if necessary convert coordinates file before
+        this.convertCoordinates();
+        
         //prepare and print title
         this.print_title();
 
         //prepare and print io section
         this.print_ioSection();
 
-        this.print_crdSection();
+        //if necessary convert coordinates file before
+        this.convertCoordinates();
+        this.print_corSection();
 
         //prepare non bonded parameters line and print it
         this.print_nbondsSection();
@@ -133,26 +146,31 @@ public class CHARMM_Input_GasPhase extends CHARMM_Input {
      * If content of the field has to be directly written to a file we use a BufferedWriter type
      * Requires also a lpun file when MTP module is used
      *
-     * @param _crd
+     * @param _cor
      * @param _top
      * @param _par
      * @param _lpun
      * @param _outf
      * @throws java.io.IOException
      */
-    public CHARMM_Input_GasPhase(String _crd, String _top, String _par, String _lpun, File _outf) throws IOException {
+    public CHARMM_Input_GasPhase(String _cor, String _top, String _par, String _lpun, File _outf) throws IOException {
 
-        super(_crd, _top, _par, _lpun, _outf);
+        super(_cor, _top, _par, _lpun, _outf);
         
         writer = new BufferedWriter(new FileWriter(_outf));
 
+        //if necessary convert coordinates file before
+        this.convertCoordinates();
+        
         //prepare and print title
         this.print_title();
 
         //prepare and print io section
         this.print_ioSection();
 
-        this.print_crdSection();
+        //if necessary convert coordinates file before
+        this.convertCoordinates();
+        this.print_corSection();
 
         //prepare non bonded parameters line and print it
         this.print_nbondsSection();
@@ -177,7 +195,7 @@ public class CHARMM_Input_GasPhase extends CHARMM_Input {
      */
     @Override
     protected void print_title() throws IOException {
-        this.title += "* CHARMM input file for " + crd + "\n";
+        this.title += "* CHARMM input file for " + cor + "\n";
         this.title += "* Gas Phase simulation with MTPs \n";
         this.title += "* generated on " + d.toString() + "\n";
         this.title += "* by user " + System.getProperty("user.name") + " on machine " + System.getProperty("os.name") + " " + System.getProperty("os.arch") + " " + System.getProperty("os.version") + "\n";
@@ -187,17 +205,6 @@ public class CHARMM_Input_GasPhase extends CHARMM_Input {
         //print error level and print level
         writer.write("bomlev " + this.bomlev + "\n");
         writer.write("prnlev " + this.prnlev + "\n\n");
-    }
-    
-    @Override
-    protected void print_crdSection() throws IOException {
-        writer.write("OPEN UNIT 10 CARD READ NAME -" + "\n");
-        writer.write("\t" + crd + "\n");
-        writer.write("READ SEQUENCE PDB UNIT 10" + "\n");
-        writer.write("GENERATE SOLU" + "\n");
-        writer.write("REWIND UNIT 10" + "\n");
-        writer.write("READ COOR PDB UNIT 10" + "\n");
-        writer.write("CLOSE UNIT 10" + "\n\n");
     }
 
     @Override
@@ -236,6 +243,11 @@ public class CHARMM_Input_GasPhase extends CHARMM_Input {
         writer.write("\t" + "IPRFRQ 0 INBFRQ -1 IMGFRQ 250 -" + "\n");
         writer.write("\t" + "TBATH 0. RBUF 0. ILBFRQ 10 FIRSTT 0. -" + "\n");
         writer.write("\t" + "NPRINT 1000 NSAVC -1" + "\n\n");
+    }
+    
+    @Override
+    protected void convertCoordinates(){
+        
     }
         
 }//end of class

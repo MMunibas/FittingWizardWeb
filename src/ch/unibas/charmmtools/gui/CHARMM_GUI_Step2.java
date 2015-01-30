@@ -37,7 +37,7 @@ public class CHARMM_GUI_Step2 extends CHARMM_GUI_base {
     @FXML
     private Label errorLabel;
     
-    private Button backStep1;
+    private Button backStep1,gotoStep3;
     
     public CHARMM_GUI_Step2(RunCHARMMWorkflow flow, List<CHARMM_InOut> ioList)
     {
@@ -62,7 +62,7 @@ public class CHARMM_GUI_Step2 extends CHARMM_GUI_base {
     @Override
     protected void fillButtonBar() {
         
-        backStep1 = ButtonFactory.createButtonBarButton("Back to INPUT file build (Step 1)", new EventHandler<ActionEvent>(){
+        backStep1 = ButtonFactory.createButtonBarButton("Back to INPUT file build", new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent actionEvent) {
                 List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
@@ -73,6 +73,18 @@ public class CHARMM_GUI_Step2 extends CHARMM_GUI_base {
             }
         });
         addButtonToButtonBar(backStep1);
+        
+        gotoStep3 = ButtonFactory.createButtonBarButton("Proceed to Results panel", new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
+                myList.add(0, inp);
+                myList.add(1, out);
+                logger.info("Going to Step3 Results.");
+                navigateTo(CHARMM_GUI_Step3.class,myList);
+            }
+        });
+        addButtonToButtonBar(gotoStep3);
 
     }
 

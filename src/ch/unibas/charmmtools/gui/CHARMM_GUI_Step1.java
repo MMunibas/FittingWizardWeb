@@ -365,8 +365,17 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
         chooser.setInitialDirectory(new File("test"));
         File selectedFile = null;
 
+        String default_name = "";
+        
+        if(dens_required)
+            default_name = "density.inp";
+        else if(DHVap_required)
+            default_name = "enthalpy_vap.inp";
+        else if(DG_hydration_required)
+            default_name = "DG_hydration.inp";
+        
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CHARMM input file", "*.inp"));
-
+        chooser.setInitialFileName(default_name);
         selectedFile = chooser.showSaveDialog(myParent);
 
         BufferedWriter buffw = null;

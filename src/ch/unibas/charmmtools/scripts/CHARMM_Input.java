@@ -33,35 +33,35 @@ public abstract class CHARMM_Input implements CHARMM_InOut{
     protected int bomlev = 0;
     protected int prnlev = 2;
     
-    protected String par,top,lpun,crd;
+    protected String par,top,lpun,cor;
     protected File inp;
     protected File out;
     
-    protected CHARMM_Input(String _crd, String _top, String _par)
+    protected CHARMM_Input(String _cor, String _top, String _par)
     {
-        this.crd = _crd;
+        this.cor = _cor;
         this.top = _top;
         this.par = _par;
     }
     
-    public CHARMM_Input(String _crd, String _top, String _par, File _outf){
-        this.crd = _crd;
+    public CHARMM_Input(String _cor, String _top, String _par, File _outf){
+        this.cor = _cor;
         this.top = _top;
         this.par = _par;
         this.out = _outf;
     }
 
-    protected CHARMM_Input(String _crd, String _top, String _par, String _lpun)
+    protected CHARMM_Input(String _cor, String _top, String _par, String _lpun)
     {
-        this.crd = _crd;
+        this.cor = _cor;
         this.top = _top;
         this.par = _par;
         this.lpun = _lpun;
     }
     
-    protected CHARMM_Input(String _crd, String _top, String _par, String _lpun, File _outf)
+    protected CHARMM_Input(String _cor, String _top, String _par, String _lpun, File _outf)
     {
-        this.crd = _crd;
+        this.cor = _cor;
         this.top = _top;
         this.par = _par;
         this.lpun = _lpun;
@@ -74,7 +74,7 @@ public abstract class CHARMM_Input implements CHARMM_InOut{
      * @throws IOException
      */
     protected void print_title() throws IOException {
-        this.title += "* CHARMM input file for " + crd + "\n";
+        this.title += "* CHARMM input file for " + cor + "\n";
         this.title += "* generated on " + d.toString() + "\n";
         this.title += "* by user " + System.getProperty("user.name") + " on machine " + System.getProperty("os.name") + " " + System.getProperty("os.arch") + " " + System.getProperty("os.version") + "\n";
         this.title += "*\n";
@@ -99,7 +99,15 @@ public abstract class CHARMM_Input implements CHARMM_InOut{
         writer.write("\t" + par + "\n\n");
     }
 
-    protected abstract void print_crdSection() throws IOException;
+    protected void print_corSection() throws IOException {
+        writer.write("OPEN UNIT 10 CARD READ NAME -" + "\n");
+        writer.write("\t" + cor + "\n");
+        writer.write("READ SEQUENCE PDB UNIT 10" + "\n");
+        writer.write("GENERATE SOLU" + "\n");
+        writer.write("REWIND UNIT 10" + "\n");
+        writer.write("READ COOR PDB UNIT 10" + "\n");
+        writer.write("CLOSE UNIT 10" + "\n\n");
+    }
 
     protected void print_crystalSection() throws IOException{}
     
@@ -155,10 +163,10 @@ public abstract class CHARMM_Input implements CHARMM_InOut{
     }
 
     /**
-     * @return the crd
+     * @return the cor
      */
     public String getCrd() {
-        return crd;
+        return cor;
     }
 
     /**
@@ -181,5 +189,7 @@ public abstract class CHARMM_Input implements CHARMM_InOut{
     public void setInp(File inp) {
         this.inp = inp;
     }
+    
+    protected abstract void convertCoordinates(); 
     
 }
