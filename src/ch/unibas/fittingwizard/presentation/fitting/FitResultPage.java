@@ -8,7 +8,7 @@
  */
 package ch.unibas.fittingwizard.presentation.fitting;
 
-import ch.unibas.charmmtools.gui.CHARMM_GUI_Step1;
+import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_Step1;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;

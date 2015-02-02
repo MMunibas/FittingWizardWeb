@@ -6,8 +6,11 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.gui;
+package ch.unibas.charmmtools.gui.step2;
 
+import ch.unibas.charmmtools.gui.step3.CHARMM_GUI_Step3;
+import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
+import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_Step1;
 import ch.unibas.charmmtools.scripts.CHARMM_InOut;
 import ch.unibas.charmmtools.scripts.CHARMM_Input;
 import ch.unibas.charmmtools.scripts.CHARMM_Output;
@@ -39,6 +42,8 @@ public class CHARMM_GUI_Step2 extends CHARMM_GUI_base {
     
     private Button backStep1,gotoStep3;
     
+    private final boolean errorOccured;
+    
     public CHARMM_GUI_Step2(RunCHARMMWorkflow flow, List<CHARMM_InOut> ioList)
     {
         super(title, flow);
@@ -47,8 +52,13 @@ public class CHARMM_GUI_Step2 extends CHARMM_GUI_base {
 //        logger.info("CHARMM_Input object  : " + inp.toString() + inp.getContentOfInputFile());
 //        logger.info("CHARMM_Output object : " + out.toString() + out.getTextOut());
         
-        if (out.getErrorOccured())
+        errorOccured = out.getErrorOccured();
+        
+        if (errorOccured)
+        {
             errorLabel.setVisible(true);
+//            gotoStep3.setDisable(true);
+        }
     }
     
     @Override

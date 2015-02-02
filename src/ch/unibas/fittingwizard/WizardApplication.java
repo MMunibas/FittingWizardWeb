@@ -8,7 +8,7 @@
  */
 package ch.unibas.fittingwizard;
 
-import ch.unibas.charmmtools.gui.CHARMM_GUI_Step1;
+import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_Step1;
 import ch.unibas.fittingwizard.presentation.MoleculeListPage;
 import ch.unibas.fittingwizard.presentation.base.Wizard;
 import ch.unibas.fittingwizard.presentation.base.WizardPageFactory;

@@ -8,6 +8,8 @@
  */
 package ch.unibas.charmmtools.gui;
 
+import ch.unibas.charmmtools.gui.step2.CHARMM_GUI_Step2;
+import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_Step1;
 import ch.unibas.charmmtools.scripts.CHARMM_InOut;
 import ch.unibas.charmmtools.scripts.CHARMM_Input;
 import ch.unibas.charmmtools.scripts.CHARMM_Output;

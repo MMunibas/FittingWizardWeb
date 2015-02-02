@@ -6,8 +6,10 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.gui;
+package ch.unibas.charmmtools.gui.step1;
 
+import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
+import ch.unibas.charmmtools.gui.RunningCHARMM;
 import ch.unibas.charmmtools.scripts.CHARMM_InOut;
 import ch.unibas.charmmtools.scripts.CHARMM_Input;
 import ch.unibas.charmmtools.scripts.CHARMM_Input_GasPhase;
