@@ -28,39 +28,46 @@ import java.util.List;
 public class RunningCHARMM extends ProgressPage{
 
     private final RunCHARMMWorkflow cflow;
-    private List<CHARMM_Input > inp;
-    private List<CHARMM_Output> out;
+    private List<CHARMM_Input > inp = new ArrayList<>();
+    private List<CHARMM_Output> out = new ArrayList<>();
     
-    public RunningCHARMM(RunCHARMMWorkflow charmmWorkflow, List<CHARMM_InOut> myList) {
+    public RunningCHARMM(RunCHARMMWorkflow charmmWorkflow, List<CHARMM_InOut> ioList) {
         super("Running CHARMM calculation");
         this.cflow = charmmWorkflow;
         
-        for (CHARMM_InOut ioListIt : myList) {
-            if (ioListIt instanceof CHARMM_Input) {
-                inp.add((CHARMM_Input) ioListIt);
-            } else if (ioListIt instanceof CHARMM_Output) {
-                out.add((CHARMM_Output) ioListIt);
-            } else {
-                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : got " + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class + " or " + CHARMM_Output.class);
-            }
-        }
-                
-//        for (CHARMM_InOut ioListIt : myList) {
-//            if (ioListIt.getClass() == CHARMM_Input.class) {
+//        this.inp = new ArrayList<>();
+//        this.out = new ArrayList<>();
+        
+//        for (CHARMM_InOut ioListIt : ioList) {
+//            if (ioListIt instanceof CHARMM_Input) {
 //                inp.add((CHARMM_Input) ioListIt);
-//            } else if (ioListIt.getClass() == CHARMM_Output.class) {
+//            } else if (ioListIt instanceof CHARMM_Output) {
 //                out.add((CHARMM_Output) ioListIt);
 //            } else {
-//                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : get " + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class + " or " + CHARMM_Output.class);
+//                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : got " + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class + " or " + CHARMM_Output.class);
 //            }
 //        }
+                
+        for (CHARMM_InOut ioListIt : ioList) {
+            
+            Class c = ioListIt.getClass();
+            Class sc = c.getSuperclass();
+            
+            if (sc == CHARMM_Input.class) {
+                inp.add((CHARMM_Input) ioListIt);
+            } else if (sc == CHARMM_Output.class) {
+                out.add((CHARMM_Output) ioListIt);
+            } else {
+                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : get " + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class + " or " + CHARMM_Output.class);
+            }
+        }
 
     }
 
     @Override
     protected boolean run(Context ctx) throws Exception {
         
-        out.set(0, cflow.execute
+        out.add(0, cflow.execute
             (new WorkflowContext<CHARMM_Input>() {
 
                 @Override
@@ -75,8 +82,9 @@ public class RunningCHARMM extends ProgressPage{
 
             })
         );
+//        logger.info(out.get(0).getTextOut());
         
-        out.set(1, cflow.execute
+        out.add(1, cflow.execute
             (new WorkflowContext<CHARMM_Input>() {
 
                 @Override
@@ -91,13 +99,14 @@ public class RunningCHARMM extends ProgressPage{
 
             })
         );
+//        logger.info(out.get(1).getTextOut());
         
         return true;
     }
 
     @Override
     protected void handleCanceled() {
-        List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
+        List<CHARMM_InOut> myList = new ArrayList<>();
         myList.addAll(inp);
         myList.addAll(out);
         
@@ -107,7 +116,7 @@ public class RunningCHARMM extends ProgressPage{
 
     @Override
     protected void handleFinishedRun(boolean successful) {
-        List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
+        List<CHARMM_InOut> myList = new ArrayList<>();
         myList.addAll(inp);
         myList.addAll(out);
         

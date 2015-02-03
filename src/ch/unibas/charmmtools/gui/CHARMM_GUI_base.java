@@ -24,20 +24,20 @@ public abstract class CHARMM_GUI_base extends WizardPage{
     
     protected RunCHARMMWorkflow charmmWorkflow;
     
-    protected List<CHARMM_Input>  inp;
-    protected List<CHARMM_Output> out;
+    protected List<CHARMM_Input>  inp = new ArrayList<>();
+    protected List<CHARMM_Output> out = new ArrayList<>();
     
-    protected List<File> CHARMM_inFile;
-    protected List<File> CHARMM_outFile;
+    protected List<File> CHARMM_inFile = new ArrayList<>();
+    protected List<File> CHARMM_outFile = new ArrayList<>();
     
     public CHARMM_GUI_base(String title, RunCHARMMWorkflow flow) {
         super(title);
         this.charmmWorkflow = flow;
         
-        this.inp = new ArrayList<>();
-        this.out = new ArrayList<>();
-        this.CHARMM_inFile = new ArrayList<>();
-        this.CHARMM_outFile = new ArrayList<>();
+//        this.inp = new ArrayList<>();
+//        this.out = new ArrayList<>();
+//        this.CHARMM_inFile = new ArrayList<>();
+//        this.CHARMM_outFile = new ArrayList<>();
     }
 
 

@@ -33,7 +33,7 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
      */
     public CHARMM_Input_PureLiquid(String _cor, String _top, String _par) throws IOException {
         
-        super(_cor, _top, _par);
+        super(_cor, _top, _par, "Pure Liquid");
         
         writer = new CharArrayWriter();
 
@@ -74,7 +74,7 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
      */
     public CHARMM_Input_PureLiquid(String _cor, String _top, String _par, File _outf) throws IOException {
         
-        super(_cor, _top, _par, _outf);
+        super(_cor, _top, _par, _outf, "Pure Liquid");
          
         writer = new BufferedWriter(new FileWriter(_outf));
 
@@ -118,7 +118,7 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
      */
     public CHARMM_Input_PureLiquid(String _cor, String _top, String _par, String _lpun) throws IOException {
 
-        super(_cor, _top, _par, _lpun);
+        super(_cor, _top, _par, _lpun, "Pure Liquid");
         
         writer = new CharArrayWriter();
 
@@ -164,7 +164,7 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
      */
     public CHARMM_Input_PureLiquid(String _cor, String _top, String _par, String _lpun, File _outf) throws IOException {
 
-        super(_cor, _top, _par, _lpun, _outf);
+        super(_cor, _top, _par, _lpun, _outf, "Pure Liquid");
         
         writer = new BufferedWriter(new FileWriter(_outf));
 
@@ -202,7 +202,6 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
     /**
      * Creates the header part of charmm input file, i.e. containing a title and bomlev and prnlev parameters
      *
-     * @param crdfile The name of the coordinates file in CHARMM format
      * @throws IOException
      */
     @Override

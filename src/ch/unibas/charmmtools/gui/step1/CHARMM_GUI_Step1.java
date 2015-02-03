@@ -87,22 +87,26 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
 
     public CHARMM_GUI_Step1(RunCHARMMWorkflow chWflow) {
         super(title, chWflow);
-        inp = new ArrayList<>();
-        out = new ArrayList<>();
-        CHARMM_inFile = new ArrayList<>();
-        CHARMM_outFile = new ArrayList<>();
+//        inp = new ArrayList<>();
+//        out = new ArrayList<>();
+//        CHARMM_inFile = new ArrayList<>();
+//        CHARMM_outFile = new ArrayList<>();
     }
 
     public CHARMM_GUI_Step1(RunCHARMMWorkflow chWflow, List<CHARMM_InOut> ioList) {
         super(title, chWflow);
 
         for (CHARMM_InOut ioListIt : ioList) {
-            if (ioListIt instanceof CHARMM_Input) {
+            
+            Class c = ioListIt.getClass();
+            Class sc = c.getSuperclass();
+            
+            if (sc == CHARMM_Input.class) {
                 inp.add((CHARMM_Input) ioListIt);
-            } else if (ioListIt instanceof CHARMM_Output) {
+            } else if (sc == CHARMM_Output.class) {
                 out.add((CHARMM_Output) ioListIt);
             } else {
-                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : got " + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class + " or " + CHARMM_Output.class);
+                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : get " + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class + " or " + CHARMM_Output.class);
             }
         }
         

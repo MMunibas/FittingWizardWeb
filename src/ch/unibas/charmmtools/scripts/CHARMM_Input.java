@@ -37,35 +37,41 @@ public abstract class CHARMM_Input implements CHARMM_InOut{
     protected File inp;
     protected File out;
     
-    protected CHARMM_Input(String _cor, String _top, String _par)
+    protected final String type;
+    
+    protected CHARMM_Input(String _cor, String _top, String _par, String _type)
     {
         this.cor = _cor;
         this.top = _top;
         this.par = _par;
+        this.type = _type;
     }
     
-    public CHARMM_Input(String _cor, String _top, String _par, File _outf){
+    public CHARMM_Input(String _cor, String _top, String _par, File _outf, String _type){
         this.cor = _cor;
         this.top = _top;
         this.par = _par;
         this.out = _outf;
+        this.type = _type;
     }
 
-    protected CHARMM_Input(String _cor, String _top, String _par, String _lpun)
+    protected CHARMM_Input(String _cor, String _top, String _par, String _lpun, String _type)
     {
         this.cor = _cor;
         this.top = _top;
         this.par = _par;
         this.lpun = _lpun;
+        this.type = _type;
     }
     
-    protected CHARMM_Input(String _cor, String _top, String _par, String _lpun, File _outf)
+    protected CHARMM_Input(String _cor, String _top, String _par, String _lpun, File _outf, String _type)
     {
         this.cor = _cor;
         this.top = _top;
         this.par = _par;
         this.lpun = _lpun;
         this.out = _outf;
+        this.type = _type;
     }
             
     /**
@@ -191,5 +197,12 @@ public abstract class CHARMM_Input implements CHARMM_InOut{
     }
     
     protected abstract void convertCoordinates(); 
+
+    /**
+     * @return the type
+     */
+    public String getType() {
+        return type;
+    }
     
 }

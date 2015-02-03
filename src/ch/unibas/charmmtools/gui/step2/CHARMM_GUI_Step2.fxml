@@ -20,20 +20,20 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TextArea fx:id="inpArea" prefHeight="200.0" prefWidth="200.0">
+            <TextArea fx:id="out_left" editable="false" prefHeight="200.0" prefWidth="200.0">
                <font>
-                  <Font name="Monospaced Regular" size="14.0" />
+                  <Font name="Monospaced Regular" size="12.0" />
                </font>
                <GridPane.margin>
-                  <Insets bottom="2.0" left="2.0" right="5.0" top="2.0" />
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                </GridPane.margin>
             </TextArea>
-            <TextArea fx:id="outArea" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+            <TextArea fx:id="out_right" editable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                <GridPane.margin>
-                  <Insets bottom="2.0" left="5.0" right="2.0" top="2.0" />
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                </GridPane.margin>
                <font>
-                  <Font name="Monospaced Regular" size="14.0" />
+                  <Font name="Monospaced Regular" size="12.0" />
                </font>
             </TextArea>
          </children>
@@ -48,12 +48,22 @@
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="CHARMM input file" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-            <Label text="CHARMM output file" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-            <Label fx:id="errorLabel" contentDisplay="CENTER" prefHeight="15.0" prefWidth="636.0" text="Error while running CHARMM calculation ! Please check output :" textAlignment="CENTER" textFill="RED" visible="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+            <Label fx:id="LabelLeft" text="Output file for : " GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font></Label>
+            <Label fx:id="LabelRight" text="Output file for : " GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font></Label>
+            <Label fx:id="errorLabelRight" alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="636.0" text="No error while running CHARMM !" textAlignment="CENTER" textFill="LIME" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="errorLabelLeft" alignment="CENTER" contentDisplay="CENTER" layoutX="652.0" layoutY="45.0" prefHeight="15.0" prefWidth="636.0" text="No error while running CHARMM !" textAlignment="CENTER" textFill="LIME" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                <font>
                   <Font size="18.0" />
                </font>

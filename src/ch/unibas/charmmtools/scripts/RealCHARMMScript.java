@@ -45,12 +45,17 @@ public class RealCHARMMScript implements ICHARMMScript {
     @Override
     public CHARMM_Output execute(CHARMM_Input input) {
 
-        String FileName = "";
+        String FileName = "generic.out";
         
-        if(input instanceof CHARMM_Input_GasPhase)
+        Class c = input.getClass();
+        if(c==CHARMM_Input_GasPhase.class)
             FileName = "gas_phase.out";
-        else if(input instanceof CHARMM_Input_PureLiquid)
+        else if(c==CHARMM_Input_PureLiquid.class)
             FileName = "pure_liquid.out";
+        else
+            throw new UnknownError("Unknown type of object in CHARMM_Input : got " + c + " but expected types are " + CHARMM_Input_GasPhase.class + " or " + CHARMM_Output_PureLiquid.class);
+        
+        logger.info("Saving to output file " + FileName);
         
         File charmmout = new File(OutputDirName,FileName);
         
@@ -63,9 +68,9 @@ public class RealCHARMMScript implements ICHARMMScript {
         // Object representation of the charmm output file
         CHARMM_Output out = null;
         
-        if(input instanceof CHARMM_Input_GasPhase)
+        if(c==CHARMM_Input_GasPhase.class)
             out = new CHARMM_Output_GasPhase(charmmout);
-        else if(input instanceof CHARMM_Input_PureLiquid)
+        else if(c==CHARMM_Input_PureLiquid.class)
             out = new CHARMM_Output_PureLiquid(charmmout);
         else
              throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : got " + input.getClass() + " but expected types are " + CHARMM_Input_GasPhase.class + " or " + CHARMM_Output_PureLiquid.class);
@@ -87,8 +92,11 @@ public class RealCHARMMScript implements ICHARMMScript {
     @Override
     public void preparePython(String inpPath, String parPath, String topPath, String lpunPath) {
         
+        logger.info("Preparing PYTHON call with parameters : " + inpPath + " " + parPath + " " + topPath + " " + lpunPath);
+        
         runner.setWorkingDir(new File(OutputDirName));
         
+        args.clear();
         args.add("-inp");   args.add(inpPath);
         args.add("-par");   args.add(parPath);
         args.add("-top");   args.add(topPath);
@@ -107,8 +115,11 @@ public class RealCHARMMScript implements ICHARMMScript {
     @Override
     public void preparePython(String inpPath, String outPath, String parPath, String topPath, String lpunPath) {
         
+        logger.info("Preparing PYTHON call with parameters : " + inpPath + " " + outPath + " " + parPath + " " + topPath + " " + lpunPath);
+        
         runner.setWorkingDir(new File(OutputDirName));
         
+        args.clear();
         args.add("-inp");   args.add(inpPath);
         args.add("-out");   args.add(outPath);
         args.add("-par");   args.add(parPath);

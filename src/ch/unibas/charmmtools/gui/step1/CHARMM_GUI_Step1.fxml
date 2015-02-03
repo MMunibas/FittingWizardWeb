@@ -173,17 +173,17 @@
                <font>
                   <Font name="Monospaced Regular" size="14.0" />
                </font>
-               <padding>
+               <GridPane.margin>
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-               </padding>
+               </GridPane.margin>
             </TextArea>
             <TextArea fx:id="textarea_right" editable="true" prefHeight="475.0" prefWidth="577.0" GridPane.columnIndex="1">
                <font>
                   <Font name="Monospaced Regular" size="14.0" />
                </font>
-               <padding>
+               <GridPane.margin>
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-               </padding>
+               </GridPane.margin>
             </TextArea>
          </children>
       </GridPane>

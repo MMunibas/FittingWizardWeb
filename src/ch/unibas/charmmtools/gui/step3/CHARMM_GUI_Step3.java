@@ -39,25 +39,29 @@ public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
     public CHARMM_GUI_Step3(RunCHARMMWorkflow flow, List<CHARMM_InOut> ioList) throws Exception {
         super(title, flow);
         
-        for (CHARMM_InOut ioListIt : ioList) {
-            if (ioListIt instanceof CHARMM_Input) {
-                inp.add((CHARMM_Input) ioListIt);
-            } else if (ioListIt instanceof CHARMM_Output) {
-                out.add((CHARMM_Output) ioListIt);
-            } else {
-                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : got " + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class + " or " + CHARMM_Output.class);
-            }
-        }
-                
 //        for (CHARMM_InOut ioListIt : ioList) {
-//            if (ioListIt.getClass() == CHARMM_Input.class) {
+//            if (ioListIt instanceof CHARMM_Input) {
 //                inp.add((CHARMM_Input) ioListIt);
-//            } else if (ioListIt.getClass() == CHARMM_Output.class) {
+//            } else if (ioListIt instanceof CHARMM_Output) {
 //                out.add((CHARMM_Output) ioListIt);
 //            } else {
-//                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : get " + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class + " or " + CHARMM_Output.class);
+//                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : got " + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class + " or " + CHARMM_Output.class);
 //            }
 //        }
+                
+        for (CHARMM_InOut ioListIt : ioList) {
+            
+            Class c = ioListIt.getClass();
+            Class sc = c.getSuperclass();
+            
+            if (sc == CHARMM_Input.class) {
+                inp.add((CHARMM_Input) ioListIt);
+            } else if (sc == CHARMM_Output.class) {
+                out.add((CHARMM_Output) ioListIt);
+            } else {
+                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : get " + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class + " or " + CHARMM_Output.class);
+            }
+        }
         
         calc_density();
         calc_vapor();

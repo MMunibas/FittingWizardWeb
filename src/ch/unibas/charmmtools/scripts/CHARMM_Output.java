@@ -24,14 +24,18 @@ public abstract class CHARMM_Output implements CHARMM_InOut{
     
     private String textOut;
     
-    private File fileOut;
+    private final File fileOut;
+    
+    private final String type;
     
     private Boolean errorOccured = false;
     private final String hasFailed = "NORMAL TERMINATION BY NORMAL STOP";
     
-    public CHARMM_Output(File charmmout){
+    public CHARMM_Output(File _charmmout, String _type){
         
-        fileOut = charmmout;
+        fileOut = _charmmout;
+        type = _type;
+        
         try {
             textOut = new String(
                     Files.readAllBytes(
@@ -67,6 +71,13 @@ public abstract class CHARMM_Output implements CHARMM_InOut{
      */
     public Boolean getErrorOccured() {
         return errorOccured;
+    }
+
+    /**
+     * @return the type
+     */
+    public String getType() {
+        return type;
     }
   
 }

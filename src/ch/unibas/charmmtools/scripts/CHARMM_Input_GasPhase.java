@@ -33,7 +33,7 @@ public class CHARMM_Input_GasPhase extends CHARMM_Input {
      */
     public CHARMM_Input_GasPhase(String _cor, String _top, String _par) throws IOException {
         
-        super(_cor, _top, _par);
+        super(_cor, _top, _par, "Gas Phase");
         
         writer = new CharArrayWriter();
         
@@ -69,7 +69,7 @@ public class CHARMM_Input_GasPhase extends CHARMM_Input {
      */
     public CHARMM_Input_GasPhase(String _cor, String _top, String _par, File _outf) throws IOException {
         
-        super(_cor, _top, _par, _outf);
+        super(_cor, _top, _par, _outf, "Gas Phase");
         
         writer = new BufferedWriter(new FileWriter(_outf));
 
@@ -111,7 +111,7 @@ public class CHARMM_Input_GasPhase extends CHARMM_Input {
      */
     public CHARMM_Input_GasPhase(String _cor, String _top, String _par, String _lpun) throws IOException {
 
-        super(_cor, _top, _par, _lpun);
+        super(_cor, _top, _par, _lpun, "Gas Phase");
         
         writer = new CharArrayWriter();
 
@@ -155,7 +155,7 @@ public class CHARMM_Input_GasPhase extends CHARMM_Input {
      */
     public CHARMM_Input_GasPhase(String _cor, String _top, String _par, String _lpun, File _outf) throws IOException {
 
-        super(_cor, _top, _par, _lpun, _outf);
+        super(_cor, _top, _par, _lpun, _outf, "Gas Phase");
         
         writer = new BufferedWriter(new FileWriter(_outf));
 
@@ -191,6 +191,7 @@ public class CHARMM_Input_GasPhase extends CHARMM_Input {
     /**
      * Creates the header part of charmm input file, i.e. containing a title and bomlev and prnlev parameters
      *
+     * @throws java.io.IOException
      * @p    * @throws IOException
      */
     @Override

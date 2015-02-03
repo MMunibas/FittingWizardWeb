@@ -17,7 +17,7 @@ import java.io.File;
 public class CHARMM_Output_GasPhase extends CHARMM_Output{
 
     public CHARMM_Output_GasPhase(File charmmout) {
-        super(charmmout);
+        super(charmmout,"Gas Phase");
     }
     
 }

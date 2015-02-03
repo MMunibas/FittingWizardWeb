@@ -17,7 +17,7 @@ import java.io.File;
 public class CHARMM_Output_PureLiquid extends CHARMM_Output{
 
     public CHARMM_Output_PureLiquid(File charmmout) {
-        super(charmmout);
+        super(charmmout,"Pure Liquid");
     }
     
 }
