@@ -54,7 +54,16 @@ public class RealCHARMMScript implements ICHARMMScript {
         runner.exec(this.ScriptFile, this.args);
         
         // Object representation of the charmm output file
-        CHARMM_Output out = new CHARMM_Output(charmmout);
+        CHARMM_Output out = null;
+        
+        if(input.getClass()==CHARMM_Input_GasPhase.class)
+            out = new CHARMM_Output_GasPhase(charmmout);
+        else if(input.getClass()==CHARMM_Input_PureLiquid.class)
+            out = new CHARMM_Output_PureLiquid(charmmout);
+        else
+        {
+             throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : got " + input.getClass() + " but expected types are " + CHARMM_Input_GasPhase.class + " or " + CHARMM_Output_PureLiquid.class);
+        }
 
         return out;
     }

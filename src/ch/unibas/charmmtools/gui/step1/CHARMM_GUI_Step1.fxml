@@ -71,7 +71,7 @@
                     <Button fx:id="button_open_PAR" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
                     <Button fx:id="button_open_RTF" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
                     <Button fx:id="button_open_COR" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
-                    <Button fx:id="button_generate" disable="true" mnemonicParsing="false" onAction="#GenerateInputFile" text="Generate input file" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
+                    <Button fx:id="button_generate" disable="true" mnemonicParsing="false" onAction="#GenerateInputFile" text="Generate input file(s)" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
                     <Label fx:id="RedLabel_Notice" prefHeight="25.0" prefWidth="500.0" text="Please edit if required before saving" textFill="RED" textOverrun="CLIP" visible="false" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="9" GridPane.valignment="CENTER">
                         <font>
                             <Font size="18.0" />
@@ -126,14 +126,13 @@
             <GridPane GridPane.columnIndex="2" GridPane.rowIndex="8">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <RadioButton fx:id="radio_dens" mnemonicParsing="false" selected="true" text="Density" GridPane.halignment="CENTER">
+                  <RadioButton fx:id="radio_dens_vap" mnemonicParsing="false" prefHeight="22.0" prefWidth="289.0" selected="true" text="Density &amp; DH_vap" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                      </GridPane.margin>
@@ -144,7 +143,7 @@
                         <ToggleGroup fx:id="toggle_radio" />
                      </toggleGroup>
                   </RadioButton>
-                  <RadioButton fx:id="radio_DG_hydration" disable="true" mnemonicParsing="false" text="DG Hydration" toggleGroup="$toggle_radio" GridPane.columnIndex="2" GridPane.halignment="CENTER">
+                  <RadioButton fx:id="radio_DG_hydration" disable="true" mnemonicParsing="false" prefHeight="22.0" prefWidth="292.0" text="DG Hydration" textAlignment="CENTER" toggleGroup="$toggle_radio" GridPane.columnIndex="1" GridPane.halignment="CENTER">
                      <GridPane.margin>
                         <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                      </GridPane.margin>
@@ -152,7 +151,6 @@
                         <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                      </padding>
                   </RadioButton>
-                  <RadioButton fx:id="radio_DHVap" mnemonicParsing="false" text="DH_vap" toggleGroup="$toggle_radio" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
                </children>
             </GridPane>
                 </children>
@@ -161,13 +159,33 @@
          </BorderPane.margin>
             </GridPane>
         </top>
-        <center>
-            <TextArea fx:id="inpfile_TextArea" editable="true" prefHeight="495.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
-         <font>
-            <Font name="Monospaced Regular" size="14.0" />
-         </font>
-         <BorderPane.margin>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </BorderPane.margin></TextArea>
-        </center>
+   <center>
+      <GridPane BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <TextArea fx:id="textarea_left" editable="true" prefHeight="475.0" prefWidth="577.0">
+               <font>
+                  <Font name="Monospaced Regular" size="14.0" />
+               </font>
+               <padding>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </padding>
+            </TextArea>
+            <TextArea fx:id="textarea_right" editable="true" prefHeight="475.0" prefWidth="577.0" GridPane.columnIndex="1">
+               <font>
+                  <Font name="Monospaced Regular" size="14.0" />
+               </font>
+               <padding>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </padding>
+            </TextArea>
+         </children>
+      </GridPane>
+   </center>
     </BorderPane>

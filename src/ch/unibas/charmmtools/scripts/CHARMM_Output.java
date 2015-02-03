@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
  *
  * @author hedin
  */
-public class CHARMM_Output implements CHARMM_InOut{
+public abstract class CHARMM_Output implements CHARMM_InOut{
     
     private final static Logger logger = Logger.getLogger(CHARMM_Output.class);
     

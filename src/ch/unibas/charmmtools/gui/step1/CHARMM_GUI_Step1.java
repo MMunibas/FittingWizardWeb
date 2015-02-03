@@ -14,6 +14,7 @@ import ch.unibas.charmmtools.scripts.CHARMM_InOut;
 import ch.unibas.charmmtools.scripts.CHARMM_Input;
 import ch.unibas.charmmtools.scripts.CHARMM_Input_GasPhase;
 import ch.unibas.charmmtools.scripts.CHARMM_Input_PureLiquid;
+import ch.unibas.charmmtools.scripts.CHARMM_Output;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
@@ -39,12 +40,10 @@ import javafx.scene.control.ToggleGroup;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 
-
-
-public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
+public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
 
     private static final String title = "LJ fitting procedure Step 1 : preparing CHARMM input file";
-    
+
     /**
      * All FXML variables
      */
@@ -53,7 +52,7 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
 
     @FXML
     private ComboBox<String> coor_type;
-    
+
     private ObservableList<String> avail_coor_types;
 
     @FXML
@@ -69,13 +68,13 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
     private Button button_generate;
 
     @FXML
-    private TextArea inpfile_TextArea;
-    
+    private TextArea textarea_left, textarea_right;
+
     @FXML
-    private RadioButton  radio_dens, radio_DHVap, radio_DG_hydration;
+    private RadioButton radio_dens_vap, radio_DG_hydration;
     @FXML
     private ToggleGroup toggle_radio;
-    
+
     // those buttons are NOT exposed to FXML but handles locally with fillbuttonbar
     private Button button_reset, button_save_to_file, button_run_CHARMM;
 
@@ -84,47 +83,58 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
      */
     private boolean PAR_selected, RTF_selected, COR_selected, LPUN_selected;
     //type of simulation asked by user
-    private boolean dens_required, DHVap_required, DG_hydration_required;
-      
+    private boolean dens_vap_required, DG_hydration_required;
+
     public CHARMM_GUI_Step1(RunCHARMMWorkflow chWflow) {
-        super(title,chWflow);
+        super(title, chWflow);
     }
-    
+
     public CHARMM_GUI_Step1(RunCHARMMWorkflow chWflow, List<CHARMM_InOut> ioList) {
-        super(title,chWflow);
-        this.inp = (CHARMM_Input)  ioList.get(0);
-        
-        inpfile_TextArea.setText(inp.getContentOfInputFile());
-        inpfile_TextArea.setEditable(true);
-        
-        RedLabel_Notice.setText("Error while running CHARMM ! Please modify input file");
+        super(title, chWflow);
+
+        for (CHARMM_InOut ioListIt : ioList) {
+            if (ioListIt.getClass() == CHARMM_Input.class) {
+                inp.add((CHARMM_Input) ioListIt);
+            } else if (ioListIt.getClass() == CHARMM_Output.class) {
+                out.add((CHARMM_Output) ioListIt);
+            } else {
+                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : got " + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class + " or " + CHARMM_Output.class);
+            }
+        }
+
+        textarea_left.setText(inp.get(0).getContentOfInputFile());
+        textarea_left.setEditable(true);
+
+        textarea_right.setText(inp.get(1).getContentOfInputFile());
+        textarea_right.setEditable(true);
+
+        RedLabel_Notice.setText("Error while running CHARMM ! Please modify input file(s) !");
         RedLabel_Notice.setVisible(true);
-        
+
         button_save_to_file.setDisable(false);
-        
+
         textfield_PAR.setDisable(true);
         textfield_RTF.setDisable(true);
         textfield_COR.setDisable(true);
         textfield_LPUN.setDisable(true);
-        
-        radio_dens.setDisable(true); 
-        radio_DHVap.setDisable(true); 
-//        radio_DG_hydration.setDisable(true);
-        
+
+        radio_dens_vap.setDisable(true);
+        radio_DG_hydration.setDisable(true);
+
         button_generate.setDisable(true);
-        
+
         button_open_PAR.setDisable(true);
         button_open_RTF.setDisable(true);
         button_open_COR.setDisable(true);
         button_open_LPUN.setDisable(true);
-        
+
         coor_type.setDisable(true);
-        
-        later_PAR.setDisable(true); 
-        later_RTF.setDisable(true); 
-        later_COR.setDisable(true); 
+
+        later_PAR.setDisable(true);
+        later_RTF.setDisable(true);
+        later_COR.setDisable(true);
         later_LPUN.setDisable(true);
-        
+
     }
 
     /**
@@ -145,9 +155,11 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
         coor_type.setValue("*.pdb");
 
         // set to false those booleans indicating if a file has been selected
-        PAR_selected = false; RTF_selected = false; COR_selected = false; LPUN_selected = false;
-        dens_required = radio_dens.isSelected();
-        DHVap_required = radio_DHVap.isSelected();
+        PAR_selected = false;
+        RTF_selected = false;
+        COR_selected = false;
+        LPUN_selected = false;
+        dens_vap_required = radio_dens_vap.isSelected();
         DG_hydration_required = radio_DG_hydration.isSelected();
     }
 
@@ -163,15 +175,15 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
     }
 
     /**
-     * Handles the event when one of the 3 button_open_XXX is pressed
-     * button_generate is enabled only when the 3 files have been loaded
+     * Handles the event when one of the 3 button_open_XXX is pressed button_generate is enabled only when the 3 files
+     * have been loaded
      *
      * @param event
      */
     @FXML
     protected void OpenButtonPressed(ActionEvent event) {
 
-        Window myParent = inpfile_TextArea.getScene().getWindow();
+        Window myParent = button_generate.getScene().getWindow();
         FileChooser chooser = new FileChooser();
         chooser.setInitialDirectory(new File("test"));
         File selectedFile = null;
@@ -222,37 +234,37 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
 
         inp = null;
         try {
-            
+
             // get filenames
             String corname = textfield_COR.getText();
             String rtfname = textfield_RTF.getText();
             String parname = textfield_PAR.getText();
             String lpunname = textfield_LPUN.getText();
-            
+
             // if empty filenames print a pattern user should modify
             //transform it to relative path instead as we have to send data to clusters later
             String folderPath = new File("test").getAbsolutePath();
-            corname = corname.length()==0?"ADD_HERE_PATH_TO_COORDINATES_FILE":ResourceUtils.getRelativePath(corname,folderPath);
-            rtfname = rtfname.length()==0?"ADD_HERE_PATH_TO_TOPOLOGY_FILE":ResourceUtils.getRelativePath(rtfname,folderPath);
-            parname = parname.length()==0?"ADD_HERE_PATH_TO_PARAMETERS_FILE":ResourceUtils.getRelativePath(parname,folderPath);
-            lpunname = lpunname.length()==0?"ADD_HERE_PATH_TO_LPUN_FILE":ResourceUtils.getRelativePath(lpunname,folderPath);
-            
-            dens_required   = toggle_radio.getSelectedToggle().equals(radio_dens);
-            DHVap_required   = toggle_radio.getSelectedToggle().equals(radio_DHVap);
+            corname = corname.length() == 0 ? "ADD_HERE_PATH_TO_COORDINATES_FILE" : ResourceUtils.getRelativePath(corname, folderPath);
+            rtfname = rtfname.length() == 0 ? "ADD_HERE_PATH_TO_TOPOLOGY_FILE" : ResourceUtils.getRelativePath(rtfname, folderPath);
+            parname = parname.length() == 0 ? "ADD_HERE_PATH_TO_PARAMETERS_FILE" : ResourceUtils.getRelativePath(parname, folderPath);
+            lpunname = lpunname.length() == 0 ? "ADD_HERE_PATH_TO_LPUN_FILE" : ResourceUtils.getRelativePath(lpunname, folderPath);
+
+            dens_vap_required = toggle_radio.getSelectedToggle().equals(radio_dens_vap);
             DG_hydration_required = toggle_radio.getSelectedToggle().equals(radio_DG_hydration);
-            
-            if(dens_required)
-                inp = new CHARMM_Input_GasPhase(corname, rtfname, parname, lpunname);
-            else if(DHVap_required)
-                inp = new CHARMM_Input_PureLiquid(corname, rtfname, parname, lpunname);
-            else{
+
+            if (dens_vap_required) {
+                inp.add(0, new CHARMM_Input_GasPhase(corname, rtfname, parname, lpunname));
+                inp.add(1, new CHARMM_Input_PureLiquid(corname, rtfname, parname, lpunname));
+            } else {
                 logger.error("The impossible happened : unable to determine which radio button was selected !");
                 throw new UnknownError("Unknown error related to selection of radio buttons.");
             }
-                
-            inpfile_TextArea.setText(inp.getContentOfInputFile());
+
+            textarea_left.setText(inp.get(0).getContentOfInputFile());
+            textarea_right.setText(inp.get(1).getContentOfInputFile());
+
             RedLabel_Notice.setVisible(true);
-            
+
         } catch (IOException ex) {
             logger.error(ex);
         }
@@ -261,18 +273,18 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
          * If success enable button for saving
          */
         button_save_to_file.setDisable(false);
-        
 
         RadioButton selected = (RadioButton) toggle_radio.getSelectedToggle();
         String selText = selected.getText();
-        
+
         button_save_to_file.setText("Click to save (" + selText + ")");
         button_run_CHARMM.setText("Run CHARMM (" + selText + ")");
-        
+
     }
 
     /**
-     * Handles the event when one of the 3 checkBox is selected. If 3 check box are set to true button_generate is enabled as the 3 required files will be chosen later
+     * Handles the event when one of the 4 checkBox is selected. If the 4 are set to true button_generate is enabled as
+     * the 4 required files will be chosen later
      *
      * @param event
      */
@@ -308,14 +320,15 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
      * @param event
      */
     protected void ResetFields(ActionEvent event) {
-        
+
         later_PAR.setDisable(false);
-        later_RTF.setDisable(false); 
-        later_COR.setDisable(false); 
+        later_RTF.setDisable(false);
+        later_COR.setDisable(false);
         later_LPUN.setDisable(false);
-        
+
         //clear textcontent
-        inpfile_TextArea.clear();
+        textarea_left.clear();
+        textarea_right.clear();
         textfield_PAR.clear();
         textfield_RTF.clear();
         textfield_COR.clear();
@@ -348,80 +361,108 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
         button_generate.setDisable(true);
         button_save_to_file.setDisable(true);
         button_run_CHARMM.setDisable(true);
-        
+
         button_save_to_file.setText("Click to save");
         button_run_CHARMM.setText("Run CHARMM");
-        
-        radio_dens.setDisable(false); 
-        radio_DHVap.setDisable(false); 
+
+        radio_dens_vap.setDisable(false);
 //        radio_DG_hydration.setDisable(false);
 
-        
+        inp.clear();
+        out.clear();
+        CHARMM_inFile.clear();
+        CHARMM_outFile.clear();
 
-        
     }
 
     protected void SaveToFile(ActionEvent event) {
         Window myParent = button_save_to_file.getScene().getWindow();
         FileChooser chooser = new FileChooser();
         chooser.setInitialDirectory(new File("test"));
-        File selectedFile = null;
+//        File selectedFile = null;
 
-        String default_name = "";
-        
-        if(dens_required)
-            default_name = "density.inp";
-        else if(DHVap_required)
-            default_name = "enthalpy_vap.inp";
-        else if(DG_hydration_required)
-            default_name = "DG_hydration.inp";
-        
+//        String default_name = "";
+//        if(dens_required)
+//            default_name = "density.inp";
+//        else if(DHVap_required)
+//            default_name = "enthalpy_vap.inp";
+//        else if(DG_hydration_required)
+//            default_name = "DG_hydration.inp";
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CHARMM input file", "*.inp"));
-        chooser.setInitialFileName(default_name);
-        selectedFile = chooser.showSaveDialog(myParent);
 
-        BufferedWriter buffw = null;
-
-        if (selectedFile != null) {
-            try {
-                buffw = new BufferedWriter(new FileWriter(selectedFile));
-                buffw.write(inpfile_TextArea.getText());
-                buffw.close();
-            } catch (IOException ex) {
-                logger.error("IOException raised whene generating CHARMM inputfile : " + ex.getMessage());
+        for (CHARMM_Input ip : inp) {
+            
+            if (ip.getClass() == CHARMM_Input_GasPhase.class) {
+                chooser.setInitialFileName("gas_phase.inp");
+                chooser.setTitle("Please save the file for Gas Phase calculation");
+            } else if (ip.getClass() == CHARMM_Input_PureLiquid.class) {
+                chooser.setInitialFileName("pure_liquid.inp");
+                chooser.setTitle("Please save the file for Pure Liquid calculation");
             }
-        } else {
-            logger.error("Error while setting file name or save path for CHARMM input file.");
+
+            File selectedFile = chooser.showSaveDialog(myParent);
+            CHARMM_inFile.add(selectedFile);
+
+            BufferedWriter buffw = null;
+
+            if (selectedFile != null) {
+                try {
+                    buffw = new BufferedWriter(new FileWriter(selectedFile));
+                    buffw.write(ip.getContentOfInputFile());
+                    buffw.close();
+                } catch (IOException ex) {
+                    logger.error("IOException raised whene generating CHARMM inputfile : " + ex.getMessage());
+                }
+            } else {
+                logger.error("Error while setting file name or save path for CHARMM input file.");
+            }
+            
+            ip.setInp(selectedFile);
+            
         }
-        
+
+//        BufferedWriter buffw = null;
+//        if (selectedFile != null) {
+//            try {
+//                buffw = new BufferedWriter(new FileWriter(selectedFile));
+//                buffw.write(inpfile_TextArea.getText());
+//                buffw.close();
+//            } catch (IOException ex) {
+//                logger.error("IOException raised whene generating CHARMM inputfile : " + ex.getMessage());
+//            }
+//        } else {
+//            logger.error("Error while setting file name or save path for CHARMM input file.");
+//        }
         //now that it is saved it may be runned
-        this.RedLabel_Notice.setText("You can now try to run the simulation");
+        this.RedLabel_Notice.setText("You can now try to run the simulation(s)");
         this.button_run_CHARMM.setDisable(false);
-        
-        this.CHARMM_inFile = selectedFile;
-        
+
+//        this.CHARMM_inFile = selectedFile;
+
         /**
          * Allow running charmm script
          */
         button_run_CHARMM.setDisable(false);
-        
-    }
-    
-    protected void runCHARMM(ActionEvent event) { 
 
-        inp.setInp(CHARMM_inFile);
-    
-        List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
-        myList.add(0, inp);
-        myList.add(1, out);
+    }
+
+    protected void runCHARMM(ActionEvent event) {
+
+//        inp.setInp(CHARMM_inFile);
+
+        List<CHARMM_InOut> myList = new ArrayList<>();
+        myList.addAll(inp);
+        myList.addAll(out);
+//        myList.add(0, inp);
+//        myList.add(1, out);
         navigateTo(RunningCHARMM.class, myList);
-        
+
     }
 
     @Override
     protected void fillButtonBar() {
-        
-        button_reset = ButtonFactory.createButtonBarButton("Reset", new EventHandler<ActionEvent>(){
+
+        button_reset = ButtonFactory.createButtonBarButton("Reset", new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 logger.info("Resetting all fields.");
@@ -429,8 +470,8 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
             }
         });
         addButtonToButtonBar(button_reset);
-        
-        button_save_to_file = ButtonFactory.createButtonBarButton("Click to save", new EventHandler<ActionEvent>(){
+
+        button_save_to_file = ButtonFactory.createButtonBarButton("Click to save", new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 logger.info("Saving CHARMM input script to a file.");
@@ -439,8 +480,8 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
         });
         addButtonToButtonBar(button_save_to_file);
         button_save_to_file.setDisable(true);
-        
-        button_run_CHARMM = ButtonFactory.createButtonBarButton("Run CHARMM", new EventHandler<ActionEvent>(){
+
+        button_run_CHARMM = ButtonFactory.createButtonBarButton("Run CHARMM", new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 logger.info("Running CHARMM input script.");
@@ -450,5 +491,5 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base{
         addButtonToButtonBar(button_run_CHARMM);
         button_run_CHARMM.setDisable(true);
     }
-    
+
 }//end of controller class

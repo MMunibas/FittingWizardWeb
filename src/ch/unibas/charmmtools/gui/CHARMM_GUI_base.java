@@ -13,6 +13,8 @@ import ch.unibas.charmmtools.scripts.CHARMM_Output;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.presentation.base.WizardPage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -22,14 +24,20 @@ public abstract class CHARMM_GUI_base extends WizardPage{
     
     protected RunCHARMMWorkflow charmmWorkflow;
     
-    protected CHARMM_Input  inp;
-    protected CHARMM_Output out;
+    protected List<CHARMM_Input>  inp;
+    protected List<CHARMM_Output> out;
     
-    protected File CHARMM_inFile, CHARMM_outFile;
+    protected List<File> CHARMM_inFile;
+    protected List<File> CHARMM_outFile;
     
     public CHARMM_GUI_base(String title, RunCHARMMWorkflow flow) {
         super(title);
         this.charmmWorkflow = flow;
+        
+        this.inp = new ArrayList<>();
+        this.out = new ArrayList<>();
+        this.CHARMM_inFile = new ArrayList<>();
+        this.CHARMM_outFile = new ArrayList<>();
     }
 
 

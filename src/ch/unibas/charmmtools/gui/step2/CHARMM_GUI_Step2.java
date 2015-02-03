@@ -47,8 +47,17 @@ public class CHARMM_GUI_Step2 extends CHARMM_GUI_base {
     public CHARMM_GUI_Step2(RunCHARMMWorkflow flow, List<CHARMM_InOut> ioList)
     {
         super(title, flow);
-        this.inp = (CHARMM_Input)  ioList.get(0);
-        this.out = (CHARMM_Output) ioList.get(1);
+        
+        for (CHARMM_InOut ioListIt : ioList) {
+            if (ioListIt.getClass() == CHARMM_Input.class) {
+                inp.add((CHARMM_Input) ioListIt);
+            } else if (ioListIt.getClass() == CHARMM_Output.class) {
+                out.add((CHARMM_Output) ioListIt);
+            } else {
+                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : get " + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class + " or " + CHARMM_Output.class);
+            }
+        }
+        
 //        logger.info("CHARMM_Input object  : " + inp.toString() + inp.getContentOfInputFile());
 //        logger.info("CHARMM_Output object : " + out.toString() + out.getTextOut());
         
