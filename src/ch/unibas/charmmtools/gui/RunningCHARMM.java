@@ -28,31 +28,69 @@ import java.util.List;
 public class RunningCHARMM extends ProgressPage{
 
     private final RunCHARMMWorkflow cflow;
-    private CHARMM_Input  inp;
-    private CHARMM_Output out;
+    private List<CHARMM_Input > inp;
+    private List<CHARMM_Output> out;
     
     public RunningCHARMM(RunCHARMMWorkflow charmmWorkflow, List<CHARMM_InOut> myList) {
         super("Running CHARMM calculation");
         this.cflow = charmmWorkflow;
-        this.inp = (CHARMM_Input)  myList.get(0);
-        this.out = (CHARMM_Output) myList.get(1);  
+        
+        for (CHARMM_InOut ioListIt : myList) {
+            if (ioListIt instanceof CHARMM_Input) {
+                inp.add((CHARMM_Input) ioListIt);
+            } else if (ioListIt instanceof CHARMM_Output) {
+                out.add((CHARMM_Output) ioListIt);
+            } else {
+                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : got " + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class + " or " + CHARMM_Output.class);
+            }
+        }
+                
+//        for (CHARMM_InOut ioListIt : myList) {
+//            if (ioListIt.getClass() == CHARMM_Input.class) {
+//                inp.add((CHARMM_Input) ioListIt);
+//            } else if (ioListIt.getClass() == CHARMM_Output.class) {
+//                out.add((CHARMM_Output) ioListIt);
+//            } else {
+//                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : get " + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class + " or " + CHARMM_Output.class);
+//            }
+//        }
+
     }
 
     @Override
     protected boolean run(Context ctx) throws Exception {
-        out = cflow.execute(new WorkflowContext<CHARMM_Input>() {
+        
+        out.set(0, cflow.execute
+            (new WorkflowContext<CHARMM_Input>() {
 
-            @Override
-            public void setCurrentStatus(String status) {
-                ctx.setTitle(status);
-            }
+                @Override
+                public void setCurrentStatus(String status) {
+                    ctx.setTitle(status);
+                }
 
-            @Override
-            public CHARMM_Input getParameter() {
-                return inp;
-            }
+                @Override
+                public CHARMM_Input getParameter() {
+                    return inp.get(0);
+                }
 
-        });
+            })
+        );
+        
+        out.set(1, cflow.execute
+            (new WorkflowContext<CHARMM_Input>() {
+
+                @Override
+                public void setCurrentStatus(String status) {
+                    ctx.setTitle(status);
+                }
+
+                @Override
+                public CHARMM_Input getParameter() {
+                    return inp.get(1);
+                }
+
+            })
+        );
         
         return true;
     }
@@ -60,8 +98,8 @@ public class RunningCHARMM extends ProgressPage{
     @Override
     protected void handleCanceled() {
         List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
-        myList.add(0, inp);
-        myList.add(1, out);
+        myList.addAll(inp);
+        myList.addAll(out);
         
         logger.info("Run canceled by user : going back to CHARMM input assistant Step1.");
         navigateTo(CHARMM_GUI_Step1.class,myList);
@@ -70,8 +108,8 @@ public class RunningCHARMM extends ProgressPage{
     @Override
     protected void handleFinishedRun(boolean successful) {
         List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
-        myList.add(0, inp);
-        myList.add(1, out);
+        myList.addAll(inp);
+        myList.addAll(out);
         
         if(successful)
         {

@@ -38,21 +38,30 @@ public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
     
     public CHARMM_GUI_Step3(RunCHARMMWorkflow flow, List<CHARMM_InOut> ioList) throws Exception {
         super(title, flow);
-        inp = (CHARMM_Input)  ioList.get(0);
-        out = (CHARMM_Output) ioList.get(1);
         
-        if(inp.getClass()==CHARMM_Input_GasPhase.class)
-        {
-            calc_density();
+        for (CHARMM_InOut ioListIt : ioList) {
+            if (ioListIt instanceof CHARMM_Input) {
+                inp.add((CHARMM_Input) ioListIt);
+            } else if (ioListIt instanceof CHARMM_Output) {
+                out.add((CHARMM_Output) ioListIt);
+            } else {
+                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : got " + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class + " or " + CHARMM_Output.class);
+            }
         }
-        else if(inp.getClass()==CHARMM_Input_PureLiquid.class)
-        {
-            calc_vapor();
-        }
-        else
-        {
-            throw new Exception("Unsupported type of class when parsing CHARMM output in constructor of CHARMM_GUI_Step3 : " + inp.getClass());
-        }
+                
+//        for (CHARMM_InOut ioListIt : ioList) {
+//            if (ioListIt.getClass() == CHARMM_Input.class) {
+//                inp.add((CHARMM_Input) ioListIt);
+//            } else if (ioListIt.getClass() == CHARMM_Output.class) {
+//                out.add((CHARMM_Output) ioListIt);
+//            } else {
+//                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : get " + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class + " or " + CHARMM_Output.class);
+//            }
+//        }
+        
+        calc_density();
+        calc_vapor();
+
     }
 
 //    @Override
@@ -65,8 +74,8 @@ public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
             @Override
             public void handle(ActionEvent actionEvent) {
                 List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
-                myList.add(0, inp);
-                myList.add(1, out);
+                myList.addAll(inp);
+                myList.addAll(out);
                 logger.info("Going back to CHARMM input assistant Step1.");
                 navigateTo(CHARMM_GUI_Step1.class,myList);
             }
@@ -77,8 +86,8 @@ public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
             @Override
             public void handle(ActionEvent actionEvent) {
                 List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
-                myList.add(0, inp);
-                myList.add(1, out);
+                myList.addAll(inp);
+                myList.addAll(out);
                 logger.info("Going to Step2 Results.");
                 navigateTo(CHARMM_GUI_Step2.class,myList);
             }
@@ -88,7 +97,7 @@ public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
     }
     
     private void splitOutFile(){
-        arraystrings = out.getTextOut().split("\n");
+//        arraystrings = out.getTextOut().split("\n");
     }
     
     private String findInArray(String pattern){

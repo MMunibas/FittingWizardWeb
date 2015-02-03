@@ -87,21 +87,25 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
 
     public CHARMM_GUI_Step1(RunCHARMMWorkflow chWflow) {
         super(title, chWflow);
+        inp = new ArrayList<>();
+        out = new ArrayList<>();
+        CHARMM_inFile = new ArrayList<>();
+        CHARMM_outFile = new ArrayList<>();
     }
 
     public CHARMM_GUI_Step1(RunCHARMMWorkflow chWflow, List<CHARMM_InOut> ioList) {
         super(title, chWflow);
 
         for (CHARMM_InOut ioListIt : ioList) {
-            if (ioListIt.getClass() == CHARMM_Input.class) {
+            if (ioListIt instanceof CHARMM_Input) {
                 inp.add((CHARMM_Input) ioListIt);
-            } else if (ioListIt.getClass() == CHARMM_Output.class) {
+            } else if (ioListIt instanceof CHARMM_Output) {
                 out.add((CHARMM_Output) ioListIt);
             } else {
                 throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : got " + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class + " or " + CHARMM_Output.class);
             }
         }
-
+        
         textarea_left.setText(inp.get(0).getContentOfInputFile());
         textarea_left.setEditable(true);
 
@@ -232,7 +236,7 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
     @FXML
     protected void GenerateInputFile() {
 
-        inp = null;
+//        inp = null;
         try {
 
             // get filenames
@@ -379,15 +383,7 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
         Window myParent = button_save_to_file.getScene().getWindow();
         FileChooser chooser = new FileChooser();
         chooser.setInitialDirectory(new File("test"));
-//        File selectedFile = null;
 
-//        String default_name = "";
-//        if(dens_required)
-//            default_name = "density.inp";
-//        else if(DHVap_required)
-//            default_name = "enthalpy_vap.inp";
-//        else if(DG_hydration_required)
-//            default_name = "DG_hydration.inp";
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CHARMM input file", "*.inp"));
 
         for (CHARMM_Input ip : inp) {
@@ -421,23 +417,9 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
             
         }
 
-//        BufferedWriter buffw = null;
-//        if (selectedFile != null) {
-//            try {
-//                buffw = new BufferedWriter(new FileWriter(selectedFile));
-//                buffw.write(inpfile_TextArea.getText());
-//                buffw.close();
-//            } catch (IOException ex) {
-//                logger.error("IOException raised whene generating CHARMM inputfile : " + ex.getMessage());
-//            }
-//        } else {
-//            logger.error("Error while setting file name or save path for CHARMM input file.");
-//        }
         //now that it is saved it may be runned
         this.RedLabel_Notice.setText("You can now try to run the simulation(s)");
         this.button_run_CHARMM.setDisable(false);
-
-//        this.CHARMM_inFile = selectedFile;
 
         /**
          * Allow running charmm script
@@ -448,13 +430,9 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
 
     protected void runCHARMM(ActionEvent event) {
 
-//        inp.setInp(CHARMM_inFile);
-
         List<CHARMM_InOut> myList = new ArrayList<>();
         myList.addAll(inp);
         myList.addAll(out);
-//        myList.add(0, inp);
-//        myList.add(1, out);
         navigateTo(RunningCHARMM.class, myList);
 
     }

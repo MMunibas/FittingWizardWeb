@@ -35,7 +35,7 @@ public class CHARMM_GUI_Step2 extends CHARMM_GUI_base {
     private static final String title = "LJ fitting procedure Step 2 : visualising output file";
 
     @FXML
-    private TextArea inpArea, outArea;
+    private TextArea out_left, out_right;
     
     @FXML
     private Label errorLabel;
@@ -49,33 +49,42 @@ public class CHARMM_GUI_Step2 extends CHARMM_GUI_base {
         super(title, flow);
         
         for (CHARMM_InOut ioListIt : ioList) {
-            if (ioListIt.getClass() == CHARMM_Input.class) {
+            if (ioListIt instanceof CHARMM_Input) {
                 inp.add((CHARMM_Input) ioListIt);
-            } else if (ioListIt.getClass() == CHARMM_Output.class) {
+            } else if (ioListIt instanceof CHARMM_Output) {
                 out.add((CHARMM_Output) ioListIt);
             } else {
-                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : get " + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class + " or " + CHARMM_Output.class);
+                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : got " + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class + " or " + CHARMM_Output.class);
             }
         }
+                
+//        for (CHARMM_InOut ioListIt : ioList) {
+//            if (ioListIt.getClass() == CHARMM_Input.class) {
+//                inp.add((CHARMM_Input) ioListIt);
+//            } else if (ioListIt.getClass() == CHARMM_Output.class) {
+//                out.add((CHARMM_Output) ioListIt);
+//            } else {
+//                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : get " + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class + " or " + CHARMM_Output.class);
+//            }
+//        }
         
-//        logger.info("CHARMM_Input object  : " + inp.toString() + inp.getContentOfInputFile());
-//        logger.info("CHARMM_Output object : " + out.toString() + out.getTextOut());
-        
-        errorOccured = out.getErrorOccured();
+        errorOccured = out.get(0).getErrorOccured() || out.get(1).getErrorOccured();
         
         if (errorOccured)
         {
             errorLabel.setVisible(true);
-//            gotoStep3.setDisable(true);
+            gotoStep3.setDisable(true);
         }
     }
     
     @Override
     public void initializeData() {
-        inpArea.setText(inp.getContentOfInputFile());
-        outArea.setText(out.getTextOut());
-        inpArea.setEditable(false);
-        outArea.setEditable(false);
+        
+        out_left.setText(inp.get(0).getContentOfInputFile());
+        out_right.setText(inp.get(1).getContentOfInputFile());
+        
+        out_left.setEditable(false);
+        out_right.setEditable(false);
     }
     
     @Override
@@ -84,9 +93,9 @@ public class CHARMM_GUI_Step2 extends CHARMM_GUI_base {
         backStep1 = ButtonFactory.createButtonBarButton("Back to INPUT file build", new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent actionEvent) {
-                List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
-                myList.add(0, inp);
-                myList.add(1, out);
+                List<CHARMM_InOut> myList = new ArrayList<>();
+                myList.addAll(inp);
+                myList.addAll(out);
                 logger.info("Going back to CHARMM input assistant Step1.");
                 navigateTo(CHARMM_GUI_Step1.class,myList);
             }
@@ -96,9 +105,9 @@ public class CHARMM_GUI_Step2 extends CHARMM_GUI_base {
         gotoStep3 = ButtonFactory.createButtonBarButton("Proceed to Results panel", new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent actionEvent) {
-                List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
-                myList.add(0, inp);
-                myList.add(1, out);
+                List<CHARMM_InOut> myList = new ArrayList<>();
+                myList.addAll(inp);
+                myList.addAll(out);
                 logger.info("Going to Step3 Results.");
                 navigateTo(CHARMM_GUI_Step3.class,myList);
             }
