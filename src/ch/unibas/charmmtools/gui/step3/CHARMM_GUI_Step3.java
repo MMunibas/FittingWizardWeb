@@ -20,16 +20,9 @@ import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 
 /**
  *
@@ -40,24 +33,8 @@ public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
     private static final String title = "LJ fitting procedure Step 3 : Results";
     
     private Button backStep1,backStep2;
-    
-//    private class CHARMMdata{
-//        private StringProperty str;
-//        public void setStr(String value){ strProperty().set(value); }
-//        public String getStr() { return strProperty().get(); }
-//        public StringProperty strProperty(){
-//            if (str == null) str = new SimpleStringProperty(this, "str");
-//            return str; 
-//        }
-//    }
-    
-    @FXML
-    private TableView<String> tabView;
-    @FXML
-    private TableColumn<String,String> tabCol;
-    
-    private ObservableList<String> oblist;
-//    private String[] arraystrings;
+     
+    private String[] arraystrings;
     
     public CHARMM_GUI_Step3(RunCHARMMWorkflow flow, List<CHARMM_InOut> ioList) throws Exception {
         super(title, flow);
@@ -78,10 +55,9 @@ public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
         }
     }
 
-    @Override
-    public void initializeData() {
-        oblist = FXCollections.observableArrayList();
-    }
+//    @Override
+//    public void initializeData() {
+//    }
 
     @Override
     protected void fillButtonBar() {
@@ -111,8 +87,27 @@ public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
 
     }
     
+    private void splitOutFile(){
+        arraystrings = out.getTextOut().split("\n");
+    }
+    
+    private String findInArray(String pattern){
+        
+        for(String st : arraystrings)
+        {
+            if (st.contains(pattern))
+                return st;
+        }
+        
+        return "";
+    }
+    
     private void calc_density(){
-
+        
+        this.splitOutFile();
+        
+        String constr = this.findInArray("constraints will");
+        String aver = this.findInArray("AVER>");
     }
     
     private void calc_vapor(){
