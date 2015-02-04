@@ -33,11 +33,6 @@ public abstract class CHARMM_GUI_base extends WizardPage{
     public CHARMM_GUI_base(String title, RunCHARMMWorkflow flow) {
         super(title);
         this.charmmWorkflow = flow;
-        
-//        this.inp = new ArrayList<>();
-//        this.out = new ArrayList<>();
-//        this.CHARMM_inFile = new ArrayList<>();
-//        this.CHARMM_outFile = new ArrayList<>();
     }
 
 

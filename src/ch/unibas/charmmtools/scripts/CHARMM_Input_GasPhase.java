@@ -192,7 +192,6 @@ public class CHARMM_Input_GasPhase extends CHARMM_Input {
      * Creates the header part of charmm input file, i.e. containing a title and bomlev and prnlev parameters
      *
      * @throws java.io.IOException
-     * @p    * @throws IOException
      */
     @Override
     protected void print_title() throws IOException {

@@ -191,7 +191,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TextArea fx:id="textarea_left" editable="true" prefHeight="475.0" prefWidth="577.0">
+            <TextArea fx:id="textarea_left" editable="true" minHeight="-Infinity" minWidth="-Infinity" prefHeight="475.0" prefWidth="577.0">
                <font>
                   <Font name="Monospaced Regular" size="14.0" />
                </font>
@@ -199,7 +199,7 @@
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                </GridPane.margin>
             </TextArea>
-            <TextArea fx:id="textarea_right" editable="true" prefHeight="475.0" prefWidth="577.0" GridPane.columnIndex="1">
+            <TextArea fx:id="textarea_right" editable="true" minHeight="-Infinity" minWidth="-Infinity" prefHeight="475.0" prefWidth="577.0" GridPane.columnIndex="1">
                <font>
                   <Font name="Monospaced Regular" size="14.0" />
                </font>

@@ -40,33 +40,33 @@ parser.add_argument('-np',dest='numCores',type=int,
 
 args = parser.parse_args()
 
-print parser
+#print parser
 
-print args.inpF
-print args.outF
-print args.parF
-print args.topF
-print args.lpunF
-print args.numCores
+#print args.inpF
+#print args.outF
+#print args.parF
+#print args.topF
+#print args.lpunF
+#print args.numCores
 
 # Test SSH connection
-print "Establishing connection"
-sshuser = config.get('remote','user').strip('\'')
-hostname = config.get('remote','hostname').strip('\'')
-sshaddress = sshuser+"@"+hostname
-bashCmd = "ssh " + sshaddress + " hostname >/dev/null"
-process = subprocess.call(bashCmd.split())
-if process != 0:
-  print "Error. Can't connect to remote computer."
-  exit(1)
+#print "Establishing connection"
+#sshuser = config.get('remote','user').strip('\'')
+#hostname = config.get('remote','hostname').strip('\'')
+#sshaddress = sshuser+"@"+hostname
+#bashCmd = "ssh " + sshaddress + " hostname >/dev/null"
+#process = subprocess.call(bashCmd.split())
+#if process != 0:
+#  print "Error. Can't connect to remote computer."
+#  exit(1)
   
 # charmm test locally
-bashCmd = "./charmm -i " + args.inpF + " -o " + args.outF
-print bashCmd.split()
-process = subprocess.call(bashCmd.split())
-if process != 0:
-  print "Problem with the CHARMM calculation, check the output file."
-  exit(0)
+#bashCmd = "./charmm -i " + args.inpF + " -o " + args.outF
+#print bashCmd.split()
+#process = subprocess.call(bashCmd.split())
+#if process != 0:
+#  print "Problem with the CHARMM calculation, check the output file."
+#  exit(0)
 
 ## Create directory for calculations
 #workdir = config.get('remote','workdir').strip('\'')

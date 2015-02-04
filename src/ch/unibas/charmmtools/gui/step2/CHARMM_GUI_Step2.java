@@ -43,21 +43,9 @@ public class CHARMM_GUI_Step2 extends CHARMM_GUI_base {
     
     private Button backStep1,gotoStep3;
     
-//    private final boolean errorOccured;
-    
     public CHARMM_GUI_Step2(RunCHARMMWorkflow flow, List<CHARMM_InOut> ioList)
     {
         super(title, flow);
-        
-//        for (CHARMM_InOut ioListIt : ioList) {
-//            if (ioListIt instanceof CHARMM_Input) {
-//                inp.add((CHARMM_Input) ioListIt);
-//            } else if (ioListIt instanceof CHARMM_Output) {
-//                out.add((CHARMM_Output) ioListIt);
-//            } else {
-//                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : got " + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class + " or " + CHARMM_Output.class);
-//            }
-//        }
                 
         for (CHARMM_InOut ioListIt : ioList) {
             
@@ -79,17 +67,11 @@ public class CHARMM_GUI_Step2 extends CHARMM_GUI_base {
     @Override
     public void initializeData() {
         
-//        logger.info(out.get(0).getTextOut());
-//        logger.info(out.get(1).getTextOut());
-        
         out_left.setText(out.get(0).getTextOut());
         out_right.setText(out.get(1).getTextOut());
         
         LabelLeft.setText(LabelLeft.getText() + " " + out.get(0).getType() );
         LabelRight.setText(LabelRight.getText() + " " + out.get(1).getType() );
-        
-//        out_left.setEditable(false);
-//        out_right.setEditable(false);
         
         if (out.get(0).getErrorOccured())
         {

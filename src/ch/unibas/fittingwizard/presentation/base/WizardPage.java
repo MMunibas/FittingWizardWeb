@@ -83,8 +83,8 @@ public abstract class WizardPage<TParam> extends VBox {
     }
 
     /**
-     * Gets the content of the view. <br/>
-     * By default the controller tries to load a FXML file with the following naming convention:<br/>
+     * Gets the content of the view. 
+     * By default the controller tries to load a FXML file with the following naming convention:
      * <b>ControllerSimpleName + .fxml</b>
      * @return
      */
