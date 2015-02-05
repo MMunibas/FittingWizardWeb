@@ -143,7 +143,8 @@ public abstract class CHARMM_Input implements CHARMM_InOut{
      *
      * @return The content of the built input file, for example for editing purposes
      */
-    public String getContentOfInputFile() {
+    @Override
+    public String getText() {
         return writer.toString();
     }
 

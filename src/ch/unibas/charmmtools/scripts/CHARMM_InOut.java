@@ -13,5 +13,5 @@ package ch.unibas.charmmtools.scripts;
  * @author hedin
  */
 public interface CHARMM_InOut {
-    
+    public String getText();
 }

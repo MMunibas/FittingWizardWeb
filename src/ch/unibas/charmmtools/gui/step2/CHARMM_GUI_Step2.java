@@ -67,8 +67,8 @@ public class CHARMM_GUI_Step2 extends CHARMM_GUI_base {
     @Override
     public void initializeData() {
         
-        out_left.setText(out.get(0).getTextOut());
-        out_right.setText(out.get(1).getTextOut());
+        out_left.setText(out.get(0).getText());
+        out_right.setText(out.get(1).getText());
         
         LabelLeft.setText(LabelLeft.getText() + " " + out.get(0).getType() );
         LabelRight.setText(LabelRight.getText() + " " + out.get(1).getType() );

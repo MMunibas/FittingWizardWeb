@@ -54,7 +54,7 @@
                <font>
                   <Font name="System Bold" size="18.0" />
                </font></Label>
-            <Button mnemonicParsing="false" text="Calculate" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+            <Button fx:id="calculate_b" mnemonicParsing="false" onAction="#calculateValues" text="Calculate" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
             <Label text="Molar mass (g/mol)" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                <font>
                   <Font size="15.0" />
@@ -65,12 +65,12 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextField text="Please enter Temperature" GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <TextField fx:id="temp_field" promptText="Please enter Temperature" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <TextField layoutX="394.0" layoutY="107.0" text="Please enter Molar mass" GridPane.columnIndex="2" GridPane.rowIndex="2">
+            <TextField fx:id="mmass_field" layoutX="394.0" layoutY="107.0" promptText="Please enter Molar mass" GridPane.columnIndex="2" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
@@ -85,7 +85,7 @@
                   <Font name="System Bold" size="17.0" />
                </font>
             </Label>
-            <TextField layoutX="300.0" layoutY="180.0" text="Please enter Number of Residues" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+            <TextField fx:id="nres_field" layoutX="300.0" layoutY="180.0" promptText="Please enter Number of Residues" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>

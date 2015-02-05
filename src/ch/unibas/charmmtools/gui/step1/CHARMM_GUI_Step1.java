@@ -106,10 +106,10 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
             }
         }
         
-        textarea_left.setText(inp.get(0).getContentOfInputFile());
+        textarea_left.setText(inp.get(0).getText());
         textarea_left.setEditable(true);
 
-        textarea_right.setText(inp.get(1).getContentOfInputFile());
+        textarea_right.setText(inp.get(1).getText());
         textarea_right.setEditable(true);
 
         RedLabel_Notice.setText("Error while running CHARMM ! Please modify input file(s) !");
@@ -282,8 +282,8 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
                 throw new UnknownError("Unknown error related to selection of radio buttons.");
             }
 
-            textarea_left.setText(inp.get(0).getContentOfInputFile());
-            textarea_right.setText(inp.get(1).getContentOfInputFile());
+            textarea_left.setText(inp.get(0).getText());
+            textarea_right.setText(inp.get(1).getText());
 
             RedLabel_Notice.setVisible(true);
 
@@ -436,7 +436,7 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
             if (selectedFile != null) {
                 try {
                     buffw = new BufferedWriter(new FileWriter(selectedFile));
-                    buffw.write(ip.getContentOfInputFile());
+                    buffw.write(ip.getText());
                     buffw.close();
                 } catch (IOException ex) {
                     logger.error("IOException raised whene generating CHARMM inputfile : " + ex.getMessage());

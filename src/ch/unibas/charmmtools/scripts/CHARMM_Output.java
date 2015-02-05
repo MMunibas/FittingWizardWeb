@@ -31,16 +31,6 @@ public abstract class CHARMM_Output implements CHARMM_InOut{
     private Boolean errorOccured = false;
     private final static String hasFailed = "NORMAL TERMINATION BY NORMAL STOP";
     
-    /*
-     * Those values are parsed from the output file as the may be reallu useful later
-     */
-    // boltzmann constant in kcal/mol-1/k-1
-    private final static double kBoltz = 0.0019872041;
-    private final static String find_temp = "FINALT =";
-    private double temp;
-    private final static String find_nres = "Number of residues";
-    private double nres;
-    
     public CHARMM_Output(File _charmmout, String _type){
         
         fileOut = _charmmout;
@@ -65,14 +55,15 @@ public abstract class CHARMM_Output implements CHARMM_InOut{
     /**
      * @return the textOut
      */
-    public String getTextOut() {
+    @Override
+    public String getText() {
         return textOut;
     }
 
     /**
      * @return the fileOut
      */
-    public File getFileOut() {
+    public File getFile() {
         return fileOut;
     }
 
