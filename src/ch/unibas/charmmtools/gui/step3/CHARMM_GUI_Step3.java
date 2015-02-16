@@ -8,6 +8,7 @@
  */
 package ch.unibas.charmmtools.gui.step3;
 
+import au.com.bytecode.opencsv.CSVWriter;
 import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
 import ch.unibas.charmmtools.gui.step2.CHARMM_GUI_Step2;
 import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_Step1;
@@ -18,6 +19,11 @@ import ch.unibas.charmmtools.scripts.CHARMM_Output_GasPhase;
 import ch.unibas.charmmtools.scripts.CHARMM_Output_PureLiquid;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.event.ActionEvent;
@@ -25,6 +31,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
 
 /**
  *
@@ -34,7 +42,7 @@ public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
 
     private static final String title = "LJ fitting procedure Step 3 : Results";
     
-    private Button backStep1,backStep2;
+    private Button backStep1,backStep2,saveToFile;
     
     /*
      * Those values are parsed from the output file as the may be useful later
@@ -125,6 +133,15 @@ public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
             }
         });
         addButtonToButtonBar(backStep2);
+        
+        saveToFile = ButtonFactory.createButtonBarButton("Save to file", new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                logger.info("Saving to *.csv file");
+                exportResultsCSV();
+            }
+        });
+        addButtonToButtonBar(saveToFile);
 
     }
     
@@ -238,6 +255,45 @@ public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
         dhvap_field.setText(Double.toString(deltaH));
     }
     
+    private void exportResultsCSV()
+    {
+        String fname = "density_and_DHVap.csv";
+        File outf = null;
+        
+        Window myParent = calculate_b.getScene().getWindow();
+        FileChooser chooser = new FileChooser();
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Comma-separated values file (*.csv)", "*.csv"));
+        chooser.setInitialFileName("density_and_DHVap.csv");
+        chooser.setTitle("Exporting data for Density and DHVap calculations ...");
+        
+//        chooser.setInitialDirectory(new File("test"));
+        
+        outf = chooser.showSaveDialog(myParent);
+        
+        Writer wr = null;
+        try {
+            wr = new BufferedWriter(new FileWriter(outf));
+        } catch (IOException ex) {
+            this.logger.error("IOException while trying to create file " + outf.getName() + " : " + ex.getMessage());
+        }
+        
+        CSVWriter csvw = new CSVWriter(wr);
+        
+        try {  
+            final String[] array1 = {"e_gas(kcal/mol)","e_liquid(kcal/mol)","temperature(K)","molar_mass(g/mol)",
+                                    "density(g/cm^3)","delta_H_vap(kcal/mol)"};
+            csvw.writeNext(array1);
+
+            final String[] array2 = {Double.toString(egas),Double.toString(eliq),Double.toString(temp),
+                                    Double.toString(mmass),Double.toString(density),Double.toString(deltaH)};
+            csvw.writeNext(array2);
+        
+            csvw.close();
+        } catch (IOException ex) {
+            this.logger.error("IOException while exporting csv file " + outf.getName() + " : " + ex.getMessage());
+        }
+        
+    }
     
 }//class
     
