@@ -1,5 +1,6 @@
 /data
 /doc/html
+/doc/*.png
 /lib/jython/cachedir
 /nbproject/private
 /build

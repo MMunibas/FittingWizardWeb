@@ -145,7 +145,7 @@
                         <ToggleGroup fx:id="toggle_radio" />
                      </toggleGroup>
                   </RadioButton>
-                  <RadioButton fx:id="radio_DG_hydration" disable="true" mnemonicParsing="false" prefHeight="22.0" prefWidth="292.0" text="DG Hydration" textAlignment="CENTER" toggleGroup="$toggle_radio" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                  <RadioButton fx:id="radio_DG_hydration" mnemonicParsing="false" prefHeight="22.0" prefWidth="292.0" text="DG Hydration" textAlignment="CENTER" toggleGroup="$toggle_radio" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                      </GridPane.margin>

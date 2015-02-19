@@ -103,7 +103,9 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
             } else if (sc == CHARMM_Output.class) {
                 out.add((CHARMM_Output) ioListIt);
             } else {
-                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : get " + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class + " or " + CHARMM_Output.class);
+                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : get " +
+                        ioListIt.getClass() + " but expected types are " + CHARMM_Input.class +
+                        " or " + CHARMM_Output.class);
             }
         }
         
@@ -183,7 +185,8 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
     private void validateButtonGenerate() {
         button_generate.setDisable(true);
 
-        if (PAR_selected == true && RTF_selected == true && COR_selected_gas == true && COR_selected_liquid == true && LPUN_selected == true) {
+        if (PAR_selected == true && RTF_selected == true && COR_selected_gas == true &&
+                COR_selected_liquid == true && LPUN_selected == true) {
             button_generate.setDisable(false);
         }
     }
@@ -403,7 +406,7 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
         button_run_CHARMM.setText("Run CHARMM");
 
         radio_dens_vap.setDisable(false);
-//        radio_DG_hydration.setDisable(false);
+        radio_DG_hydration.setDisable(false);
 
         inp.clear();
         out.clear();
