@@ -193,6 +193,8 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
         dens_vap_required = radio_dens_vap.isSelected();
         DG_hydration_required = radio_DG_hydration.isSelected();
         
+        this.ToggleObservable(new ActionEvent());
+        
     }
 
     /**
@@ -233,6 +235,8 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
             gpane_textareas.getColumnConstraints().addAll(col_left,col_right);
             gpane_textareas.addRow(0, textarea_left,textarea_right);
             
+            COR_selected_solv = true;
+            
         } else if(toggle_radio.getSelectedToggle().equals(radio_DG_hydration)){
             
             later_COR_solv.setSelected(false);
@@ -262,7 +266,7 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
 
         Window myParent = button_generate.getScene().getWindow();
         FileChooser chooser = new FileChooser();
-//        chooser.setInitialDirectory(new File("test"));
+        chooser.setInitialDirectory(new File("test"));
         File selectedFile = null;
 
         chooser.setTitle("Open File");
@@ -350,6 +354,8 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
             if (dens_vap_required) {
                 inp.add(0, new CHARMM_Input_GasPhase(corname_gas, rtfname, parname, lpunname));
                 inp.add(1, new CHARMM_Input_PureLiquid(corname_liquid, rtfname, parname, lpunname));
+                textarea_left.setText(inp.get(0).getText());
+                textarea_right.setText(inp.get(1).getText());
             } else if (DG_hydration_required){
                 /* TODO */
             } else {
@@ -357,8 +363,7 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
                 throw new UnknownError("Unknown error related to selection of radio buttons.");
             }
 
-            textarea_left.setText(inp.get(0).getText());
-            textarea_right.setText(inp.get(1).getText());
+
 
             RedLabel_Notice.setVisible(true);
 
