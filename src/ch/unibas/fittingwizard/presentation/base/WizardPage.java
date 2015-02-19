@@ -25,7 +25,8 @@ import javafx.scene.layout.VBox;
 import org.apache.log4j.Logger;
 
 
-/** basic wizard page class */
+/** basic wizard page class
+ * @param <TParam> */
 public abstract class WizardPage<TParam> extends VBox {
 
     protected final Logger logger;

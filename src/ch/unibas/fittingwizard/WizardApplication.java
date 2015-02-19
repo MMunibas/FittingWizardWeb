@@ -52,11 +52,11 @@ public class WizardApplication extends Application {
         try {
             Parent root = this.setupWizard(primaryStage);
 
-            Scene scene = new Scene(root, 1400, 900);
+            Scene scene = new Scene(root);
             primaryStage.centerOnScreen();
-            primaryStage.setMinWidth(1024);
-            primaryStage.setMinHeight(600);
-            primaryStage.setResizable(true);
+//            primaryStage.setMinWidth(1024);
+//            primaryStage.setMinHeight(600);
+            primaryStage.setResizable(false);
 
             this.loadStylesheets(scene);
             primaryStage.setScene(scene);

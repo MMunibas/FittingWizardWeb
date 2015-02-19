@@ -68,7 +68,7 @@ import ch.unibas.fittingwizard.presentation.fitting.RunningFitPage;
 import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_Step1;
 import ch.unibas.charmmtools.gui.step2.CHARMM_GUI_Step2;
 import ch.unibas.charmmtools.gui.step3.CHARMM_GUI_Step3;
-import ch.unibas.charmmtools.gui.RunningCHARMM;
+import ch.unibas.charmmtools.workflows.RunningCHARMM;
 import ch.unibas.charmmtools.scripts.CHARMM_InOut;
 import ch.unibas.charmmtools.scripts.ICHARMMScript;
 import ch.unibas.charmmtools.scripts.RealCHARMMScript;

@@ -33,6 +33,7 @@ public abstract class CHARMM_GUI_base extends WizardPage{
     public CHARMM_GUI_base(String title, RunCHARMMWorkflow flow) {
         super(title);
         this.charmmWorkflow = flow;
+        this.logger.info("Style for class : '" + this.getClass().toGenericString() + "' is : " + this.getStyle());
     }
 
 

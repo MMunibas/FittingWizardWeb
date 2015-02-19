@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.gui;
+package ch.unibas.charmmtools.workflows;
 
 import ch.unibas.charmmtools.gui.step2.CHARMM_GUI_Step2;
 import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_Step1;
