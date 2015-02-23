@@ -71,7 +71,8 @@ import ch.unibas.charmmtools.gui.step3.CHARMM_GUI_Step3;
 import ch.unibas.charmmtools.workflows.RunningCHARMM;
 import ch.unibas.charmmtools.scripts.CHARMM_InOut;
 import ch.unibas.charmmtools.scripts.ICHARMMScript;
-import ch.unibas.charmmtools.scripts.RealCHARMMScript;
+import ch.unibas.charmmtools.scripts.CHARMMScript_Den_Vap;
+import ch.unibas.charmmtools.scripts.CHARMMScript_DG;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import java.util.List;
 
@@ -101,13 +102,13 @@ public class WizardPageFactory {
     private IFitMtpScript fitMtpScript;
     private IExportScript exportScript;
     private IVmdDisplayScript vmdScript;
-    private ICHARMMScript charmmScript;
+    private ICHARMMScript charmmScript_Den_Vap, charmmScript_DG;
 
     private RunFitWorkflow runFitWorkflow;
     private ExportFitWorkflow exportFitWorkflow;
     private RunGaussianWorkflow runGaussianWorkflow;
     private RunVmdDisplayWorkflow vmdDisplayWorkflow;
-    private RunCHARMMWorkflow charmmWorkflow;
+    private RunCHARMMWorkflow charmmWorkflow_Den_Vap, charmmWorkflow_DG;
 
     public WizardPageFactory(Stage primaryStage) {
         initializeDependencies(primaryStage);
@@ -162,7 +163,8 @@ public class WizardPageFactory {
             gaussScript = new RealMultipoleGaussScript(moleculesDir, settings);
         }
         
-        charmmScript = new RealCHARMMScript(sessionDir, settings);
+        charmmScript_Den_Vap = new CHARMMScript_Den_Vap(sessionDir, settings);
+        charmmScript_DG = new CHARMMScript_DG(sessionDir, settings);
 
     }
 
@@ -183,7 +185,8 @@ public class WizardPageFactory {
 
         vmdDisplayWorkflow = new RunVmdDisplayWorkflow(vmdScript, sessionDir);
         
-        charmmWorkflow = new RunCHARMMWorkflow(charmmScript);
+        charmmWorkflow_Den_Vap = new RunCHARMMWorkflow(charmmScript_Den_Vap);
+        charmmWorkflow_DG = new RunCHARMMWorkflow(charmmScript_DG);
     }
 
     public <T extends WizardPage> WizardPage create(Class<T> type, Object parameter) {
@@ -233,24 +236,24 @@ public class WizardPageFactory {
             // CHARMM FITTING PAGES
             else if (type == CHARMM_GUI_Step1.class) {
                 if(parameter==null)
-                    page = new CHARMM_GUI_Step1(charmmWorkflow);
+                    page = new CHARMM_GUI_Step1(charmmWorkflow_Den_Vap);
                 else{
                     List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
-                    page = new CHARMM_GUI_Step1(charmmWorkflow,ioList);
+                    page = new CHARMM_GUI_Step1(charmmWorkflow_Den_Vap,ioList);
                 }
             } 
             else if (type == RunningCHARMM.class) {
                 List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
-                page = new RunningCHARMM(charmmWorkflow,ioList);
+                page = new RunningCHARMM(charmmWorkflow_Den_Vap,ioList);
                 
             }
             else if (type == CHARMM_GUI_Step2.class) {
                 List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
-                page = new CHARMM_GUI_Step2(charmmWorkflow,ioList);
+                page = new CHARMM_GUI_Step2(charmmWorkflow_Den_Vap,ioList);
             } 
             else if (type == CHARMM_GUI_Step3.class) {
                 List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
-                page = new CHARMM_GUI_Step3(charmmWorkflow,ioList);
+                page = new CHARMM_GUI_Step3(charmmWorkflow_Den_Vap,ioList);
             } 
             // MISC
             else {

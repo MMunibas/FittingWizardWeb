@@ -13,8 +13,6 @@ import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_Step1;
 import ch.unibas.charmmtools.scripts.CHARMM_InOut;
 import ch.unibas.charmmtools.scripts.CHARMM_Input;
 import ch.unibas.charmmtools.scripts.CHARMM_Output;
-import ch.unibas.charmmtools.scripts.RealCHARMMScript;
-import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.application.workflows.base.WorkflowContext;
 import ch.unibas.fittingwizard.presentation.base.progress.Context;
 import ch.unibas.fittingwizard.presentation.base.progress.ProgressPage;

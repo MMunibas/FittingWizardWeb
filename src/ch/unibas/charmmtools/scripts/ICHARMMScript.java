@@ -9,6 +9,7 @@
 package ch.unibas.charmmtools.scripts;
 
 import ch.unibas.fittingwizard.application.scripts.base.IScript;
+import java.io.File;
 
 
 /**
@@ -20,11 +21,9 @@ public interface ICHARMMScript extends IScript<CHARMM_Input, CHARMM_Output> {
     // prepare all required data
     public void prepareData();
     
-    // prepare python call -- implicit output file
-    public void preparePython(String inpPath, String parPath, String topPath, String lpunPath);
-    
-    // prepare python call -- explicit output file
-    public void preparePython(String inpPath, String outPath, String parPath, String topPath, String lpunPath);
+    // prepare python call
+    public void prepare_Python(CHARMM_Input input, File output);
+
     
     /**
      * @return the ScriptFile name
