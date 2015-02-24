@@ -93,7 +93,7 @@ public class CHARMM_GUI_Step2 extends CHARMM_GUI_base {
     @Override
     protected void fillButtonBar() {
         
-        backStep1 = ButtonFactory.createButtonBarButton("Back to INPUT file build", new EventHandler<ActionEvent>(){
+        backStep1 = ButtonFactory.createButtonBarButton("Back to ρ and ΔH input assistant", new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent actionEvent) {
                 List<CHARMM_InOut> myList = new ArrayList<>();

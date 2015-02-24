@@ -222,6 +222,7 @@ public abstract class CHARMM_Input implements CHARMM_InOut{
     /**
      * @return the type
      */
+    @Override
     public String getType() {
         return type;
     }

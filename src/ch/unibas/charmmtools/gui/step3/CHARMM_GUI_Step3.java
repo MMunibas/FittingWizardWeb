@@ -17,6 +17,7 @@ import ch.unibas.charmmtools.generate.CHARMM_Input;
 import ch.unibas.charmmtools.generate.CHARMM_Output;
 import ch.unibas.charmmtools.generate.CHARMM_Output_GasPhase;
 import ch.unibas.charmmtools.generate.CHARMM_Output_PureLiquid;
+import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Step4;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import java.io.BufferedWriter;
@@ -42,7 +43,7 @@ public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
 
     private static final String title = "LJ fitting procedure Step 3 : Results";
     
-    private Button backStep1,backStep2,saveToFile;
+    private Button backStep1,backStep2,saveToFile,gotoStep4;
     
     /*
      * Those values are parsed from the output file as the may be useful later
@@ -110,7 +111,7 @@ public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
 
     @Override
     protected void fillButtonBar() {
-        backStep1 = ButtonFactory.createButtonBarButton("Back to INPUT file build", new EventHandler<ActionEvent>(){
+        backStep1 = ButtonFactory.createButtonBarButton("Back to ρ and ΔH input assistant", new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent actionEvent) {
                 List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
@@ -122,7 +123,7 @@ public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
         });
         addButtonToButtonBar(backStep1);
         
-        backStep2 = ButtonFactory.createButtonBarButton("Back to OUTPUT file ", new EventHandler<ActionEvent>(){
+        backStep2 = ButtonFactory.createButtonBarButton("Back to ρ and ΔH output", new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent actionEvent) {
                 List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
@@ -142,6 +143,15 @@ public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
             }
         });
         addButtonToButtonBar(saveToFile);
+        
+        gotoStep4 = ButtonFactory.createButtonBarButton("Next step : ΔG solvation", new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                logger.info("Going to Step 4 : ΔG of solvation input assistant");
+                navigateTo(CHARMM_GUI_Step4.class,null);
+            }
+        });
+        addButtonToButtonBar(gotoStep4);
 
     }
     

@@ -77,6 +77,7 @@ public abstract class CHARMM_Output implements CHARMM_InOut{
     /**
      * @return the type
      */
+    @Override
     public String getType() {
         return type;
     }
