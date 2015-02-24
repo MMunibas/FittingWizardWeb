@@ -188,7 +188,7 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
 
         Window myParent = button_generate.getScene().getWindow();
         FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(new File("test"));
+        chooser.setInitialDirectory(new File("."));
         File selectedFile = null;
 
         chooser.setTitle("Open File");
@@ -253,7 +253,7 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
 
             // if empty filenames print a pattern user should modify
             //transform it to relative path instead as we have to send data to clusters later
-            String folderPath = new File("test").getAbsolutePath();
+            String folderPath = new File(".").getAbsolutePath();
             corname_gas = corname_gas.length() == 0 ? "ADD_HERE_PATH_TO_COORDINATES_GAS_FILE" : ResourceUtils.getRelativePath(corname_gas, folderPath);
             corname_liquid = corname_liquid.length() == 0 ? "ADD_HERE_PATH_TO_COORDINATES_LIQUID_FILE" : ResourceUtils.getRelativePath(corname_liquid, folderPath);
             rtfname = rtfname.length() == 0 ? "ADD_HERE_PATH_TO_TOPOLOGY_FILE" : ResourceUtils.getRelativePath(rtfname, folderPath);

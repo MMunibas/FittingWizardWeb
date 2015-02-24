@@ -19,11 +19,15 @@ import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -59,6 +63,9 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
     //where the generated input files are added
     @FXML
     private TabPane tab_pane;
+
+    @FXML
+    private TextField lambda_min, lambda_space, lambda_max;
 
     // those buttons are NOT exposed to FXML but handled locally with fillbuttonbar
     private Button button_reset;
@@ -103,11 +110,6 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
             tab_pane.getTabs().addAll(tabsList);
         }
 
-//        textarea_left.setText(inp.get(0).getText());
-//        textarea_left.setEditable(true);
-//
-//        textarea_right.setText(inp.get(1).getText());
-//        textarea_right.setEditable(true);
 //        button_save_to_file.setDisable(false);
         textfield_PAR.setDisable(true);
         textfield_RTF.setDisable(true);
@@ -160,6 +162,48 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
         COR_selected_solv = false;
         LPUN_selected = false;
 
+        lambda_min.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (Double.valueOf(newValue) < 0.0) {
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Error with λ min value !");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Please choose a λ min not less than 0.0 !");
+                    alert.showAndWait();
+                    lambda_min.setText("0.0");
+                }
+            }
+        });
+
+        lambda_max.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (Double.valueOf(newValue) > 1.0) {
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Error with λ max value !");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Please choose a λ max not larger than 1.0 !");
+                    alert.showAndWait();
+                    lambda_max.setText("1.0");
+                }
+            }
+        });
+
+        lambda_space.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (Double.valueOf(newValue) >= Double.valueOf(lambda_max.getText())) {
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Error with λ space value !");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Please choose a λ space value smaller than λ max !");
+                    alert.showAndWait();
+                    lambda_space.setText("0.1");
+                }
+            }
+        });
+
     }
 
 //    @Override
@@ -188,7 +232,7 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 
         Window myParent = button_generate.getScene().getWindow();
         FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(new File("test"));
+        chooser.setInitialDirectory(new File("."));
         File selectedFile = null;
 
         chooser.setTitle("Open File");
@@ -243,47 +287,34 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
     protected void GenerateInputFile() {
 
 //        try {
+        // get filenames
+        String corname_solu = textfield_COR_solu.getText();
+        String corname_solv = textfield_COR_solv.getText();
+        String rtfname = textfield_RTF.getText();
+        String parname = textfield_PAR.getText();
+        String lpunname = textfield_LPUN.getText();
 
-            // get filenames
-            String corname_solu = textfield_COR_solu.getText();
-            String corname_solv = textfield_COR_solv.getText();
-            String rtfname = textfield_RTF.getText();
-            String parname = textfield_PAR.getText();
-            String lpunname = textfield_LPUN.getText();
+        // if empty filenames print a pattern user should modify
+        //transform it to relative path instead as we have to send data to clusters later
+        String folderPath = new File(".").getAbsolutePath();
+        corname_solu = corname_solu.length() == 0 ? "ADD_HERE_PATH_TO_COORDINATES_LIQUID_FILE" : ResourceUtils.getRelativePath(corname_solu, folderPath);
+        corname_solv = corname_solv.length() == 0 ? "ADD_HERE_PATH_TO_COORDINATES_SOLVENT_FILE" : ResourceUtils.getRelativePath(corname_solv, folderPath);
+        rtfname = rtfname.length() == 0 ? "ADD_HERE_PATH_TO_TOPOLOGY_FILE" : ResourceUtils.getRelativePath(rtfname, folderPath);
+        parname = parname.length() == 0 ? "ADD_HERE_PATH_TO_PARAMETERS_FILE" : ResourceUtils.getRelativePath(parname, folderPath);
+        lpunname = lpunname.length() == 0 ? "ADD_HERE_PATH_TO_LPUN_FILE" : ResourceUtils.getRelativePath(lpunname, folderPath);
 
-            // if empty filenames print a pattern user should modify
-            //transform it to relative path instead as we have to send data to clusters later
-            String folderPath = new File("test").getAbsolutePath();
-            corname_solu = corname_solu.length() == 0 ? "ADD_HERE_PATH_TO_COORDINATES_LIQUID_FILE" : ResourceUtils.getRelativePath(corname_solu, folderPath);
-            corname_solv = corname_solv.length() == 0 ? "ADD_HERE_PATH_TO_COORDINATES_SOLVENT_FILE" : ResourceUtils.getRelativePath(corname_solv, folderPath);
-            rtfname = rtfname.length() == 0 ? "ADD_HERE_PATH_TO_TOPOLOGY_FILE" : ResourceUtils.getRelativePath(rtfname, folderPath);
-            parname = parname.length() == 0 ? "ADD_HERE_PATH_TO_PARAMETERS_FILE" : ResourceUtils.getRelativePath(parname, folderPath);
-            lpunname = lpunname.length() == 0 ? "ADD_HERE_PATH_TO_LPUN_FILE" : ResourceUtils.getRelativePath(lpunname, folderPath);
+        tabsList.add(new MyTab(corname_solu, corname_solu));
+        tabsList.add(new MyTab(corname_solv, corname_solv));
+        tabsList.add(new MyTab(rtfname, rtfname));
+        tabsList.add(new MyTab(parname, parname));
+        tabsList.add(new MyTab(lpunname, lpunname));
 
-            tabsList.add(new MyTab(corname_solu,corname_solu));
-            tabsList.add(new MyTab(corname_solv,corname_solv));
-            tabsList.add(new MyTab(rtfname,rtfname));
-            tabsList.add(new MyTab(parname,parname));
-            tabsList.add(new MyTab(lpunname,lpunname));
-            
-            boolean addTabsSuccess = tab_pane.getTabs().addAll(tabsList);
-            if(!addTabsSuccess)
-            {
-                logger.error("Problem while adding tabs to current window ; try again ... ");
-            }
-            else
-                button_generate.setDisable(addTabsSuccess);
-            
-//            inp.add(0, new CHARMM_Input_GasPhase(corname_gas, rtfname, parname, lpunname));
-//            inp.add(1, new CHARMM_Input_PureLiquid(corname_solu, rtfname, parname, lpunname));
-//            textarea_left.setText(inp.get(0).getText());
-//            textarea_right.setText(inp.get(1).getText());
-            
-            
-
-//        } catch (IOException ex) {
-//            logger.error(ex);
-//        }
+        boolean addTabsSuccess = tab_pane.getTabs().addAll(tabsList);
+        if (!addTabsSuccess) {
+            logger.error("Problem while adding tabs to current window ; try again ... ");
+        } else {
+            button_generate.setDisable(addTabsSuccess);
+        }
 
         /**
          * If success enable button for saving
@@ -341,9 +372,6 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
         later_COR_solv.setDisable(false);
         later_LPUN.setDisable(false);
 
-        //clear textcontent
-//        textarea_left.clear();
-//        textarea_right.clear();
         textfield_PAR.clear();
         textfield_RTF.clear();
         textfield_COR_solu.clear();
@@ -390,10 +418,13 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
         out.clear();
         CHARMM_inFile.clear();
         CHARMM_outFile.clear();
-        
+
         tabsList.clear();
         tab_pane.getTabs().clear();
 
+        lambda_min.setText("0.0");
+        lambda_space.setText("0.1");
+        lambda_max.setText("1.0");
     }
 
 //    protected void SaveToFile(ActionEvent event) {
