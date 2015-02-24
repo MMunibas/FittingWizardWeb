@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.scripts;
+package ch.unibas.charmmtools.generate;
 
 import java.io.File;
 
@@ -14,10 +14,10 @@ import java.io.File;
  *
  * @author hedin
  */
-public class CHARMM_Output_PureLiquid extends CHARMM_Output{
+public class CHARMM_Output_DGHydr extends CHARMM_Output{
 
-    public CHARMM_Output_PureLiquid(File charmmout) {
-        super(charmmout,"Pure Liquid");
+    public CHARMM_Output_DGHydr(File _charmmout) {
+        super(_charmmout, "DeltaG of Hydration");
     }
     
 }

@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.scripts;
+package ch.unibas.charmmtools.generate;
 
 import java.io.File;
 import java.io.IOException;

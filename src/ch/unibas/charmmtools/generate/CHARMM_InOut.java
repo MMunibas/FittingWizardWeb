@@ -6,18 +6,12 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.scripts;
-
-import java.io.File;
+package ch.unibas.charmmtools.generate;
 
 /**
  *
  * @author hedin
  */
-public class CHARMM_Output_GasPhase extends CHARMM_Output{
-
-    public CHARMM_Output_GasPhase(File charmmout) {
-        super(charmmout,"Gas Phase");
-    }
-    
+public interface CHARMM_InOut {
+    public String getText();
 }

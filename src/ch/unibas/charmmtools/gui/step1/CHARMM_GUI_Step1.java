@@ -10,11 +10,11 @@ package ch.unibas.charmmtools.gui.step1;
 
 import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
 import ch.unibas.charmmtools.workflows.RunningCHARMM;
-import ch.unibas.charmmtools.scripts.CHARMM_InOut;
-import ch.unibas.charmmtools.scripts.CHARMM_Input;
-import ch.unibas.charmmtools.scripts.CHARMM_Input_GasPhase;
-import ch.unibas.charmmtools.scripts.CHARMM_Input_PureLiquid;
-import ch.unibas.charmmtools.scripts.CHARMM_Output;
+import ch.unibas.charmmtools.generate.CHARMM_InOut;
+import ch.unibas.charmmtools.generate.CHARMM_Input;
+import ch.unibas.charmmtools.generate.CHARMM_Input_GasPhase;
+import ch.unibas.charmmtools.generate.CHARMM_Input_PureLiquid;
+import ch.unibas.charmmtools.generate.CHARMM_Output;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
@@ -357,7 +357,7 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
                 textarea_left.setText(inp.get(0).getText());
                 textarea_right.setText(inp.get(1).getText());
             } else if (DG_hydration_required){
-                /* TODO */
+                //navigateTo(RunningCHARMM.class, myList);
             } else {
                 logger.error("The impossible happened : unable to determine which radio button was selected !");
                 throw new UnknownError("Unknown error related to selection of radio buttons.");

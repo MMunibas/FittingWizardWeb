@@ -8,6 +8,12 @@
  */
 package ch.unibas.charmmtools.scripts;
 
+import ch.unibas.charmmtools.generate.CHARMM_Output_PureLiquid;
+import ch.unibas.charmmtools.generate.CHARMM_Output;
+import ch.unibas.charmmtools.generate.CHARMM_Output_GasPhase;
+import ch.unibas.charmmtools.generate.CHARMM_Input;
+import ch.unibas.charmmtools.generate.CHARMM_Input_PureLiquid;
+import ch.unibas.charmmtools.generate.CHARMM_Input_GasPhase;
 import ch.unibas.fittingwizard.Settings;
 import java.io.File;
 

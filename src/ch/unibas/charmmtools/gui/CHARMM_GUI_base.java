@@ -8,8 +8,8 @@
  */
 package ch.unibas.charmmtools.gui;
 
-import ch.unibas.charmmtools.scripts.CHARMM_Input;
-import ch.unibas.charmmtools.scripts.CHARMM_Output;
+import ch.unibas.charmmtools.generate.CHARMM_Input;
+import ch.unibas.charmmtools.generate.CHARMM_Output;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.presentation.base.WizardPage;
 import java.io.File;

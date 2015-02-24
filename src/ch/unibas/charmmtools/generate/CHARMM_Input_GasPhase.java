@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.scripts;
+package ch.unibas.charmmtools.generate;
 
 import java.io.BufferedWriter;
 import java.io.CharArrayWriter;
@@ -37,24 +37,8 @@ public class CHARMM_Input_GasPhase extends CHARMM_Input {
         
         writer = new CharArrayWriter();
         
-        //prepare and print title
-        this.print_title();
-
-        //prepare and print io section
-        this.print_ioSection();
-        
-        //if necessary convert coordinates file before
-        this.convertCoordinates();
-        this.print_corSection();
-
-        //prepare non bonded parameters line and print it
-        this.print_nbondsSection();
-
-        this.print_ShakeSection();
-
-        this.print_MiniSection();
-        this.print_DynaSection();
-        this.print_StopSection();
+        //build the input file by calling all the print_* sections
+        this.build();
 
     }
 
@@ -72,28 +56,9 @@ public class CHARMM_Input_GasPhase extends CHARMM_Input {
         super(_cor, _top, _par, _outf, "Gas Phase");
         
         writer = new BufferedWriter(new FileWriter(_outf));
-
-        //if necessary convert coordinates file before
-        this.convertCoordinates();
         
-        //prepare and print title
-        this.print_title();
-
-        //prepare and print io section
-        this.print_ioSection();
-
-        //if necessary convert coordinates file before
-        this.convertCoordinates();
-        this.print_corSection();
-
-        //prepare non bonded parameters line and print it
-        this.print_nbondsSection();
-
-        this.print_ShakeSection();
-
-        this.print_MiniSection();
-        this.print_DynaSection();
-        this.print_StopSection();
+        //build the input file by calling all the print_* sections
+        this.build();
 
         writer.close();
 
@@ -114,31 +79,9 @@ public class CHARMM_Input_GasPhase extends CHARMM_Input {
         super(_cor, _top, _par, _lpun, "Gas Phase");
         
         writer = new CharArrayWriter();
-
-        //if necessary convert coordinates file before
-        this.convertCoordinates();
         
-        //prepare and print title
-        this.print_title();
-
-        //prepare and print io section
-        this.print_ioSection();
-
-        //if necessary convert coordinates file before
-        this.convertCoordinates();
-        this.print_corSection();
-
-        //prepare non bonded parameters line and print it
-        this.print_nbondsSection();
-
-        this.print_ShakeSection();
-
-        //add section with lpun file
-        this.print_lpunfile();
-
-        this.print_MiniSection();
-        this.print_DynaSection();
-        this.print_StopSection();
+        //build the input file by calling all the print_* sections
+        this.build();
 
     }
 
@@ -158,18 +101,21 @@ public class CHARMM_Input_GasPhase extends CHARMM_Input {
         super(_cor, _top, _par, _lpun, _outf, "Gas Phase");
         
         writer = new BufferedWriter(new FileWriter(_outf));
-
-        //if necessary convert coordinates file before
-        this.convertCoordinates();
         
+        //build the input file by calling all the print_* sections
+        this.build();
+
+        writer.close();
+
+    }
+    
+    @Override
+    protected void build() throws IOException {
         //prepare and print title
         this.print_title();
 
         //prepare and print io section
         this.print_ioSection();
-
-        //if necessary convert coordinates file before
-        this.convertCoordinates();
         this.print_corSection();
 
         //prepare non bonded parameters line and print it
@@ -177,15 +123,9 @@ public class CHARMM_Input_GasPhase extends CHARMM_Input {
 
         this.print_ShakeSection();
 
-        //add section with lpun file
-        this.print_lpunfile();
-
         this.print_MiniSection();
         this.print_DynaSection();
         this.print_StopSection();
-
-        writer.close();
-
     }
     
     /**
@@ -243,11 +183,6 @@ public class CHARMM_Input_GasPhase extends CHARMM_Input {
         writer.write("\t" + "IPRFRQ 0 INBFRQ -1 IMGFRQ 250 -" + "\n");
         writer.write("\t" + "TBATH 0. RBUF 0. ILBFRQ 10 FIRSTT 0. -" + "\n");
         writer.write("\t" + "NPRINT 1000 NSAVC -1" + "\n\n");
-    }
-    
-    @Override
-    protected void convertCoordinates(){
-        
     }
         
 }//end of class

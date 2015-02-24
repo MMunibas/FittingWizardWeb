@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.scripts;
+package ch.unibas.charmmtools.generate;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,6 +73,11 @@ public abstract class CHARMM_Input implements CHARMM_InOut{
         this.out = _outf;
         this.type = _type;
     }
+    /**
+     * Calls all the print_* sections for effectively creating an input file either in a String or directly to a file depending on the constructor that was initially called
+     * @throws java.io.IOException
+     */
+    protected abstract void build() throws IOException;
             
     /**
      * Creates the header part of charmm input file, i.e. containing a title and bomlev and prnlev parameters
@@ -119,7 +124,7 @@ public abstract class CHARMM_Input implements CHARMM_InOut{
     
     /**
      * Creates the section where nonbonded parameters are defined
-     *
+     * Abstract because this may vary a lot between the different types of simulations
      * @throws IOException
      */
     protected abstract void print_nbondsSection() throws IOException;
@@ -128,10 +133,25 @@ public abstract class CHARMM_Input implements CHARMM_InOut{
         writer.write("SHAKE BONH PARA SELE ALL END" + "\n\n");
     }
 
+    /**
+     * Prints the part that calls the MTPL module
+     * Abstract because this may vary a lot between the different types of simulations
+     * @throws IOException
+     */
     protected abstract void print_lpunfile() throws IOException;
 
+    /**
+     * Prints the part in charge of the minimisation procedure
+     * Abstract because this may vary a lot between the different types of simulations
+     * @throws IOException
+     */
     protected abstract void print_MiniSection() throws IOException;
 
+    /**
+     * Prints the part in charge of the molecular dynamics procedure
+     * Abstract because this may vary a lot between the different types of simulations
+     * @throws IOException
+     */
     protected abstract void print_DynaSection() throws IOException;
 
     protected void print_StopSection() throws IOException {
@@ -197,7 +217,7 @@ public abstract class CHARMM_Input implements CHARMM_InOut{
         this.inp = inp;
     }
     
-    protected abstract void convertCoordinates(); 
+//    protected abstract void convertCoordinates(); 
 
     /**
      * @return the type

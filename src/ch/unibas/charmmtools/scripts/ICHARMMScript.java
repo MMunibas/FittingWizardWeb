@@ -8,6 +8,8 @@
  */
 package ch.unibas.charmmtools.scripts;
 
+import ch.unibas.charmmtools.generate.CHARMM_Output;
+import ch.unibas.charmmtools.generate.CHARMM_Input;
 import ch.unibas.fittingwizard.application.scripts.base.IScript;
 import java.io.File;
 

@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.scripts;
+package ch.unibas.charmmtools.generate;
 
 import java.io.BufferedWriter;
 import java.io.CharArrayWriter;
@@ -36,30 +36,9 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
         super(_cor, _top, _par, "Pure Liquid");
         
         writer = new CharArrayWriter();
-
-        //if necessary convert coordinates file before
-        this.convertCoordinates();
         
-        //prepare and print title
-        this.print_title();
-
-        //prepare and print io section
-        this.print_ioSection();
-
-        //if necessary convert coordinates file before
-        this.convertCoordinates();
-        this.print_corSection();
-        
-        this.print_crystalSection();
-
-        //prepare non bonded parameters line and print it
-        this.print_nbondsSection();
-
-        this.print_ShakeSection();
-
-        this.print_MiniSection();
-        this.print_DynaSection();
-        this.print_StopSection();
+        //build the input file by calling all the print_* sections
+        this.build();
 
     }
 
@@ -77,30 +56,9 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
         super(_cor, _top, _par, _outf, "Pure Liquid");
          
         writer = new BufferedWriter(new FileWriter(_outf));
-
-        //if necessary convert coordinates file before
-        this.convertCoordinates();
         
-        //prepare and print title
-        this.print_title();
-
-        //prepare and print io section
-        this.print_ioSection();
-
-        //if necessary convert coordinates file before
-        this.convertCoordinates();
-        this.print_corSection();
-        
-        this.print_crystalSection();
-        
-        //prepare non bonded parameters line and print it
-        this.print_nbondsSection();
-
-        this.print_ShakeSection();
-
-        this.print_MiniSection();
-        this.print_DynaSection();
-        this.print_StopSection();
+        //build the input file by calling all the print_* sections
+        this.build();
 
         writer.close();
 
@@ -121,33 +79,9 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
         super(_cor, _top, _par, _lpun, "Pure Liquid");
         
         writer = new CharArrayWriter();
-
-        //if necessary convert coordinates file before
-        this.convertCoordinates();
         
-        //prepare and print title
-        this.print_title();
-
-        //prepare and print io section
-        this.print_ioSection();
-
-        //if necessary convert coordinates file before
-        this.convertCoordinates();
-        this.print_corSection();
-        
-        this.print_crystalSection();
-        
-        //prepare non bonded parameters line and print it
-        this.print_nbondsSection();
-
-        this.print_ShakeSection();
-
-        //add section with lpun file
-        this.print_lpunfile();
-
-        this.print_MiniSection();
-        this.print_DynaSection();
-        this.print_StopSection();
+        //build the input file by calling all the print_* sections
+        this.build();
 
     }
 
@@ -167,20 +101,23 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
         super(_cor, _top, _par, _lpun, _outf, "Pure Liquid");
         
         writer = new BufferedWriter(new FileWriter(_outf));
+        
+        //build the input file by calling all the print_* sections
+        this.build();
 
-        //if necessary convert coordinates file before
-        this.convertCoordinates();
+        writer.close();
+
+    }
+    
+    @Override
+    protected void build() throws IOException{
         
         //prepare and print title
         this.print_title();
 
         //prepare and print io section
         this.print_ioSection();
-
-        //if necessary convert coordinates file before
-        this.convertCoordinates();
         this.print_corSection();
-        
         this.print_crystalSection();
 
         //prepare non bonded parameters line and print it
@@ -194,9 +131,7 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
         this.print_MiniSection();
         this.print_DynaSection();
         this.print_StopSection();
-
-        writer.close();
-
+        
     }
     
     /**
@@ -285,11 +220,5 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
                         "  cpt pint pconst pref 1 pgamma 0 pmass @pmass -\n" +
                         "  hoover reft 298 tmass @tmass\n\n");
     }
-    
-    @Override
-    protected void convertCoordinates(){
-        
-    }
-
 
 }//end of class
