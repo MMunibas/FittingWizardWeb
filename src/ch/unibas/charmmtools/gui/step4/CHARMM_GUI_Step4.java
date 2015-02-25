@@ -110,6 +110,11 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
                 );
             } else if (sc == CHARMM_Output.class) {
                 out.add((CHARMM_Output) ioListIt);
+                tabsList.add(
+                        new MyTab(
+                                ioListIt.getType(), ioListIt.getText()
+                        )
+                );
             } else {
                 throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : get "
                         + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class
@@ -240,7 +245,7 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 
         Window myParent = button_generate.getScene().getWindow();
         FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(new File("."));
+        chooser.setInitialDirectory(new File("test"));
         File selectedFile = null;
 
         chooser.setTitle("Open File");
@@ -304,7 +309,7 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 
         // if empty filenames print a pattern user should modify
         //transform it to relative path instead as we have to send data to clusters later
-        String folderPath = new File(".").getAbsolutePath();
+        String folderPath = new File("test").getAbsolutePath();
         corname_solu = corname_solu.length() == 0 ? "ADD_HERE_PATH_TO_COORDINATES_LIQUID_FILE" : ResourceUtils.getRelativePath(corname_solu, folderPath);
         corname_solv = corname_solv.length() == 0 ? "ADD_HERE_PATH_TO_COORDINATES_SOLVENT_FILE" : ResourceUtils.getRelativePath(corname_solv, folderPath);
         rtfname = rtfname.length() == 0 ? "ADD_HERE_PATH_TO_TOPOLOGY_FILE" : ResourceUtils.getRelativePath(rtfname, folderPath);
@@ -318,8 +323,9 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
                 Double.valueOf(lambda_min.getText()),
                 Double.valueOf(lambda_space.getText()),
                 Double.valueOf(lambda_max.getText()));
+        
         this.inp.add(in);
-         button_run_CHARMM.setDisable(false);
+        button_run_CHARMM.setDisable(false);
          
 //        tabsList.add(new MyTab(corname_solu, corname_solu));
 //        tabsList.add(new MyTab(corname_solv, corname_solv));
@@ -500,7 +506,7 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 
         List<CHARMM_InOut> myList = new ArrayList<>();
         myList.addAll(inp);
-        myList.addAll(out);
+//        myList.addAll(out);
         navigateTo(RunningCHARMM.class, myList);
 
     }
@@ -526,6 +532,7 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 //        });
 //        addButtonToButtonBar(button_save_to_file);
 //        button_save_to_file.setDisable(true);
+        
         button_run_CHARMM = ButtonFactory.createButtonBarButton("Run CHARMM", new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {

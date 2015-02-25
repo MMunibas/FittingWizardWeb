@@ -35,9 +35,9 @@ public class CHARMMScript_DG extends CHARMMScript_Base {
         String FileName = "dg_hydr.out";
         File charmmout = new File(OutputDirName,FileName);
         
-        this.prepare_Python(input, charmmout);
+        this.prepare_Python(input, null);
         
-        runner.exec(this.ScriptFile, this.args);
+        runner.exec(this.ScriptFile, this.args, charmmout);
         
         CHARMM_Output out = new CHARMM_Output_DGHydr(charmmout);
         
@@ -62,12 +62,12 @@ public class CHARMMScript_DG extends CHARMMScript_Base {
         args.clear();
         args.add("--ti");   args.add(input2.getTi_type());
         args.add("--tps");   args.add(input2.getTop());
-        args.add("--top");   args.add(input2.getSolv_top());
+//        args.add("--top");   args.add(input2.getSolv_top());
         args.add("--slu");   args.add(input2.getCrd());
-        args.add("--slv");   args.add(input2.getSolv_cor());
+//        args.add("--slv");   args.add(input2.getSolv_cor());
         args.add("--par");   args.add(input2.getPar());
         args.add("--lpun");  args.add(input2.getLpun());
-        
+        args.add("--chm");  args.add("/home/hedin/prog/fitting_wizard/scripts/charmm");
         args.add("--lmb");  args.add(Double.toString(input2.getL_min()));
         args.add(Double.toString(input2.getL_space()));
         args.add(Double.toString(input2.getL_max()));

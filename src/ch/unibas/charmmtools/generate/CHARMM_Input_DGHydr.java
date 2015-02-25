@@ -8,6 +8,7 @@
  */
 package ch.unibas.charmmtools.generate;
 
+import java.io.CharArrayWriter;
 import java.io.IOException;
 
 /**
@@ -33,6 +34,9 @@ public class CHARMM_Input_DGHydr  extends CHARMM_Input {
         this.l_min = _l_min;
         this.l_space = _l_space;
         this.l_max = _l_max;
+        
+        writer = new CharArrayWriter();
+        
 //        build();
     }
 
