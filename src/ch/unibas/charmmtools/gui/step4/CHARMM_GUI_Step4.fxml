@@ -10,7 +10,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="800.0" maxWidth="1300.0" minHeight="800.0" minWidth="1300.0" prefHeight="800.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
         <top>
             <GridPane alignment="CENTER" prefHeight="295.0" prefWidth="1300.0" BorderPane.alignment="CENTER">
                 <columnConstraints>
@@ -177,7 +177,23 @@
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                </GridPane.margin>
             </Label>
-            <RadioButton mnemonicParsing="false" text="RadioButton" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+            <GridPane GridPane.columnIndex="2" GridPane.rowIndex="7">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <RadioButton fx:id="ti_mtp" mnemonicParsing="false" selected="true" text="MTP" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="ti_toggle_group" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton fx:id="ti_vdw" layoutX="10.0" layoutY="16.0" mnemonicParsing="false" text="VDW" toggleGroup="$ti_toggle_group" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+               </children>
+            </GridPane>
                 </children>
          <BorderPane.margin>
             <Insets />

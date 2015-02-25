@@ -71,6 +71,8 @@ import ch.unibas.charmmtools.gui.step3.CHARMM_GUI_Step3;
 import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Step4;
 import ch.unibas.charmmtools.workflows.RunningCHARMM;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
+import ch.unibas.charmmtools.generate.CHARMM_Input_GasPhase;
+import ch.unibas.charmmtools.generate.CHARMM_Input_PureLiquid;
 import ch.unibas.charmmtools.scripts.ICHARMMScript;
 import ch.unibas.charmmtools.scripts.CHARMMScript_Den_Vap;
 import ch.unibas.charmmtools.scripts.CHARMMScript_DG;
@@ -245,7 +247,15 @@ public class WizardPageFactory {
             } 
             else if (type == RunningCHARMM.class) {
                 List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
-                page = new RunningCHARMM(charmmWorkflow_Den_Vap,ioList);
+                Class c = ioList.get(0).getClass();
+                if(c==CHARMM_Input_GasPhase.class || c==CHARMM_Input_PureLiquid.class)
+                {
+                    page = new RunningCHARMM(charmmWorkflow_Den_Vap,ioList);
+                }
+                else
+                {
+                    page = new RunningCHARMM(charmmWorkflow_DG,ioList);
+                }
                 
             }
             else if (type == CHARMM_GUI_Step2.class) {

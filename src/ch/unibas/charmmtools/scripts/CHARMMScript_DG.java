@@ -10,6 +10,8 @@ package ch.unibas.charmmtools.scripts;
 
 import ch.unibas.charmmtools.generate.CHARMM_Output;
 import ch.unibas.charmmtools.generate.CHARMM_Input;
+import ch.unibas.charmmtools.generate.CHARMM_Input_DGHydr;
+import ch.unibas.charmmtools.generate.CHARMM_Output_DGHydr;
 import ch.unibas.fittingwizard.Settings;
 import java.io.File;
 
@@ -28,13 +30,46 @@ public class CHARMMScript_DG extends CHARMMScript_Base {
     }
 
     @Override
-    public void prepare_Python(CHARMM_Input input, File output) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public CHARMM_Output execute(CHARMM_Input input) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        String FileName = "dg_hydr.out";
+        File charmmout = new File(OutputDirName,FileName);
+        
+        this.prepare_Python(input, charmmout);
+        
+        runner.exec(this.ScriptFile, this.args);
+        
+        CHARMM_Output out = new CHARMM_Output_DGHydr(charmmout);
+        
+        return out;
     }
     
+    @Override
+    public void prepare_Python(CHARMM_Input input, File output) {
+//        String inpPath = input.getInp().getAbsolutePath();
+//        String parPath = input.getPar();
+//        String topPath = input.getTop();
+//        String lpunPath = input.getLpun();   
+        
+//        String outPath = output.getAbsolutePath();
+        
+//        logger.info("Preparing PYTHON call with parameters : " + inpPath + " " + outPath + " " + parPath + " " + topPath + " " + lpunPath);
+        
+        CHARMM_Input_DGHydr input2 = (CHARMM_Input_DGHydr) input;
+        
+        runner.setWorkingDir(new File(OutputDirName));
+        
+        args.clear();
+        args.add("--ti");   args.add(input2.getTi_type());
+        args.add("--tps");   args.add(input2.getTop());
+        args.add("--top");   args.add(input2.getSolv_top());
+        args.add("--slu");   args.add(input2.getCrd());
+        args.add("--slv");   args.add(input2.getSolv_cor());
+        args.add("--par");   args.add(input2.getPar());
+        args.add("--lpun");  args.add(input2.getLpun());
+        
+        args.add("--lmb");  args.add(Double.toString(input2.getL_min()));
+        args.add(Double.toString(input2.getL_space()));
+        args.add(Double.toString(input2.getL_max()));
+    }
 }

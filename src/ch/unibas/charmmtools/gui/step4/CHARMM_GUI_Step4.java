@@ -12,6 +12,7 @@ import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
 import ch.unibas.charmmtools.workflows.RunningCHARMM;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.generate.CHARMM_Input;
+import ch.unibas.charmmtools.generate.CHARMM_Input_DGHydr;
 import ch.unibas.charmmtools.generate.CHARMM_Output;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
@@ -31,8 +32,10 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 
@@ -64,6 +67,11 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
     @FXML
     private TabPane tab_pane;
 
+    @FXML
+    private RadioButton ti_mtp, ti_vdw;
+    @FXML
+    private ToggleGroup ti_toggle_group;
+    
     @FXML
     private TextField lambda_min, lambda_space, lambda_max;
 
@@ -303,19 +311,31 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
         parname = parname.length() == 0 ? "ADD_HERE_PATH_TO_PARAMETERS_FILE" : ResourceUtils.getRelativePath(parname, folderPath);
         lpunname = lpunname.length() == 0 ? "ADD_HERE_PATH_TO_LPUN_FILE" : ResourceUtils.getRelativePath(lpunname, folderPath);
 
-        tabsList.add(new MyTab(corname_solu, corname_solu));
-        tabsList.add(new MyTab(corname_solv, corname_solv));
-        tabsList.add(new MyTab(rtfname, rtfname));
-        tabsList.add(new MyTab(parname, parname));
-        tabsList.add(new MyTab(lpunname, lpunname));
+        RadioButton butt = (RadioButton) ti_toggle_group.getSelectedToggle();
+        String type = butt.getText().toLowerCase();
+        CHARMM_Input_DGHydr in = new CHARMM_Input_DGHydr(corname_solu, corname_solv, 
+                rtfname, rtfname, parname, lpunname, type,
+                Double.valueOf(lambda_min.getText()),
+                Double.valueOf(lambda_space.getText()),
+                Double.valueOf(lambda_max.getText()));
+        this.inp.add(in);
+         button_run_CHARMM.setDisable(false);
+         
+//        tabsList.add(new MyTab(corname_solu, corname_solu));
+//        tabsList.add(new MyTab(corname_solv, corname_solv));
+//        tabsList.add(new MyTab(rtfname, rtfname));
+//        tabsList.add(new MyTab(parname, parname));
+//        tabsList.add(new MyTab(lpunname, lpunname));
+//
+//        boolean addTabsSuccess = tab_pane.getTabs().addAll(tabsList);
+//        if (!addTabsSuccess) {
+//            logger.error("Problem while adding tabs to current window ; try again ... ");
+//        } else {
+//            button_generate.setDisable(addTabsSuccess);
+//        }
 
-        boolean addTabsSuccess = tab_pane.getTabs().addAll(tabsList);
-        if (!addTabsSuccess) {
-            logger.error("Problem while adding tabs to current window ; try again ... ");
-        } else {
-            button_generate.setDisable(addTabsSuccess);
-        }
-
+//        this.charmmWorkflow;
+        
         /**
          * If success enable button for saving
          */
@@ -425,6 +445,8 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
         lambda_min.setText("0.0");
         lambda_space.setText("0.1");
         lambda_max.setText("1.0");
+        
+        ti_toggle_group.selectToggle(ti_mtp);
     }
 
 //    protected void SaveToFile(ActionEvent event) {
@@ -466,7 +488,7 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 //        }
 //
 //        //now that it is saved it may be runned
-//        this.button_run_CHARMM.setDisable(false);
+        
 //
 //        /**
 //         * Allow running charmm script
