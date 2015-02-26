@@ -139,7 +139,7 @@ public class FitResultPage extends WizardPageWithVisualization {
                 exportFitData();
             }
         });
-        exportButton.setDisable(true);
+//        exportButton.setDisable(true);
         addButtonToButtonBar(exportButton);
         
         Settings settings = Settings.loadConfig();

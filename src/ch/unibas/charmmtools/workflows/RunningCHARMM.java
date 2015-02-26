@@ -91,22 +91,26 @@ public class RunningCHARMM extends ProgressPage{
 //        }
         logger.info(out.get(0).getText());
         
-//        out.add(1, cflow.execute
-//            (new WorkflowContext<CHARMM_Input>() {
-//
-//                @Override
-//                public void setCurrentStatus(String status) {
-//                    ctx.setTitle(status);
-//                }
-//
-//                @Override
-//                public CHARMM_Input getParameter() {
-//                    return inp.get(1);
-//                }
-//
-//            })
-//        );
-//        logger.info(out.get(1).getTextOut());
+        Class c = inp.get(0).getClass();
+        if (c==CHARMM_Input_GasPhase.class || c==CHARMM_Input_PureLiquid.class)
+        {
+            out.add(1, cflow.execute
+                (new WorkflowContext<CHARMM_Input>() {
+
+                    @Override
+                    public void setCurrentStatus(String status) {
+                        ctx.setTitle(status);
+                    }
+
+                    @Override
+                    public CHARMM_Input getParameter() {
+                        return inp.get(1);
+                    }
+
+                })
+            );
+            logger.info(out.get(1).getText());
+        }
         
         return true;
     }

@@ -67,7 +67,7 @@ public class CHARMMScript_DG extends CHARMMScript_Base {
 //        args.add("--slv");   args.add(input2.getSolv_cor());
         args.add("--par");   args.add(input2.getPar());
         args.add("--lpun");  args.add(input2.getLpun());
-        args.add("--chm");  args.add("/home/hedin/prog/fitting_wizard/scripts/charmm");
+        args.add("--chm");  args.add("./charmm");
         args.add("--lmb");  args.add(Double.toString(input2.getL_min()));
         args.add(Double.toString(input2.getL_space()));
         args.add(Double.toString(input2.getL_max()));
