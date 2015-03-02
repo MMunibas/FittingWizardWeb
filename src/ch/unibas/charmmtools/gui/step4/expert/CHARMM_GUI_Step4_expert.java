@@ -13,6 +13,7 @@ import ch.unibas.charmmtools.workflows.RunningCHARMM;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_DGHydr;
+import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_DGHydr_solvent;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
 import ch.unibas.charmmtools.gui.step4.MyTab;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
@@ -319,7 +320,7 @@ public class CHARMM_GUI_Step4_expert extends CHARMM_GUI_base {
 
         RadioButton butt = (RadioButton) ti_toggle_group.getSelectedToggle();
         String type = butt.getText().toLowerCase();
-        CHARMM_Input_DGHydr in = new CHARMM_Input_DGHydr(corname_solu, corname_solv, 
+        CHARMM_Input_DGHydr in = new CHARMM_Input_DGHydr_solvent(corname_solu, corname_solv, 
                 rtfname, rtfname, parname, lpunname, type,
                 Double.valueOf(lambda_min.getText()),
                 Double.valueOf(lambda_space.getText()),

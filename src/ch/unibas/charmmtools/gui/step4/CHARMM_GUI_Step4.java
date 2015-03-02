@@ -11,17 +11,15 @@ package ch.unibas.charmmtools.gui.step4;
 import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
 import ch.unibas.charmmtools.workflows.RunningCHARMM;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
-import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_DGHydr;
-import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
+import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_DGHydr_gas;
+import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_DGHydr_solvent;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -38,8 +36,8 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
     /**
      * All FXML variables
      */
-    @FXML
-    private ObservableList<String> avail_coor_types;
+//    @FXML
+//    private ObservableList<String> avail_coor_types;
 
     @FXML
     private Button button_open_PAR, button_open_RTF, button_open_COR_solu, button_open_COR_solv, button_open_LPUN;
@@ -68,7 +66,8 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
     private boolean PAR_selected, RTF_selected, COR_selected_solu,
             COR_selected_solv, LPUN_selected;
 
-    private List<MyTab> tabsList = new ArrayList<>();
+    private List<MyTab> tab_list_gas  = new ArrayList<>();
+    private List<MyTab> tab_list_solv = new ArrayList<>();
 
     public CHARMM_GUI_Step4(RunCHARMMWorkflow chWflow) {
         super(title, chWflow);
@@ -78,47 +77,46 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 
         super(title, chWflow);
 
-        for (CHARMM_InOut ioListIt : ioList) {
-
-            Class c = ioListIt.getClass();
-            Class sc = c.getSuperclass();
-
-            if (sc == CHARMM_Input.class) {
-                inp.add((CHARMM_Input) ioListIt);
-                tabsList.add(
-                        new MyTab(
-                                ioListIt.getType(), ioListIt.getText()
-                        )
-                );
-            } else if (sc == CHARMM_Output.class) {
-                out.add((CHARMM_Output) ioListIt);
-                tabsList.add(
-                        new MyTab(
-                                ioListIt.getType(), ioListIt.getText()
-                        )
-                );
-            } else {
-                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : get "
-                        + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class
-                        + " or " + CHARMM_Output.class);
-            }
-            tab_pane.getTabs().addAll(tabsList);
-        }
+//        for (CHARMM_InOut ioListIt : ioList) {
+//
+//            if (ioList.getClass().isInstance(CHARMM_Input.class)) {
+//                
+//                inp.add(ioListIt);
+//                
+//                tabsList.add(
+//                        new MyTab(
+//                                ioListIt.getType(), ioListIt.getText()
+//                        )
+//                );
+//            } else if (sc == CHARMM_Output.class) {
+//                out.add((CHARMM_Output) ioListIt);
+//                tabsList.add(
+//                        new MyTab(
+//                                ioListIt.getType(), ioListIt.getText()
+//                        )
+//                );
+//            } else {
+//                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : get "
+//                        + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class
+//                        + " or " + CHARMM_Output.class);
+//            }
+//            tab_pane.getTabs().addAll(tabsList);
+//        }
 
 //        button_save_to_file.setDisable(false);
-        textfield_PAR.setDisable(true);
-        textfield_RTF.setDisable(true);
-        textfield_COR_solu.setDisable(true);
-        textfield_COR_solv.setDisable(true);
-        textfield_LPUN.setDisable(true);
-
-        button_generate.setDisable(true);
-
-        button_open_PAR.setDisable(true);
-        button_open_RTF.setDisable(true);
-        button_open_COR_solu.setDisable(true);
-        button_open_COR_solv.setDisable(true);
-        button_open_LPUN.setDisable(true);
+//        textfield_PAR.setDisable(true);
+//        textfield_RTF.setDisable(true);
+//        textfield_COR_solu.setDisable(true);
+//        textfield_COR_solv.setDisable(true);
+//        textfield_LPUN.setDisable(true);
+//
+//        button_generate.setDisable(true);
+//
+//        button_open_PAR.setDisable(true);
+//        button_open_RTF.setDisable(true);
+//        button_open_COR_solu.setDisable(true);
+//        button_open_COR_solv.setDisable(true);
+//        button_open_LPUN.setDisable(true);
     }
 
     /**
@@ -127,8 +125,8 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
     @Override
     public void initialize() {
 
-        avail_coor_types = FXCollections.observableArrayList();
-        avail_coor_types.addAll(/*"*.xyz", "*.cor", */"*.pdb");
+//        avail_coor_types = FXCollections.observableArrayList();
+//        avail_coor_types.addAll(/*"*.xyz", "*.cor", */"*.pdb");
 
 //        coor_type_solu.setItems(avail_coor_types);
 //        coor_type_solu.setValue("*.pdb");
@@ -254,19 +252,43 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
         parname = ResourceUtils.getRelativePath(parname, folderPath);
         lpunname = ResourceUtils.getRelativePath(lpunname, folderPath);
 
-        // build the charmm inputfiles
-        CHARMM_Input_DGHydr in = new CHARMM_Input_DGHydr(corname_solu, corname_solv, 
-                rtfname, rtfname, parname, lpunname, type,
-                Double.valueOf(lambda_min.getText()),
-                Double.valueOf(lambda_space.getText()),
-                Double.valueOf(lambda_max.getText()));
+        double lamb_spacing_val = Double.valueOf(lambda_space.getText());
         
-        this.inp.add(in);
+        /**
+         * TODO : get a list of input files from python script
+         */
+        
+        
+        // build the charmm inputfiles
+//        CHARMM_Input_DGHydr in = new CHARMM_Input_DGHydr(corname_solu, corname_solv, 
+//                rtfname, rtfname, parname, lpunname, type,
+//                Double.valueOf(lambda_min.getText()),
+//                Double.valueOf(lambda_space.getText()),
+//                Double.valueOf(lambda_max.getText()));
+        
+        CHARMM_Input_DGHydr in_gas_vdw = new CHARMM_Input_DGHydr_gas(corname_solu,rtfname,parname,lpunname,"vdw",
+                0.0,lamb_spacing_val,1.0);
+        this.inp.add(in_gas_vdw);
+                
+        CHARMM_Input_DGHydr in_gas_mtp = new CHARMM_Input_DGHydr_gas(corname_solu,rtfname,parname,lpunname,"mtp",
+                0.0,lamb_spacing_val,1.0);
+        this.inp.add(in_gas_mtp);
+        
+        CHARMM_Input_DGHydr in_solv_vdw = new CHARMM_Input_DGHydr_solvent(corname_solu,corname_solv,rtfname,rtfname,
+                parname,lpunname,"vdw",0.0,lamb_spacing_val,1.0);
+        this.inp.add(in_solv_vdw);
+        
+        CHARMM_Input_DGHydr in_solv_mtp = new CHARMM_Input_DGHydr_solvent(corname_solu,corname_solv,rtfname,rtfname,
+                parname,lpunname,"mtp",0.0,lamb_spacing_val,1.0);
+        this.inp.add(in_solv_mtp);
+        
         button_run_CHARMM.setDisable(false);
         
         /*
-         * TODO : add call for preparing input files without running CHARMM
+         * TODO : display input files without running CHARMM (might go with previous TODO ?? )
          */
+        
+        
     }
 
     /**
@@ -275,37 +297,37 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
      *
      * @param event
      */
-    @FXML
-    protected void CheckBoxActions(ActionEvent event) {
-
-        if (event.getSource().equals(later_PAR)) {
-            PAR_selected = later_PAR.isSelected();
-            button_open_PAR.setDisable(later_PAR.isSelected());
-            textfield_PAR.setDisable(later_PAR.isSelected());
-        } else if (event.getSource().equals(later_RTF)) {
-            RTF_selected = later_RTF.isSelected();
-            button_open_RTF.setDisable(later_RTF.isSelected());
-            textfield_RTF.setDisable(later_RTF.isSelected());
-        } else if (event.getSource().equals(later_COR_solu)) {
-            COR_selected_solu = later_COR_solu.isSelected();
-            button_open_COR_solu.setDisable(later_COR_solu.isSelected());
-            textfield_COR_solu.setDisable(later_COR_solu.isSelected());
-            coor_type_solu.setDisable(later_COR_solu.isSelected());
-        } else if (event.getSource().equals(later_COR_solv)) {
-            COR_selected_solv = later_COR_solv.isSelected();
-            button_open_COR_solv.setDisable(later_COR_solv.isSelected());
-            textfield_COR_solv.setDisable(later_COR_solv.isSelected());
-            coor_type_solv.setDisable(later_COR_solv.isSelected());
-        } else if (event.getSource().equals(later_LPUN)) {
-            LPUN_selected = later_LPUN.isSelected();
-            button_open_LPUN.setDisable(later_LPUN.isSelected());
-            textfield_LPUN.setDisable(later_LPUN.isSelected());
-        } else {
-            throw new UnknownError("Unknown Event");
-        }
-
-        this.validateButtonGenerate();
-    }
+//    @FXML
+//    protected void CheckBoxActions(ActionEvent event) {
+//
+//        if (event.getSource().equals(later_PAR)) {
+//            PAR_selected = later_PAR.isSelected();
+//            button_open_PAR.setDisable(later_PAR.isSelected());
+//            textfield_PAR.setDisable(later_PAR.isSelected());
+//        } else if (event.getSource().equals(later_RTF)) {
+//            RTF_selected = later_RTF.isSelected();
+//            button_open_RTF.setDisable(later_RTF.isSelected());
+//            textfield_RTF.setDisable(later_RTF.isSelected());
+//        } else if (event.getSource().equals(later_COR_solu)) {
+//            COR_selected_solu = later_COR_solu.isSelected();
+//            button_open_COR_solu.setDisable(later_COR_solu.isSelected());
+//            textfield_COR_solu.setDisable(later_COR_solu.isSelected());
+//            coor_type_solu.setDisable(later_COR_solu.isSelected());
+//        } else if (event.getSource().equals(later_COR_solv)) {
+//            COR_selected_solv = later_COR_solv.isSelected();
+//            button_open_COR_solv.setDisable(later_COR_solv.isSelected());
+//            textfield_COR_solv.setDisable(later_COR_solv.isSelected());
+//            coor_type_solv.setDisable(later_COR_solv.isSelected());
+//        } else if (event.getSource().equals(later_LPUN)) {
+//            LPUN_selected = later_LPUN.isSelected();
+//            button_open_LPUN.setDisable(later_LPUN.isSelected());
+//            textfield_LPUN.setDisable(later_LPUN.isSelected());
+//        } else {
+//            throw new UnknownError("Unknown Event");
+//        }
+//
+//        this.validateButtonGenerate();
+//    }
 
     /**
      *
@@ -313,11 +335,11 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
      */
     protected void ResetFields(ActionEvent event) {
 
-        later_PAR.setDisable(false);
-        later_RTF.setDisable(false);
-        later_COR_solu.setDisable(false);
-        later_COR_solv.setDisable(false);
-        later_LPUN.setDisable(false);
+//        later_PAR.setDisable(false);
+//        later_RTF.setDisable(false);
+//        later_COR_solu.setDisable(false);
+//        later_COR_solv.setDisable(false);
+//        later_LPUN.setDisable(false);
 
         textfield_PAR.clear();
         textfield_RTF.clear();
@@ -332,48 +354,48 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
         COR_selected_solv = false;
         LPUN_selected = false;
 
-        later_PAR.setSelected(false);
-        button_open_PAR.setDisable(later_PAR.isSelected());
-        textfield_PAR.setDisable(later_PAR.isSelected());
+//        later_PAR.setSelected(false);
+        button_open_PAR.setDisable(false);
+        textfield_PAR.setDisable(false);
 
-        later_RTF.setSelected(false);
-        button_open_RTF.setDisable(later_RTF.isSelected());
-        textfield_RTF.setDisable(later_RTF.isSelected());
+//        later_RTF.setSelected(false);
+        button_open_RTF.setDisable(false);
+        textfield_RTF.setDisable(false);
 
-        later_COR_solu.setSelected(false);
-        button_open_COR_solu.setDisable(later_COR_solu.isSelected());
-        textfield_COR_solu.setDisable(later_COR_solu.isSelected());
-        coor_type_solu.setDisable(later_COR_solu.isSelected());
+//        later_COR_solu.setSelected(false);
+        button_open_COR_solu.setDisable(false);
+        textfield_COR_solu.setDisable(false);
+////        coor_type_solu.setDisable(later_COR_solu.isSelected());
+//
+//        later_COR_solv.setSelected(false);
+        button_open_COR_solv.setDisable(false);
+        textfield_COR_solv.setDisable(false);
+//        coor_type_solv.setDisable(later_COR_solv.isSelected());
 
-        later_COR_solv.setSelected(false);
-        button_open_COR_solv.setDisable(later_COR_solv.isSelected());
-        textfield_COR_solv.setDisable(later_COR_solv.isSelected());
-        coor_type_solv.setDisable(later_COR_solv.isSelected());
-
-        later_LPUN.setSelected(false);
-        button_open_LPUN.setDisable(later_LPUN.isSelected());
-        textfield_LPUN.setDisable(later_LPUN.isSelected());
+//        later_LPUN.setSelected(false);
+        button_open_LPUN.setDisable(false);
+        textfield_LPUN.setDisable(false);
 
         button_generate.setDisable(true);
 //        button_save_to_file.setDisable(true);
         button_run_CHARMM.setDisable(true);
 
 //        button_save_to_file.setText("Click to save");
-        button_run_CHARMM.setText("Run CHARMM");
+//        button_run_CHARMM.setText("Run CHARMM");
 
         inp.clear();
         out.clear();
         CHARMM_inFile.clear();
         CHARMM_outFile.clear();
 
-        tabsList.clear();
-        tab_pane.getTabs().clear();
+//        tabsList.clear();
+//        tab_pane.getTabs().clear();
 
-        lambda_min.setText("0.0");
+//        lambda_min.setText("0.0");
         lambda_space.setText("0.1");
-        lambda_max.setText("1.0");
+//        lambda_max.setText("1.0");
         
-        ti_toggle_group.selectToggle(ti_mtp);
+//        ti_toggle_group.selectToggle(ti_mtp);
     }
 
 //    protected void SaveToFile(ActionEvent event) {
