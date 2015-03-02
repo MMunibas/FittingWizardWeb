@@ -55,7 +55,7 @@ public class WizardApplication extends Application {
 
             Scene scene = new Scene(root);
             primaryStage.centerOnScreen();
-            primaryStage.setWidth(1024);
+            primaryStage.setWidth(1200);
             primaryStage.setHeight(600);
             primaryStage.setResizable(true);
 

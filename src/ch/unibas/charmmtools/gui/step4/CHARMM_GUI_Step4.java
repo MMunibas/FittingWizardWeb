@@ -18,6 +18,7 @@ import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.event.ActionEvent;
@@ -38,7 +39,6 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
      */
 //    @FXML
 //    private ObservableList<String> avail_coor_types;
-
     @FXML
     private Button button_open_PAR, button_open_RTF, button_open_COR_solu, button_open_COR_solv, button_open_LPUN;
 
@@ -51,7 +51,7 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
     //where the generated input files are added
     @FXML
     private TabPane tab_pane_gas, tab_pane_solv;
-    
+
     @FXML
     private TextField lambda_space;
 
@@ -66,7 +66,7 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
     private boolean PAR_selected, RTF_selected, COR_selected_solu,
             COR_selected_solv, LPUN_selected;
 
-    private List<MyTab> tab_list_gas  = new ArrayList<>();
+    private List<MyTab> tab_list_gas = new ArrayList<>();
     private List<MyTab> tab_list_solv = new ArrayList<>();
 
     public CHARMM_GUI_Step4(RunCHARMMWorkflow chWflow) {
@@ -102,7 +102,6 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 //            }
 //            tab_pane.getTabs().addAll(tabsList);
 //        }
-
 //        button_save_to_file.setDisable(false);
 //        textfield_PAR.setDisable(true);
 //        textfield_RTF.setDisable(true);
@@ -127,13 +126,11 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 
 //        avail_coor_types = FXCollections.observableArrayList();
 //        avail_coor_types.addAll(/*"*.xyz", "*.cor", */"*.pdb");
-
 //        coor_type_solu.setItems(avail_coor_types);
 //        coor_type_solu.setValue("*.pdb");
 //
 //        coor_type_solv.setItems(avail_coor_types);
 //        coor_type_solv.setValue("*.pdb");
-
         // set to false those booleans indicating if a file has been selected
         PAR_selected = false;
         RTF_selected = false;
@@ -154,7 +151,6 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 //                }
 //            }
 //        });
-
     }
 
 //    @Override
@@ -189,7 +185,7 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
         chooser.setTitle("Open File");
 
         if (event.getSource().equals(button_open_PAR)) {
-            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CHARMM FF parameters file (*.par,*.prm)","*.par", "*.prm"));
+            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CHARMM FF parameters file (*.par,*.prm)", "*.par", "*.prm"));
             selectedFile = chooser.showOpenDialog(myParent);
             if (selectedFile != null) {
                 textfield_PAR.setText(selectedFile.getAbsolutePath());
@@ -253,42 +249,52 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
         lpunname = ResourceUtils.getRelativePath(lpunname, folderPath);
 
         double lamb_spacing_val = Double.valueOf(lambda_space.getText());
-        
+
         /**
          * TODO : get a list of input files from python script
          */
-        
-        
-        // build the charmm inputfiles
-//        CHARMM_Input_DGHydr in = new CHARMM_Input_DGHydr(corname_solu, corname_solv, 
-//                rtfname, rtfname, parname, lpunname, type,
-//                Double.valueOf(lambda_min.getText()),
-//                Double.valueOf(lambda_space.getText()),
-//                Double.valueOf(lambda_max.getText()));
-        
-        CHARMM_Input_DGHydr in_gas_vdw = new CHARMM_Input_DGHydr_gas(corname_solu,rtfname,parname,lpunname,"vdw",
-                0.0,lamb_spacing_val,1.0);
-        this.inp.add(in_gas_vdw);
-                
-        CHARMM_Input_DGHydr in_gas_mtp = new CHARMM_Input_DGHydr_gas(corname_solu,rtfname,parname,lpunname,"mtp",
-                0.0,lamb_spacing_val,1.0);
-        this.inp.add(in_gas_mtp);
-        
-        CHARMM_Input_DGHydr in_solv_vdw = new CHARMM_Input_DGHydr_solvent(corname_solu,corname_solv,rtfname,rtfname,
-                parname,lpunname,"vdw",0.0,lamb_spacing_val,1.0);
-        this.inp.add(in_solv_vdw);
-        
-        CHARMM_Input_DGHydr in_solv_mtp = new CHARMM_Input_DGHydr_solvent(corname_solu,corname_solv,rtfname,rtfname,
-                parname,lpunname,"mtp",0.0,lamb_spacing_val,1.0);
-        this.inp.add(in_solv_mtp);
-        
-        button_run_CHARMM.setDisable(false);
-        
+        CHARMM_Input_DGHydr in_gas_vdw = null, in_gas_mtp = null, in_solv_vdw = null, in_solv_mtp = null;
+
+        try {
+            in_gas_vdw = new CHARMM_Input_DGHydr_gas(corname_solu, rtfname, parname, lpunname, "vdw",
+                    0.0, lamb_spacing_val, 1.0);
+            inp.add(in_gas_vdw);
+
+            in_gas_mtp = new CHARMM_Input_DGHydr_gas(corname_solu, rtfname, parname, lpunname, "mtp",
+                    0.0, lamb_spacing_val, 1.0);
+            inp.add(in_gas_mtp);
+
+            in_solv_vdw = new CHARMM_Input_DGHydr_solvent(corname_solu, corname_solv, rtfname, rtfname,
+                    parname, lpunname, "vdw", 0.0, lamb_spacing_val, 1.0);
+            inp.add(in_solv_vdw);
+
+            in_solv_mtp = new CHARMM_Input_DGHydr_solvent(corname_solu, corname_solv, rtfname, rtfname,
+                    parname, lpunname, "mtp", 0.0, lamb_spacing_val, 1.0);
+            inp.add(in_solv_mtp);
+
+            tab_list_gas.add(new MyTab(in_gas_vdw.getType(), in_gas_vdw.getText()));
+            tab_list_gas.add(new MyTab(in_gas_mtp.getType(), in_gas_mtp.getText()));
+
+            tab_list_solv.add(new MyTab(in_solv_vdw.getType(), in_solv_vdw.getText()));
+            tab_list_solv.add(new MyTab(in_solv_mtp.getType(), in_solv_mtp.getText()));
+
+            tab_pane_gas.getTabs().addAll(tab_list_gas);
+            tab_pane_solv.getTabs().addAll(tab_list_solv);
+
+            button_run_CHARMM.setDisable(false);
+            
+            logger.debug(in_gas_vdw.getText());
+            logger.debug(in_gas_mtp.getText());
+            logger.debug(in_solv_vdw.getText());
+            logger.debug(in_solv_mtp.getText());
+
+        } catch (IOException ex) {
+            logger.error(ex);
+        }
+
         /*
          * TODO : display input files without running CHARMM (might go with previous TODO ?? )
          */
-        
-        
     }
 
     /**
@@ -328,7 +334,6 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 //
 //        this.validateButtonGenerate();
 //    }
-
     /**
      *
      * @param event
@@ -340,7 +345,6 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 //        later_COR_solu.setDisable(false);
 //        later_COR_solv.setDisable(false);
 //        later_LPUN.setDisable(false);
-
         textfield_PAR.clear();
         textfield_RTF.clear();
         textfield_COR_solu.clear();
@@ -382,19 +386,21 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 
 //        button_save_to_file.setText("Click to save");
 //        button_run_CHARMM.setText("Run CHARMM");
-
         inp.clear();
         out.clear();
+
         CHARMM_inFile.clear();
         CHARMM_outFile.clear();
 
-//        tabsList.clear();
-//        tab_pane.getTabs().clear();
+        tab_list_gas.clear();
+        tab_list_solv.clear();
+        tab_pane_gas.getTabs().clear();
+        tab_pane_solv.getTabs().clear();
 
 //        lambda_min.setText("0.0");
         lambda_space.setText("0.1");
 //        lambda_max.setText("1.0");
-        
+
 //        ti_toggle_group.selectToggle(ti_mtp);
     }
 
@@ -437,7 +443,6 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 //        }
 //
 //        //now that it is saved it may be runned
-        
 //
 //        /**
 //         * Allow running charmm script
@@ -475,7 +480,6 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 //        });
 //        addButtonToButtonBar(button_save_to_file);
 //        button_save_to_file.setDisable(true);
-        
         button_run_CHARMM = ButtonFactory.createButtonBarButton("Run CHARMM", new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
