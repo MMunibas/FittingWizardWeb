@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.generate;
+package ch.unibas.charmmtools.generate.inputs;
 
 import java.io.BufferedWriter;
 import java.io.CharArrayWriter;
@@ -20,8 +20,6 @@ import java.io.IOException;
  * @author hedin
  */
 public class CHARMM_Input_GasPhase extends CHARMM_Input {
-
-    private final String expectedFormat=".pdb";
 
      /**
      * If content of the field has to be retrieved later on it is stored on an internal CharArrayWriter within this class

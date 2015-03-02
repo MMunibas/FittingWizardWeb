@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.generate;
+package ch.unibas.charmmtools.generate.outputs;
 
 import java.io.File;
 
@@ -14,10 +14,10 @@ import java.io.File;
  *
  * @author hedin
  */
-public class CHARMM_Output_PureLiquid extends CHARMM_Output{
+public class CHARMM_Output_GasPhase extends CHARMM_Output{
 
-    public CHARMM_Output_PureLiquid(File _charmmout) {
-        super(_charmmout,"Pure Liquid");
+    public CHARMM_Output_GasPhase(File _charmmout) {
+        super(_charmmout,"Gas Phase");
     }
     
 }

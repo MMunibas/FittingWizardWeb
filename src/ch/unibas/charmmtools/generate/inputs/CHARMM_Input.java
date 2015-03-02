@@ -6,12 +6,15 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.generate;
+package ch.unibas.charmmtools.generate.inputs;
 
+import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import org.apache.log4j.Logger;
 
 /**
@@ -20,11 +23,18 @@ import org.apache.log4j.Logger;
  */
 public abstract class CHARMM_Input implements CHARMM_InOut{
     
-    private static final Logger logger = Logger.getLogger(CHARMM_Input.class);
+    protected static final Logger logger = Logger.getLogger(CHARMM_Input.class);
     
     protected Writer writer = null;
     protected String title = "";
     protected Date d = new Date();
+    
+    /**
+     * contains the acceptable types of coordinate files, by default only *.pdb 
+     * (the extension may be *.ent but that's the same type of file)
+     */
+    protected final List<String> expectedFormats;
+        
     /*
      * bomlev is the error level causing abortion of CHARMM
      * prnlev regulates the level of output from CHARMM
@@ -45,6 +55,10 @@ public abstract class CHARMM_Input implements CHARMM_InOut{
         this.top = _top;
         this.par = _par;
         this.type = _type;
+        
+        this.expectedFormats = new ArrayList<>();
+        this.expectedFormats.add("*.pdb");
+        this.expectedFormats.add("*.ent");
     }
     
     public CHARMM_Input(String _cor, String _top, String _par, File _outf, String _type){
@@ -53,6 +67,10 @@ public abstract class CHARMM_Input implements CHARMM_InOut{
         this.par = _par;
         this.out = _outf;
         this.type = _type;
+        
+        this.expectedFormats = new ArrayList<>();
+        this.expectedFormats.add("*.pdb");
+        this.expectedFormats.add("*.ent");
     }
 
     protected CHARMM_Input(String _cor, String _top, String _par, String _lpun, String _type)
@@ -62,6 +80,10 @@ public abstract class CHARMM_Input implements CHARMM_InOut{
         this.par = _par;
         this.lpun = _lpun;
         this.type = _type;
+                
+        this.expectedFormats = new ArrayList<>();
+        this.expectedFormats.add("*.pdb");
+        this.expectedFormats.add("*.ent");
     }
     
     protected CHARMM_Input(String _cor, String _top, String _par, String _lpun, File _outf, String _type)
@@ -72,6 +94,10 @@ public abstract class CHARMM_Input implements CHARMM_InOut{
         this.lpun = _lpun;
         this.out = _outf;
         this.type = _type;
+                
+        this.expectedFormats = new ArrayList<>();
+        this.expectedFormats.add("*.pdb");
+        this.expectedFormats.add("*.ent");
     }
     /**
      * Calls all the print_* sections for effectively creating an input file either in a String or directly to a file depending on the constructor that was initially called

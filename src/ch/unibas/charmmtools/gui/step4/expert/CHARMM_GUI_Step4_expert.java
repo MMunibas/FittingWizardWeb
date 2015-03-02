@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.gui.step4;
+package ch.unibas.charmmtools.gui.step4.expert;
 
 import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
 import ch.unibas.charmmtools.workflows.RunningCHARMM;
@@ -14,24 +14,33 @@ import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_DGHydr;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
+import ch.unibas.charmmtools.gui.step4.MyTab;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 
-public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
+public class CHARMM_GUI_Step4_expert extends CHARMM_GUI_base {
 
     private static final String title = "LJ fitting procedure Step 4 : preparing CHARMM files for Therm. Integration";
 
@@ -39,6 +48,11 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
      * All FXML variables
      */
     @FXML
+    private CheckBox later_PAR, later_RTF, later_COR_solu, later_COR_solv, later_LPUN;
+
+    @FXML
+    private ComboBox<String> coor_type_solu, coor_type_solv;
+
     private ObservableList<String> avail_coor_types;
 
     @FXML
@@ -52,10 +66,15 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 
     //where the generated input files are added
     @FXML
-    private TabPane tab_pane_gas, tab_pane_solv;
+    private TabPane tab_pane;
+
+    @FXML
+    private RadioButton ti_mtp, ti_vdw;
+    @FXML
+    private ToggleGroup ti_toggle_group;
     
     @FXML
-    private TextField lambda_space;
+    private TextField lambda_min, lambda_space, lambda_max;
 
     // those buttons are NOT exposed to FXML but handled locally with fillbuttonbar
     private Button button_reset;
@@ -70,11 +89,11 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 
     private List<MyTab> tabsList = new ArrayList<>();
 
-    public CHARMM_GUI_Step4(RunCHARMMWorkflow chWflow) {
+    public CHARMM_GUI_Step4_expert(RunCHARMMWorkflow chWflow) {
         super(title, chWflow);
     }
 
-    public CHARMM_GUI_Step4(RunCHARMMWorkflow chWflow, List<CHARMM_InOut> ioList) {
+    public CHARMM_GUI_Step4_expert(RunCHARMMWorkflow chWflow, List<CHARMM_InOut> ioList) {
 
         super(title, chWflow);
 
@@ -119,6 +138,14 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
         button_open_COR_solu.setDisable(true);
         button_open_COR_solv.setDisable(true);
         button_open_LPUN.setDisable(true);
+
+        coor_type_solu.setDisable(true);
+
+        later_PAR.setDisable(true);
+        later_RTF.setDisable(true);
+        later_COR_solu.setDisable(true);
+        later_COR_solv.setDisable(true);
+        later_LPUN.setDisable(true);
     }
 
     /**
@@ -127,14 +154,20 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
     @Override
     public void initialize() {
 
+        later_PAR.setAllowIndeterminate(false);
+        later_RTF.setAllowIndeterminate(false);
+        later_COR_solu.setAllowIndeterminate(false);
+        later_COR_solv.setAllowIndeterminate(false);
+        later_LPUN.setAllowIndeterminate(false);
+
         avail_coor_types = FXCollections.observableArrayList();
         avail_coor_types.addAll(/*"*.xyz", "*.cor", */"*.pdb");
 
-//        coor_type_solu.setItems(avail_coor_types);
-//        coor_type_solu.setValue("*.pdb");
-//
-//        coor_type_solv.setItems(avail_coor_types);
-//        coor_type_solv.setValue("*.pdb");
+        coor_type_solu.setItems(avail_coor_types);
+        coor_type_solu.setValue("*.pdb");
+
+        coor_type_solv.setItems(avail_coor_types);
+        coor_type_solv.setValue("*.pdb");
 
         // set to false those booleans indicating if a file has been selected
         PAR_selected = false;
@@ -143,19 +176,47 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
         COR_selected_solv = false;
         LPUN_selected = false;
 
-//        lambda_space.textProperty().addListener(new ChangeListener<String>() {
-//            @Override
-//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-//                if (Double.valueOf(newValue) >= Double.valueOf(lambda_max.getText())) {
-//                    Alert alert = new Alert(AlertType.ERROR);
-//                    alert.setTitle("Error with λ space value !");
-//                    alert.setHeaderText(null);
-//                    alert.setContentText("Please choose a λ space value smaller than λ max !");
-//                    alert.showAndWait();
-//                    lambda_space.setText("0.1");
-//                }
-//            }
-//        });
+        lambda_min.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (Double.valueOf(newValue) < 0.0) {
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Error with λ min value !");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Please choose a λ min not less than 0.0 !");
+                    alert.showAndWait();
+                    lambda_min.setText("0.0");
+                }
+            }
+        });
+
+        lambda_max.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (Double.valueOf(newValue) > 1.0) {
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Error with λ max value !");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Please choose a λ max not larger than 1.0 !");
+                    alert.showAndWait();
+                    lambda_max.setText("1.0");
+                }
+            }
+        });
+
+        lambda_space.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (Double.valueOf(newValue) >= Double.valueOf(lambda_max.getText())) {
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Error with λ space value !");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Please choose a λ space value smaller than λ max !");
+                    alert.showAndWait();
+                    lambda_space.setText("0.1");
+                }
+            }
+        });
 
     }
 
@@ -191,28 +252,28 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
         chooser.setTitle("Open File");
 
         if (event.getSource().equals(button_open_PAR)) {
-            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CHARMM FF parameters file (*.par,*.prm)","*.par", "*.prm"));
+            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CHARMM FF parameters file", /*"*.inp",*/ "*.par", "*.prm"));
             selectedFile = chooser.showOpenDialog(myParent);
             if (selectedFile != null) {
                 textfield_PAR.setText(selectedFile.getAbsolutePath());
                 PAR_selected = true;
             }
         } else if (event.getSource().equals(button_open_RTF)) {
-            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CHARMM FF topology file (*.top,*.rtf)", "*.top", "*.rtf"));
+            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CHARMM FF topology file", "*.top", "*.rtf"));
             selectedFile = chooser.showOpenDialog(myParent);
             if (selectedFile != null) {
                 textfield_RTF.setText(selectedFile.getAbsolutePath());
                 RTF_selected = true;
             }
         } else if (event.getSource().equals(button_open_COR_solu)) {
-            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Coordinates file (*.pdb,*.ent)", "*.pdb", "*.ent"));
+            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Coordinates file " + coor_type_solu.getValue(), coor_type_solu.getValue()));
             selectedFile = chooser.showOpenDialog(myParent);
             if (selectedFile != null) {
                 textfield_COR_solu.setText(selectedFile.getAbsolutePath());
                 COR_selected_solu = true;
             }
         } else if (event.getSource().equals(button_open_COR_solv)) {
-            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Coordinates file (*.pdb,*.ent)", "*.pdb", "*.ent"));
+            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Coordinates file " + coor_type_solv.getValue(), coor_type_solv.getValue()));
             selectedFile = chooser.showOpenDialog(myParent);
             if (selectedFile != null) {
                 textfield_COR_solv.setText(selectedFile.getAbsolutePath());
@@ -237,8 +298,9 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
      * Try to generate an input file with standard parameters, it can be edited later
      */
     @FXML
-    protected void GenerateInputFiles() {
+    protected void GenerateInputFile() {
 
+//        try {
         // get filenames
         String corname_solu = textfield_COR_solu.getText();
         String corname_solv = textfield_COR_solv.getText();
@@ -246,15 +308,17 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
         String parname = textfield_PAR.getText();
         String lpunname = textfield_LPUN.getText();
 
+        // if empty filenames print a pattern user should modify
         //transform it to relative path instead as we have to send data to clusters later
         String folderPath = new File("test").getAbsolutePath();
-        corname_solu = ResourceUtils.getRelativePath(corname_solu, folderPath);
-        corname_solv = ResourceUtils.getRelativePath(corname_solv, folderPath);
-        rtfname = ResourceUtils.getRelativePath(rtfname, folderPath);
-        parname = ResourceUtils.getRelativePath(parname, folderPath);
-        lpunname = ResourceUtils.getRelativePath(lpunname, folderPath);
+        corname_solu = corname_solu.length() == 0 ? "ADD_HERE_PATH_TO_COORDINATES_LIQUID_FILE" : ResourceUtils.getRelativePath(corname_solu, folderPath);
+        corname_solv = corname_solv.length() == 0 ? "ADD_HERE_PATH_TO_COORDINATES_SOLVENT_FILE" : ResourceUtils.getRelativePath(corname_solv, folderPath);
+        rtfname = rtfname.length() == 0 ? "ADD_HERE_PATH_TO_TOPOLOGY_FILE" : ResourceUtils.getRelativePath(rtfname, folderPath);
+        parname = parname.length() == 0 ? "ADD_HERE_PATH_TO_PARAMETERS_FILE" : ResourceUtils.getRelativePath(parname, folderPath);
+        lpunname = lpunname.length() == 0 ? "ADD_HERE_PATH_TO_LPUN_FILE" : ResourceUtils.getRelativePath(lpunname, folderPath);
 
-        // build the charmm inputfiles
+        RadioButton butt = (RadioButton) ti_toggle_group.getSelectedToggle();
+        String type = butt.getText().toLowerCase();
         CHARMM_Input_DGHydr in = new CHARMM_Input_DGHydr(corname_solu, corname_solv, 
                 rtfname, rtfname, parname, lpunname, type,
                 Double.valueOf(lambda_min.getText()),
@@ -263,10 +327,26 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
         
         this.inp.add(in);
         button_run_CHARMM.setDisable(false);
+         
+//        tabsList.add(new MyTab(corname_solu, corname_solu));
+//        tabsList.add(new MyTab(corname_solv, corname_solv));
+//        tabsList.add(new MyTab(rtfname, rtfname));
+//        tabsList.add(new MyTab(parname, parname));
+//        tabsList.add(new MyTab(lpunname, lpunname));
+//
+//        boolean addTabsSuccess = tab_pane.getTabs().addAll(tabsList);
+//        if (!addTabsSuccess) {
+//            logger.error("Problem while adding tabs to current window ; try again ... ");
+//        } else {
+//            button_generate.setDisable(addTabsSuccess);
+//        }
+
+//        this.charmmWorkflow;
         
-        /*
-         * TODO : add call for preparing input files without running CHARMM
+        /**
+         * If success enable button for saving
          */
+//        button_save_to_file.setDisable(false);
     }
 
     /**

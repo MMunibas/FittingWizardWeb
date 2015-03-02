@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.generate;
+package ch.unibas.charmmtools.generate.inputs;
 
 import java.io.BufferedWriter;
 import java.io.CharArrayWriter;
@@ -20,8 +20,6 @@ import java.io.IOException;
  * @author hedin
  */
 public class CHARMM_Input_PureLiquid extends CHARMM_Input {
-
-    private final String expectedFormat=".cor";
     
     /**
      * If content of the field has to be retrieved later on it is stored on an internal CharArrayWriter within this class
@@ -34,6 +32,9 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
     public CHARMM_Input_PureLiquid(String _cor, String _top, String _par) throws IOException {
         
         super(_cor, _top, _par, "Pure Liquid");
+        
+        this.expectedFormats.clear();
+        this.expectedFormats.add(".cor");
         
         writer = new CharArrayWriter();
         
@@ -54,6 +55,9 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
     public CHARMM_Input_PureLiquid(String _cor, String _top, String _par, File _outf) throws IOException {
         
         super(_cor, _top, _par, _outf, "Pure Liquid");
+        
+        this.expectedFormats.clear();
+        this.expectedFormats.add(".cor");
          
         writer = new BufferedWriter(new FileWriter(_outf));
         
@@ -78,6 +82,9 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
 
         super(_cor, _top, _par, _lpun, "Pure Liquid");
         
+        this.expectedFormats.clear();
+        this.expectedFormats.add(".cor");
+        
         writer = new CharArrayWriter();
         
         //build the input file by calling all the print_* sections
@@ -99,6 +106,9 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
     public CHARMM_Input_PureLiquid(String _cor, String _top, String _par, String _lpun, File _outf) throws IOException {
 
         super(_cor, _top, _par, _lpun, _outf, "Pure Liquid");
+        
+        this.expectedFormats.clear();
+        this.expectedFormats.add(".cor");
         
         writer = new BufferedWriter(new FileWriter(_outf));
         

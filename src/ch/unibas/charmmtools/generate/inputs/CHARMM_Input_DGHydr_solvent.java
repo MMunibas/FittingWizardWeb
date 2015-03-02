@@ -6,38 +6,30 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.generate;
+package ch.unibas.charmmtools.generate.inputs;
 
 import java.io.CharArrayWriter;
 import java.io.IOException;
 
 /**
  * DG of hydration charmm calculation ; extends the abstract CHARMM_Input class
+ * it is also an abstract class before there are several types of possible simulations
+ * and we want to have a dedicated class for each because the input files may vary a lot
  * @author hedin
  */
-public class CHARMM_Input_DGHydr  extends CHARMM_Input {
+public class CHARMM_Input_DGHydr_solvent  extends CHARMM_Input_DGHydr {
 
-    private final String expectedFormat=".pdb";
-    
-    protected String solv_cor, solv_top;
-    protected String ti_type;
-    protected double l_min, l_space, l_max;
-    
-    public CHARMM_Input_DGHydr(String _solu_cor, String _solv_cor,
+    public CHARMM_Input_DGHydr_solvent(String _solu_cor, String _solv_cor,
             String _solu_top, String _solv_top,
             String _par, String _lpun,
             String _ti_type, double _l_min, double _l_space, double _l_max) {
-        super(_solu_cor, _solu_top, _par, _lpun, "DeltaG of Hydration");
-        this.solv_cor = _solv_cor;
-        this.solv_top = _solv_top;
-        this.ti_type = _ti_type;
-        this.l_min = _l_min;
-        this.l_space = _l_space;
-        this.l_max = _l_max;
         
+        super(_solu_cor, _solv_cor, _solu_top, _solv_top, _par, _lpun, 
+                _ti_type, _l_min, _l_space, _l_max);
+
         writer = new CharArrayWriter();
         
-//        build();
+        this.build();
     }
 
     @Override
@@ -80,48 +72,6 @@ public class CHARMM_Input_DGHydr  extends CHARMM_Input {
     @Override
     protected void print_DynaSection() throws IOException {
 
-    }
-
-    /**
-     * @return the solv_cor
-     */
-    public String getSolv_cor() {
-        return solv_cor;
-    }
-
-    /**
-     * @return the solv_top
-     */
-    public String getSolv_top() {
-        return solv_top;
-    }
-
-    /**
-     * @return the ti_type
-     */
-    public String getTi_type() {
-        return ti_type;
-    }
-
-    /**
-     * @return the l_min
-     */
-    public double getL_min() {
-        return l_min;
-    }
-
-    /**
-     * @return the l_space
-     */
-    public double getL_space() {
-        return l_space;
-    }
-
-    /**
-     * @return the l_max
-     */
-    public double getL_max() {
-        return l_max;
     }
     
 }
