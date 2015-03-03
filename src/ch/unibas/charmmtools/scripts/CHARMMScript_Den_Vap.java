@@ -18,7 +18,7 @@ import ch.unibas.fittingwizard.Settings;
 import java.io.File;
 
 
-public class CHARMMScript_Den_Vap extends CHARMMScript_Base {
+public class CHARMMScript_Den_Vap extends CHARMMScript_Base implements ICHARMMScriptWithPython{
     
     private static final String ScriptNameKey = "scripts.submitCHARMM_Den_Vap";
     private static final String OutputDirName = "test";

@@ -9,7 +9,7 @@
 package ch.unibas.charmmtools.gui.step4.expert;
 
 import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
-import ch.unibas.charmmtools.workflows.RunningCHARMM;
+import ch.unibas.charmmtools.gui.RunningCHARMM;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_DGHydr;
@@ -20,6 +20,7 @@ import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.value.ChangeListener;
@@ -301,33 +302,36 @@ public class CHARMM_GUI_Step4_expert extends CHARMM_GUI_base {
     @FXML
     protected void GenerateInputFile() {
 
-//        try {
-        // get filenames
-        String corname_solu = textfield_COR_solu.getText();
-        String corname_solv = textfield_COR_solv.getText();
-        String rtfname = textfield_RTF.getText();
-        String parname = textfield_PAR.getText();
-        String lpunname = textfield_LPUN.getText();
+        try {
+            // get filenames
+            String corname_solu = textfield_COR_solu.getText();
+            String corname_solv = textfield_COR_solv.getText();
+            String rtfname = textfield_RTF.getText();
+            String parname = textfield_PAR.getText();
+            String lpunname = textfield_LPUN.getText();
 
-        // if empty filenames print a pattern user should modify
-        //transform it to relative path instead as we have to send data to clusters later
-        String folderPath = new File("test").getAbsolutePath();
-        corname_solu = corname_solu.length() == 0 ? "ADD_HERE_PATH_TO_COORDINATES_LIQUID_FILE" : ResourceUtils.getRelativePath(corname_solu, folderPath);
-        corname_solv = corname_solv.length() == 0 ? "ADD_HERE_PATH_TO_COORDINATES_SOLVENT_FILE" : ResourceUtils.getRelativePath(corname_solv, folderPath);
-        rtfname = rtfname.length() == 0 ? "ADD_HERE_PATH_TO_TOPOLOGY_FILE" : ResourceUtils.getRelativePath(rtfname, folderPath);
-        parname = parname.length() == 0 ? "ADD_HERE_PATH_TO_PARAMETERS_FILE" : ResourceUtils.getRelativePath(parname, folderPath);
-        lpunname = lpunname.length() == 0 ? "ADD_HERE_PATH_TO_LPUN_FILE" : ResourceUtils.getRelativePath(lpunname, folderPath);
+            // if empty filenames print a pattern user should modify
+            //transform it to relative path instead as we have to send data to clusters later
+            String folderPath = new File("test").getAbsolutePath();
+            corname_solu = corname_solu.length() == 0 ? "ADD_HERE_PATH_TO_COORDINATES_LIQUID_FILE" : ResourceUtils.getRelativePath(corname_solu, folderPath);
+            corname_solv = corname_solv.length() == 0 ? "ADD_HERE_PATH_TO_COORDINATES_SOLVENT_FILE" : ResourceUtils.getRelativePath(corname_solv, folderPath);
+            rtfname = rtfname.length() == 0 ? "ADD_HERE_PATH_TO_TOPOLOGY_FILE" : ResourceUtils.getRelativePath(rtfname, folderPath);
+            parname = parname.length() == 0 ? "ADD_HERE_PATH_TO_PARAMETERS_FILE" : ResourceUtils.getRelativePath(parname, folderPath);
+            lpunname = lpunname.length() == 0 ? "ADD_HERE_PATH_TO_LPUN_FILE" : ResourceUtils.getRelativePath(lpunname, folderPath);
 
-        RadioButton butt = (RadioButton) ti_toggle_group.getSelectedToggle();
-        String type = butt.getText().toLowerCase();
-        CHARMM_Input_DGHydr in = new CHARMM_Input_DGHydr_solvent(corname_solu, corname_solv, 
-                rtfname, rtfname, parname, lpunname, type,
-                Double.valueOf(lambda_min.getText()),
-                Double.valueOf(lambda_space.getText()),
-                Double.valueOf(lambda_max.getText()));
-        
-        this.inp.add(in);
-        button_run_CHARMM.setDisable(false);
+            RadioButton butt = (RadioButton) ti_toggle_group.getSelectedToggle();
+            String type = butt.getText().toLowerCase();
+            CHARMM_Input_DGHydr in = new CHARMM_Input_DGHydr_solvent(corname_solu, corname_solv, 
+                    rtfname, rtfname, parname, lpunname, type,
+                    Double.valueOf(lambda_min.getText()),
+                    Double.valueOf(lambda_space.getText()),
+                    Double.valueOf(lambda_max.getText()));
+
+            this.inp.add(in);
+            button_run_CHARMM.setDisable(false);
+        } catch (IOException ex) {
+            logger.error(ex);
+        }
          
 //        tabsList.add(new MyTab(corname_solu, corname_solu));
 //        tabsList.add(new MyTab(corname_solv, corname_solv));

@@ -9,7 +9,7 @@
 package ch.unibas.charmmtools.gui.step4;
 
 import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
-import ch.unibas.charmmtools.workflows.RunningCHARMM;
+import ch.unibas.charmmtools.gui.RunningCHARMM;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_DGHydr;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_DGHydr_gas;
@@ -22,9 +22,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
@@ -37,8 +37,6 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
     /**
      * All FXML variables
      */
-//    @FXML
-//    private ObservableList<String> avail_coor_types;
     @FXML
     private Button button_open_PAR, button_open_RTF, button_open_COR_solu, button_open_COR_solv, button_open_LPUN;
 
@@ -54,6 +52,9 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 
     @FXML
     private TextField lambda_space;
+    
+    @FXML
+    private CheckBox check_autogen_corsolv;
 
     // those buttons are NOT exposed to FXML but handled locally with fillbuttonbar
     private Button button_reset;
@@ -298,42 +299,24 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
     }
 
     /**
-     * Handles the event when one of the 4 checkBox is selected. If the 4 are set to true button_generate is enabled as
-     * the 4 required files will be chosen later
+     * Handles the event when a checkBox is selected.
      *
      * @param event
      */
-//    @FXML
-//    protected void CheckBoxActions(ActionEvent event) {
-//
-//        if (event.getSource().equals(later_PAR)) {
-//            PAR_selected = later_PAR.isSelected();
-//            button_open_PAR.setDisable(later_PAR.isSelected());
-//            textfield_PAR.setDisable(later_PAR.isSelected());
-//        } else if (event.getSource().equals(later_RTF)) {
-//            RTF_selected = later_RTF.isSelected();
-//            button_open_RTF.setDisable(later_RTF.isSelected());
-//            textfield_RTF.setDisable(later_RTF.isSelected());
-//        } else if (event.getSource().equals(later_COR_solu)) {
-//            COR_selected_solu = later_COR_solu.isSelected();
-//            button_open_COR_solu.setDisable(later_COR_solu.isSelected());
-//            textfield_COR_solu.setDisable(later_COR_solu.isSelected());
-//            coor_type_solu.setDisable(later_COR_solu.isSelected());
-//        } else if (event.getSource().equals(later_COR_solv)) {
-//            COR_selected_solv = later_COR_solv.isSelected();
-//            button_open_COR_solv.setDisable(later_COR_solv.isSelected());
-//            textfield_COR_solv.setDisable(later_COR_solv.isSelected());
-//            coor_type_solv.setDisable(later_COR_solv.isSelected());
-//        } else if (event.getSource().equals(later_LPUN)) {
-//            LPUN_selected = later_LPUN.isSelected();
-//            button_open_LPUN.setDisable(later_LPUN.isSelected());
-//            textfield_LPUN.setDisable(later_LPUN.isSelected());
-//        } else {
-//            throw new UnknownError("Unknown Event");
-//        }
-//
-//        this.validateButtonGenerate();
-//    }
+    @FXML
+    protected void CheckBoxActions(ActionEvent event) {
+
+        if (event.getSource().equals(check_autogen_corsolv)) {
+            boolean l = check_autogen_corsolv.isSelected();
+            textfield_COR_solv.setDisable(l);
+            button_open_COR_solv.setDisable(l);
+            COR_selected_solv=l;
+        } else {
+            throw new UnknownError("Unknown Event");
+        }
+
+        this.validateButtonGenerate();
+    }
     /**
      *
      * @param event
@@ -374,6 +357,7 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 //        later_COR_solv.setSelected(false);
         button_open_COR_solv.setDisable(false);
         textfield_COR_solv.setDisable(false);
+        check_autogen_corsolv.setSelected(false);
 //        coor_type_solv.setDisable(later_COR_solv.isSelected());
 
 //        later_LPUN.setSelected(false);
@@ -462,12 +446,9 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
     @Override
     protected void fillButtonBar() {
 
-        button_reset = ButtonFactory.createButtonBarButton("Reset", new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                logger.info("Resetting all fields.");
-                ResetFields(actionEvent);
-            }
+        button_reset = ButtonFactory.createButtonBarButton("Reset", (ActionEvent actionEvent) -> {
+            logger.info("Resetting all fields.");
+            ResetFields(actionEvent);
         });
         addButtonToButtonBar(button_reset);
 
@@ -480,12 +461,10 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 //        });
 //        addButtonToButtonBar(button_save_to_file);
 //        button_save_to_file.setDisable(true);
-        button_run_CHARMM = ButtonFactory.createButtonBarButton("Run CHARMM", new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                logger.info("Running CHARMM input script.");
-                runCHARMM(actionEvent);
-            }
+        
+        button_run_CHARMM = ButtonFactory.createButtonBarButton("Run CHARMM", (ActionEvent actionEvent) -> {
+            logger.info("Running CHARMM input script.");
+            runCHARMM(actionEvent);
         });
         addButtonToButtonBar(button_run_CHARMM);
         button_run_CHARMM.setDisable(true);

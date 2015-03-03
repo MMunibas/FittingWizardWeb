@@ -9,7 +9,7 @@
 package ch.unibas.charmmtools.gui.step1;
 
 import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
-import ch.unibas.charmmtools.workflows.RunningCHARMM;
+import ch.unibas.charmmtools.gui.RunningCHARMM;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_GasPhase;

@@ -69,7 +69,7 @@ import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_Step1;
 import ch.unibas.charmmtools.gui.step2.CHARMM_GUI_Step2;
 import ch.unibas.charmmtools.gui.step3.CHARMM_GUI_Step3;
 import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Step4;
-import ch.unibas.charmmtools.workflows.RunningCHARMM;
+import ch.unibas.charmmtools.gui.RunningCHARMM;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_GasPhase;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_PureLiquid;

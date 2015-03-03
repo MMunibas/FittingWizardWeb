@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.workflows;
+package ch.unibas.charmmtools.gui;
 
 import ch.unibas.charmmtools.gui.step2.CHARMM_GUI_Step2;
 import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_Step1;
@@ -17,10 +17,10 @@ import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_GasPhase;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_PureLiquid;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
 import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Step4;
+import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.application.workflows.base.WorkflowContext;
 import ch.unibas.fittingwizard.presentation.base.progress.Context;
 import ch.unibas.fittingwizard.presentation.base.progress.ProgressPage;
-import java.sql.JDBCType;
 import java.util.ArrayList;
 import java.util.List;
 
