@@ -21,8 +21,8 @@ import java.io.File;
  */
 public abstract class CHARMMScript_DG extends CHARMMScript_Base implements ICHARMMScriptWithPython{
 
-    private static final String ScriptNameKey = "scripts.submitCHARMM_DG";
-    private static final String OutputDirName = "test";
+    protected static final String ScriptNameKey = "scripts.submitCHARMM_DG";
+    protected static final String OutputDirName = "test";
     
     public CHARMMScript_DG(File _sessionDir, Settings _settings)
     {

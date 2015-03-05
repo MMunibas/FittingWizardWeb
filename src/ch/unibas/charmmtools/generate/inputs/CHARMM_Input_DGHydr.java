@@ -8,8 +8,9 @@
  */
 package ch.unibas.charmmtools.generate.inputs;
 
-import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
+import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
 import java.io.CharArrayWriter;
+import java.io.File;
 
 /**
  * DG of hydration charmm calculation ; extends the abstract CHARMM_Input class
@@ -23,7 +24,9 @@ public abstract class CHARMM_Input_DGHydr  extends CHARMM_Input {
     protected String ti_type;
     protected double l_min, l_space, l_max;
     
-    protected RunCHARMMWorkflow charmmWorkflow;
+    protected PythonScriptRunner runner;
+    
+//    protected RunCHARMMWorkflow charmmWorkflow;
     
     /**
      * A constructor to call when a DGHydr vdw or mtp simulation is required in solvent 
@@ -37,15 +40,16 @@ public abstract class CHARMM_Input_DGHydr  extends CHARMM_Input {
      * @param _l_min Minimal lambda value, usually 0.0
      * @param _l_space spacing value for lambda grid, usually 0.1
      * @param _l_max Maximal lambda value, usually 1.0
-     * @param _cflow CHARMM workflow object is required for generating input files using an external python script
      */
     public CHARMM_Input_DGHydr(String _solu_cor, String _solv_cor,
             String _solu_top, String _solv_top,
             String _par, String _lpun,
-            String _ti_type, double _l_min, double _l_space, double _l_max,
-            RunCHARMMWorkflow _cflow) {
+            String _ti_type, double _l_min, double _l_space, double _l_max) {
         
         super(_solu_cor, _solu_top, _par, _lpun, "DeltaG of Hydration (with solvent)");
+        
+        this.runner = new PythonScriptRunner();
+        this.runner.setWorkingDir(new File("./test"));
         
         this.solv_cor = _solv_cor;
         this.solv_top = _solv_top;
@@ -53,7 +57,7 @@ public abstract class CHARMM_Input_DGHydr  extends CHARMM_Input {
         this.l_min = _l_min;
         this.l_space = _l_space;
         this.l_max = _l_max;
-        this.charmmWorkflow = _cflow;
+//        this.charmmWorkflow = _cflow;
         
         writer = new CharArrayWriter();
     }
@@ -68,14 +72,15 @@ public abstract class CHARMM_Input_DGHydr  extends CHARMM_Input {
      * @param _l_min Minimal lambda value, usually 0.0
      * @param _l_space spacing value for lambda grid, usually 0.1
      * @param _l_max Maximal lambda value, usually 1.0
-     * @param _cflow CHARMM workflow object is required for generating input files using an external python script
      */
     public CHARMM_Input_DGHydr(String _solu_cor, String _solu_top,
             String _par, String _lpun,
-            String _ti_type, double _l_min, double _l_space, double _l_max,
-            RunCHARMMWorkflow _cflow) {
+            String _ti_type, double _l_min, double _l_space, double _l_max) {
         
         super(_solu_cor, _solu_top, _par, _lpun, "DeltaG of Hydration (in gas phase)");
+        
+        this.runner = new PythonScriptRunner();
+        this.runner.setWorkingDir(new File("./test"));
         
         this.solv_cor = null;
         this.solv_top = null;
@@ -83,11 +88,11 @@ public abstract class CHARMM_Input_DGHydr  extends CHARMM_Input {
         this.l_min = _l_min;
         this.l_space = _l_space;
         this.l_max = _l_max;
-        this.charmmWorkflow = _cflow;
+//        this.charmmWorkflow = _cflow;
         
         writer = new CharArrayWriter();
     }
-       
+    
     protected abstract void genInputFromPython();
 
     /**
