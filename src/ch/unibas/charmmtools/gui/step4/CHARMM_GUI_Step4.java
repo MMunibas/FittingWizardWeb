@@ -284,10 +284,10 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 
             button_run_CHARMM.setDisable(false);
             
-            logger.debug(in_gas_vdw.getText());
-            logger.debug(in_gas_mtp.getText());
-            logger.debug(in_solv_vdw.getText());
-            logger.debug(in_solv_mtp.getText());
+//            logger.debug(in_gas_vdw.getText());
+//            logger.debug(in_gas_mtp.getText());
+//            logger.debug(in_solv_vdw.getText());
+//            logger.debug(in_solv_mtp.getText());
 
         } catch (IOException ex) {
             logger.error(ex);

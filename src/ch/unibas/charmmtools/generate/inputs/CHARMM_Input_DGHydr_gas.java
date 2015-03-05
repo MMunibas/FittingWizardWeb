@@ -9,6 +9,7 @@
 package ch.unibas.charmmtools.generate.inputs;
 
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
+import ch.unibas.fittingwizard.application.workflows.base.WorkflowContext;
 import java.io.IOException;
 
 /**
@@ -53,10 +54,10 @@ public class CHARMM_Input_DGHydr_gas  extends CHARMM_Input_DGHydr {
     protected void print_DynaSection() throws IOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     protected void genInputFromPython() {
-//        this.charmmWorkflow.
+        
     }
 
   

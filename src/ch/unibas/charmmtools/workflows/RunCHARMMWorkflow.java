@@ -59,26 +59,26 @@ public class RunCHARMMWorkflow extends Workflow<CHARMM_Input, CHARMM_Output> {
         return out;
     }
     
-    public List<CHARMM_Output> execute(List< WorkflowContext<CHARMM_Input> > status) {
-        
-        List<CHARMM_Output> out = new ArrayList<>();
-        
-        logger.info("Executing CHARMM workflow ...");
-        
-        int idx_scr=charmmScript.size(), idx_cont=status.size();
-        
-        if(idx_scr!=idx_cont)
-            throw new Error("When using the multi argument execute() for RunCHARMMWorkflow, it seems"
-                    + "that lists of scripts and context have different sizes !");
-            
-        for(WorkflowContext<CHARMM_Input> cont : status){
-            ICHARMMScript myScript = charmmScript.get(idx_scr);
-            cont.setCurrentStatus("Executing " + myScript.getScriptFileName() + " ...");
-            out.add( myScript.execute(cont.getParameter()) );
-            idx_scr++;
-        }
-        
-        return out;
-    }
+//    public List<CHARMM_Output> execute(List< WorkflowContext<CHARMM_Input> > status) {
+//        
+//        List<CHARMM_Output> out = new ArrayList<>();
+//        
+//        logger.info("Executing CHARMM workflow ...");
+//        
+//        int idx_scr=charmmScript.size(), idx_cont=status.size();
+//        
+//        if(idx_scr!=idx_cont)
+//            throw new Error("When using the multi argument execute() for RunCHARMMWorkflow, it seems"
+//                    + "that lists of scripts and context have different sizes !");
+//            
+//        for(WorkflowContext<CHARMM_Input> cont : status){
+//            ICHARMMScript myScript = charmmScript.get(idx_scr);
+//            cont.setCurrentStatus("Executing " + myScript.getScriptFileName() + " ...");
+//            out.add( myScript.execute(cont.getParameter()) );
+//            idx_scr++;
+//        }
+//        
+//        return out;
+//    }
 
 }
