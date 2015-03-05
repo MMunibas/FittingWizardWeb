@@ -71,11 +71,14 @@ import ch.unibas.charmmtools.gui.step3.CHARMM_GUI_Step3;
 import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Step4;
 import ch.unibas.charmmtools.gui.RunningCHARMM;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
+import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_DGHydr_gas;
+import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_DGHydr_solvent;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_GasPhase;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_PureLiquid;
 import ch.unibas.charmmtools.scripts.ICHARMMScript;
 import ch.unibas.charmmtools.scripts.CHARMMScript_Den_Vap;
-import ch.unibas.charmmtools.scripts.CHARMMScript_DG;
+import ch.unibas.charmmtools.scripts.CHARMMScript_DG_gas;
+import ch.unibas.charmmtools.scripts.CHARMMScript_DG_solvent;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import java.util.List;
 
@@ -105,7 +108,7 @@ public class WizardPageFactory {
     private IFitMtpScript fitMtpScript;
     private IExportScript exportScript;
     private IVmdDisplayScript vmdScript;
-    private ICHARMMScript charmmScript_Den_Vap, charmmScript_DG;
+    private ICHARMMScript charmmScript_Den_Vap, charmmScript_DG_gas, charmmScript_DG_solvent;
 
     private RunFitWorkflow runFitWorkflow;
     private ExportFitWorkflow exportFitWorkflow;
@@ -167,8 +170,8 @@ public class WizardPageFactory {
         }
         
         charmmScript_Den_Vap = new CHARMMScript_Den_Vap(sessionDir, settings);
-        charmmScript_DG = new CHARMMScript_DG(sessionDir, settings);
-
+        charmmScript_DG_gas = new CHARMMScript_DG_gas(sessionDir, settings);
+        charmmScript_DG_solvent = new CHARMMScript_DG_solvent(sessionDir, settings);    
     }
 
     private void initializeWorkflows() {
@@ -189,7 +192,7 @@ public class WizardPageFactory {
         vmdDisplayWorkflow = new RunVmdDisplayWorkflow(vmdScript, sessionDir);
         
         charmmWorkflow_Den_Vap = new RunCHARMMWorkflow(charmmScript_Den_Vap);
-        charmmWorkflow_DG = new RunCHARMMWorkflow(charmmScript_DG);
+        charmmWorkflow_DG = new RunCHARMMWorkflow(charmmScript_DG_gas,charmmScript_DG_solvent);
     }
 
     public <T extends WizardPage> WizardPage create(Class<T> type, Object parameter) {
@@ -252,9 +255,12 @@ public class WizardPageFactory {
                 {
                     page = new RunningCHARMM(charmmWorkflow_Den_Vap,ioList);
                 }
-                else
+                else if(c==CHARMM_Input_DGHydr_gas.class || c==CHARMM_Input_DGHydr_solvent.class)
                 {
                     page = new RunningCHARMM(charmmWorkflow_DG,ioList);
+                }
+                else{//default if there was an error is to go back to initial procedure of CHARMM fitting
+                    page = new CHARMM_GUI_Step1(charmmWorkflow_Den_Vap);
                 }
                 
             }

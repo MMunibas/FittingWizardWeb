@@ -302,7 +302,7 @@ public class CHARMM_GUI_Step4_expert extends CHARMM_GUI_base {
     @FXML
     protected void GenerateInputFile() {
 
-        try {
+//        try {
             // get filenames
             String corname_solu = textfield_COR_solu.getText();
             String corname_solv = textfield_COR_solv.getText();
@@ -321,17 +321,17 @@ public class CHARMM_GUI_Step4_expert extends CHARMM_GUI_base {
 
             RadioButton butt = (RadioButton) ti_toggle_group.getSelectedToggle();
             String type = butt.getText().toLowerCase();
-            CHARMM_Input_DGHydr in = new CHARMM_Input_DGHydr_solvent(corname_solu, corname_solv, 
-                    rtfname, rtfname, parname, lpunname, type,
-                    Double.valueOf(lambda_min.getText()),
-                    Double.valueOf(lambda_space.getText()),
-                    Double.valueOf(lambda_max.getText()));
-
-            this.inp.add(in);
-            button_run_CHARMM.setDisable(false);
-        } catch (IOException ex) {
-            logger.error(ex);
-        }
+//            CHARMM_Input_DGHydr in = new CHARMM_Input_DGHydr_solvent(corname_solu, corname_solv, 
+//                    rtfname, rtfname, parname, lpunname, type,
+//                    Double.valueOf(lambda_min.getText()),
+//                    Double.valueOf(lambda_space.getText()),
+//                    Double.valueOf(lambda_max.getText()));
+//
+//            this.inp.add(in);
+//            button_run_CHARMM.setDisable(false);
+//        } catch (IOException ex) {
+//            logger.error(ex);
+//        }
          
 //        tabsList.add(new MyTab(corname_solu, corname_solu));
 //        tabsList.add(new MyTab(corname_solv, corname_solv));

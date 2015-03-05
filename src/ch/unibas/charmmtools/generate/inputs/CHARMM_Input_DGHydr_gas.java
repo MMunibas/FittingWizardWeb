@@ -26,12 +26,12 @@ public class CHARMM_Input_DGHydr_gas  extends CHARMM_Input_DGHydr {
 
 //        writer = new CharArrayWriter();
         
-        this.build();
+        build();
     }
 
     @Override
     protected void build() throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        genInputFromPython();
     }
 
     @Override
@@ -52,6 +52,11 @@ public class CHARMM_Input_DGHydr_gas  extends CHARMM_Input_DGHydr {
     @Override
     protected void print_DynaSection() throws IOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    protected void genInputFromPython() {
+//        this.charmmWorkflow.
     }
 
   

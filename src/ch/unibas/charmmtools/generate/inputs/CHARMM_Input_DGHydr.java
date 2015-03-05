@@ -87,6 +87,8 @@ public abstract class CHARMM_Input_DGHydr  extends CHARMM_Input {
         
         writer = new CharArrayWriter();
     }
+       
+    protected abstract void genInputFromPython();
 
     /**
      * @return the solv_cor
