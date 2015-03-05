@@ -1,4 +1,5 @@
 /charmm
 /*.out
 /*.inp
+/tmp.*
 

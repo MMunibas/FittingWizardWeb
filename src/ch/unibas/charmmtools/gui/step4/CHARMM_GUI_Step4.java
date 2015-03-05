@@ -258,19 +258,19 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 
         try {
             in_gas_vdw = new CHARMM_Input_DGHydr_gas(corname_solu, rtfname, parname, lpunname, "vdw",
-                    0.0, lamb_spacing_val, 1.0);
+                    0.0, lamb_spacing_val, 1.0, this.charmmWorkflow);
             inp.add(in_gas_vdw);
 
             in_gas_mtp = new CHARMM_Input_DGHydr_gas(corname_solu, rtfname, parname, lpunname, "mtp",
-                    0.0, lamb_spacing_val, 1.0);
+                    0.0, lamb_spacing_val, 1.0, this.charmmWorkflow);
             inp.add(in_gas_mtp);
 
             in_solv_vdw = new CHARMM_Input_DGHydr_solvent(corname_solu, corname_solv, rtfname, rtfname,
-                    parname, lpunname, "vdw", 0.0, lamb_spacing_val, 1.0);
+                    parname, lpunname, "vdw", 0.0, lamb_spacing_val, 1.0, this.charmmWorkflow);
             inp.add(in_solv_vdw);
 
             in_solv_mtp = new CHARMM_Input_DGHydr_solvent(corname_solu, corname_solv, rtfname, rtfname,
-                    parname, lpunname, "mtp", 0.0, lamb_spacing_val, 1.0);
+                    parname, lpunname, "mtp", 0.0, lamb_spacing_val, 1.0, this.charmmWorkflow);
             inp.add(in_solv_mtp);
 
             tab_list_gas.add(new MyTab(in_gas_vdw.getType(), in_gas_vdw.getText()));
