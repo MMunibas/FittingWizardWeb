@@ -12,11 +12,7 @@ import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
 import ch.unibas.charmmtools.gui.RunningCHARMM;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
-import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_DGHydr;
-import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_DGHydr_gas;
-import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_DGHydr_solvent;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
-import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import java.io.File;
 import java.io.IOException;
@@ -155,6 +151,8 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 //                }
 //            }
 //        });
+        this.tab_pane_gas.getTabs().clear();
+        this.tab_pane_solv.getTabs().clear();
     }
 
 //    @Override
