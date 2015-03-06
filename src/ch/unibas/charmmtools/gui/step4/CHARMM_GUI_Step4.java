@@ -11,6 +11,7 @@ package ch.unibas.charmmtools.gui.step4;
 import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
 import ch.unibas.charmmtools.gui.RunningCHARMM;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
+import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_DGHydr;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_DGHydr_gas;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_DGHydr_solvent;
@@ -242,42 +243,42 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
         String lpunname = textfield_LPUN.getText();
 
         //transform it to relative path instead as we have to send data to clusters later
-        String folderPath = new File("test").getAbsolutePath();
-        corname_solu = ResourceUtils.getRelativePath(corname_solu, folderPath);
-        corname_solv = ResourceUtils.getRelativePath(corname_solv, folderPath);
-        rtfname = ResourceUtils.getRelativePath(rtfname, folderPath);
-        parname = ResourceUtils.getRelativePath(parname, folderPath);
-        lpunname = ResourceUtils.getRelativePath(lpunname, folderPath);
+//        String folderPath = new File("test").getAbsolutePath();
+//        corname_solu = ResourceUtils.getRelativePath(corname_solu, folderPath);
+//        corname_solv = ResourceUtils.getRelativePath(corname_solv, folderPath);
+//        rtfname = ResourceUtils.getRelativePath(rtfname, folderPath);
+//        parname = ResourceUtils.getRelativePath(parname, folderPath);
+//        lpunname = ResourceUtils.getRelativePath(lpunname, folderPath);
 
         double lamb_spacing_val = Double.valueOf(lambda_space.getText());
 
         /**
          * TODO : get a list of input files from python script
          */
-        CHARMM_Input_DGHydr in_gas_vdw = null, in_gas_mtp = null, in_solv_vdw = null, in_solv_mtp = null;
+        CHARMM_Generator_DGHydr in_gas_vdw = null, in_gas_mtp = null, in_solv_vdw = null, in_solv_mtp = null;
 
-        try {
-            in_gas_vdw = new CHARMM_Input_DGHydr_gas(corname_solu, rtfname, parname, lpunname, "vdw",
+//        try {
+            in_gas_vdw = new CHARMM_Generator_DGHydr(corname_solu, rtfname, parname, lpunname, "vdw",
                     0.0, lamb_spacing_val, 1.0);
-            inp.add(in_gas_vdw);
-
-            in_gas_mtp = new CHARMM_Input_DGHydr_gas(corname_solu, rtfname, parname, lpunname, "mtp",
+//            inp.add(in_gas_vdw);
+//
+            in_gas_mtp = new CHARMM_Generator_DGHydr(corname_solu, rtfname, parname, lpunname, "mtp",
                     0.0, lamb_spacing_val, 1.0);
-            inp.add(in_gas_mtp);
-
-            in_solv_vdw = new CHARMM_Input_DGHydr_solvent(corname_solu, corname_solv, rtfname, rtfname,
+//            inp.add(in_gas_mtp);
+//
+            in_solv_vdw = new CHARMM_Generator_DGHydr(corname_solu, corname_solv, rtfname, rtfname,
                     parname, lpunname, "vdw", 0.0, lamb_spacing_val, 1.0);
-            inp.add(in_solv_vdw);
-
-            in_solv_mtp = new CHARMM_Input_DGHydr_solvent(corname_solu, corname_solv, rtfname, rtfname,
+//            inp.add(in_solv_vdw);
+//
+            in_solv_mtp = new CHARMM_Generator_DGHydr(corname_solu, corname_solv, rtfname, rtfname,
                     parname, lpunname, "mtp", 0.0, lamb_spacing_val, 1.0);
-            inp.add(in_solv_mtp);
+//            inp.add(in_solv_mtp);
 
-            tab_list_gas.add(new MyTab(in_gas_vdw.getType(), in_gas_vdw.getText()));
-            tab_list_gas.add(new MyTab(in_gas_mtp.getType(), in_gas_mtp.getText()));
-
-            tab_list_solv.add(new MyTab(in_solv_vdw.getType(), in_solv_vdw.getText()));
-            tab_list_solv.add(new MyTab(in_solv_mtp.getType(), in_solv_mtp.getText()));
+//            tab_list_gas.add(new MyTab(in_gas_vdw.getType(), in_gas_vdw.getText()));
+//            tab_list_gas.add(new MyTab(in_gas_mtp.getType(), in_gas_mtp.getText()));
+//
+//            tab_list_solv.add(new MyTab(in_solv_vdw.getType(), in_solv_vdw.getText()));
+//            tab_list_solv.add(new MyTab(in_solv_mtp.getType(), in_solv_mtp.getText()));
 
             tab_pane_gas.getTabs().addAll(tab_list_gas);
             tab_pane_solv.getTabs().addAll(tab_list_solv);
@@ -288,10 +289,10 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 //            logger.debug(in_gas_mtp.getText());
 //            logger.debug(in_solv_vdw.getText());
 //            logger.debug(in_solv_mtp.getText());
-
-        } catch (IOException ex) {
-            logger.error(ex);
-        }
+//
+//        } catch (IOException ex) {
+//            logger.error(ex);
+//        }
 
         /*
          * TODO : display input files without running CHARMM (might go with previous TODO ?? )

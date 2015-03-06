@@ -17,7 +17,7 @@ import java.util.List;
  * DG of hydration charmm calculation ; solvated system
  * @author hedin
  */
-public class CHARMM_Input_DGHydr_solvent  extends CHARMM_Input_DGHydr {
+public abstract class CHARMM_Input_DGHydr_solvent  extends CHARMM_Input_DGHydr {
 
     public CHARMM_Input_DGHydr_solvent(String _solu_cor, String _solv_cor,
             String _solu_top, String _solv_top,
@@ -26,9 +26,7 @@ public class CHARMM_Input_DGHydr_solvent  extends CHARMM_Input_DGHydr {
         
         super(_solu_cor, _solv_cor, _solu_top, _solv_top, _par, _lpun, 
                 _ti_type, _l_min, _l_space, _l_max);
-
-//        writer = new CharArrayWriter();
-        
+      
         build();
     }
 
@@ -56,29 +54,5 @@ public class CHARMM_Input_DGHydr_solvent  extends CHARMM_Input_DGHydr {
     protected void print_DynaSection() throws IOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    @Override
-    protected void genInputFromPython() {
-        List<String> args = new ArrayList<>();
-        args.clear();
-        
-        args.add("--ti");   args.add(this.ti_type);
-        args.add("--tps");   args.add(this.top);
-        args.add("--top");   args.add(this.solv_top);
-        args.add("--slu");   args.add(this.cor);
-        args.add("--slv");   args.add(this.solv_cor);
-        args.add("--par");   args.add(this.par);
-        args.add("--lpun");  args.add(this.lpun);
-        args.add("--chm");  args.add(runner.getWorkingDir().getParent() + "/scripts/charmm");
-        args.add("--lmb");  args.add(Double.toString(this.l_min));
-        args.add(Double.toString(this.l_space));
-        args.add(Double.toString(this.l_max));
-        args.add("--generate");
-        
-        File script = new File(runner.getWorkingDir().getParent() + "/scripts/charmm-ti/perform-ti.py");
-        runner.exec(script, args);
-    }
-
-
-    
+  
 }
