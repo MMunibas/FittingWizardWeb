@@ -25,12 +25,12 @@ public abstract class CHARMM_Input_DGHydr_gas  extends CHARMM_Input_DGHydr {
         
         super(_solu_cor, _solu_top, _par, _lpun, _ti_type, _l_min, _l_space, _l_max);
         
-        build();
+//        build();
     }
 
     @Override
     protected void build() throws IOException {
-        genInputFromPython();
+//        genInputFromPython();
     }
 
     @Override

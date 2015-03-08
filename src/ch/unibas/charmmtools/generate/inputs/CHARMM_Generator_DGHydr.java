@@ -8,6 +8,9 @@
  */
 package ch.unibas.charmmtools.generate.inputs;
 
+import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
+import ch.unibas.charmmtools.scripts.ICHARMMScript;
+import ch.unibas.charmmtools.scripts.ICHARMMScriptWithPython;
 import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
 import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
 import java.io.File;
@@ -23,7 +26,7 @@ import org.apache.log4j.Logger;
  *
  * @author hedin
  */
-public class CHARMM_Generator_DGHydr {
+public class CHARMM_Generator_DGHydr{
 
     protected String solu_cor, solu_top;
     protected String solv_cor, solv_top;
@@ -60,8 +63,8 @@ public class CHARMM_Generator_DGHydr {
         this.runner = new PythonScriptRunner();
         this.runner.setWorkingDir(this.myDir);
 
-        this.copyAndFixPaths();
-        this.genInputPythonGas();
+        this.generate();
+
     }
 
     public CHARMM_Generator_DGHydr(String _solu_cor, String _solv_cor,
@@ -86,8 +89,8 @@ public class CHARMM_Generator_DGHydr {
         this.runner = new PythonScriptRunner();
         this.runner.setWorkingDir(this.myDir);
 
-        this.copyAndFixPaths();
-        this.genInputPythonSolvent();
+        this.generate();
+        
     }
 
     private void copyAndFixPaths() {
@@ -112,7 +115,7 @@ public class CHARMM_Generator_DGHydr {
         this.lpun = ResourceUtils.getRelativePath(lpun,folderPath);
     }
 
-    protected void genInputPythonGas() {
+    private void genInputPythonGas(boolean genOnly) {
         List<String> args = new ArrayList<>();
         args.clear();
 
@@ -132,18 +135,23 @@ public class CHARMM_Generator_DGHydr {
         args.add(Double.toString(this.l_min));
         args.add(Double.toString(this.l_space));
         args.add(Double.toString(this.l_max));
-        args.add("--generate");
+        
+        if(genOnly) args.add("--generate");
 
         File script = new File("scripts/charmm-ti/perform-ti.py");
         File output = new File("test/gen_dg_inp_" + this.ti_type + "_gas" + ".out");
 
-        int returnCode = runner.exec(script, args, output);
+        int returnCode;
+        if (genOnly)
+            returnCode = runner.exec(script, args, output);
+        else
+            returnCode = runner.exec(script, args);
         
         String[] exts = {"inp"};
         myFiles.addAll(FileUtils.listFiles(myDir, exts, false));
     }
 
-    protected void genInputPythonSolvent() {
+    private void genInputPythonSolvent(boolean genOnly) {
         List<String> args = new ArrayList<>();
         args.clear();
 
@@ -167,12 +175,18 @@ public class CHARMM_Generator_DGHydr {
         args.add(Double.toString(this.l_min));
         args.add(Double.toString(this.l_space));
         args.add(Double.toString(this.l_max));
-        args.add("--generate");
+        
+        if(genOnly) args.add("--generate");
 
         File script = new File("scripts/charmm-ti/perform-ti.py");
         File output = new File("test/gen_dg_inp_" + this.ti_type + "_solvent" + ".out");
 
-        int returnCode = runner.exec(script, args, output);
+        int returnCode;
+        if (genOnly)
+            returnCode = runner.exec(script, args, output);
+        else
+            returnCode = runner.exec(script, args);
+            
         
         String[] exts = {"inp"};
         myFiles.addAll(FileUtils.listFiles(myDir, exts, false));
@@ -184,5 +198,25 @@ public class CHARMM_Generator_DGHydr {
     public List<File> getMyFiles() {
         return myFiles;
     }
+
+    private void generate(){
+        this.copyAndFixPaths();
+        
+        if(this.solv_cor != null)
+            this.genInputPythonSolvent(true);
+        else
+            this.genInputPythonGas(true);
+        
+    }
+ 
+    public void run(){
+        
+        if(this.solv_cor != null)
+            this.genInputPythonSolvent(false);
+        else
+            this.genInputPythonGas(false);
+        
+    }
+
 
 }

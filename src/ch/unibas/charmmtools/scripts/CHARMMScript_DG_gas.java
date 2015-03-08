@@ -21,7 +21,7 @@ public class CHARMMScript_DG_gas extends CHARMMScript_DG {
 
     @Override
     public void prepare_Python(CHARMM_Input input, File output) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

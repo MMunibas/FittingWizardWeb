@@ -13,6 +13,7 @@ import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
 import ch.unibas.charmmtools.scripts.ICHARMMScript;
 import ch.unibas.fittingwizard.application.workflows.base.Workflow;
 import ch.unibas.fittingwizard.application.workflows.base.WorkflowContext;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -78,6 +79,11 @@ public class RunCHARMMWorkflow extends Workflow<CHARMM_Input, CHARMM_Output> {
             idx_scr++;
         }
         
+        return out;
+    }
+    
+    public List<CHARMM_Output> execute(){
+        List<CHARMM_Output> out = new ArrayList<>();
         return out;
     }
 

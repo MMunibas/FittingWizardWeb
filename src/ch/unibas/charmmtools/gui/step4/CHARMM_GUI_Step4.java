@@ -69,6 +69,8 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
     private List<MyTab> tab_list_gas = new ArrayList<>();
     private List<MyTab> tab_list_solv = new ArrayList<>();
     
+    private CHARMM_Generator_DGHydr in_gas_vdw = null, in_gas_mtp = null, in_solv_vdw = null, in_solv_mtp = null;
+    
     public CHARMM_GUI_Step4(RunCHARMMWorkflow chWflow) {
         super(title, chWflow);
     }
@@ -254,7 +256,6 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
         /**
          * TODO : get a list of input files from python script
          */
-        CHARMM_Generator_DGHydr in_gas_vdw = null, in_gas_mtp = null, in_solv_vdw = null, in_solv_mtp = null;
 
 //        try {
         in_gas_vdw = new CHARMM_Generator_DGHydr(corname_solu, rtfname, parname, lpunname, "vdw",
@@ -281,25 +282,25 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
         try {
             for (File fi : in_gas_vdw.getMyFiles()) {
                 tab_list_gas.add(new MyTab(
-                        fi.getName(), new String(Files.readAllBytes(Paths.get(fi.getAbsolutePath())))
+                        "Gas & VDW", new String(Files.readAllBytes(Paths.get(fi.getAbsolutePath())))
                 ));
             }
             
             for (File fi : in_gas_mtp.getMyFiles()) {
                 tab_list_gas.add(new MyTab(
-                        fi.getName(), new String(Files.readAllBytes(Paths.get(fi.getAbsolutePath())))
+                        "Gas & MTP", new String(Files.readAllBytes(Paths.get(fi.getAbsolutePath())))
                 ));
             }
             
             for (File fi : in_solv_vdw.getMyFiles()) {
                 tab_list_solv.add(new MyTab(
-                        fi.getName(), new String(Files.readAllBytes(Paths.get(fi.getAbsolutePath())))
+                        "Solv & VDW", new String(Files.readAllBytes(Paths.get(fi.getAbsolutePath())))
                 ));
             }
             
             for (File fi : in_solv_mtp.getMyFiles()) {
                 tab_list_solv.add(new MyTab(
-                        fi.getName(), new String(Files.readAllBytes(Paths.get(fi.getAbsolutePath())))
+                        "Solv & MTP", new String(Files.readAllBytes(Paths.get(fi.getAbsolutePath())))
                 ));
             }
         } catch (IOException ex) {
@@ -464,10 +465,22 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 //    }
     protected void runCHARMM(ActionEvent event) {
         
-        List<CHARMM_InOut> myList = new ArrayList<>();
-        myList.addAll(inp);
+//        List<CHARMM_InOut> myList = new ArrayList<>();
+//        myList.addAll(inp);
 //        myList.addAll(out);
-        navigateTo(RunningCHARMM.class, myList);
+//        navigateTo(RunningCHARMM.class, myList);
+        
+        logger.info("Now running in_gas_vdw");
+        this.in_gas_vdw.run();
+        
+        logger.info("Now running in_gas_mtp");
+        this.in_gas_mtp.run();
+        
+        logger.info("Now running in_solv_vdw");
+        this.in_solv_vdw.run();
+        
+        logger.info("Now running in_solv_mtp");
+        this.in_solv_mtp.run();
         
     }
     
