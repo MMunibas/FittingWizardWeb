@@ -12,6 +12,7 @@ import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
 import ch.unibas.charmmtools.gui.RunningCHARMM;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
+import ch.unibas.charmmtools.gui.RunningCHARMM_DG;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import java.io.File;
@@ -75,49 +76,9 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
         super(title, chWflow);
     }
     
-    public CHARMM_GUI_Step4(RunCHARMMWorkflow chWflow, List<CHARMM_InOut> ioList) {
+    public CHARMM_GUI_Step4(RunCHARMMWorkflow chWflow, boolean succeed) {
         
         super(title, chWflow);
-
-//        for (CHARMM_InOut ioListIt : ioList) {
-//
-//            if (ioList.getClass().isInstance(CHARMM_Input.class)) {
-//                
-//                inp.add(ioListIt);
-//                
-//                tabsList.add(
-//                        new MyTab(
-//                                ioListIt.getType(), ioListIt.getText()
-//                        )
-//                );
-//            } else if (sc == CHARMM_Output.class) {
-//                out.add((CHARMM_Output) ioListIt);
-//                tabsList.add(
-//                        new MyTab(
-//                                ioListIt.getType(), ioListIt.getText()
-//                        )
-//                );
-//            } else {
-//                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : get "
-//                        + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class
-//                        + " or " + CHARMM_Output.class);
-//            }
-//            tab_pane.getTabs().addAll(tabsList);
-//        }
-//        button_save_to_file.setDisable(false);
-//        textfield_PAR.setDisable(true);
-//        textfield_RTF.setDisable(true);
-//        textfield_COR_solu.setDisable(true);
-//        textfield_COR_solv.setDisable(true);
-//        textfield_LPUN.setDisable(true);
-//
-//        button_generate.setDisable(true);
-//
-//        button_open_PAR.setDisable(true);
-//        button_open_RTF.setDisable(true);
-//        button_open_COR_solu.setDisable(true);
-//        button_open_COR_solv.setDisable(true);
-//        button_open_LPUN.setDisable(true);
     }
 
     /**
@@ -470,17 +431,12 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 //        myList.addAll(out);
 //        navigateTo(RunningCHARMM.class, myList);
         
-        logger.info("Now running in_gas_vdw");
-        this.in_gas_vdw.run();
-        
-        logger.info("Now running in_gas_mtp");
-        this.in_gas_mtp.run();
-        
-        logger.info("Now running in_solv_vdw");
-        this.in_solv_vdw.run();
-        
-        logger.info("Now running in_solv_mtp");
-        this.in_solv_mtp.run();
+        List<CHARMM_Generator_DGHydr> myList = new ArrayList<>();
+        myList.add(in_gas_vdw);
+//        myList.add(in_solv_vdw);
+        myList.add(in_gas_mtp);
+//        myList.add(in_solv_mtp);
+        navigateTo(RunningCHARMM_DG.class, myList);
         
     }
     

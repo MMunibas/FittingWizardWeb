@@ -8,9 +8,6 @@
  */
 package ch.unibas.charmmtools.generate.inputs;
 
-import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
-import ch.unibas.charmmtools.scripts.ICHARMMScript;
-import ch.unibas.charmmtools.scripts.ICHARMMScriptWithPython;
 import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
 import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
 import java.io.File;
@@ -33,6 +30,7 @@ public class CHARMM_Generator_DGHydr{
     protected String par, lpun;
     protected String ti_type;
     protected double l_min, l_space, l_max;
+    protected String whoami;
 
     protected PythonScriptRunner runner = null;
 //    protected final File currDir = new File(".");
@@ -63,6 +61,8 @@ public class CHARMM_Generator_DGHydr{
         this.runner = new PythonScriptRunner();
         this.runner.setWorkingDir(this.myDir);
 
+        whoami="gas_" + ti_type;
+        
         this.generate();
 
     }
@@ -89,6 +89,8 @@ public class CHARMM_Generator_DGHydr{
         this.runner = new PythonScriptRunner();
         this.runner.setWorkingDir(this.myDir);
 
+        whoami="solvent_" + ti_type;
+        
         this.generate();
         
     }
@@ -216,6 +218,13 @@ public class CHARMM_Generator_DGHydr{
         else
             this.genInputPythonGas(false);
         
+    }
+
+    /**
+     * @return the whoami
+     */
+    public String Whoami() {
+        return whoami;
     }
 
 

@@ -71,10 +71,12 @@ import ch.unibas.charmmtools.gui.step3.CHARMM_GUI_Step3;
 import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Step4;
 import ch.unibas.charmmtools.gui.RunningCHARMM;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
+import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_DGHydr_gas;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_DGHydr_solvent;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_GasPhase;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_PureLiquid;
+import ch.unibas.charmmtools.gui.RunningCHARMM_DG;
 import ch.unibas.charmmtools.scripts.ICHARMMScript;
 import ch.unibas.charmmtools.scripts.CHARMMScript_Den_Vap;
 import ch.unibas.charmmtools.scripts.CHARMMScript_DG_gas;
@@ -240,6 +242,10 @@ public class WizardPageFactory {
                         vmdDisplayWorkflow);
             } 
             // CHARMM FITTING PAGES
+            else if (type == RunningCHARMM_DG.class) {
+                List<CHARMM_Generator_DGHydr> ioList = throwIfParameterIsNull(parameter);
+                    page = new RunningCHARMM_DG(charmmWorkflow_DG,ioList);
+            }
             else if (type == CHARMM_GUI_Step1.class) {
                 if(parameter==null)
                     page = new CHARMM_GUI_Step1(charmmWorkflow_Den_Vap);
@@ -248,22 +254,6 @@ public class WizardPageFactory {
                     page = new CHARMM_GUI_Step1(charmmWorkflow_Den_Vap,ioList);
                 }
             } 
-            else if (type == RunningCHARMM.class) {
-                List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
-                Class c = ioList.get(0).getClass();
-                if(c==CHARMM_Input_GasPhase.class || c==CHARMM_Input_PureLiquid.class)
-                {
-                    page = new RunningCHARMM(charmmWorkflow_Den_Vap,ioList);
-                }
-                else if(c==CHARMM_Input_DGHydr_gas.class || c==CHARMM_Input_DGHydr_solvent.class)
-                {
-                    page = new RunningCHARMM(charmmWorkflow_DG,ioList);
-                }
-                else{//default if there was an error is to go back to initial procedure of CHARMM fitting
-                    page = new CHARMM_GUI_Step1(charmmWorkflow_Den_Vap);
-                }
-                
-            }
             else if (type == CHARMM_GUI_Step2.class) {
                 List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
                 page = new CHARMM_GUI_Step2(charmmWorkflow_Den_Vap,ioList);
@@ -275,8 +265,8 @@ public class WizardPageFactory {
                 if(parameter==null)
                     page = new CHARMM_GUI_Step4(charmmWorkflow_DG);
                 else{
-                    List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
-                    page = new CHARMM_GUI_Step4(charmmWorkflow_DG,ioList);
+                    boolean success = throwIfParameterIsNull(parameter);
+                    page = new CHARMM_GUI_Step4(charmmWorkflow_DG,success);
                 }
             }
             // MISC
