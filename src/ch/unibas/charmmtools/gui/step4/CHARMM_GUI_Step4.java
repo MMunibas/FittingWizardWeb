@@ -101,6 +101,8 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
                 throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : get " + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class + " or " + CHARMM_Output.class);
             }
             
+//            gotoResults.setDisable(false);
+            
         }
         
     }
@@ -460,8 +462,12 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 //        myList.add(in_gas_mtp);
 //        myList.add(in_solv_vdw);
 //        myList.add(in_solv_mtp);
+        
+        List<CHARMM_InOut> ioList = new ArrayList<>();
+        ioList.addAll(inp);
+        ioList.addAll(out);
+        this.charmmWorkflow.setIOList(ioList);
         navigateTo(RunningCHARMM_DG.class, myList);
-        gotoResults.setDisable(false);
         
     }
     
@@ -501,7 +507,7 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
             }
         });
         addButtonToButtonBar(gotoResults);
-        gotoResults.setDisable(true);
+//        gotoResults.setDisable(true);
     }
     
 }//end of controller class

@@ -8,6 +8,7 @@
  */
 package ch.unibas.charmmtools.workflows;
 
+import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
 import ch.unibas.charmmtools.scripts.ICHARMMScript;
@@ -29,6 +30,8 @@ public class RunCHARMMWorkflow extends Workflow<CHARMM_Input, CHARMM_Output> {
     
     private final List<ICHARMMScript> charmmScript = new ArrayList<>();
     
+    private List<CHARMM_InOut> ioList;
+    
     /**
      * if there is only one script registered for this workflow
      * @param chScr a charmm script
@@ -36,6 +39,7 @@ public class RunCHARMMWorkflow extends Workflow<CHARMM_Input, CHARMM_Output> {
     public RunCHARMMWorkflow(ICHARMMScript chScr){
         charmmScript.clear();
         this.charmmScript.add(chScr);
+        this.ioList = new ArrayList<>();
     }
         
     /**
@@ -45,6 +49,17 @@ public class RunCHARMMWorkflow extends Workflow<CHARMM_Input, CHARMM_Output> {
     public RunCHARMMWorkflow(ICHARMMScript... chScr){
         charmmScript.clear();
         this.charmmScript.addAll(Arrays.asList(chScr));
+        this.ioList = new ArrayList<>();
+    }
+    
+    public void setIOList(List<CHARMM_InOut> inpList)
+    {
+        this.ioList.addAll(inpList);
+    }
+    
+    public List<CHARMM_InOut> getIOList( List<CHARMM_InOut> inpList)
+    {
+        return ioList;
     }
     
     @Override

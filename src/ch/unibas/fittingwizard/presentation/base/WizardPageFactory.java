@@ -197,7 +197,7 @@ public class WizardPageFactory {
         charmmWorkflow_DG = new RunCHARMMWorkflow(charmmScript_DG_gas,charmmScript_DG_solvent);
     }
 
-    public <T extends WizardPage> WizardPage create(Class<T> type, Object... parameter) {
+    public <T extends WizardPage> WizardPage create(Class<T> type, Object parameter) {
         WizardPage page;
         logger.info("Type is : " + type.toString());
         try {
@@ -208,23 +208,23 @@ public class WizardPageFactory {
                         moleculesDir);
             } // ADD MOLECULE PAGES
             else if (type == SelectCoordinateFilePage.class) {
-                File dto = (File) parameter[0];
+                File dto = (File) parameter;
                 page = new SelectCoordinateFilePage(dto);
             } else if (type == CoordinatesPage.class) {
-                CoordinatesDto dto = throwIfParameterIsNull(parameter[0]);
+                CoordinatesDto dto = throwIfParameterIsNull(parameter);
                 page = new CoordinatesPage(visualization, moleculesDir, dto);
             } else if (type == MultipoleGaussParameterPage.class) {
-                MultipoleGaussParameterDto dto = throwIfParameterIsNull(parameter[0]);
+                MultipoleGaussParameterDto dto = throwIfParameterIsNull(parameter);
                 page = new MultipoleGaussParameterPage(defaultValues, dto);
             } else if (type == AtomTypeChargePage.class) {
-                AtomChargesDto dto = throwIfParameterIsNull(parameter[0]);
+                AtomChargesDto dto = throwIfParameterIsNull(parameter);
                 page = new AtomTypeChargePage(moleculeRepository, lPunParser, visualization, dto);
             } else if (type == GaussCalculationPage.class) {
-                GaussCalculationDto dto = throwIfParameterIsNull(parameter[0]);
+                GaussCalculationDto dto = throwIfParameterIsNull(parameter);
                 page = new GaussCalculationPage(runGaussianWorkflow, dto);
             } // GAUSSIAN FITTING PAGES
             else if (type == FittingParameterPage.class) {
-                FitMtpInput dto = (FitMtpInput) parameter[0];
+                FitMtpInput dto = (FitMtpInput) parameter;
                 page = new FittingParameterPage(fitRepository,
                         moleculeRepository,
                         defaultValues,
@@ -232,7 +232,7 @@ public class WizardPageFactory {
                         editAtomTypeChargesDialog,
                         dto);
             } else if (type == RunningFitPage.class) {
-                FitMtpInput dto = throwIfParameterIsNull(parameter[0]);
+                FitMtpInput dto = throwIfParameterIsNull(parameter);
                 page = new RunningFitPage(runFitWorkflow, dto);
             } else if (type == FitResultPage.class) {
                 page = new FitResultPage(moleculeRepository,
@@ -243,28 +243,27 @@ public class WizardPageFactory {
             } 
             // CHARMM FITTING PAGES
             else if (type == RunningCHARMM.class) {
-                List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter[0]);
+                List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
                     page = new RunningCHARMM(charmmWorkflow_Den_Vap,ioList);
             }
             else if (type == RunningCHARMM_DG.class) {
-                List<CHARMM_Generator_DGHydr> dgList = throwIfParameterIsNull(parameter[0]);
-                List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter[1]);
-                    page = new RunningCHARMM_DG(charmmWorkflow_DG,dgList,ioList);
+                List<CHARMM_Generator_DGHydr> dgList = throwIfParameterIsNull(parameter);
+                    page = new RunningCHARMM_DG(charmmWorkflow_DG,dgList);
             }
             else if (type == CHARMM_GUI_Step1.class) {
                 if(parameter==null)
                     page = new CHARMM_GUI_Step1(charmmWorkflow_Den_Vap);
                 else{
-                    List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter[0]);
+                    List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
                     page = new CHARMM_GUI_Step1(charmmWorkflow_Den_Vap,ioList);
                 }
             } 
             else if (type == CHARMM_GUI_Step2.class) {
-                List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter[0]);
+                List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
                 page = new CHARMM_GUI_Step2(charmmWorkflow_Den_Vap,ioList);
             } 
             else if (type == CHARMM_GUI_Step3.class) {
-                List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter[0]);
+                List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
                 page = new CHARMM_GUI_Step3(charmmWorkflow_Den_Vap,ioList);
             } else if (type == CHARMM_GUI_Step4.class) {
                 if(parameter==null)
@@ -274,7 +273,7 @@ public class WizardPageFactory {
 //                    page = new CHARMM_GUI_Step4(charmmWorkflow_DG,success);
 //                }
                 else{
-                    List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter[0]);
+                    List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
                     page = new CHARMM_GUI_Step4(charmmWorkflow_DG,ioList);
                 }
             }

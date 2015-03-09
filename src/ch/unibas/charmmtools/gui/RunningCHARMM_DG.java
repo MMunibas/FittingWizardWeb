@@ -27,6 +27,20 @@ public class RunningCHARMM_DG extends ProgressPage{
     private List<CHARMM_InOut> ioList;
     private List<CHARMM_Generator_DGHydr> dgList;
     
+    public RunningCHARMM_DG(RunCHARMMWorkflow charmmWorkflow, List<CHARMM_Generator_DGHydr> simList) {
+        super("Running CHARMM calculation");
+                
+        this.cflow = charmmWorkflow;
+        
+        this.dgList = new ArrayList<>();
+        this.dgList.addAll(simList);
+
+        this.ioList = new ArrayList<>();
+//        this.ioList.addAll(inpList);
+        this.setIOList(cflow.getIOList(ioList));
+
+    }
+        
     public RunningCHARMM_DG(RunCHARMMWorkflow charmmWorkflow, List<CHARMM_Generator_DGHydr> simList, List<CHARMM_InOut> inpList) {
         super("Running CHARMM calculation");
                 
@@ -38,6 +52,11 @@ public class RunningCHARMM_DG extends ProgressPage{
         this.ioList = new ArrayList<>();
         this.ioList.addAll(inpList);
 
+    }
+    
+    private void setIOList( List<CHARMM_InOut> inpList)
+    {
+        this.ioList.addAll(inpList);
     }
 
     /**
