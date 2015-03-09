@@ -8,11 +8,13 @@
  */
 package ch.unibas.charmmtools.gui.step4;
 
-import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
-import ch.unibas.charmmtools.gui.RunningCHARMM;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
+import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
+import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
+import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
 import ch.unibas.charmmtools.gui.RunningCHARMM_DG;
+import ch.unibas.charmmtools.gui.step3.CHARMM_GUI_Step3;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import java.io.File;
@@ -22,6 +24,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -60,6 +63,7 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
     private Button button_reset;
 //    private Button button_save_to_file;
     private Button button_run_CHARMM;
+    private Button gotoResults;
 
     /**
      * Internal variables
@@ -76,9 +80,29 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
         super(title, chWflow);
     }
     
-    public CHARMM_GUI_Step4(RunCHARMMWorkflow chWflow, boolean succeed) {
-        
+//    public CHARMM_GUI_Step4(RunCHARMMWorkflow chWflow, boolean succeed) {
+//        
+//        super(title, chWflow);
+//    }
+    
+    public CHARMM_GUI_Step4(RunCHARMMWorkflow chWflow, List<CHARMM_InOut> ioList){
         super(title, chWflow);
+                
+        for (CHARMM_InOut ioListIt : ioList) {
+            
+            Class c = ioListIt.getClass();
+            Class sc = c.getSuperclass();
+            
+            if (sc == CHARMM_Input.class) {
+                inp.add((CHARMM_Input) ioListIt);
+            } else if (sc == CHARMM_Output.class) {
+                out.add((CHARMM_Output) ioListIt);
+            } else {
+                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : get " + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class + " or " + CHARMM_Output.class);
+            }
+            
+        }
+        
     }
 
     /**
@@ -432,11 +456,12 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 //        navigateTo(RunningCHARMM.class, myList);
         
         List<CHARMM_Generator_DGHydr> myList = new ArrayList<>();
-        myList.add(in_gas_vdw);
+//        myList.add(in_gas_vdw);
+//        myList.add(in_gas_mtp);
 //        myList.add(in_solv_vdw);
-        myList.add(in_gas_mtp);
 //        myList.add(in_solv_mtp);
         navigateTo(RunningCHARMM_DG.class, myList);
+        gotoResults.setDisable(false);
         
     }
     
@@ -464,6 +489,19 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
         });
         addButtonToButtonBar(button_run_CHARMM);
         button_run_CHARMM.setDisable(true);
+        
+        gotoResults = ButtonFactory.createButtonBarButton("Proceed to Results page", new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                List<CHARMM_InOut> myList = new ArrayList<>();
+                myList.addAll(inp);
+                myList.addAll(out);
+                logger.info("Going to Results page");
+                navigateTo(CHARMM_GUI_Step3.class,myList);
+            }
+        });
+        addButtonToButtonBar(gotoResults);
+        gotoResults.setDisable(true);
     }
     
 }//end of controller class

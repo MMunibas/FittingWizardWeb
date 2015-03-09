@@ -14,6 +14,7 @@ import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_Step1;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
+import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Step4;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class CHARMM_GUI_Step2 extends CHARMM_GUI_base {
     @FXML
     private Label LabelLeft,LabelRight,errorLabelRight,errorLabelLeft;
     
-    private Button backStep1,gotoStep3;
+    private Button backStep1,gotoStep4;
     
     public CHARMM_GUI_Step2(RunCHARMMWorkflow flow, List<CHARMM_InOut> ioList)
     {
@@ -78,7 +79,7 @@ public class CHARMM_GUI_Step2 extends CHARMM_GUI_base {
             errorLabelLeft.setVisible(true);
             errorLabelLeft.setText("Error while running CHARMM calculation ! Please check output :");
             errorLabelLeft.setTextFill(Paint.valueOf("RED"));
-            gotoStep3.setDisable(true);
+            gotoStep4.setDisable(true);
         }
 
         if (out.get(1).getErrorOccured())
@@ -86,7 +87,7 @@ public class CHARMM_GUI_Step2 extends CHARMM_GUI_base {
             errorLabelRight.setVisible(true);
             errorLabelRight.setText("Error while running CHARMM calculation ! Please check output :");
             errorLabelRight.setTextFill(Paint.valueOf("RED"));
-            gotoStep3.setDisable(true);
+            gotoStep4.setDisable(true);
         }
     }
     
@@ -105,17 +106,17 @@ public class CHARMM_GUI_Step2 extends CHARMM_GUI_base {
         });
         addButtonToButtonBar(backStep1);
         
-        gotoStep3 = ButtonFactory.createButtonBarButton("Proceed to Results panel", new EventHandler<ActionEvent>(){
+        gotoStep4 = ButtonFactory.createButtonBarButton("Proceed to ΔG solvation", new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent actionEvent) {
                 List<CHARMM_InOut> myList = new ArrayList<>();
                 myList.addAll(inp);
                 myList.addAll(out);
-                logger.info("Going to Step3 Results.");
-                navigateTo(CHARMM_GUI_Step3.class,myList);
+                logger.info("Going to Step4 ΔG solvation.");
+                navigateTo(CHARMM_GUI_Step4.class,myList);
             }
         });
-        addButtonToButtonBar(gotoStep3);
+        addButtonToButtonBar(gotoStep4);
 
     }
 

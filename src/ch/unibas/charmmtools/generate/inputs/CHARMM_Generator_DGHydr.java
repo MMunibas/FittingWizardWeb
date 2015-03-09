@@ -137,6 +137,10 @@ public class CHARMM_Generator_DGHydr{
         args.add(Double.toString(this.l_min));
         args.add(Double.toString(this.l_space));
         args.add(Double.toString(this.l_max));
+        args.add("--nst");
+        args.add("3000");
+        args.add("--neq");
+        args.add("1000");
         
         if(genOnly) args.add("--generate");
 
@@ -177,6 +181,10 @@ public class CHARMM_Generator_DGHydr{
         args.add(Double.toString(this.l_min));
         args.add(Double.toString(this.l_space));
         args.add(Double.toString(this.l_max));
+        args.add("--nst");
+        args.add("3000");
+        args.add("--neq");
+        args.add("1000");
         
         if(genOnly) args.add("--generate");
 

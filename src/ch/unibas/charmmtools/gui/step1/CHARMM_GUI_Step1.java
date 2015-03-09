@@ -188,7 +188,7 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
 
         Window myParent = button_generate.getScene().getWindow();
         FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(new File("."));
+        chooser.setInitialDirectory(new File("./test"));
         File selectedFile = null;
 
         chooser.setTitle("Open File");
@@ -384,7 +384,7 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
     protected void SaveToFile(ActionEvent event) {
         Window myParent = button_save_to_file.getScene().getWindow();
         FileChooser chooser = new FileChooser();
-//        chooser.setInitialDirectory(new File("test"));
+        chooser.setInitialDirectory(new File("./test"));
 
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CHARMM input file", "*.inp"));
 

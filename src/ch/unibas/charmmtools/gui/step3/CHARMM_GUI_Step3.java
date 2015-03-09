@@ -43,7 +43,7 @@ public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
 
     private static final String title = "LJ fitting procedure Step 3 : Results";
     
-    private Button backStep1,backStep2,saveToFile,gotoStep4;
+    private Button backStep1,backStep2,saveToFile,backStep4;
     
     /*
      * Those values are parsed from the output file as the may be useful later
@@ -61,12 +61,13 @@ public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
     private final static String find_nres = "Number of residues";
     private int nres;
     private double mmass;
+    private double dg;
     
     List<String> gasPhaseOut;
     List<String> pureLiqOut;
     
     @FXML
-    private TextField temp_field,mmass_field,nres_field,dens_field,dhvap_field;
+    private TextField temp_field,mmass_field,nres_field,dens_field,dhvap_field,dghydr_field;
     
     @FXML
     private Button calculate_b;
@@ -135,6 +136,18 @@ public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
         });
         addButtonToButtonBar(backStep2);
         
+        backStep4 = ButtonFactory.createButtonBarButton("Back to ΔG solvation", new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
+                myList.addAll(inp);
+                myList.addAll(out);
+                logger.info("Back to ΔG of solvation input assistant");
+                navigateTo(CHARMM_GUI_Step4.class,myList);
+            }
+        });
+        addButtonToButtonBar(backStep4);
+        
         saveToFile = ButtonFactory.createButtonBarButton("Save to file", new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -143,15 +156,6 @@ public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
             }
         });
         addButtonToButtonBar(saveToFile);
-        
-        gotoStep4 = ButtonFactory.createButtonBarButton("Next step : ΔG solvation", new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                logger.info("Going to Step 4 : ΔG of solvation input assistant");
-                navigateTo(CHARMM_GUI_Step4.class,null);
-            }
-        });
-        addButtonToButtonBar(gotoStep4);
 
     }
     
@@ -260,10 +264,23 @@ public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
         
         calc_density();
         calc_vapor();
+        calc_dg();
         
         dens_field.setText(Double.toString(density));
         dhvap_field.setText(Double.toString(deltaH));
+        dghydr_field.setText(Double.toString(dg));
     }
+    
+    @FXML
+    protected void calc_dg()
+    {
+        double gas_mtp = -13.09403;
+        double gas_vdw = 11.43775;
+        double solvent_mtp = -21.11868;
+        double solvent_vdw = 12.96885;
+        dg = (solvent_mtp+solvent_vdw) - (gas_mtp+gas_vdw);
+    }
+    
     
     private void exportResultsCSV()
     {

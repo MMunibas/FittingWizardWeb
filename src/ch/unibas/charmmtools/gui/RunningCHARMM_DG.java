@@ -8,6 +8,7 @@
  */
 package ch.unibas.charmmtools.gui;
 
+import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Step4;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
@@ -23,16 +24,19 @@ import java.util.List;
 public class RunningCHARMM_DG extends ProgressPage{
 
     private final RunCHARMMWorkflow cflow;
-    private List<CHARMM_Generator_DGHydr> myList;
+    private List<CHARMM_InOut> ioList;
+    private List<CHARMM_Generator_DGHydr> dgList;
     
-    public RunningCHARMM_DG(RunCHARMMWorkflow charmmWorkflow, List<CHARMM_Generator_DGHydr> simList) {
+    public RunningCHARMM_DG(RunCHARMMWorkflow charmmWorkflow, List<CHARMM_Generator_DGHydr> simList, List<CHARMM_InOut> inpList) {
         super("Running CHARMM calculation");
                 
         this.cflow = charmmWorkflow;
         
-        this.myList = new ArrayList<>();
-        this.myList.addAll(simList);
+        this.dgList = new ArrayList<>();
+        this.dgList.addAll(simList);
 
+        this.ioList = new ArrayList<>();
+        this.ioList.addAll(inpList);
 
     }
 
@@ -45,7 +49,7 @@ public class RunningCHARMM_DG extends ProgressPage{
     @Override
     protected boolean run(Context ctx) throws Exception {
         
-        for (CHARMM_Generator_DGHydr script : myList){
+        for (CHARMM_Generator_DGHydr script : dgList){
             String msg = "Now running " + script.Whoami();
             logger.info(msg);
             this.lblTitle.textProperty().setValue(msg);
@@ -58,13 +62,13 @@ public class RunningCHARMM_DG extends ProgressPage{
     @Override
     protected void handleCanceled() {
         logger.info("Run canceled by user before normal termination");
-        navigateTo(CHARMM_GUI_Step4.class,false);
+        navigateTo(CHARMM_GUI_Step4.class,ioList);
     }
 
     @Override
     protected void handleFinishedRun(boolean successful) {
         logger.info("Normal termination");
-        navigateTo(CHARMM_GUI_Step4.class,true);
+        navigateTo(CHARMM_GUI_Step4.class,ioList);
     }
 
   

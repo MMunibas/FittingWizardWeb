@@ -61,7 +61,7 @@ args = parser.parse_args()
 #  exit(1)
   
 # charmm test locally
-#bashCmd = "./charmm -i " + args.inpF + " -o " + args.outF
+#bashCmd = "../scripts/charmm -i " + args.inpF + " -o " + args.outF
 #print bashCmd.split()
 #process = subprocess.call(bashCmd.split())
 #if process != 0:
