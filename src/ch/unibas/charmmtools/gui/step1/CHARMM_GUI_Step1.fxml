@@ -14,9 +14,9 @@
         <top>
             <GridPane alignment="CENTER" BorderPane.alignment="CENTER">
                 <columnConstraints>
-                    <ColumnConstraints hgrow="ALWAYS" maxWidth="369.0" minWidth="10.0" prefWidth="288.0" />
-                    <ColumnConstraints hgrow="ALWAYS" maxWidth="692.0" minWidth="10.0" prefWidth="692.0" />
-                    <ColumnConstraints hgrow="ALWAYS" maxWidth="449.0" minWidth="10.0" prefWidth="148.0" />
+                    <ColumnConstraints hgrow="ALWAYS" percentWidth="25.0" />
+                    <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0" />
+                    <ColumnConstraints hgrow="ALWAYS" maxWidth="294.0" minWidth="274.0" percentWidth="25.0" prefWidth="274.0" />
                 </columnConstraints>
                 <rowConstraints>
             <RowConstraints minHeight="30.0" vgrow="ALWAYS" />
@@ -68,9 +68,18 @@
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                </GridPane.margin>
             </Label>
-                    <Button fx:id="button_open_PAR" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
-                    <Button fx:id="button_open_RTF" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
-                    <Button fx:id="button_open_COR_gas" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
+                    <Button fx:id="button_open_PAR" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="5">
+               <GridPane.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </GridPane.margin></Button>
+                    <Button fx:id="button_open_RTF" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="6">
+               <GridPane.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </GridPane.margin></Button>
+                    <Button fx:id="button_open_COR_gas" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="7">
+               <GridPane.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </GridPane.margin></Button>
                     <Button fx:id="button_generate" disable="true" mnemonicParsing="false" onAction="#GenerateInputFile" text="Generate input file(s)" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="11" />
             <Label text="Name of LPUN file :" GridPane.halignment="RIGHT" GridPane.rowIndex="10" GridPane.valignment="CENTER">
                <GridPane.margin>
@@ -82,7 +91,10 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <Button fx:id="button_open_LPUN" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="10" />
+            <Button fx:id="button_open_LPUN" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="10">
+               <GridPane.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </GridPane.margin></Button>
             <Label text="Name of coordinates file (pure liquid) :" GridPane.halignment="RIGHT" GridPane.rowIndex="8">
                <GridPane.margin>
                   <Insets bottom="2.0" left="2.0" right="5.0" top="2.0" />
@@ -92,7 +104,10 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <Button fx:id="button_open_COR_liquid" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="8" />
+            <Button fx:id="button_open_COR_liquid" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="8">
+               <GridPane.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </GridPane.margin></Button>
             <Label text="ρ &amp; ΔH &amp; ΔG calculations" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                <font>
                   <Font name="System Bold" size="16.0" />
@@ -108,7 +123,10 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <Button fx:id="button_open_COR_solv" alignment="CENTER" contentDisplay="CENTER" layoutX="939.0" layoutY="178.0" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="9" />
+            <Button fx:id="button_open_COR_solv" alignment="CENTER" contentDisplay="CENTER" layoutX="939.0" layoutY="178.0" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="9">
+               <GridPane.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </GridPane.margin></Button>
             <Label layoutX="589.0" layoutY="108.0" text="Please provide experimental values for comparison after fit :" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
