@@ -34,7 +34,7 @@ import javafx.scene.paint.Paint;
  */
 public class CHARMM_GUI_Step2 extends CHARMM_GUI_base {
     
-    private static final String title = "LJ fitting procedure Step 2 : visualising output file";
+    private static final String title = "LJ fitting procedure : visualising output files";
 
     @FXML
     private TextArea out_left, out_right;

@@ -14,11 +14,9 @@
         <top>
             <GridPane alignment="CENTER" BorderPane.alignment="CENTER">
                 <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="208.0" minWidth="10.0" prefWidth="147.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="347.0" minWidth="10.0" prefWidth="284.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="599.0" minWidth="10.0" prefWidth="599.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="211.0" minWidth="10.0" prefWidth="105.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="218.0" minWidth="10.0" prefWidth="115.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="369.0" minWidth="10.0" prefWidth="288.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="692.0" minWidth="10.0" prefWidth="692.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="449.0" minWidth="10.0" prefWidth="148.0" />
                 </columnConstraints>
                 <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -28,159 +26,90 @@
                     <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 </rowConstraints>
                 <children>
-                    <TextField fx:id="textfield_PAR" editable="false" promptText="Please select a file ..." GridPane.columnIndex="2" GridPane.rowIndex="2">
+                    <TextField fx:id="textfield_PAR" editable="false" promptText="Please select a file ..." GridPane.columnIndex="1" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-                    <TextField fx:id="textfield_RTF" editable="false" promptText="Please select a file ..." GridPane.columnIndex="2" GridPane.rowIndex="3">
+                    <TextField fx:id="textfield_RTF" editable="false" promptText="Please select a file ..." GridPane.columnIndex="1" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-                    <TextField fx:id="textfield_COR_gas" editable="false" promptText="Please select a file ..." GridPane.columnIndex="2" GridPane.rowIndex="4">
+                    <TextField fx:id="textfield_COR_gas" editable="false" promptText="Please select a file ..." GridPane.columnIndex="1" GridPane.rowIndex="4">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-                    <Label text="Name of parameters PAR file :" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+                    <Label text="Name of parameters PAR file :" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets bottom="2.0" left="2.0" right="5.0" top="2.0" />
+               </GridPane.margin>
+            </Label>
+                    <Label text="Name of topology RTF|TOP file :" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+               <GridPane.margin>
+                  <Insets bottom="2.0" left="2.0" right="5.0" top="2.0" />
+               </GridPane.margin>
+            </Label>
+                    <Label text="Name of coordinates file (1 mol. in gas) :" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+               <GridPane.margin>
+                  <Insets bottom="2.0" left="2.0" right="5.0" top="2.0" />
+               </GridPane.margin>
+            </Label>
+                    <Label text="Please choose path to files :" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                </GridPane.margin>
             </Label>
-                    <Label text="Name of topology RTF|TOP file :" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+                    <Button fx:id="button_open_PAR" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                    <Button fx:id="button_open_RTF" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                    <Button fx:id="button_open_COR_gas" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+                    <Button fx:id="button_generate" disable="true" mnemonicParsing="false" onAction="#GenerateInputFile" text="Generate input file(s)" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="8" />
+            <Label text="Name of LPUN file :" GridPane.halignment="RIGHT" GridPane.rowIndex="7" GridPane.valignment="CENTER">
                <GridPane.margin>
-                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                  <Insets bottom="2.0" left="2.0" right="5.0" top="2.0" />
                </GridPane.margin>
             </Label>
-                    <Label text="Name of coordinates file (1 mol. in gas) :" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4">
-               <GridPane.margin>
-                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-               </GridPane.margin>
-            </Label>
-                    <Label text="Please choose path to files :" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
-               <GridPane.margin>
-                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-               </GridPane.margin>
-            </Label>
-                    <Button fx:id="button_open_PAR" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                    <Button fx:id="button_open_RTF" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-                    <Button fx:id="button_open_COR_gas" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
-                    <Button fx:id="button_generate" disable="true" mnemonicParsing="false" onAction="#GenerateInputFile" text="Generate input file(s)" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
-                    <Label fx:id="RedLabel_Notice" prefHeight="25.0" prefWidth="596.0" text="Please edit if required before saving" textFill="RED" textOverrun="CLIP" visible="false" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="8" GridPane.valignment="CENTER">
-                        <font>
-                            <Font size="18.0" />
-                        </font>
-               <GridPane.margin>
-                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-               </GridPane.margin>
-               <padding>
-                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-               </padding>
-                    </Label>
-            <CheckBox fx:id="later_PAR" mnemonicParsing="false" onAction="#CheckBoxActions" text="Choose later" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2">
-               <GridPane.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </GridPane.margin>
-            </CheckBox>
-            <CheckBox fx:id="later_RTF" mnemonicParsing="false" onAction="#CheckBoxActions" text="Choose later" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3">
-               <GridPane.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </GridPane.margin>
-            </CheckBox>
-            <CheckBox fx:id="later_COR_gas" mnemonicParsing="false" onAction="#CheckBoxActions" text="Choose later" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="4">
-               <GridPane.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </GridPane.margin>
-            </CheckBox>
-            <ComboBox fx:id="coor_type_gas" prefWidth="150.0" promptText="Choose coordinates Type ..." GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <GridPane.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </GridPane.margin>
-            </ComboBox>
-            <Label text="Name of LPUN file :" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6">
-               <GridPane.margin>
-                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-               </GridPane.margin>
-            </Label>
-            <TextField fx:id="textfield_LPUN" promptText="Please select a file ..." GridPane.columnIndex="2" GridPane.rowIndex="6">
+            <TextField fx:id="textfield_LPUN" promptText="Please select a file ..." GridPane.columnIndex="1" GridPane.rowIndex="7">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <Button fx:id="button_open_LPUN" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
-            <CheckBox fx:id="later_LPUN" mnemonicParsing="false" onAction="#CheckBoxActions" text="Choose later" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="6">
+            <Button fx:id="button_open_LPUN" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
+            <Label text="Name of coordinates file (pure liquid) :" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
                <GridPane.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </GridPane.margin></CheckBox>
-            <Label text="Name of coordinates file (pure liquid) :" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
-            <ComboBox fx:id="coor_type_liquid" prefWidth="150.0" promptText="Choose coordinates Type ..." GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <GridPane.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </GridPane.margin>
-            </ComboBox>
-            <TextField fx:id="textfield_COR_liquid" editable="false" promptText="Please select a file ..." GridPane.columnIndex="2" GridPane.rowIndex="5">
+                  <Insets bottom="2.0" left="2.0" right="5.0" top="2.0" />
+               </GridPane.margin></Label>
+            <TextField fx:id="textfield_COR_liquid" editable="false" promptText="Please select a file ..." GridPane.columnIndex="1" GridPane.rowIndex="5">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <Button fx:id="button_open_COR_liquid" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
-            <CheckBox fx:id="later_COR_liquid" mnemonicParsing="false" onAction="#CheckBoxActions" text="Choose later" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="5">
-               <GridPane.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </GridPane.margin>
-            </CheckBox>
-            <Label text="Density ρ &amp; ΔH of vaporization calculations" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+            <Button fx:id="button_open_COR_liquid" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+            <Label text="ρ &amp; ΔH &amp; ΔG calculations" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
+            <Label layoutX="203.0" layoutY="183.0" text="Name of coordinates file (solvent) :" GridPane.halignment="RIGHT" GridPane.rowIndex="6" GridPane.valignment="CENTER">
+               <GridPane.margin>
+                  <Insets bottom="2.0" left="2.0" right="5.0" top="2.0" />
+               </GridPane.margin>
+            </Label>
+            <TextField fx:id="textfield_COR_solv" editable="false" layoutX="465.0" layoutY="178.0" promptText="Please select a file ..." GridPane.columnIndex="1" GridPane.rowIndex="6">
+               <GridPane.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </GridPane.margin>
+            </TextField>
+            <Button fx:id="button_open_COR_solv" alignment="CENTER" contentDisplay="CENTER" layoutX="939.0" layoutY="178.0" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
                 </children>
          <BorderPane.margin>
             <Insets />
          </BorderPane.margin>
             </GridPane>
         </top>
-   <center>
-      <GridPane fx:id="gpane_textareas" alignment="CENTER" gridLinesVisible="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
-        <columnConstraints>
-          <ColumnConstraints minWidth="0.0" percentWidth="50.0" />
-          <ColumnConstraints minWidth="0.0" percentWidth="50.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints percentHeight="100.0" valignment="CENTER" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <TextArea fx:id="textarea_left" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-               <font>
-                  <Font name="Monospaced Regular" size="14.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-               </GridPane.margin>
-            </TextArea>
-            <TextArea fx:id="textarea_right" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1">
-               <font>
-                  <Font name="Monospaced Regular" size="14.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-               </GridPane.margin>
-            </TextArea>
-         </children>
-         <padding>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </padding>
-      </GridPane>
-   </center>
     </BorderPane>
