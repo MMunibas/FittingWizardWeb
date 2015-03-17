@@ -41,7 +41,7 @@ import javafx.stage.Window;
  */
 public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
 
-    private static final String title = "LJ fitting procedure Step 3 : Results";
+    private static final String title = "LJ fitting procedure : Results";
     
     private Button backStep1,backStep2,saveToFile,backStep4;
     

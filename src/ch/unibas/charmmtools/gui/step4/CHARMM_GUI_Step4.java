@@ -35,7 +35,7 @@ import javafx.stage.Window;
 
 public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
     
-    private static final String title = "LJ fitting procedure Step 4 : preparing CHARMM files for Therm. Integration";
+    private static final String title = "LJ fitting procedure : preparing CHARMM files for Therm. Integration";
 
     /**
      * All FXML variables
