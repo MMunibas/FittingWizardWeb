@@ -10,7 +10,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="10000.0" maxWidth="10000.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
         <top>
             <GridPane alignment="CENTER" BorderPane.alignment="CENTER">
                 <columnConstraints>
@@ -19,92 +19,92 @@
                     <ColumnConstraints hgrow="ALWAYS" maxWidth="294.0" minWidth="274.0" percentWidth="25.0" prefWidth="274.0" />
                 </columnConstraints>
                 <rowConstraints>
-            <RowConstraints minHeight="30.0" vgrow="ALWAYS" />
-            <RowConstraints minHeight="30.0" vgrow="ALWAYS" />
-            <RowConstraints minHeight="30.0" vgrow="ALWAYS" />
-            <RowConstraints minHeight="30.0" vgrow="ALWAYS" />
-                    <RowConstraints minHeight="30.0" vgrow="ALWAYS" />
-                    <RowConstraints minHeight="30.0" vgrow="ALWAYS" />
-                    <RowConstraints minHeight="30.0" vgrow="ALWAYS" />
-                    <RowConstraints minHeight="30.0" vgrow="ALWAYS" />
-            <RowConstraints minHeight="30.0" vgrow="ALWAYS" />
-            <RowConstraints minHeight="30.0" vgrow="ALWAYS" />
-            <RowConstraints minHeight="30.0" vgrow="ALWAYS" />
-                    <RowConstraints minHeight="30.0" vgrow="ALWAYS" />
+            <RowConstraints minHeight="20.0" vgrow="ALWAYS" />
+            <RowConstraints minHeight="20.0" vgrow="ALWAYS" />
+            <RowConstraints minHeight="20.0" vgrow="ALWAYS" />
+                    <RowConstraints minHeight="20.0" vgrow="ALWAYS" />
+                    <RowConstraints minHeight="20.0" vgrow="ALWAYS" />
+                    <RowConstraints minHeight="20.0" vgrow="ALWAYS" />
+                    <RowConstraints minHeight="20.0" vgrow="ALWAYS" />
+            <RowConstraints minHeight="20.0" vgrow="ALWAYS" />
+            <RowConstraints minHeight="20.0" vgrow="ALWAYS" />
+            <RowConstraints minHeight="20.0" vgrow="ALWAYS" />
+            <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="ALWAYS" />
+                    <RowConstraints minHeight="20.0" vgrow="ALWAYS" />
                 </rowConstraints>
                 <children>
-                    <TextField fx:id="textfield_PAR" editable="false" promptText="Please select a file ..." GridPane.columnIndex="1" GridPane.rowIndex="5">
+                    <TextField fx:id="textfield_PAR" editable="false" promptText="Please select a file ..." GridPane.columnIndex="1" GridPane.rowIndex="4">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-                    <TextField fx:id="textfield_RTF" editable="false" promptText="Please select a file ..." GridPane.columnIndex="1" GridPane.rowIndex="6">
+                    <TextField fx:id="textfield_RTF" editable="false" promptText="Please select a file ..." GridPane.columnIndex="1" GridPane.rowIndex="5">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-                    <TextField fx:id="textfield_COR_gas" editable="false" promptText="Please select a file ..." GridPane.columnIndex="1" GridPane.rowIndex="7">
+                    <TextField fx:id="textfield_COR_gas" editable="false" promptText="Please select a file ..." GridPane.columnIndex="1" GridPane.rowIndex="6">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-                    <Label text="Name of parameters PAR file :" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
+                    <Label text="Name of parameters PAR file :" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
                <GridPane.margin>
                   <Insets bottom="2.0" left="2.0" right="5.0" top="2.0" />
                </GridPane.margin>
             </Label>
-                    <Label text="Name of topology RTF|TOP file :" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
+                    <Label text="Name of topology RTF|TOP file :" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
                <GridPane.margin>
                   <Insets bottom="2.0" left="2.0" right="5.0" top="2.0" />
                </GridPane.margin>
             </Label>
-                    <Label text="Name of coordinates file (1 mol. in gas) :" GridPane.halignment="RIGHT" GridPane.rowIndex="7">
+                    <Label text="Name of coordinates file (1 mol. in gas) :" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
                <GridPane.margin>
                   <Insets bottom="2.0" left="2.0" right="5.0" top="2.0" />
                </GridPane.margin>
             </Label>
-                    <Label text="Please choose path to files :" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4">
+                    <Label text="Please choose path to files :" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                </GridPane.margin>
             </Label>
-                    <Button fx:id="button_open_PAR" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="5">
+                    <Button fx:id="button_open_PAR" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="4">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin></Button>
-                    <Button fx:id="button_open_RTF" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="6">
+                    <Button fx:id="button_open_RTF" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="5">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin></Button>
-                    <Button fx:id="button_open_COR_gas" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="7">
+                    <Button fx:id="button_open_COR_gas" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="6">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin></Button>
                     <Button fx:id="button_generate" disable="true" mnemonicParsing="false" onAction="#GenerateInputFile" text="Generate input file(s)" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="11" />
-            <Label text="Name of LPUN file :" GridPane.halignment="RIGHT" GridPane.rowIndex="10" GridPane.valignment="CENTER">
+            <Label text="Name of LPUN file :" GridPane.halignment="RIGHT" GridPane.rowIndex="9" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets bottom="2.0" left="2.0" right="5.0" top="2.0" />
                </GridPane.margin>
             </Label>
-            <TextField fx:id="textfield_LPUN" promptText="Please select a file ..." GridPane.columnIndex="1" GridPane.rowIndex="10">
+            <TextField fx:id="textfield_LPUN" promptText="Please select a file ..." GridPane.columnIndex="1" GridPane.rowIndex="9">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <Button fx:id="button_open_LPUN" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="10">
+            <Button fx:id="button_open_LPUN" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="9">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin></Button>
-            <Label text="Name of coordinates file (pure liquid) :" GridPane.halignment="RIGHT" GridPane.rowIndex="8">
+            <Label text="Name of coordinates file (pure liquid) :" GridPane.halignment="RIGHT" GridPane.rowIndex="7">
                <GridPane.margin>
                   <Insets bottom="2.0" left="2.0" right="5.0" top="2.0" />
                </GridPane.margin></Label>
-            <TextField fx:id="textfield_COR_liquid" editable="false" promptText="Please select a file ..." GridPane.columnIndex="1" GridPane.rowIndex="8">
+            <TextField fx:id="textfield_COR_liquid" editable="false" promptText="Please select a file ..." GridPane.columnIndex="1" GridPane.rowIndex="7">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <Button fx:id="button_open_COR_liquid" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="8">
+            <Button fx:id="button_open_COR_liquid" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="7">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin></Button>
@@ -113,17 +113,17 @@
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
-            <Label layoutX="203.0" layoutY="183.0" text="Name of coordinates file (solvent) :" GridPane.halignment="RIGHT" GridPane.rowIndex="9" GridPane.valignment="CENTER">
+            <Label layoutX="203.0" layoutY="183.0" text="Name of coordinates file (solvent) :" GridPane.halignment="RIGHT" GridPane.rowIndex="8" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets bottom="2.0" left="2.0" right="5.0" top="2.0" />
                </GridPane.margin>
             </Label>
-            <TextField fx:id="textfield_COR_solv" editable="false" layoutX="465.0" layoutY="178.0" promptText="Please select a file ..." GridPane.columnIndex="1" GridPane.rowIndex="9">
+            <TextField fx:id="textfield_COR_solv" editable="false" layoutX="465.0" layoutY="178.0" promptText="Please select a file ..." GridPane.columnIndex="1" GridPane.rowIndex="8">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <Button fx:id="button_open_COR_solv" alignment="CENTER" contentDisplay="CENTER" layoutX="939.0" layoutY="178.0" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="9">
+            <Button fx:id="button_open_COR_solv" alignment="CENTER" contentDisplay="CENTER" layoutX="939.0" layoutY="178.0" mnemonicParsing="false" onAction="#OpenButtonPressed" text="Open..." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="8">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin></Button>
@@ -165,10 +165,35 @@
                   <Label text="ΔG" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                </children>
             </GridPane>
+            <Label text="λ spacing parameter :" GridPane.halignment="RIGHT" GridPane.rowIndex="10" GridPane.valignment="CENTER">
+               <GridPane.margin>
+                  <Insets bottom="2.0" left="2.0" right="5.0" top="2.0" />
+               </GridPane.margin>
+            </Label>
+            <TextField fx:id="lambda_space" text="0.1" GridPane.columnIndex="1" GridPane.rowIndex="10">
+               <GridPane.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </GridPane.margin>
+            </TextField>
                 </children>
          <BorderPane.margin>
             <Insets />
          </BorderPane.margin>
             </GridPane>
         </top>
+   <center>
+      <TabPane fx:id="tab_pane" prefHeight="200.0" prefWidth="1200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+         <tabs>
+            <Tab closable="false" text="Test tab">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextArea minHeight="-Infinity" minWidth="-Infinity" prefHeight="313.0" prefWidth="1200.0" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent condimentum condimentum pulvinar. Nullam id libero quis eros placerat sodales. Duis non cursus dolor. Integer finibus urna quis venenatis finibus. Maecenas quis ultricies nibh, at eleifend dolor. Cras libero neque, pulvinar ut faucibus in, dignissim at nunc. Nunc volutpat ac risus at tincidunt. Donec congue viverra tortor, at egestas mi aliquet ac. Suspendisse sed orci sodales, fermentum odio id, gravida libero. Proin eleifend et nisi vel malesuada. Cras semper ornare ligula, quis tincidunt massa. Quisque viverra dictum tortor, lobortis vehicula arcu hendrerit eu.Pellentesque fermentum egestas turpis. Vivamus fringilla nec augue at semper. Ut ullamcorper gravida tortor, id interdum neque consectetur et. Suspendisse aliquet nec tortor non venenatis. Donec fringilla dictum lorem a vulputate. Etiam scelerisque vulputate nisi, sit amet posuere tellus porttitor sed. Phasellus pretium orci nec felis pellentesque sodales. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Morbi bibendum, tellus ut tempor luctus, massa arcu dictum urna, eget iaculis risus quam ac dolor. Sed rhoncus magna vel ipsum facilisis rhoncus. Phasellus pharetra semper turpis, sit amet condimentum nisl dictum ut. Fusce sed neque accumsan, fermentum neque eget, iaculis felis. Donec eu malesuada metus. Proin lobortis sed purus euismod eleifend. Nunc ipsum felis, porta a elit at, placerat accumsan urna.Sed blandit neque a sem bibendum, non imperdiet magna ullamcorper. Phasellus vitae nisi eu ante ultricies tincidunt a vitae nibh. Maecenas eu rutrum ante. Proin facilisis felis sed ante maximus, ut elementum ligula ornare. Aliquam metus nisl, lobortis non ullamcorper non, consectetur vitae nibh. Nunc enim nunc, blandit et nulla non, ullamcorper rutrum orci. In volutpat nisi in orci pretium rutrum. Duis interdum felis eget ligula molestie vehicula. Nulla facilisi. Donec eu pellentesque purus, ut consectetur augue. Donec eu mi pretium, ullamcorper erat eu, maximus risus. Vestibulum ut interdum est.Vivamus rutrum lorem nunc, eu convallis est blandit euismod. Etiam a est sit amet ipsum fringilla mollis. Integer quis rutrum ex. Donec ex lectus, facilisis gravida quam faucibus, egestas commodo elit. Mauris aliquam non libero eget auctor. Proin ut pretium dui. Fusce at tempor diam. Quisque mollis felis quis euismod sagittis. Vivamus eu fermentum urna, sed tempor ipsum. Quisque pretium vitae eros ac convallis. Proin condimentum magna at diam pulvinar, ut consequat orci placerat. Curabitur sit amet justo et urna elementum bibendum non non justo. Nunc feugiat vehicula efficitur.Morbi eget faucibus magna. Fusce congue vitae lectus nec tristique. Sed in turpis est. Nunc mollis maximus leo, at tincidunt enim tristique sit amet. Cras ornare nulla a nunc gravida, tincidunt semper ipsum sodales. Vestibulum vitae bibendum sem. Curabitur quis libero porta, feugiat mauris ut, luctus mauris.Fusce nec eros dolor. Nulla urna urna, dapibus tincidunt imperdiet ut, efficitur a est. Integer blandit, tellus at malesuada pulvinar, nunc risus hendrerit leo, in efficitur libero nibh et libero. Aenean aliquet pharetra odio, sed posuere eros lobortis quis. Aenean ut nisi semper, aliquam neque ut, lacinia erat. Cras vulputate velit vel libero facilisis finibus. Ut pellentesque non lacus ac sollicitudin. Vestibulum at eros enim. Nam laoreet, nulla sed laoreet dignissim, orci metus ornare felis, a vestibulum massa risus vitae metus. Duis commodo interdum turpis eu condimentum.Fusce commodo bibendum molestie. Donec ullamcorper enim ac turpis iaculis, in volutpat justo vulputate. Nulla metus urna, vulputate in ultrices non, suscipit in ante. Nam laoreet interdum eros ac tempus. Curabitur euismod mi varius ante tincidunt, non interdum risus ultricies. Maecenas lobortis urna et enim placerat, a sagittis nunc tincidunt. Quisque ligula dolor, dictum sed felis a, placerat aliquam lectus. Aenean congue mi a lobortis imperdiet. Vestibulum rutrum diam eget ex porta, in vehicula felis aliquet. Mauris auctor dolor leo, et fermentum mi viverra eu. Nulla facilisi. Maecenas a arcu vel risus scelerisque tristique. Nam eu augue hendrerit, consequat lacus sed, vulputate ligula. Maecenas fermentum libero in nulla pulvinar, in interdum leo viverra. Aliquam commodo tellus quis leo sollicitudin, eu tincidunt leo ultrices.Fusce quis nulla ut nunc aliquet porttitor. Maecenas fringilla ipsum maximus euismod aliquam. Etiam finibus, nisl a aliquam posuere, elit nibh finibus nibh, a vulputate odio lectus rhoncus sapien. Vivamus ac eros non magna aliquet viverra. Praesent at mauris et ipsum lobortis laoreet vel non enim. Aliquam eget felis ipsum. Phasellus eget odio id nunc volutpat laoreet ut id tellus. Suspendisse potenti. Proin erat arcu, auctor at venenatis porttitor, tempus at nibh. Etiam quis metus dui. Duis ornare purus eget purus suscipit venenatis. Aenean volutpat nibh eget odio volutpat vestibulum. Etiam elementum porttitor diam maximus mollis. Sed in tincidunt orci. Maecenas id nisl libero.Etiam consequat tempor magna, vel vulputate nisi ornare eget. Nulla sit amet aliquet quam. Cras nunc augue, facilisis hendrerit diam et, porta vestibulum tellus. Sed eu ipsum id libero bibendum fermentum. Donec luctus luctus mauris bibendum semper. Suspendisse potenti. Nunc condimentum diam id dolor viverra, vitae pellentesque mi condimentum. Nam sit amet metus lobortis, fringilla justo eu, dignissim libero. Etiam at pellentesque felis. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus congue malesuada ipsum non sagittis. Morbi lobortis vehicula luctus.Nam id consectetur velit, in ullamcorper tellus. Proin tincidunt ex id augue mollis, eu interdum mauris aliquet. Vestibulum vitae euismod ante. Aenean tincidunt, turpis sit amet cursus aliquam, tellus dui rhoncus quam, elementum posuere ipsum dui at nulla. In hac habitasse platea dictumst. Mauris quis urna sed est laoreet ornare. Proin varius, diam quis mattis blandit, dolor felis mattis nisl, lobortis commodo mi nibh fringilla augue. Aliquam erat volutpat. Nullam suscipit posuere quam ut blandit. In lacinia interdum massa nec rutrum. Curabitur pulvinar, ipsum sed porttitor consectetur, lectus mauris facilisis nunc, id pretium ipsum enim a odio. Nam ultricies libero a rhoncus auctor. Maecenas a sodales tellus. Vivamus scelerisque commodo accumsan. Maecenas iaculis rutrum neque, iaculis accumsan turpis finibus eget. Nunc hendrerit, nisl id pretium dignissim, elit dui posuere lacus, ac faucibus turpis erat consequat justo. " wrapText="true" AnchorPane.bottomAnchor="-1.0" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+         </tabs>
+      </TabPane>
+   </center>
     </BorderPane>
