@@ -77,6 +77,7 @@ import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_DGHydr_solvent;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_GasPhase;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_PureLiquid;
 import ch.unibas.charmmtools.gui.RunningCHARMM_DG;
+import ch.unibas.charmmtools.gui.step5_grid.CHARMM_GUI_Step5_grid;
 import ch.unibas.charmmtools.scripts.ICHARMMScript;
 import ch.unibas.charmmtools.scripts.CHARMMScript_Den_Vap;
 import ch.unibas.charmmtools.scripts.CHARMMScript_DG_gas;
@@ -170,10 +171,10 @@ public class WizardPageFactory {
         } else {
             gaussScript = new RealMultipoleGaussScript(moleculesDir, settings);
         }
-        
+
         charmmScript_Den_Vap = new CHARMMScript_Den_Vap(sessionDir, settings);
         charmmScript_DG_gas = new CHARMMScript_DG_gas(sessionDir, settings);
-        charmmScript_DG_solvent = new CHARMMScript_DG_solvent(sessionDir, settings);    
+        charmmScript_DG_solvent = new CHARMMScript_DG_solvent(sessionDir, settings);
     }
 
     private void initializeWorkflows() {
@@ -192,9 +193,9 @@ public class WizardPageFactory {
                 notifications);
 
         vmdDisplayWorkflow = new RunVmdDisplayWorkflow(vmdScript, sessionDir);
-        
+
         charmmWorkflow_Den_Vap = new RunCHARMMWorkflow(charmmScript_Den_Vap);
-        charmmWorkflow_DG = new RunCHARMMWorkflow(charmmScript_DG_gas,charmmScript_DG_solvent);
+        charmmWorkflow_DG = new RunCHARMMWorkflow(charmmScript_DG_gas, charmmScript_DG_solvent);
     }
 
     public <T extends WizardPage> WizardPage create(Class<T> type, Object parameter) {
@@ -240,42 +241,39 @@ public class WizardPageFactory {
                         visualization,
                         exportFitWorkflow,
                         vmdDisplayWorkflow);
-            } 
-            // CHARMM FITTING PAGES
+            } // CHARMM FITTING PAGES
             else if (type == RunningCHARMM.class) {
                 List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
-                    page = new RunningCHARMM(charmmWorkflow_Den_Vap,ioList);
-            }
-            else if (type == RunningCHARMM_DG.class) {
+                page = new RunningCHARMM(charmmWorkflow_Den_Vap, ioList);
+            } else if (type == RunningCHARMM_DG.class) {
                 List<CHARMM_Generator_DGHydr> dgList = throwIfParameterIsNull(parameter);
-                    page = new RunningCHARMM_DG(charmmWorkflow_DG,dgList);
-            }
-            else if (type == CHARMM_GUI_Step1.class) {
-                if(parameter==null)
+                page = new RunningCHARMM_DG(charmmWorkflow_DG, dgList);
+            } else if (type == CHARMM_GUI_Step1.class) {
+                if (parameter == null) {
                     page = new CHARMM_GUI_Step1(charmmWorkflow_Den_Vap);
-                else{
+                } else {
                     List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
-                    page = new CHARMM_GUI_Step1(charmmWorkflow_Den_Vap,ioList);
+                    page = new CHARMM_GUI_Step1(charmmWorkflow_Den_Vap, ioList);
                 }
-            } 
-            else if (type == CHARMM_GUI_Step2.class) {
+            } else if (type == CHARMM_GUI_Step2.class) {
                 List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
-                page = new CHARMM_GUI_Step2(charmmWorkflow_Den_Vap,ioList);
-            } 
-            else if (type == CHARMM_GUI_Step3.class) {
+                page = new CHARMM_GUI_Step2(charmmWorkflow_Den_Vap, ioList);
+            } else if (type == CHARMM_GUI_Step3.class) {
                 List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
-                page = new CHARMM_GUI_Step3(charmmWorkflow_Den_Vap,ioList);
+                page = new CHARMM_GUI_Step3(charmmWorkflow_Den_Vap, ioList);
             } else if (type == CHARMM_GUI_Step4.class) {
-                if(parameter==null)
+                if (parameter == null) {
                     page = new CHARMM_GUI_Step4(charmmWorkflow_DG);
-//                else{
-//                    boolean success = throwIfParameterIsNull(parameter);
-//                    page = new CHARMM_GUI_Step4(charmmWorkflow_DG,success);
-//                }
-                else{
+                } //                else{
+                //                    boolean success = throwIfParameterIsNull(parameter);
+                //                    page = new CHARMM_GUI_Step4(charmmWorkflow_DG,success);
+                //                }
+                else {
                     List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
-                    page = new CHARMM_GUI_Step4(charmmWorkflow_DG,ioList);
+                    page = new CHARMM_GUI_Step4(charmmWorkflow_DG, ioList);
                 }
+            } else if (type == CHARMM_GUI_Step5_grid.class){
+                page = new CHARMM_GUI_Step5_grid();
             }
             // MISC
             else {

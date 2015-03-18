@@ -18,11 +18,8 @@ import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_PureLiquid;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
 import ch.unibas.charmmtools.gui.step4.MyTab;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
-import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -168,7 +165,7 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
         COR_selected_solv = false;
         LPUN_selected = false;
 
-//        this.tab_pane.getTabs().clear();
+        this.tab_pane.getTabs().clear();
     }
 
     /**

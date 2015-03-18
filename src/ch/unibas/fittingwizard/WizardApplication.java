@@ -10,6 +10,7 @@ package ch.unibas.fittingwizard;
 
 import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_Step1;
 import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Step4;
+import ch.unibas.charmmtools.gui.step5_grid.CHARMM_GUI_Step5_grid;
 import ch.unibas.fittingwizard.presentation.MoleculeListPage;
 import ch.unibas.fittingwizard.presentation.base.Wizard;
 import ch.unibas.fittingwizard.presentation.base.WizardPageFactory;
@@ -120,7 +121,8 @@ public class WizardApplication extends Application {
         WizardPageFactory factory = new WizardPageFactory(primaryStage);
         Wizard wizard = new Wizard(factory);
 //        wizard.navigateTo(MoleculeListPage.class, null);
-        wizard.navigateTo(CHARMM_GUI_Step1.class, null);
+//        wizard.navigateTo(CHARMM_GUI_Step1.class, null);
+        wizard.navigateTo(CHARMM_GUI_Step5_grid.class,null);
         this.settings = factory.getSettings();
         return wizard;
     }
