@@ -18,13 +18,19 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.RowConstraints;
 
 /**
  *
@@ -41,20 +47,14 @@ public class CHARMM_GUI_Step5_grid extends WizardPage {
 
     @FXML
     private TableView<gridValuesModel> tableview_gridValues;
-    @FXML
-    private TableView<fullGridModel> tableview_fullgrid;
 
     @FXML
     private TableColumn<gridValuesModel, String> column_gridValues;
     private ObservableList<gridValuesModel> list_gridValues;
-    private ObservableList<fullGridModel> list_fullgrid;
 
-    private TableColumn<fullGridModel, String> epsCol;
     @FXML
-    private List<TableColumn<fullGridModel, String>> columns_fullgrid;
-//    private List<ObservableList<fullGridModel>> list_fullGrid;
+    private GridPane gpane_fullgrid;
 
-//    private Callback<TableColumn<gridValuesModel,String>,TableCell<gridValuesModel,String>> cellFactory;
     /**
      * Represents a group of grid values
      */
@@ -82,55 +82,11 @@ public class CHARMM_GUI_Step5_grid extends WizardPage {
 
     }
 
-    public class fullGridModel {
-
-        private StringProperty epsilon;
-//        private List<StringProperty> valList = new ArrayList<>();
-//        
-//        private fullGridModel(String epsi, String... val)
-//        {
-//            this.epsilon = new SimpleStringProperty(epsi);
-//            for(String st : val)
-//                valList.add(new SimpleStringProperty(st));
-//        }
-//        
-//        private fullGridModel(String epsi, List<String> val)
-//        {
-//            this.epsilon = new SimpleStringProperty(epsi);
-//            for(String st : val)
-//                valList.add(new SimpleStringProperty(st));
-//        }
-        private StringProperty data;
-
-        public fullGridModel(String epsi, String dat) {
-            this.epsilon = new SimpleStringProperty(epsi);
-            this.data = new SimpleStringProperty(dat);
-        }
-
-        public void setEps(String eps){
-            this.epsilon.setValue(eps);
-        }
-        
-        public void setDat(String dat){
-            this.data.setValue(dat);
-        }
-        
-        public String getEps(){
-            return this.epsilon.get();
-        }
-        
-        public String getDat(){
-            return this.data.get();
-        }
-        
-    }
-
     public CHARMM_GUI_Step5_grid() {
         super(title);
 //        this.tableview_gridValues = new TableView<gridValuesModel>();
 
         this.list_gridValues = FXCollections.observableArrayList();
-        this.columns_fullgrid = new ArrayList<>();
 
         setupGridTable();
     }
@@ -187,67 +143,44 @@ public class CHARMM_GUI_Step5_grid extends WizardPage {
 
     private void setupFullGrid() {
 
-        int ngrid = Integer.valueOf(textfield_ngrid.getText());
-
-        tableview_fullgrid.getColumns().clear();
-
-//        list_fullGrid = new ArrayList<>();
-//        for( ObservableList<fullGridModel> obl : list_fullGrid)
-//        {
-//            
-//        }
-//        columns_fullgrid.add(new TableColumn("epsilons"));
-
-        epsCol = new TableColumn("Epsilons");
-        epsCol.setSortable(false);
-        epsCol.setCellValueFactory(
-                    new PropertyValueFactory<fullGridModel, String>("epsilon")
-            );
-//        epsCol.setCellFactory(TextFieldTableCell.forTableColumn());
-//        epsCol.setOnEditCommit(
-//                    new EventHandler<CellEditEvent<fullGridModel, String>>() {
-//                        @Override
-//                        public void handle(CellEditEvent<fullGridModel, String> t) {
-//                            ((fullGridModel) t.getTableView().getItems().get(
-//                                    t.getTablePosition().getRow())).setEps(t.getNewValue());
-//                        }
-//                    }
-//            );
+        int ngrid = Integer.valueOf(textfield_ngrid.getText())+1;
+        gpane_fullgrid.setGridLinesVisible(true);
+        gpane_fullgrid.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+        gpane_fullgrid.getColumnConstraints().clear();
         
-        for (int i = 0; i < ngrid; i++) {
-            String scale = list_gridValues.get(i).getValue();
-            columns_fullgrid.add(new TableColumn("sigma*" + scale));
-        }
-
-        for (TableColumn col : columns_fullgrid) {
-            col.setSortable(false);
-            col.setPrefWidth(tableview_fullgrid.getWidth() / ((double) ngrid + 1));
-//            col.setCellValueFactory(
-//                    new PropertyValueFactory<fullGridModel, String>("data")
-//            );
-//            col.setCellFactory(TextFieldTableCell.forTableColumn());
-//            col.setOnEditCommit(
-//                    new EventHandler<CellEditEvent<fullGridModel, String>>() {
-//                        @Override
-//                        public void handle(CellEditEvent<fullGridModel, String> t) {
-//                            ((fullGridModel) t.getTableView().getItems().get(
-//                                    t.getTablePosition().getRow())).setDat(t.getNewValue());
-//                        }
-//                    }
-//            );
-        }
-
-        tableview_fullgrid.getColumns().add(epsCol);
-//        tableview_fullgrid.getColumns().addAll(columns_fullgrid);
-        
-        list_fullgrid = FXCollections.observableArrayList();
-        for (int i = 0; i < ngrid; i++) {
-            String scale = list_gridValues.get(i).getValue();
-            list_fullgrid.add(new fullGridModel("epsilon*"+scale, "0.0"));
+        // grid constraints
+        for (int i = 0; i < ngrid; i++)
+        {
+            ColumnConstraints column = new ColumnConstraints();
+            column.setPercentWidth(100.0/ngrid);
+            RowConstraints row = new RowConstraints();
+            row.setPercentHeight(100.0/ngrid);
+            gpane_fullgrid.getColumnConstraints().add(column);
+            gpane_fullgrid.getRowConstraints().add(row);
         }
         
+        // set col 0 and row 0 containing labels
+        for (int i = 1; i < ngrid; i++)
+        {
+            Label sig = new Label("σ*"+list_gridValues.get(i-1).getValue());
+            sig.setAlignment(Pos.CENTER);
+            Label eps = new Label("ε*"+list_gridValues.get(i-1).getValue());
+            eps.setAlignment(Pos.CENTER);
+            gpane_fullgrid.add(sig, i, 0);
+            gpane_fullgrid.add(eps, 0, i);
+        }
         
-        tableview_fullgrid.setItems(list_fullgrid);
+        // set content of cells
+        for (int i = 1; i < ngrid; i++)
+            for (int j = 1; j < ngrid; j++){
+                GridPane loc = new GridPane();
+                loc.add(new Label("ρ"), 0, 0);  loc.add(new Label("..."), 1, 0);
+                loc.add(new Label("ΔH"), 0, 1); loc.add(new Label("..."), 1, 1);
+                loc.add(new Label("ΔG"), 0, 2); loc.add(new Label("..."), 1, 2);
+                gpane_fullgrid.add(loc,i,j);       
+            }
+        
+        genGrid.setDisable(true);
     }
 
     @FXML
