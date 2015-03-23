@@ -9,9 +9,6 @@
 package ch.unibas.charmmtools.gui.database;
 
 import ch.unibas.fittingwizard.presentation.base.WizardPage;
-import java.util.Observable;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -89,7 +86,8 @@ public class CHARMM_GUI_db extends WizardPage {
 
     public CHARMM_GUI_db() {
         super(title);
-        dbi = new DB_interface();
+//        dbi = new DB_interface();
+        dbi = new SQLITE_DB_interface();
     }
 
     @Override
@@ -136,19 +134,16 @@ public class CHARMM_GUI_db extends WizardPage {
             tabview_db.getItems().addAll(obsList);
         } else if (event.getSource().equals(search_byformula)) {
             // search for a compound by formula in DB
-            tabview_db.getItems().addAll(
-                dbi.findByFormula(text_formula.getText())
-            );
+            obsList.addAll(dbi.findByFormula(text_formula.getText()));
+            tabview_db.getItems().addAll(obsList);
         } else if (event.getSource().equals(search_bysmiles)) {
             // search for a compound by SMILES notation in DB
-            tabview_db.getItems().addAll(
-                dbi.findBySMILES(text_smiles.getText())
-            );
+            obsList.addAll(dbi.findBySMILES(text_smiles.getText()));
+            tabview_db.getItems().addAll(obsList);
         } else if (event.getSource().equals(search_bymass)) {
             // search for a compound by Mass in DB
-            tabview_db.getItems().addAll(
-                dbi.findByMASS(Double.valueOf(text_mass.getText()), Double.valueOf(text_mass_threshold.getText()))
-            );
+            obsList.addAll(dbi.findByMASS(Double.valueOf(text_mass.getText()), Double.valueOf(text_mass_threshold.getText())));
+            tabview_db.getItems().addAll(obsList);
         } else {
             throw new UnknownError("Unknown Event in searchButtonPressed(ActionEvent event)");
         }

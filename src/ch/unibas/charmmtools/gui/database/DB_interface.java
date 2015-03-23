@@ -9,104 +9,38 @@
 package ch.unibas.charmmtools.gui.database;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
 /**
- * This class manages a connection to a mysql database for finding chemical compounds properties
+ * This abstract class manages a connection to a database for finding chemical compounds properties
  *
  * @author hedin
  */
-public class DB_interface {
+public abstract class DB_interface {
 
-    private static final Logger logger = Logger.getLogger(DB_interface.class);
+    protected static final Logger logger = Logger.getLogger(DB_interface.class);
 
-    private String db_url = "jdbc:mysql://localhost:3306/fittingWizard";
-    private String db_pass = "z6nNfrAhyxb2cLA8";
-    private String db_user = "fittingWizard";
+    protected static final String colName = "name";
+    protected static final String colFormula = "formula";
+    protected static final String colSmiles = "smiles";
+    protected static final String colMass = "mass";
+    protected static final String colDensity = "density";
+    protected static final String colHvap = "Hvap";
+    protected static final String colGsolv = "Gsolv";
 
-//    private static final String byNameQuery = "select `compounds`.name, `structure`.formula, `structure`.smiles,"
-//            + " `prop`.mass, `prop`.density, `prop`.Hvap, `prop`.Gsolv from `compounds`,`prop`,`structure`where `compounds`.name like '%?%'";
-
-    private static final String colName = "name";
-    private static final String colFormula = "formula";
-    private static final String colSmiles = "smiles";
-    private static final String colMass = "mass";
-    private static final String colDensity = "density";
-    private static final String colHvap = "Hvap";
-    private static final String colGsolv = "Gsolv";
-
-    private Connection connect = null;
-//    private Statement statement = null;
-//    private PreparedStatement preparedStatement = null;
-//    private ResultSet resultSet = null;
+    protected Connection connect = null;
 
     /**
-     * Open connection to database using default connection
+     * 
+     * @param rset
+     * @return 
      */
-    public DB_interface() {
-
-        // prepare connection parameters and try to connect
-        try {
-            connect = DriverManager.getConnection(db_url, db_user, db_pass);
-        } catch (SQLException ex) {
-            logger.error("Error when connecting to Mysql database ! " + ex.getMessage());
-        }
-
-        // test statement to check if connection is OK
-        try {
-            Statement statement = connect.createStatement();
-            ResultSet resultSet = statement.executeQuery("show tables");
-
-            logger.info("Executing test query " + resultSet.getStatement().toString() + " on DB " + db_url);
-
-        } catch (SQLException ex) {
-            logger.error("Error when executing test statement 'show tables' on Mysql database ! " + ex.getMessage());
-        }
-
-    }
-
-    /**
-     * Open connection to database
-     *
-     * @param _url
-     * @param _pass
-     * @param _user
-     */
-    public DB_interface(String _url, String _pass, String _user) {
-
-        this.db_url = _url;
-        this.db_pass = _pass;
-        this.db_user = _user;
-
-        // prepare connection parameters and try to connect
-        try {
-            connect = DriverManager.getConnection(db_url, db_user, db_pass);
-        } catch (SQLException ex) {
-            logger.error("Error when connecting to Mysql database ! " + ex.getMessage());
-        }
-
-        // test statement to check if connection is OK
-        try {
-            Statement statement = connect.createStatement();
-            ResultSet resultSet = statement.executeQuery("show tables");
-
-            logger.info("Executing test query " + resultSet.getStatement().toString() + " on DB " + db_url);
-
-        } catch (SQLException ex) {
-            logger.error("Error when executing test statement 'show tables' on Mysql database ! " + ex.getMessage());
-        }
-
-    }
-
-    private List<DB_model> parseResultSet(ResultSet rset) {
+    protected List<DB_model> parseResultSet(ResultSet rset) {
 
         List<DB_model> parsedList = new ArrayList<>();
 
@@ -133,6 +67,7 @@ public class DB_interface {
      * Find data using compound name
      *
      * @param name
+     * @return 
      */
     public List<DB_model> findByName(String name) {
 
@@ -146,13 +81,14 @@ public class DB_interface {
 //            statement = connect.prepareStatement(byNameQuery);
 //            statement.setString(1, name);
             statement = connect.createStatement();
-            resultSet = statement.executeQuery("select `compounds`.name,`structure`.formula, `structure`.smiles, `prop`.mass, `prop`.density, `prop`.Hvap, `prop`.Gsolv from `compounds`,`prop`,`structure` where `compounds`.name like '%" + name + "%'");
+            resultSet = statement.executeQuery("select `compounds`.name,`structure`.formula,"
+                    + " `structure`.smiles, `prop`.mass, `prop`.density, `prop`.Hvap, `prop`.Gsolv"
+                    + " from `compounds`,`prop`,`structure` where `compounds`.name like '%" + name + "%'"
+                    + " and compounds.id=prop.id and compounds.id=structure.id");
             modelList = parseResultSet(resultSet);
         } catch (SQLException ex) {
             logger.error("Error when executing SQL statement in findByName() ! " + ex.getMessage());
         }
-
-
 
         return modelList;
     }
@@ -161,20 +97,52 @@ public class DB_interface {
      * Find data using compound formula
      *
      * @param formula
+     * @return 
      */
     public List<DB_model> findByFormula(String formula) {
-        List<DB_model> res = new ArrayList<>();
-        return res;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        List<DB_model> modelList = null;
+        
+        try {
+            //prepare statement and execute it
+            statement = connect.createStatement();
+            resultSet = statement.executeQuery("select `compounds`.name,`structure`.formula,"
+                    + " `structure`.smiles, `prop`.mass, `prop`.density, `prop`.Hvap, `prop`.Gsolv"
+                    + " from `compounds`,`prop`,`structure` where `structure`.formula like '%" + formula + "%'"
+                    + " and compounds.id=prop.id and compounds.id=structure.id");
+            modelList = parseResultSet(resultSet);
+        } catch (SQLException ex) {
+            logger.error("Error when executing SQL statement in findByFormula() ! " + ex.getMessage());
+        }
+
+        return modelList;
     }
 
     /**
      * Find data using compound SMILES notation
      *
      * @param smiles
+     * @return 
      */
     public List<DB_model> findBySMILES(String smiles) {
-        List<DB_model> res = new ArrayList<>();
-        return res;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        List<DB_model> modelList = null;
+        
+        try {
+            //prepare statement and execute it
+            statement = connect.createStatement();
+            resultSet = statement.executeQuery("select `compounds`.name,`structure`.formula,"
+                    + " `structure`.smiles, `prop`.mass, `prop`.density, `prop`.Hvap, `prop`.Gsolv"
+                    + " from `compounds`,`prop`,`structure` where `structure`.smiles like '%" + smiles + "%'"
+                    + " and compounds.id=prop.id and compounds.id=structure.id");
+            modelList = parseResultSet(resultSet);
+        } catch (SQLException ex) {
+            logger.error("Error when executing SQL statement in findBySMILES() ! " + ex.getMessage());
+        }
+
+        return modelList;
     }
 
     /**
@@ -182,6 +150,7 @@ public class DB_interface {
      *
      * @param target
      * @param threshold
+     * @return 
      */
     public List<DB_model> findByMASS(double target, double threshold) {
         List<DB_model> res = new ArrayList<>();

@@ -7,8 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <GridPane BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -32,12 +31,12 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Label>
-            <Label disable="true" text="Search by formula :" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+            <Label text="Search by formula :" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Label>
-            <Label disable="true" layoutX="476.0" layoutY="78.0" text="Search by SMILES notation :" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+            <Label layoutX="476.0" layoutY="78.0" text="Search by SMILES notation :" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
@@ -52,12 +51,12 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="text_formula" disable="true" promptText="Enter molecule formula" GridPane.columnIndex="2" GridPane.rowIndex="2">
+            <TextField fx:id="text_formula" promptText="Enter molecule formula" GridPane.columnIndex="2" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="text_smiles" disable="true" promptText="Enter molecule SMILES notation" GridPane.columnIndex="2" GridPane.rowIndex="3">
+            <TextField fx:id="text_smiles" promptText="Enter molecule SMILES notation" GridPane.columnIndex="2" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
@@ -88,12 +87,12 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="search_bysmiles" disable="true" layoutX="975.0" layoutY="43.0" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" GridPane.columnIndex="3" GridPane.rowIndex="3">
+            <Button fx:id="search_bysmiles" layoutX="975.0" layoutY="43.0" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" GridPane.columnIndex="3" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="search_byformula" disable="true" layoutX="975.0" layoutY="43.0" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" GridPane.columnIndex="3" GridPane.rowIndex="2">
+            <Button fx:id="search_byformula" layoutX="975.0" layoutY="43.0" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" GridPane.columnIndex="3" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
