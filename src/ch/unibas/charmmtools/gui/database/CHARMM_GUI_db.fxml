@@ -32,17 +32,17 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Label>
-            <Label text="Search by formula :" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+            <Label disable="true" text="Search by formula :" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Label>
-            <Label layoutX="476.0" layoutY="78.0" text="Search by SMILES notation :" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+            <Label disable="true" layoutX="476.0" layoutY="78.0" text="Search by SMILES notation :" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Label>
-            <Label text="Search by mass (± threshold) :" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+            <Label disable="true" text="Search by mass (± threshold) :" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
@@ -52,12 +52,12 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="text_formula" promptText="Enter molecule formula" GridPane.columnIndex="2" GridPane.rowIndex="2">
+            <TextField fx:id="text_formula" disable="true" promptText="Enter molecule formula" GridPane.columnIndex="2" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="text_smiles" promptText="Enter molecule SMILES notation" GridPane.columnIndex="2" GridPane.rowIndex="3">
+            <TextField fx:id="text_smiles" disable="true" promptText="Enter molecule SMILES notation" GridPane.columnIndex="2" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
@@ -71,34 +71,34 @@
                   <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <TextField fx:id="text_mass" promptText="Enter mass and adjust threshold if required">
+                  <TextField fx:id="text_mass" disable="true" promptText="Enter mass and adjust threshold if required">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <TextField fx:id="text_mass_threshold" layoutX="15.0" layoutY="13.0" promptText="Adjust threshold if required" text="0.5" GridPane.columnIndex="1">
+                  <TextField fx:id="text_mass_threshold" disable="true" layoutX="15.0" layoutY="13.0" promptText="Adjust threshold if required" text="0.5" GridPane.columnIndex="1">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
                </children>
             </GridPane>
-            <Button fx:id="search_byname" mnemonicParsing="false" text="Search" GridPane.columnIndex="3" GridPane.rowIndex="1">
+            <Button fx:id="search_byname" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" GridPane.columnIndex="3" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="search_bysmiles" layoutX="975.0" layoutY="43.0" mnemonicParsing="false" text="Search" GridPane.columnIndex="3" GridPane.rowIndex="3">
+            <Button fx:id="search_bysmiles" disable="true" layoutX="975.0" layoutY="43.0" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" GridPane.columnIndex="3" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="search_byformula" layoutX="975.0" layoutY="43.0" mnemonicParsing="false" text="Search" GridPane.columnIndex="3" GridPane.rowIndex="2">
+            <Button fx:id="search_byformula" disable="true" layoutX="975.0" layoutY="43.0" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" GridPane.columnIndex="3" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="search_bymass" layoutX="970.0" layoutY="103.0" mnemonicParsing="false" text="Search" GridPane.columnIndex="3" GridPane.rowIndex="4">
+            <Button fx:id="search_bymass" disable="true" layoutX="970.0" layoutY="103.0" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" GridPane.columnIndex="3" GridPane.rowIndex="4">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
