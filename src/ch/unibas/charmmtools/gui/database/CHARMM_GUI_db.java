@@ -8,6 +8,7 @@
  */
 package ch.unibas.charmmtools.gui.database;
 
+import ch.unibas.fittingwizard.Settings;
 import ch.unibas.fittingwizard.presentation.base.WizardPage;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,6 +29,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 public class CHARMM_GUI_db extends WizardPage {
 
     private static final String title = "LJ fitting procedure : find compound in database";
+    
+    protected Settings settings;
 
     @FXML // fx:id="tabcol_mass"
     private TableColumn<DB_model, String> tabcol_mass; // Value injected by FXMLLoader
@@ -84,10 +87,22 @@ public class CHARMM_GUI_db extends WizardPage {
     
     private ObservableList<DB_model> obsList;
 
-    public CHARMM_GUI_db() {
+    public CHARMM_GUI_db(Settings _settings) {
         super(title);
-//        dbi = new DB_interface();
-        dbi = new SQLITE_DB_interface();
+        this.settings = _settings;
+        
+        String DB_type = settings.getValue("DB.type");
+        String DB_conn = settings.getValue("DB.connect");
+        String DB_user = settings.getValue("DB.user");
+        String DB_pass = settings.getValue("DB.password");
+
+        
+        // if not mysql default to sqlite
+        if(DB_type.compareToIgnoreCase("mysql")==0)
+            dbi = new MYSQL_DB_interface(DB_conn, DB_user, DB_pass);
+        else
+            dbi = new SQLITE_DB_interface(DB_conn);
+        
     }
 
     @Override

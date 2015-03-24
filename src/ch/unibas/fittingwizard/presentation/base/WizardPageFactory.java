@@ -277,7 +277,7 @@ public class WizardPageFactory {
                 page = new CHARMM_GUI_Step5_grid();
             }
             else if (type == CHARMM_GUI_db.class){
-                page = new CHARMM_GUI_db();
+                page = new CHARMM_GUI_db(settings);
             }
             // MISC
             else {

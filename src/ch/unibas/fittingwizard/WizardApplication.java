@@ -119,9 +119,9 @@ public class WizardApplication extends Application {
         WizardPageFactory factory = new WizardPageFactory(primaryStage);
         Wizard wizard = new Wizard(factory);
 //        wizard.navigateTo(MoleculeListPage.class, null);
-//        wizard.navigateTo(CHARMM_GUI_Step1.class, null);
+        wizard.navigateTo(CHARMM_GUI_Step1.class, null);
 //        wizard.navigateTo(CHARMM_GUI_Step5_grid.class,null);
-        wizard.navigateTo(CHARMM_GUI_db.class,null);
+//        wizard.navigateTo(CHARMM_GUI_db.class,null);
         this.settings = factory.getSettings();
         return wizard;
     }
