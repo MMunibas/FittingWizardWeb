@@ -15,7 +15,7 @@ import java.sql.Statement;
 
 public class SQLITE_DB_interface extends DB_interface {
 
-    private String db_url = "jdbc:sqlite:db/db.sqlite3";
+    private String db_url = "jdbc:sqlite:db/db_test.sqlite";
 
     public SQLITE_DB_interface() {
         // prepare connection parameters and try to connect

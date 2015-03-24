@@ -17,16 +17,16 @@ CREATE TABLE IF NOT EXISTS `compounds` (
 -- Dumping data for table `compounds`
 --
 
-INSERT INTO `compounds` (`id`, `name`) VALUES
-(1, 'phenol'),
-(1, 'phénol'),
-(1, 'Benzenol'),
-(1, 'CARBOLIC ACID'),
-(1, 'Phenic Acid'),
-(1, 'Phenylic Acid'),
-(1, 'Phenylic alcohol'),
-(1, 'Karbolsäure'),
-(1, 'Karbol');
+-- INSERT INTO `compounds` (`id`, `name`) VALUES
+-- (1, 'phenol'),
+-- (1, 'phénol'),
+-- (1, 'Benzenol'),
+-- (1, 'CARBOLIC ACID'),
+-- (1, 'Phenic Acid'),
+-- (1, 'Phenylic Acid'),
+-- (1, 'Phenylic alcohol'),
+-- (1, 'Karbolsäure'),
+-- (1, 'Karbol');
 
 -- --------------------------------------------------------
 
@@ -47,8 +47,8 @@ CREATE TABLE IF NOT EXISTS `prop` (
 -- Dumping data for table `prop`
 --
 
-INSERT INTO `prop` (`id`, `mass`, `density`, `Hvap`, `Gsolv`) VALUES
-(1, 94.11, 1.07, NULL, NULL);
+-- INSERT INTO `prop` (`id`, `mass`, `density`, `Hvap`, `Gsolv`) VALUES
+-- (1, 94.11, 1.07, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -68,6 +68,6 @@ CREATE TABLE IF NOT EXISTS `structure` (
 -- Dumping data for table `structure`
 --
 
-INSERT INTO `structure` (`id`, `formula`, `inchi`, `smiles`) VALUES
-(1, 'C6H6O', 'InChI=1S/C6H6O/c7-6-4-2-1-3-5-6/h1-5,7H', 'Oc1ccccc1');
+-- INSERT INTO `structure` (`id`, `formula`, `inchi`, `smiles`) VALUES
+-- (1, 'C6H6O', 'InChI=1S/C6H6O/c7-6-4-2-1-3-5-6/h1-5,7H', 'Oc1ccccc1');
 
