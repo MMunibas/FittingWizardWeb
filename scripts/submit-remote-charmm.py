@@ -69,31 +69,29 @@ if process != 0:
 #  exit(0)
 
 ## Create directory for calculations
-#workdir = config.get('remote','workdir').strip('\'')
-#bashCmd = "ssh " + sshaddress + " ls "+workdir+" "
-#existing_dirs = subprocess.check_output(bashCmd.split())
-#dirIndex = 0
-#dirName = "dir{:03d}".format(dirIndex)
-#while dirName in existing_dirs:
-#  dirIndex += 1
-#  dirName = "dir{:03d}".format(dirIndex)
-#  if dirIndex > 999:
-#    print "Error. No free directory in remote cluster."
-#    exit(1)
-#bashCmd = "ssh " + sshaddress + " mkdir -p " + workdir + \
-#  "/" + dirName
-#process = subprocess.call(bashCmd.split())
-#if process != 0:
-#  print "Error. Can't create remote directory."
-#  exit(1)
-#print "Copying files to remote computer"
-#bashCmd = "scp " + args.xyz + " " + \
-#  dir + "/calc_Multipole_Gauss_MEP_comp.py " + \
-#  sshaddress + ":" + workdir + "/" + dirName
-#process = subprocess.call(bashCmd.split())
-#if process != 0:
-#  print "Error. Can't copy files to remote directory."
-#  exit(1)
+workdir = config.get('remote','workdir').strip('\'')
+bashCmd = "ssh " + sshaddress + " ls "+workdir+" "
+existing_dirs = subprocess.check_output(bashCmd.split())
+dirIndex = 0
+dirName = "dir{:03d}".format(dirIndex)
+while dirName in existing_dirs:
+  dirIndex += 1
+  dirName = "dir{:03d}".format(dirIndex)
+  if dirIndex > 999:
+    print "Error. No free directory in remote cluster."
+    exit(1)
+bashCmd = "ssh " + sshaddress + " mkdir -p " + workdir + \
+  "/" + dirName
+process = subprocess.call(bashCmd.split())
+if process != 0:
+  print "Error. Can't create remote directory."
+  exit(1)
+print "Copying files to remote computer"
+bashCmd = "scp " + args.inpF + " " + args.parF + " " + args.topF + " "+ args.lpunF + " " + sshaddress + ":" + workdir + "/" + dirName
+process = subprocess.call(bashCmd.split())
+if process != 0:
+  print "Error. Can't copy files to remote directory."
+  exit(1)
 #print "Running script remotely in " + sshaddress + \
 #  ":" + workdir + "/" + dirName
 #print "Please wait..."

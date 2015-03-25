@@ -42,7 +42,7 @@ public class CHARMM_GUI_ShowOutput extends CHARMM_GUI_base {
     @FXML
     private Label LabelLeft,LabelRight,errorLabelRight,errorLabelLeft;
     
-    private Button backAssistant,gotoStep4;
+    private Button backAssistant,gotoShowResults;
     
     public CHARMM_GUI_ShowOutput(RunCHARMMWorkflow flow, List<CHARMM_InOut> ioList)
     {
@@ -79,7 +79,7 @@ public class CHARMM_GUI_ShowOutput extends CHARMM_GUI_base {
             errorLabelLeft.setVisible(true);
             errorLabelLeft.setText("Error while running CHARMM calculation ! Please check output :");
             errorLabelLeft.setTextFill(Paint.valueOf("RED"));
-            gotoStep4.setDisable(true);
+            gotoShowResults.setDisable(true);
         }
 
         if (out.get(1).getErrorOccured())
@@ -87,7 +87,7 @@ public class CHARMM_GUI_ShowOutput extends CHARMM_GUI_base {
             errorLabelRight.setVisible(true);
             errorLabelRight.setText("Error while running CHARMM calculation ! Please check output :");
             errorLabelRight.setTextFill(Paint.valueOf("RED"));
-            gotoStep4.setDisable(true);
+            gotoShowResults.setDisable(true);
         }
     }
     
@@ -107,17 +107,17 @@ public class CHARMM_GUI_ShowOutput extends CHARMM_GUI_base {
         });
         addButtonToButtonBar(backAssistant);
         
-//        gotoStep4 = ButtonFactory.createButtonBarButton("Proceed to ΔG solvation", new EventHandler<ActionEvent>(){
-//            @Override
-//            public void handle(ActionEvent actionEvent) {
-//                List<CHARMM_InOut> myList = new ArrayList<>();
-//                myList.addAll(inp);
-//                myList.addAll(out);
-//                logger.info("Going to Step4 ΔG solvation.");
-//                navigateTo(CHARMM_GUI_Step4.class,myList);
-//            }
-//        });
-//        addButtonToButtonBar(gotoStep4);
+        gotoShowResults = ButtonFactory.createButtonBarButton("Proceed to Results page", new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                List<CHARMM_InOut> myList = new ArrayList<>();
+                myList.addAll(inp);
+                myList.addAll(out);
+                logger.info("Going to Results display");
+                navigateTo(CHARMM_GUI_ShowResults.class,myList);
+            }
+        });
+        addButtonToButtonBar(gotoShowResults);
         
         
 

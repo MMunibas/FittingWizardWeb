@@ -89,7 +89,7 @@ public class RunningCHARMM_DenVap extends ProgressPage{
                 })
             );
 //        }
-        logger.info(out.get(0).getText());
+//        logger.info(out.get(0).getText());
         
         Class c = inp.get(0).getClass();
         if (c==CHARMM_Input_GasPhase.class || c==CHARMM_Input_PureLiquid.class)
@@ -109,7 +109,7 @@ public class RunningCHARMM_DenVap extends ProgressPage{
 
                 })
             );
-            logger.info(out.get(1).getText());
+//            logger.info(out.get(1).getText());
         }
         
         return true;
@@ -123,11 +123,11 @@ public class RunningCHARMM_DenVap extends ProgressPage{
         
         logger.info("Run canceled by user");
         
-        Class c = myList.get(0).getClass();
-        if (c==CHARMM_Input_GasPhase.class || c==CHARMM_Input_PureLiquid.class)
-            navigateTo(CHARMM_GUI_InputAssistant.class,myList);
-        else if (c==CHARMM_Input_DGHydr.class)
-            navigateTo(CHARMM_GUI_Step4.class,myList);
+//        Class c = myList.get(0).getClass();
+//        if (c==CHARMM_Input_GasPhase.class || c==CHARMM_Input_PureLiquid.class)
+        navigateTo(CHARMM_GUI_InputAssistant.class,null);
+//        else if (c==CHARMM_Input_DGHydr.class)
+//            navigateTo(CHARMM_GUI_Step4.class,myList);
     }
 
     @Override
@@ -136,22 +136,22 @@ public class RunningCHARMM_DenVap extends ProgressPage{
         myList.addAll(inp);
         myList.addAll(out);
         
-        Class c = myList.get(0).getClass();
+//        Class c = myList.get(0).getClass();
         
         if(successful)
         {
 //            logger.info("Going to CHARMM input assistant Step 2");
-            if (c==CHARMM_Input_GasPhase.class || c==CHARMM_Input_PureLiquid.class)
-                navigateTo(CHARMM_GUI_ShowOutput.class,myList);
-            else if (c==CHARMM_Input_DGHydr.class)
-                navigateTo(CHARMM_GUI_Step4.class,myList);  
+//            if (c==CHARMM_Input_GasPhase.class || c==CHARMM_Input_PureLiquid.class)
+            navigateTo(CHARMM_GUI_ShowOutput.class,myList);
+//            else if (c==CHARMM_Input_DGHydr.class)
+//                navigateTo(CHARMM_GUI_Step4.class,myList);  
         }
         else{
 //            logger.info("CHARMM run failed : going back to CHARMM input assistant Step1.");
-            if (c==CHARMM_Input_GasPhase.class || c==CHARMM_Input_PureLiquid.class)
-                navigateTo(CHARMM_GUI_InputAssistant.class,myList);
-            else if (c==CHARMM_Input_DGHydr.class)
-                navigateTo(CHARMM_GUI_Step4.class,myList);
+//            if (c==CHARMM_Input_GasPhase.class || c==CHARMM_Input_PureLiquid.class)
+            navigateTo(CHARMM_GUI_ShowOutput.class,myList);
+//            else if (c==CHARMM_Input_DGHydr.class)
+//                navigateTo(CHARMM_GUI_Step4.class,myList);
         }
         
     }

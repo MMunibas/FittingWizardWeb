@@ -43,7 +43,7 @@ public class CHARMM_GUI_ShowResults extends CHARMM_GUI_base{
 
     private static final String title = "LJ fitting procedure : Results";
     
-    private Button backStep1,backStep2,saveToFile,backStep4;
+    private Button backInputAssistant,backShowOutput,saveToFile;
     
     /*
      * Those values are parsed from the output file as the may be useful later
@@ -112,7 +112,7 @@ public class CHARMM_GUI_ShowResults extends CHARMM_GUI_base{
 
     @Override
     protected void fillButtonBar() {
-        backStep1 = ButtonFactory.createButtonBarButton("Back to ρ and ΔH input assistant", new EventHandler<ActionEvent>(){
+        backInputAssistant = ButtonFactory.createButtonBarButton("Back to ρ and ΔH input assistant", new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent actionEvent) {
                 List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
@@ -122,9 +122,9 @@ public class CHARMM_GUI_ShowResults extends CHARMM_GUI_base{
                 navigateTo(CHARMM_GUI_InputAssistant.class,myList);
             }
         });
-        addButtonToButtonBar(backStep1);
+        addButtonToButtonBar(backInputAssistant);
         
-        backStep2 = ButtonFactory.createButtonBarButton("Back to ρ and ΔH output", new EventHandler<ActionEvent>(){
+        backShowOutput = ButtonFactory.createButtonBarButton("Back to ρ and ΔH output", new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent actionEvent) {
                 List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
@@ -134,19 +134,19 @@ public class CHARMM_GUI_ShowResults extends CHARMM_GUI_base{
                 navigateTo(CHARMM_GUI_ShowOutput.class,myList);
             }
         });
-        addButtonToButtonBar(backStep2);
+        addButtonToButtonBar(backShowOutput);
         
-        backStep4 = ButtonFactory.createButtonBarButton("Back to ΔG solvation", new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
-                myList.addAll(inp);
-                myList.addAll(out);
-                logger.info("Back to ΔG of solvation input assistant");
-                navigateTo(CHARMM_GUI_Step4.class,myList);
-            }
-        });
-        addButtonToButtonBar(backStep4);
+//        backStep4 = ButtonFactory.createButtonBarButton("Back to ΔG solvation", new EventHandler<ActionEvent>(){
+//            @Override
+//            public void handle(ActionEvent actionEvent) {
+//                List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
+//                myList.addAll(inp);
+//                myList.addAll(out);
+//                logger.info("Back to ΔG of solvation input assistant");
+//                navigateTo(CHARMM_GUI_Step4.class,myList);
+//            }
+//        });
+//        addButtonToButtonBar(backStep4);
         
         saveToFile = ButtonFactory.createButtonBarButton("Save to file", new EventHandler<ActionEvent>(){
             @Override

@@ -33,7 +33,7 @@ public class CHARMM_Generator_DGHydr{
     protected String whoami;
 
     protected PythonScriptRunner runner = null;
-//    protected final File currDir = new File(".");
+    protected final File workDir = new File("test");
     protected File myDir = null;
     
     private List<File> myFiles = new ArrayList<>();
@@ -55,7 +55,7 @@ public class CHARMM_Generator_DGHydr{
         this.l_space = _l_space;
         this.l_max = _l_max;
 
-        this.myDir = new File("./test/gas_" + ti_type);
+        this.myDir = new File("test/gas_" + ti_type);
         this.myDir.mkdirs();
 
         this.runner = new PythonScriptRunner();
@@ -83,7 +83,7 @@ public class CHARMM_Generator_DGHydr{
         this.l_space = _l_space;
         this.l_max = _l_max;
 
-        this.myDir = new File("./test/solvent_" + ti_type);
+        this.myDir = new File("test/solvent_" + ti_type);
         this.myDir.mkdirs();
 
         this.runner = new PythonScriptRunner();
@@ -97,24 +97,32 @@ public class CHARMM_Generator_DGHydr{
 
     private void copyAndFixPaths() {
         try {
-            FileUtils.copyFileToDirectory(new File(solu_cor), myDir);
-            if(this.solv_cor != null) FileUtils.copyFileToDirectory(new File(solv_cor), myDir);
-            FileUtils.copyFileToDirectory(new File(solu_top), myDir);
-            if(this.solv_top != null) FileUtils.copyFileToDirectory(new File(solv_top), myDir);
-            FileUtils.copyFileToDirectory(new File(par), myDir);
-            FileUtils.copyFileToDirectory(new File(lpun), myDir);
+            FileUtils.copyFileToDirectory(new File(workDir,solu_cor), myDir);
+            
+            if(this.solv_cor != null) 
+                FileUtils.copyFileToDirectory(new File(workDir,solv_cor), myDir);
+            
+            FileUtils.copyFileToDirectory(new File(workDir,solu_top), myDir);
+            
+            if(this.solv_top != null) 
+                FileUtils.copyFileToDirectory(new File(workDir,solv_top), myDir);
+            
+            FileUtils.copyFileToDirectory(new File(workDir,par), myDir);
+            
+            FileUtils.copyFileToDirectory(new File(workDir,lpun), myDir);
+            
         } catch (IOException | NullPointerException ex) {
             logger.error("An error append while copying files to subdirectory " + this.myDir.getAbsolutePath() + " : " + ex.getMessage());
         }
 
-        String folderPath = new File("./test").getAbsolutePath();
-
-        this.solu_cor = ResourceUtils.getRelativePath(solu_cor,folderPath);
-        if(this.solv_cor != null) this.solv_cor = ResourceUtils.getRelativePath(solv_cor,folderPath);
-        this.solu_top = ResourceUtils.getRelativePath(solu_top,folderPath);
-        if(this.solv_top != null) this.solv_top = ResourceUtils.getRelativePath(solv_top,folderPath);
-        this.par = ResourceUtils.getRelativePath(par,folderPath);
-        this.lpun = ResourceUtils.getRelativePath(lpun,folderPath);
+//        String folderPath = new File("test").getAbsolutePath();
+//
+//        this.solu_cor = ResourceUtils.getRelativePath(solu_cor,folderPath);
+//        if(this.solv_cor != null) this.solv_cor = ResourceUtils.getRelativePath(solv_cor,folderPath);
+//        this.solu_top = ResourceUtils.getRelativePath(solu_top,folderPath);
+//        if(this.solv_top != null) this.solv_top = ResourceUtils.getRelativePath(solv_top,folderPath);
+//        this.par = ResourceUtils.getRelativePath(par,folderPath);
+//        this.lpun = ResourceUtils.getRelativePath(lpun,folderPath);
     }
 
     private void genInputPythonGas(boolean genOnly) {

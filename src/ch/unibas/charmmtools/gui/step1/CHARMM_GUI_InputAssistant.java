@@ -18,6 +18,7 @@ import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_PureLiquid;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
 import ch.unibas.charmmtools.gui.MyTab;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
+import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import java.io.File;
 import java.io.IOException;
@@ -256,30 +257,14 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
 
         try {
 
+            String folderPath = new File("test").getAbsolutePath();
+            
             // get filenames
-            String corname_gas = textfield_COR_gas.getText();
-            String corname_liquid = textfield_COR_liquid.getText();
-            String rtfname = textfield_RTF.getText();
-            String parname = textfield_PAR.getText();
-            String lpunname = textfield_LPUN.getText();
-
-            // if empty filenames print a pattern user should modify
-            //transform it to relative path instead as we have to send data to clusters later
-//            String folderPath = new File(".").getAbsolutePath();
-//            corname_gas = corname_gas.length() == 0 ? "ADD_HERE_PATH_TO_COORDINATES_GAS_FILE"
-//                    : ResourceUtils.getRelativePath(corname_gas, folderPath);
-//            corname_liquid = corname_liquid.length() == 0 ? "ADD_HERE_PATH_TO_COORDINATES_LIQUID_FILE"
-//                    : ResourceUtils.getRelativePath(corname_liquid, folderPath);
-//            rtfname = rtfname.length() == 0 ? "ADD_HERE_PATH_TO_TOPOLOGY_FILE"
-//                    : ResourceUtils.getRelativePath(rtfname, folderPath);
-//            parname = parname.length() == 0 ? "ADD_HERE_PATH_TO_PARAMETERS_FILE"
-//                    : ResourceUtils.getRelativePath(parname, folderPath);
-//            lpunname = lpunname.length() == 0 ? "ADD_HERE_PATH_TO_LPUN_FILE"
-//                    : ResourceUtils.getRelativePath(lpunname, folderPath);
-//            inp.add(0, new CHARMM_Input_GasPhase(corname_gas, rtfname, parname, lpunname));
-//            inp.add(1, new CHARMM_Input_PureLiquid(corname_liquid, rtfname, parname, lpunname));
-//            textarea_left.setText(inp.get(0).getText());
-//            textarea_right.setText(inp.get(1).getText());
+            String corname_gas = ResourceUtils.getRelativePath(textfield_COR_gas.getText(), folderPath);
+            String corname_liquid = ResourceUtils.getRelativePath(textfield_COR_liquid.getText(), folderPath);
+            String rtfname = ResourceUtils.getRelativePath(textfield_RTF.getText(), folderPath);
+            String parname = ResourceUtils.getRelativePath(textfield_PAR.getText(), folderPath);
+            String lpunname = ResourceUtils.getRelativePath(textfield_LPUN.getText(), folderPath);
 
             File gasFile = new File("test", "gas_phase.inp");
             CHARMM_Input gasInp = new CHARMM_Input_GasPhase(corname_gas, rtfname, parname, lpunname, gasFile);
@@ -300,7 +285,7 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
             inp.add(liqInp);
             
 //            RedLabel_Notice.setVisible(true);
-            String corname_solv = textfield_COR_solv.getText();
+            String corname_solv = ResourceUtils.getRelativePath(textfield_COR_solv.getText(), folderPath);
             double lamb_spacing_val = Double.valueOf(lambda_space.getText());
 
             in_gas_vdw = new CHARMM_Generator_DGHydr(corname_gas, rtfname, parname, lpunname, "vdw",

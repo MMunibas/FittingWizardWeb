@@ -6,35 +6,35 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.babelBinding;
-
-import org.openbabel.OBConversion;
-import org.openbabel.OBMol;
-
-/**
- *
- * @author hedin
- */
-
-
-class BabelConverterAPI {
-
-    OBConversion conv;
-    OBMol mol;
-
-    public BabelConverterAPI(String typeIN, String typeOUT) {
-        System.loadLibrary("openbabel_java");
-
-        conv = new OBConversion();
-        mol = new OBMol();
-
-        conv.SetInFormat(typeIN);
-        conv.SetOutFormat(typeOUT);
-    }
-
-    public void convert(String inFile, String outFile) {
-        conv.ReadFile(mol, inFile);
-        conv.WriteFile(mol, outFile);
-    }
-
-}// class
+//package ch.unibas.babelBinding;
+//
+//import org.openbabel.OBConversion;
+//import org.openbabel.OBMol;
+//
+///**
+// *
+// * @author hedin
+// */
+//
+//
+//class BabelConverterAPI {
+//
+//    OBConversion conv;
+//    OBMol mol;
+//
+//    public BabelConverterAPI(String typeIN, String typeOUT) {
+//        System.loadLibrary("openbabel_java");
+//
+//        conv = new OBConversion();
+//        mol = new OBMol();
+//
+//        conv.SetInFormat(typeIN);
+//        conv.SetOutFormat(typeOUT);
+//    }
+//
+//    public void convert(String inFile, String outFile) {
+//        conv.ReadFile(mol, inFile);
+//        conv.WriteFile(mol, outFile);
+//    }
+//
+//}// class

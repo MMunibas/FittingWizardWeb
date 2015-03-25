@@ -30,8 +30,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
+//import javafx.scene.control.Alert;
+//import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -178,47 +178,47 @@ public class CHARMM_GUI_Step4_expert extends CHARMM_GUI_base {
         COR_selected_solv = false;
         LPUN_selected = false;
 
-        lambda_min.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (Double.valueOf(newValue) < 0.0) {
-                    Alert alert = new Alert(AlertType.ERROR);
-                    alert.setTitle("Error with λ min value !");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Please choose a λ min not less than 0.0 !");
-                    alert.showAndWait();
-                    lambda_min.setText("0.0");
-                }
-            }
-        });
-
-        lambda_max.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (Double.valueOf(newValue) > 1.0) {
-                    Alert alert = new Alert(AlertType.ERROR);
-                    alert.setTitle("Error with λ max value !");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Please choose a λ max not larger than 1.0 !");
-                    alert.showAndWait();
-                    lambda_max.setText("1.0");
-                }
-            }
-        });
-
-        lambda_space.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (Double.valueOf(newValue) >= Double.valueOf(lambda_max.getText())) {
-                    Alert alert = new Alert(AlertType.ERROR);
-                    alert.setTitle("Error with λ space value !");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Please choose a λ space value smaller than λ max !");
-                    alert.showAndWait();
-                    lambda_space.setText("0.1");
-                }
-            }
-        });
+//        lambda_min.textProperty().addListener(new ChangeListener<String>() {
+//            @Override
+//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+//                if (Double.valueOf(newValue) < 0.0) {
+//                    Alert alert = new Alert(AlertType.ERROR);
+//                    alert.setTitle("Error with λ min value !");
+//                    alert.setHeaderText(null);
+//                    alert.setContentText("Please choose a λ min not less than 0.0 !");
+//                    alert.showAndWait();
+//                    lambda_min.setText("0.0");
+//                }
+//            }
+//        });
+//
+//        lambda_max.textProperty().addListener(new ChangeListener<String>() {
+//            @Override
+//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+//                if (Double.valueOf(newValue) > 1.0) {
+//                    Alert alert = new Alert(AlertType.ERROR);
+//                    alert.setTitle("Error with λ max value !");
+//                    alert.setHeaderText(null);
+//                    alert.setContentText("Please choose a λ max not larger than 1.0 !");
+//                    alert.showAndWait();
+//                    lambda_max.setText("1.0");
+//                }
+//            }
+//        });
+//
+//        lambda_space.textProperty().addListener(new ChangeListener<String>() {
+//            @Override
+//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+//                if (Double.valueOf(newValue) >= Double.valueOf(lambda_max.getText())) {
+//                    Alert alert = new Alert(AlertType.ERROR);
+//                    alert.setTitle("Error with λ space value !");
+//                    alert.setHeaderText(null);
+//                    alert.setContentText("Please choose a λ space value smaller than λ max !");
+//                    alert.showAndWait();
+//                    lambda_space.setText("0.1");
+//                }
+//            }
+//        });
 
     }
 

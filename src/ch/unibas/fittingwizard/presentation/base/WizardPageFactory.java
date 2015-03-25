@@ -262,18 +262,20 @@ public class WizardPageFactory {
             } else if (type == CHARMM_GUI_ShowResults.class) {
                 List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
                 page = new CHARMM_GUI_ShowResults(charmmWorkflow_Den_Vap, ioList);
-            } else if (type == CHARMM_GUI_Step4.class) {
-                if (parameter == null) {
-                    page = new CHARMM_GUI_Step4(charmmWorkflow_DG);
-                } //                else{
-                //                    boolean success = throwIfParameterIsNull(parameter);
-                //                    page = new CHARMM_GUI_Step4(charmmWorkflow_DG,success);
-                //                }
-                else {
-                    List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
-                    page = new CHARMM_GUI_Step4(charmmWorkflow_DG, ioList);
-                }
-            } else if (type == CHARMM_GUI_Fitgrid.class){
+            } 
+//            else if (type == CHARMM_GUI_Step4.class) {
+//                if (parameter == null) {
+//                    page = new CHARMM_GUI_Step4(charmmWorkflow_DG);
+//                } //                else{
+//                //                    boolean success = throwIfParameterIsNull(parameter);
+//                //                    page = new CHARMM_GUI_Step4(charmmWorkflow_DG,success);
+//                //                }
+//                else {
+//                    List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
+//                    page = new CHARMM_GUI_Step4(charmmWorkflow_DG, ioList);
+//                }
+//            } 
+            else if (type == CHARMM_GUI_Fitgrid.class){
                 page = new CHARMM_GUI_Fitgrid();
             }
             else if (type == CHARMM_GUI_db.class){
