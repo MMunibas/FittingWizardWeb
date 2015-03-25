@@ -16,34 +16,9 @@ import java.sql.Statement;
 
 public class MYSQL_DB_interface extends DB_interface {
 
-    private String db_url = "jdbc:mysql://localhost:3306/fittingWizard";
-    private String db_pass = "z6nNfrAhyxb2cLA8";
-    private String db_user = "fittingWizard";
-    
-      /**
-     * Open connection to database using default connection
-     */
-    public MYSQL_DB_interface() {
-
-        // prepare connection parameters and try to connect
-        try {
-            connect = DriverManager.getConnection(db_url, db_user, db_pass);
-        } catch (SQLException ex) {
-            logger.error("Error when connecting to Mysql database ! " + ex.getMessage());
-        }
-
-        // test statement to check if connection is OK
-        try {
-            Statement statement = connect.createStatement();
-            ResultSet resultSet = statement.executeQuery("show tables");
-
-            logger.info("Executing test query " + resultSet.getStatement().toString() + " on DB " + db_url);
-
-        } catch (SQLException ex) {
-            logger.error("Error when executing test statement 'show tables' on Mysql database ! " + ex.getMessage());
-        }
-
-    }
+    private String db_url;
+    private String db_pass;
+    private String db_user;
 
     /**
      * Open connection to database
@@ -52,7 +27,7 @@ public class MYSQL_DB_interface extends DB_interface {
      * @param _pass
      * @param _user
      */
-    public MYSQL_DB_interface(String _url, String _pass, String _user) {
+    public MYSQL_DB_interface(String _url, String _user, String _pass) {
 
         this.db_url = _url;
         this.db_pass = _pass;

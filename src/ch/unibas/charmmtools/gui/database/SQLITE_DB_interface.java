@@ -15,27 +15,7 @@ import java.sql.Statement;
 
 public class SQLITE_DB_interface extends DB_interface {
 
-    private String db_url = "jdbc:sqlite:db/db_test.sqlite";
-
-    public SQLITE_DB_interface() {
-        // prepare connection parameters and try to connect
-        try {
-            connect = DriverManager.getConnection(db_url);
-        } catch (SQLException ex) {
-            logger.error("Error when connecting to SQLite database ! " + ex.getMessage());
-        }
-
-        // test statement to check if connection is OK
-        try {
-            Statement statement = connect.createStatement();
-            ResultSet resultSet = statement.executeQuery("PRAGMA encoding");
-
-            logger.info("Executing test query " + resultSet.getStatement().toString() + " on DB " + db_url);
-
-        } catch (SQLException ex) {
-            logger.error("Error when executing test statement 'PRAGMA encoding' on SQLite database ! " + ex.getMessage());
-        }
-    }
+    private String db_url;
 
     /**
      * 
@@ -54,12 +34,13 @@ public class SQLITE_DB_interface extends DB_interface {
         // test statement to check if connection is OK
         try {
             Statement statement = connect.createStatement();
-            ResultSet resultSet = statement.executeQuery("PRAGMA encoding");
-
-            logger.info("Executing test query " + resultSet.getStatement().toString() + " on DB " + db_url);
+            statement.execute("PRAGMA foreign_keys=ON");
+//            statement.execute("PRAGMA foreign_keys");
+            
+            logger.info("Executing test query " + statement.toString() + " on DB " + db_url);
 
         } catch (SQLException ex) {
-            logger.error("Error when executing test statement 'PRAGMA encoding' on SQLite database ! " + ex.getMessage());
+            logger.error("Error when executing test statement 'PRAGMA foreign_keys=ON' on SQLite database ! " + ex.getMessage());
         }
     }
 
