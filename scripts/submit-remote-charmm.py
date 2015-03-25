@@ -50,15 +50,15 @@ args = parser.parse_args()
 #print args.numCores
 
 # Test SSH connection
-#print "Establishing connection"
-#sshuser = config.get('remote','user').strip('\'')
-#hostname = config.get('remote','hostname').strip('\'')
-#sshaddress = sshuser+"@"+hostname
-#bashCmd = "ssh " + sshaddress + " hostname >/dev/null"
-#process = subprocess.call(bashCmd.split())
-#if process != 0:
-#  print "Error. Can't connect to remote computer."
-#  exit(1)
+print "Establishing connection"
+sshuser = config.get('remote','user').strip('\'')
+hostname = config.get('remote','hostname').strip('\'')
+sshaddress = sshuser+"@"+hostname
+bashCmd = "ssh " + sshaddress + " hostname >/dev/null"
+process = subprocess.call(bashCmd.split())
+if process != 0:
+  print "Error. Can't connect to remote computer."
+  exit(1)
   
 # charmm test locally
 #bashCmd = "../scripts/charmm -i " + args.inpF + " -o " + args.outF

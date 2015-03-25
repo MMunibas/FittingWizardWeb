@@ -6,15 +6,16 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.gui.step4;
+package ch.unibas.charmmtools.gui.obsolete;
 
+import ch.unibas.charmmtools.gui.MyTab;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
 import ch.unibas.charmmtools.gui.RunningCHARMM_DG;
-import ch.unibas.charmmtools.gui.step3.CHARMM_GUI_Step3;
+import ch.unibas.charmmtools.gui.step3.CHARMM_GUI_ShowResults;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import java.io.File;
@@ -503,7 +504,7 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
                 myList.addAll(inp);
                 myList.addAll(out);
                 logger.info("Going to Results page");
-                navigateTo(CHARMM_GUI_Step3.class,myList);
+                navigateTo(CHARMM_GUI_ShowResults.class,myList);
             }
         });
         addButtonToButtonBar(gotoResults);

@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.gui.step5_grid;
+package ch.unibas.charmmtools.gui.step4;
 
 import ch.unibas.fittingwizard.application.scripts.base.ScriptExecutionException;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
@@ -41,7 +41,7 @@ import org.apache.commons.io.FileUtils;
  *
  * @author hedin
  */
-public class CHARMM_GUI_Step5_grid extends WizardPage {
+public class CHARMM_GUI_Fitgrid extends WizardPage {
 
     private static final String title = "LJ fitting procedure : preparing fitting grid";
 
@@ -90,7 +90,7 @@ public class CHARMM_GUI_Step5_grid extends WizardPage {
 
     }
 
-    public CHARMM_GUI_Step5_grid() {
+    public CHARMM_GUI_Fitgrid() {
         super(title);
 //        this.tableview_gridValues = new TableView<gridValuesModel>();
 

@@ -6,16 +6,16 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.gui.expertMode;
+package ch.unibas.charmmtools.gui.obsolete;
 
 import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
-import ch.unibas.charmmtools.gui.RunningCHARMM;
+import ch.unibas.charmmtools.gui.RunningCHARMM_DenVap;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_DGHydr;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_DGHydr_solvent;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
-import ch.unibas.charmmtools.gui.step4.MyTab;
+import ch.unibas.charmmtools.gui.MyTab;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
@@ -513,7 +513,7 @@ public class CHARMM_GUI_Step4_expert extends CHARMM_GUI_base {
         List<CHARMM_InOut> myList = new ArrayList<>();
         myList.addAll(inp);
 //        myList.addAll(out);
-        navigateTo(RunningCHARMM.class, myList);
+        navigateTo(RunningCHARMM_DenVap.class, myList);
 
     }
 

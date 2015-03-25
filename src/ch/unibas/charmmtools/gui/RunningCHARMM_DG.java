@@ -10,7 +10,7 @@ package ch.unibas.charmmtools.gui;
 
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
-import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Step4;
+import ch.unibas.charmmtools.gui.obsolete.CHARMM_GUI_Step4;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.presentation.base.progress.Context;
 import ch.unibas.fittingwizard.presentation.base.progress.ProgressPage;

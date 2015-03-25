@@ -44,7 +44,7 @@ public abstract class CHARMM_Input implements CHARMM_InOut{
     protected int prnlev = 2;
     
     protected String par,top,lpun,cor;
-    protected File inp;
+//    protected File inp;
     protected File out;
     
     protected final String type;
@@ -232,16 +232,16 @@ public abstract class CHARMM_Input implements CHARMM_InOut{
     /**
      * @return the inp
      */
-    public File getInp() {
-        return inp;
-    }
+//    public File getInp() {
+//        return inp;
+//    }
 
     /**
      * @param inp the inp to set
      */
-    public void setInp(File inp) {
-        this.inp = inp;
-    }
+//    public void setInp(File inp) {
+//        this.inp = inp;
+//    }
     
 //    protected abstract void convertCoordinates(); 
 

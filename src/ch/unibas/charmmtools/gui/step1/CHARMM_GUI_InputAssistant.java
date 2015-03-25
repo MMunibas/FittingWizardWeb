@@ -9,14 +9,14 @@
 package ch.unibas.charmmtools.gui.step1;
 
 import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
-import ch.unibas.charmmtools.gui.RunningCHARMM;
+import ch.unibas.charmmtools.gui.RunningCHARMM_DenVap;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_GasPhase;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_PureLiquid;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
-import ch.unibas.charmmtools.gui.step4.MyTab;
+import ch.unibas.charmmtools.gui.MyTab;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import java.io.File;
@@ -34,7 +34,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 
-public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
+public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
 
     private static final String title = "LJ fitting procedure : preparing CHARMM input files";
 
@@ -79,63 +79,63 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
     private CHARMM_Generator_DGHydr in_gas_vdw = null, in_gas_mtp = null,
             in_solv_vdw = null, in_solv_mtp = null;
 
-    public CHARMM_GUI_Step1(RunCHARMMWorkflow chWflow) {
+    public CHARMM_GUI_InputAssistant(RunCHARMMWorkflow chWflow) {
         super(title, chWflow);
     }
 
-    public CHARMM_GUI_Step1(RunCHARMMWorkflow chWflow, List<CHARMM_InOut> ioList) {
-
-        super(title, chWflow);
-
-        for (CHARMM_InOut ioListIt : ioList) {
-
-            Class c = ioListIt.getClass();
-            Class sc = c.getSuperclass();
-
-            if (sc == CHARMM_Input.class) {
-                inp.add((CHARMM_Input) ioListIt);
-            } else if (sc == CHARMM_Output.class) {
-                out.add((CHARMM_Output) ioListIt);
-            } else {
-                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : get "
-                        + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class
-                        + " or " + CHARMM_Output.class);
-            }
-        }
-
-//        textarea_left.setText(inp.get(0).getText());
-//        textarea_left.setEditable(true);
+//    public CHARMM_GUI_InputAssistant(RunCHARMMWorkflow chWflow, List<CHARMM_InOut> ioList) {
 //
-//        textarea_right.setText(inp.get(1).getText());
-//        textarea_right.setEditable(true);
+//        super(title, chWflow);
 //
-//        RedLabel_Notice.setText("Error while running CHARMM ! Please modify input file(s) !");
-//        RedLabel_Notice.setVisible(true);
-//        button_save_to_file.setDisable(false);
-
-        textfield_PAR.setDisable(true);
-        textfield_RTF.setDisable(true);
-        textfield_COR_gas.setDisable(true);
-        textfield_COR_liquid.setDisable(true);
-        textfield_LPUN.setDisable(true);
-
-        button_generate.setDisable(true);
-
-        button_open_PAR.setDisable(true);
-        button_open_RTF.setDisable(true);
-        button_open_COR_gas.setDisable(true);
-        button_open_COR_liquid.setDisable(true);
-        button_open_LPUN.setDisable(true);
-
-//        coor_type_gas.setDisable(true);
-//        coor_type_liquid.setDisable(true);
-//        
-//        later_PAR.setDisable(true);
-//        later_RTF.setDisable(true);
-//        later_COR_gas.setDisable(true);
-//        later_COR_liquid.setDisable(true);
-//        later_LPUN.setDisable(true);
-    }
+//        for (CHARMM_InOut ioListIt : ioList) {
+//
+//            Class c = ioListIt.getClass();
+//            Class sc = c.getSuperclass();
+//
+//            if (sc == CHARMM_Input.class) {
+//                inp.add((CHARMM_Input) ioListIt);
+//            } else if (sc == CHARMM_Output.class) {
+//                out.add((CHARMM_Output) ioListIt);
+//            } else {
+//                throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : get "
+//                        + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class
+//                        + " or " + CHARMM_Output.class);
+//            }
+//        }
+//
+////        textarea_left.setText(inp.get(0).getText());
+////        textarea_left.setEditable(true);
+////
+////        textarea_right.setText(inp.get(1).getText());
+////        textarea_right.setEditable(true);
+////
+////        RedLabel_Notice.setText("Error while running CHARMM ! Please modify input file(s) !");
+////        RedLabel_Notice.setVisible(true);
+////        button_save_to_file.setDisable(false);
+//
+//        textfield_PAR.setDisable(true);
+//        textfield_RTF.setDisable(true);
+//        textfield_COR_gas.setDisable(true);
+//        textfield_COR_liquid.setDisable(true);
+//        textfield_LPUN.setDisable(true);
+//
+//        button_generate.setDisable(true);
+//
+//        button_open_PAR.setDisable(true);
+//        button_open_RTF.setDisable(true);
+//        button_open_COR_gas.setDisable(true);
+//        button_open_COR_liquid.setDisable(true);
+//        button_open_LPUN.setDisable(true);
+//
+////        coor_type_gas.setDisable(true);
+////        coor_type_liquid.setDisable(true);
+////        
+////        later_PAR.setDisable(true);
+////        later_RTF.setDisable(true);
+////        later_COR_gas.setDisable(true);
+////        later_COR_liquid.setDisable(true);
+////        later_LPUN.setDisable(true);
+//    }
 
     /**
      * Here we can add actions done just before showing the window
@@ -288,6 +288,7 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
                             new String(Files.readAllBytes(Paths.get(gasFile.getAbsolutePath())))
                     )
             );
+            inp.add(gasInp);
             
             File liqFile = new File("test", "pure_liquid.inp");
             CHARMM_Input liqInp = new CHARMM_Input_PureLiquid(corname_liquid, rtfname, parname, lpunname, liqFile);
@@ -296,7 +297,7 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
                             new String(Files.readAllBytes(Paths.get(liqFile.getAbsolutePath())))
                     ) 
             );
-            
+            inp.add(liqInp);
             
 //            RedLabel_Notice.setVisible(true);
             String corname_solv = textfield_COR_solv.getText();
@@ -346,6 +347,8 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
         }
 
         tab_pane.getTabs().addAll(tab_list);
+        
+        button_run_CHARMM.setDisable(false);
         
         /**
          * If success enable button for saving
@@ -443,7 +446,7 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
         button_run_CHARMM.setDisable(true);
 
 //        button_save_to_file.setText("Click to save");
-        button_run_CHARMM.setText("Run CHARMM");
+//        button_run_CHARMM.setText("Run CHARMM");
 
         inp.clear();
         out.clear();
@@ -511,7 +514,7 @@ public class CHARMM_GUI_Step1 extends CHARMM_GUI_base {
         List<CHARMM_InOut> myList = new ArrayList<>();
         myList.addAll(inp);
         myList.addAll(out);
-        navigateTo(RunningCHARMM.class, myList);
+        navigateTo(RunningCHARMM_DenVap.class, myList);
 
     }
 

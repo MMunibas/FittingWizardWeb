@@ -8,7 +8,7 @@
  */
 package ch.unibas.fittingwizard.presentation.fitting;
 
-import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_Step1;
+import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_InputAssistant;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
@@ -163,11 +163,11 @@ public class FitResultPage extends WizardPageWithVisualization {
         });
         addButtonToButtonBar(anotherFit);
         
-        Button gotoCharmmFit = ButtonFactory.createButtonBarButton("Go to LJ fit section", new EventHandler<ActionEvent>() {
+        Button gotoCharmmFit = ButtonFactory.createButtonBarButton("Go to CHARMM section", new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 logger.info("Now switching to the CHARMM Lennard-Jones fit section.");
-                navigateTo(CHARMM_GUI_Step1.class);
+                navigateTo(CHARMM_GUI_InputAssistant.class);
             }
         });
         addButtonToButtonBar(gotoCharmmFit); 

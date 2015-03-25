@@ -9,7 +9,6 @@
 package ch.unibas.charmmtools.gui.database;
 
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -35,7 +34,6 @@ public class SQLITE_DB_interface extends DB_interface {
         try {
             Statement statement = connect.createStatement();
             statement.execute("PRAGMA foreign_keys=ON");
-//            statement.execute("PRAGMA foreign_keys");
             
             logger.info("Executing test query " + statement.toString() + " on DB " + db_url);
 

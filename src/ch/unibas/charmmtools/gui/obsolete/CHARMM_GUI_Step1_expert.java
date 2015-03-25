@@ -6,10 +6,10 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.gui.expertMode;
+package ch.unibas.charmmtools.gui.obsolete;
 
 import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
-import ch.unibas.charmmtools.gui.RunningCHARMM;
+import ch.unibas.charmmtools.gui.RunningCHARMM_DenVap;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_GasPhase;
@@ -415,7 +415,7 @@ public class CHARMM_GUI_Step1_expert extends CHARMM_GUI_base {
                 logger.error("Error while setting file name or save path for CHARMM input file.");
             }
             
-            ip.setInp(selectedFile);
+//            ip.setInp(selectedFile);
             
         }
 
@@ -435,7 +435,7 @@ public class CHARMM_GUI_Step1_expert extends CHARMM_GUI_base {
         List<CHARMM_InOut> myList = new ArrayList<>();
         myList.addAll(inp);
         myList.addAll(out);
-        navigateTo(RunningCHARMM.class, myList);
+        navigateTo(RunningCHARMM_DenVap.class, myList);
 
     }
 

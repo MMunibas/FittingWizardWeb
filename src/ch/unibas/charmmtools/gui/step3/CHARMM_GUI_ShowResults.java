@@ -10,14 +10,14 @@ package ch.unibas.charmmtools.gui.step3;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
-import ch.unibas.charmmtools.gui.step2.CHARMM_GUI_Step2;
-import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_Step1;
+import ch.unibas.charmmtools.gui.step2.CHARMM_GUI_ShowOutput;
+import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_InputAssistant;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output_GasPhase;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output_PureLiquid;
-import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Step4;
+import ch.unibas.charmmtools.gui.obsolete.CHARMM_GUI_Step4;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import java.io.BufferedWriter;
@@ -39,7 +39,7 @@ import javafx.stage.Window;
  *
  * @author hedin
  */
-public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
+public class CHARMM_GUI_ShowResults extends CHARMM_GUI_base{
 
     private static final String title = "LJ fitting procedure : Results";
     
@@ -72,7 +72,7 @@ public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
     @FXML
     private Button calculate_b;
     
-    public CHARMM_GUI_Step3(RunCHARMMWorkflow flow, List<CHARMM_InOut> ioList) throws Exception {
+    public CHARMM_GUI_ShowResults(RunCHARMMWorkflow flow, List<CHARMM_InOut> ioList) throws Exception {
         super(title, flow);
                 
         for (CHARMM_InOut ioListIt : ioList) {
@@ -119,7 +119,7 @@ public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
                 myList.addAll(inp);
                 myList.addAll(out);
                 logger.info("Going back to CHARMM input assistant Step1.");
-                navigateTo(CHARMM_GUI_Step1.class,myList);
+                navigateTo(CHARMM_GUI_InputAssistant.class,myList);
             }
         });
         addButtonToButtonBar(backStep1);
@@ -131,7 +131,7 @@ public class CHARMM_GUI_Step3 extends CHARMM_GUI_base{
                 myList.addAll(inp);
                 myList.addAll(out);
                 logger.info("Going to Step2 Results.");
-                navigateTo(CHARMM_GUI_Step2.class,myList);
+                navigateTo(CHARMM_GUI_ShowOutput.class,myList);
             }
         });
         addButtonToButtonBar(backStep2);

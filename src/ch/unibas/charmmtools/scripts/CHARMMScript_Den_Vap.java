@@ -82,7 +82,7 @@ public class CHARMMScript_Den_Vap extends CHARMMScript_Base implements ICHARMMSc
     @Override
     public void prepare_Python(CHARMM_Input input, File output) {
         
-        String inpPath = input.getInp().getAbsolutePath();
+        String inpPath = input.getOut().getAbsolutePath();
         String parPath = input.getPar();
         String topPath = input.getTop();
         String lpunPath = input.getLpun();   

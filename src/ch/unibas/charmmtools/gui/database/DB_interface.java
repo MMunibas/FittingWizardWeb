@@ -100,6 +100,7 @@ public abstract class DB_interface {
      * @return 
      */
     public List<DB_model> findByFormula(String formula) {
+        
         Statement statement = null;
         ResultSet resultSet = null;
         List<DB_model> modelList = null;
@@ -126,6 +127,7 @@ public abstract class DB_interface {
      * @return 
      */
     public List<DB_model> findBySMILES(String smiles) {
+        
         Statement statement = null;
         ResultSet resultSet = null;
         List<DB_model> modelList = null;
@@ -153,7 +155,9 @@ public abstract class DB_interface {
      * @return 
      */
     public List<DB_model> findByMASS(double target, double threshold) {
+        
         List<DB_model> res = new ArrayList<>();
+        
         return res;
     }
 }

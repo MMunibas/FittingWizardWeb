@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.gui.step4;
+package ch.unibas.charmmtools.gui;
 
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;

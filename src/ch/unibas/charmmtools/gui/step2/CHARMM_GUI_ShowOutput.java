@@ -8,13 +8,13 @@
  */
 package ch.unibas.charmmtools.gui.step2;
 
-import ch.unibas.charmmtools.gui.step3.CHARMM_GUI_Step3;
+import ch.unibas.charmmtools.gui.step3.CHARMM_GUI_ShowResults;
 import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
-import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_Step1;
+import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_InputAssistant;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
-import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Step4;
+import ch.unibas.charmmtools.gui.obsolete.CHARMM_GUI_Step4;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ import javafx.scene.paint.Paint;
  *
  * @author hedin
  */
-public class CHARMM_GUI_Step2 extends CHARMM_GUI_base {
+public class CHARMM_GUI_ShowOutput extends CHARMM_GUI_base {
     
     private static final String title = "LJ fitting procedure : visualising output files";
 
@@ -42,9 +42,9 @@ public class CHARMM_GUI_Step2 extends CHARMM_GUI_base {
     @FXML
     private Label LabelLeft,LabelRight,errorLabelRight,errorLabelLeft;
     
-    private Button backStep1,gotoStep4;
+    private Button backAssistant,gotoStep4;
     
-    public CHARMM_GUI_Step2(RunCHARMMWorkflow flow, List<CHARMM_InOut> ioList)
+    public CHARMM_GUI_ShowOutput(RunCHARMMWorkflow flow, List<CHARMM_InOut> ioList)
     {
         super(title, flow);
                 
@@ -94,29 +94,32 @@ public class CHARMM_GUI_Step2 extends CHARMM_GUI_base {
     @Override
     protected void fillButtonBar() {
         
-        backStep1 = ButtonFactory.createButtonBarButton("Back to ρ and ΔH input assistant", new EventHandler<ActionEvent>(){
+        backAssistant = ButtonFactory.createButtonBarButton("Back to ρ and ΔH input assistant", new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent actionEvent) {
                 List<CHARMM_InOut> myList = new ArrayList<>();
                 myList.addAll(inp);
                 myList.addAll(out);
-                logger.info("Going back to CHARMM input assistant Step1.");
-                navigateTo(CHARMM_GUI_Step1.class,myList);
+                logger.info("Going back to CHARMM input assistant");
+//                navigateTo(CHARMM_GUI_InputAssistant.class,myList);
+                navigateTo(CHARMM_GUI_InputAssistant.class,null);
             }
         });
-        addButtonToButtonBar(backStep1);
+        addButtonToButtonBar(backAssistant);
         
-        gotoStep4 = ButtonFactory.createButtonBarButton("Proceed to ΔG solvation", new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                List<CHARMM_InOut> myList = new ArrayList<>();
-                myList.addAll(inp);
-                myList.addAll(out);
-                logger.info("Going to Step4 ΔG solvation.");
-                navigateTo(CHARMM_GUI_Step4.class,myList);
-            }
-        });
-        addButtonToButtonBar(gotoStep4);
+//        gotoStep4 = ButtonFactory.createButtonBarButton("Proceed to ΔG solvation", new EventHandler<ActionEvent>(){
+//            @Override
+//            public void handle(ActionEvent actionEvent) {
+//                List<CHARMM_InOut> myList = new ArrayList<>();
+//                myList.addAll(inp);
+//                myList.addAll(out);
+//                logger.info("Going to Step4 ΔG solvation.");
+//                navigateTo(CHARMM_GUI_Step4.class,myList);
+//            }
+//        });
+//        addButtonToButtonBar(gotoStep4);
+        
+        
 
     }
 
