@@ -86,7 +86,7 @@ public class CHARMMScript_Den_Vap extends CHARMMScript_Base implements ICHARMMSc
         String parPath = input.getPar();
         String topPath = input.getTop();
         String lpunPath = input.getLpun();   
-        
+        String pdbpath = input.getCrd();
         String outPath = output.getAbsolutePath();
         
         logger.info("Preparing PYTHON call with parameters : " + inpPath + " " + outPath + " " + parPath + " " + topPath + " " + lpunPath);
@@ -99,7 +99,8 @@ public class CHARMMScript_Den_Vap extends CHARMMScript_Base implements ICHARMMSc
         args.add("-par");   args.add(parPath);
         args.add("-top");   args.add(topPath);
         args.add("-lpun");  args.add(lpunPath);
-        args.add("-np");    args.add(Integer.toString(1));
+        args.add("-pdb");  args.add(pdbpath);
+        args.add("-np");    args.add(Integer.toString(4));
     }  
     
 }

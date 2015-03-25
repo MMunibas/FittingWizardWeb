@@ -34,7 +34,10 @@ parser.add_argument('-top',dest='topF',type=str,
   
 parser.add_argument('-lpun',dest='lpunF',type=str,
   required=True, help='CHARMM MTP lpun file')
-  
+
+parser.add_argument('-pdb',dest='pdbF',type=str,
+                    required=True, help='CHARMM PDB coordinates file')
+
 parser.add_argument('-np',dest='numCores',type=int,
   default=1, help='number of cores for MPI parallelized runs')
 
@@ -47,6 +50,7 @@ args = parser.parse_args()
 #print args.parF
 #print args.topF
 #print args.lpunF
+#print args.pdbF
 #print args.numCores
 
 # Test SSH connection
@@ -86,15 +90,23 @@ process = subprocess.call(bashCmd.split())
 if process != 0:
   print "Error. Can't create remote directory."
   exit(1)
+
 print "Copying files to remote computer"
-bashCmd = "scp " + args.inpF + " " + args.parF + " " + args.topF + " "+ args.lpunF + " " + sshaddress + ":" + workdir + "/" + dirName
+bashCmd = "scp " + args.inpF + " " + args.parF + " " + args.topF + " " + args.lpunF + " " + args.pdbF + " " + sshaddress + ":" + workdir + "/" + dirName
 process = subprocess.call(bashCmd.split())
 if process != 0:
   print "Error. Can't copy files to remote directory."
   exit(1)
-#print "Running script remotely in " + sshaddress + \
-#  ":" + workdir + "/" + dirName
-#print "Please wait..."
+
+print "Running script remotely in " + sshaddress + \
+ ":" + workdir + "/" + dirName
+print "Please wait..."
+chm = config.get('remote','charmm').strip('\'')
+bashCmd = "ssh " + sshaddress + " cd " + workdir + \
+    "/" + dirName + " ; echo '/usr/lib64/mpi/gcc/openmpi/bin/mpirun -np " + str(args.numCores) + " " + chm + " -i " + \
+        args.inpF + " -o " + args.outF + " ' > run.sh ; " + " qsub -cwd -S /bin/bash -pe orte* " + str(args.numCores) + " run.sh ; "
+process = subprocess.check_output(bashCmd.split())
+
 #formchk    = config.get('remote','formchk').strip('\'')
 #cubegen    = config.get('remote','cubegen').strip('\'')
 #gdma       = config.get('remote','gdma').strip('\'')
