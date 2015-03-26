@@ -5,7 +5,7 @@
 
 # Tristan BEREAU (2013)
 
-import sys,os,ConfigParser,argparse,subprocess
+import sys,os,ConfigParser,argparse,subprocess,time
 dir = os.path.dirname(os.path.realpath(__file__))
 
 #print dir
@@ -102,37 +102,32 @@ print "Running script remotely in " + sshaddress + \
  ":" + workdir + "/" + dirName
 print "Please wait..."
 chm = config.get('remote','charmm').strip('\'')
+
+#generate a unique jobname for following submission status
+uniqueID = "job_" + dirName
+#submit job
 bashCmd = "ssh " + sshaddress + " cd " + workdir + \
     "/" + dirName + " ; echo '/usr/lib64/mpi/gcc/openmpi/bin/mpirun -np " + str(args.numCores) + " " + chm + " -i " + \
-        args.inpF + " -o " + args.outF + " ' > run.sh ; " + " qsub -cwd -S /bin/bash -pe orte* " + str(args.numCores) + " run.sh ; "
-process = subprocess.check_output(bashCmd.split())
+        os.path.relpath(args.inpF) + " -o " + os.path.relpath(args.outF) + " ' > run.sh ; " + " qsub -N " + uniqueID + \
+        " -cwd -S /bin/bash -pe orte* " + str(args.numCores) + " run.sh ; sleep 2"
+process = subprocess.call(bashCmd.split())
+if process != 0:
+  print "Error when trying to run simulation script"
+  exit(1)
 
-#formchk    = config.get('remote','formchk').strip('\'')
-#cubegen    = config.get('remote','cubegen').strip('\'')
-#gdma       = config.get('remote','gdma').strip('\'')
-#fieldcomp  = config.get('remote','fieldcomp').strip('\'')
-#gdma_local = config.get('remote','gdma_local').strip('\'')
-#gauss_ext  = config.get('remote','gauss_ext').strip('\'')
-#gsub       = config.get('remote','gsub').strip('\'')
-#bashCmd = "ssh " + sshaddress + " cd " + workdir + \
-#  "/" + dirName + "; python calc_Multipole_Gauss_MEP_comp.py -xyz " + \
-#  args.xyz + " -mtp_order " + str(args.mtpOrder) + \
-#  " -stpsz " + str(args.gridStep) + \
-#  " -charge " + str(args.netCharge) + \
-#  " -state " + str(args.multiplicity) + \
-#  " -Gauss \"" + args.gauss + "\" -n " + str(args.numCores) + \
-#  " -formchk "+ formchk +" -cubegen " + cubegen + \
-#  " -gdma " + gdma + " -fieldcomp " + fieldcomp + \
-#  " -gdma_local " + gdma_local + " -gauss_ext " + gauss_ext + " -gsub " + gsub  
-## print bashCmd
-#process = subprocess.check_output(bashCmd.split())
-## After this point, the script has ended. Copy back the results
-#print "Copying back remote data and delete remote directory"
-#bashCmd = "scp -r " + sshaddress + ":" + workdir + "/" + \
-#  dirName + "/* " + os.getcwd()
-#process = subprocess.call(bashCmd.split())
-#if process != 0:
-#  print "Error. Can't copy files back from remote directory."
-#  exit(1)
-#bashCmd = "ssh " + sshaddress + " rm -rf " + workdir + "/" + dirName
-#process = subprocess.call(bashCmd.split())
+# check if jobs still running
+cmd = "bash ../scripts/check_jobs.sh " + uniqueID
+process = subprocess.call(cmd.split(),stderr=subprocess.STDOUT)
+if process != 0:
+  print "Error. Can't copy files back from remote directory."
+  exit(1)
+  
+# After this point, the script has ended. Copy back the results
+print "Copying back remote data and delete remote directory"
+bashCmd = "rsync -avz " + sshaddress + ":" + workdir + "/" + dirName + "/" + os.path.relpath(args.outF) + " ."
+print bashCmd
+process = subprocess.call(bashCmd.split())
+if process != 0:
+  print "Error. Can't copy files back from remote directory."
+  exit(1)
+
