@@ -53,6 +53,8 @@ args = parser.parse_args()
 #print args.pdbF
 #print args.numCores
 
+exit(0)
+
 # Test SSH connection
 print "Establishing connection"
 sshuser = config.get('remote','user').strip('\'')
