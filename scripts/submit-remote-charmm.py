@@ -55,7 +55,7 @@ config.readfp(open(args.cfgF))
 #print args.numCores
 
 # TO REMOVE ; it is here for debugging
-#exit(0)
+exit(0)
 
 # Test SSH connection
 print "Establishing connection"
