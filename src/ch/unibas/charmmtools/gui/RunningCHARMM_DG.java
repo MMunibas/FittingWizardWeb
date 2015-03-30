@@ -11,6 +11,8 @@ package ch.unibas.charmmtools.gui;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.charmmtools.gui.obsolete.CHARMM_GUI_Step4;
+import ch.unibas.charmmtools.gui.step2.CHARMM_GUI_ShowOutput;
+import ch.unibas.charmmtools.gui.step3.CHARMM_GUI_ShowResults;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.presentation.base.progress.Context;
 import ch.unibas.fittingwizard.presentation.base.progress.ProgressPage;
@@ -81,13 +83,16 @@ public class RunningCHARMM_DG extends ProgressPage{
     @Override
     protected void handleCanceled() {
         logger.info("Run canceled by user before normal termination");
-        navigateTo(CHARMM_GUI_Step4.class,ioList);
+//        navigateTo(CHARMM_GUI_Step4.class,ioList);
+//        navigateTo(CHARMM_GUI_ShowOutput.class, i);
+        navigateTo(CHARMM_GUI_ShowResults.class,ioList);
     }
 
     @Override
     protected void handleFinishedRun(boolean successful) {
         logger.info("Normal termination");
-        navigateTo(CHARMM_GUI_Step4.class,ioList);
+//        navigateTo(CHARMM_GUI_Step4.class,ioList);
+        navigateTo(CHARMM_GUI_ShowResults.class,ioList);
     }
 
   

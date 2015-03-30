@@ -499,6 +499,10 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
         List<CHARMM_InOut> myList = new ArrayList<>();
         myList.addAll(inp);
         myList.addAll(out);
+        myList.add(in_gas_vdw);
+        myList.add(in_gas_mtp);
+        myList.add(in_solv_vdw);
+        myList.add(in_solv_mtp);
         navigateTo(RunningCHARMM_DenVap.class, myList);
 
     }
