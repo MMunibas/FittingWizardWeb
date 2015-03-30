@@ -127,7 +127,7 @@
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin></Button>
-            <Label layoutX="589.0" layoutY="108.0" text="Please provide experimental values for comparison after fit :" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+            <Label layoutX="589.0" layoutY="108.0" text="Please provide experimental values for comparison after fit :" visible="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                </GridPane.margin>
@@ -145,24 +145,24 @@
                 <RowConstraints minHeight="30.0" vgrow="ALWAYS" />
               </rowConstraints>
                <children>
-                  <TextField prefHeight="25.0" prefWidth="373.0" promptText="Please insert experimental value ..." GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                  <TextField prefHeight="25.0" prefWidth="373.0" promptText="Please insert experimental value ..." visible="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                      </GridPane.margin>
                   </TextField>
-                  <TextField promptText="Please insert experimental value ..." GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                  <TextField promptText="Please insert experimental value ..." visible="false" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                      </GridPane.margin>
                   </TextField>
-                  <TextField promptText="Please insert experimental value ..." GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                  <TextField promptText="Please insert experimental value ..." visible="false" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                      </GridPane.margin>
                   </TextField>
-                  <Label text="ρ" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                  <Label text="ΔH" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                  <Label text="ΔG" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <Label text="ρ" visible="false" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <Label text="ΔH" visible="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <Label text="ΔG" visible="false" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                </children>
             </GridPane>
             <Label text="λ spacing parameter :" GridPane.halignment="RIGHT" GridPane.rowIndex="10" GridPane.valignment="CENTER">
@@ -175,6 +175,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
+            <Button fx:id="button_default" mnemonicParsing="false" onAction="#setDefault" text="Default values" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                 </children>
          <BorderPane.margin>
             <Insets />

@@ -100,7 +100,8 @@ public class CHARMMScript_Den_Vap extends CHARMMScript_Base implements ICHARMMSc
         args.add("-top");   args.add(topPath);
         args.add("-lpun");  args.add(lpunPath);
         args.add("-pdb");  args.add(pdbpath);
-        args.add("-np");    args.add(Integer.toString(1));
+        args.add("-np");    args.add(Integer.toString(4));
+        args.add("-cfg");   args.add(this.configFile.getAbsolutePath());
     }  
     
 }

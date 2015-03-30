@@ -27,6 +27,7 @@ public abstract class CHARMMScript_Base implements ICHARMMScript{
     protected Settings settings;
     protected PythonScriptRunner runner;
     protected File ScriptFile;
+    protected final File configFile = new File("scripts","config.ini");
     
     protected List<String> args = new ArrayList<>();
     

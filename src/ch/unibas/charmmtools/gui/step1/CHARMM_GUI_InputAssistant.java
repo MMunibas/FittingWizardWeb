@@ -61,6 +61,7 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
     private Button button_reset;
 //    private Button button_save_to_file;
     private Button button_run_CHARMM;
+    private Button button_default;
 
     //where the generated input files are added
     @FXML
@@ -68,7 +69,7 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
 
     @FXML
     private TextField lambda_space;
-    
+
     /**
      * Internal variables
      */
@@ -82,6 +83,17 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
 
     public CHARMM_GUI_InputAssistant(RunCHARMMWorkflow chWflow) {
         super(title, chWflow);
+    }
+
+    @FXML
+    protected void setDefault(ActionEvent e) {
+        textfield_PAR.setText(new File("test","phenol_cgenff.par").getAbsolutePath());
+        textfield_RTF.setText(new File("test","phenol_cgenff_mtp_0.01.top").getAbsolutePath());
+        textfield_COR_gas.setText(new File("test","phenol_gas.pdb").getAbsolutePath());
+        textfield_COR_liquid.setText(new File("test","phenol_liquid.pdb").getAbsolutePath());
+        textfield_COR_solv.setText(new File("test","solvent.pdb").getAbsolutePath());
+        textfield_LPUN.setText(new File("test","phenol_cgenff_mtp_0.01.lpun").getAbsolutePath());
+        this.button_generate.setDisable(PAR_selected);
     }
 
 //    public CHARMM_GUI_InputAssistant(RunCHARMMWorkflow chWflow, List<CHARMM_InOut> ioList) {
@@ -137,7 +149,6 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
 ////        later_COR_liquid.setDisable(true);
 ////        later_LPUN.setDisable(true);
 //    }
-
     /**
      * Here we can add actions done just before showing the window
      */
@@ -258,7 +269,7 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
         try {
 
             String folderPath = new File("test").getAbsolutePath();
-            
+
             // get filenames
             String corname_gas = ResourceUtils.getRelativePath(textfield_COR_gas.getText(), folderPath);
             String corname_liquid = ResourceUtils.getRelativePath(textfield_COR_liquid.getText(), folderPath);
@@ -274,16 +285,16 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
                     )
             );
             inp.add(gasInp);
-            
+
             File liqFile = new File("test", "pure_liquid.inp");
             CHARMM_Input liqInp = new CHARMM_Input_PureLiquid(corname_liquid, rtfname, parname, lpunname, liqFile);
             tab_list.add(
                     new MyTab("ρ/ΔH Pure Liquid",
                             new String(Files.readAllBytes(Paths.get(liqFile.getAbsolutePath())))
-                    ) 
+                    )
             );
             inp.add(liqInp);
-            
+
 //            RedLabel_Notice.setVisible(true);
             String corname_solv = ResourceUtils.getRelativePath(textfield_COR_solv.getText(), folderPath);
             double lamb_spacing_val = Double.valueOf(lambda_space.getText());
@@ -332,14 +343,13 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
         }
 
         tab_pane.getTabs().addAll(tab_list);
-        
+
         button_run_CHARMM.setDisable(false);
-        
+
         /**
          * If success enable button for saving
          */
 //        button_save_to_file.setDisable(false);
-
     }
 
     /**
@@ -432,15 +442,14 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
 
 //        button_save_to_file.setText("Click to save");
 //        button_run_CHARMM.setText("Run CHARMM");
-
         inp.clear();
         out.clear();
         CHARMM_inFile.clear();
         CHARMM_outFile.clear();
-        
+
         tab_list.clear();
         tab_pane.getTabs().clear();
-        
+
         lambda_space.setText("0.1");
 
     }
@@ -493,7 +502,6 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
 //        button_run_CHARMM.setDisable(false);
 //
 //    }
-
     protected void runCHARMM(ActionEvent event) {
 
         List<CHARMM_InOut> myList = new ArrayList<>();

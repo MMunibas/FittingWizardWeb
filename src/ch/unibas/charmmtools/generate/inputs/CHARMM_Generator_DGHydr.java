@@ -148,7 +148,7 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
             args.add("../../scripts/charmm");
         } else {
             args.add("--rem");
-            args.add("verdi");
+            args.add("beethoven");
             args.add("--num");
             args.add("8");
         }
@@ -167,7 +167,13 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
         }
 
         File script = new File("scripts/charmm-ti/perform-ti.py");
-        File output = new File("test/gen_dg_inp_" + this.ti_type + "_gas" + ".out");
+        File output = null;
+
+        if (genOnly) {
+            output = new File("test/dg_gen_" + this.ti_type + "_gas" + ".out");
+        } else {
+            output = new File("test/dg_run_" + this.ti_type + "_gas" + ".out");
+        }
 
         int returnCode;
 ////        if (genOnly) {
@@ -222,7 +228,13 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
         }
 
         File script = new File("scripts/charmm-ti/perform-ti.py");
-        File output = new File("test/gen_dg_inp_" + this.ti_type + "_solvent" + ".out");
+        File output = null;
+
+        if (genOnly) {
+            output = new File("test/dg_gen_" + this.ti_type + "_solv" + ".out");
+        } else {
+            output = new File("test/dg_run_" + this.ti_type + "_solv" + ".out");
+        }
 
         int returnCode;
 //        if (genOnly) {

@@ -5,15 +5,8 @@
 
 # Tristan BEREAU (2013)
 
-import sys,os,ConfigParser,argparse,subprocess,time
+import sys,os,ConfigParser,argparse,subprocess,time,tempfile
 dir = os.path.dirname(os.path.realpath(__file__))
-
-#print dir
-
-config = ConfigParser.ConfigParser()
-config.readfp(open('../scripts/config.ini'))
-
-#print config
 
 ## Parse command-line options 
 parser = argparse.ArgumentParser(description=
@@ -41,7 +34,15 @@ parser.add_argument('-pdb',dest='pdbF',type=str,
 parser.add_argument('-np',dest='numCores',type=int,
   default=1, help='number of cores for MPI parallelized runs')
 
+parser.add_argument('-cfg',dest='cfgF',type=str,
+  required=True, help='Remote clusters config file')
+  
 args = parser.parse_args()
+
+
+config = ConfigParser.ConfigParser()
+config.readfp(open(args.cfgF))
+
 
 #print parser
 
@@ -53,7 +54,8 @@ args = parser.parse_args()
 #print args.pdbF
 #print args.numCores
 
-exit(0)
+# TO REMOVE ; it is here for debugging
+#exit(0)
 
 # Test SSH connection
 print "Establishing connection"
@@ -118,11 +120,31 @@ if process != 0:
   exit(1)
 
 # check if jobs still running
-cmd = "bash ../scripts/check_jobs.sh " + uniqueID
-process = subprocess.call(cmd.split(),stderr=subprocess.STDOUT)
-if process != 0:
-  print "Error. Can't copy files back from remote directory."
-  exit(1)
+cmd = '''\
+user=hedin
+stop=0
+myid=$1
+
+while true;
+do 
+out=$(ssh verdi "qstat -u $user"| grep $myid | awk '{print $1}')
+arr=($out)
+size=${#arr[@]}
+if [ "$size" -eq "$stop" ]; then
+break
+fi
+echo "$size jobs still running ; sleeping 10 seconds and then looping ..."
+sleep 10
+done
+'''
+
+with tempfile.NamedTemporaryFile() as scriptfile:
+    scriptfile.write(cmd)
+    scriptfile.flush()
+    process = subprocess.call(['/bin/bash', scriptfile.name, str(uniqueID)])
+    if process != 0:
+        print "Error. Can't copy files back from remote directory."
+        exit(1)
   
 # After this point, the script has ended. Copy back the results
 print "Copying back remote data and delete remote directory"
