@@ -1,0 +1,1 @@
+.[].Section[] | select(.TOCHeading=="Chemical and Physical Properties").Section[] | select(.TOCHeading=="Experimental Properties").Section[] | select(.TOCHeading=="Density").Information[0].StringValue
