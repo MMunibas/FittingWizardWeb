@@ -104,6 +104,10 @@ public class CHARMM_GUI_db extends WizardPage {
             dbi = new SQLITE_DB_interface(DB_conn);
         
     }
+    
+    private void connectToDb(){
+    
+    }
 
     @Override
     public void initializeData() {

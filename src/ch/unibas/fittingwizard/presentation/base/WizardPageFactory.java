@@ -281,6 +281,9 @@ public class WizardPageFactory {
             else if (type == CHARMM_GUI_db.class){
                 page = new CHARMM_GUI_db(settings);
             }
+            else if (type == WhereToGo.class){
+                page = new WhereToGo();
+            }
             // MISC
             else {
                 page = type.newInstance();

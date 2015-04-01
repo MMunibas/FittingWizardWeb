@@ -107,13 +107,13 @@
    <center>
       <TableView fx:id="tabview_db" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <columns>
-            <TableColumn fx:id="tabcol_name" editable="false" minWidth="50.0" prefWidth="170.0" sortable="false" text="Name" />
-            <TableColumn fx:id="tabcol_formula" editable="false" minWidth="50.0" prefWidth="170.0" sortable="false" text="Formula" />
-            <TableColumn fx:id="tabcol_smiles" editable="false" minWidth="50.0" prefWidth="170.0" sortable="false" text="SMILES" />
-            <TableColumn fx:id="tabcol_mass" editable="false" minWidth="50.0" prefWidth="170.0" sortable="false" text="Mass" />
-            <TableColumn fx:id="tabcol_density" editable="false" minWidth="50.0" prefWidth="170.0" sortable="false" text="Density" />
-            <TableColumn fx:id="tabcol_dh" editable="false" minWidth="50.0" prefWidth="170.0" sortable="false" text="ΔH" />
-            <TableColumn fx:id="tabcol_dg" editable="false" minWidth="50.0" prefWidth="170.0" sortable="false" text="ΔG" />
+            <TableColumn fx:id="tabcol_name" editable="false" minWidth="50.0" prefWidth="180.0" text="Name" />
+            <TableColumn fx:id="tabcol_formula" editable="false" minWidth="50.0" prefWidth="170.0" text="Formula" />
+            <TableColumn fx:id="tabcol_smiles" editable="false" minWidth="50.0" prefWidth="170.0" text="SMILES" />
+            <TableColumn fx:id="tabcol_mass" editable="false" minWidth="50.0" prefWidth="170.0" text="Mass (g/mol)" />
+            <TableColumn fx:id="tabcol_density" editable="false" minWidth="50.0" prefWidth="170.0" text="Density (g/cm^3)" />
+            <TableColumn fx:id="tabcol_dh" editable="false" minWidth="50.0" prefWidth="170.0" text="ΔH (kcal/mol)" />
+            <TableColumn fx:id="tabcol_dg" editable="false" minWidth="50.0" prefWidth="170.0" text="ΔG (kcal/mol)" />
          </columns>
       </TableView>
    </center>
