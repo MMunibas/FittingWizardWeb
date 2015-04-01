@@ -26,9 +26,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
  *
  * @author hedin
  */
-public class CHARMM_GUI_db extends WizardPage {
+public class GUI_compounds_DB extends WizardPage {
 
-    private static final String title = "LJ fitting procedure : find compound in database";
+    private static final String title = "Explore database of compounds and their properties";
     
     protected Settings settings;
 
@@ -87,7 +87,7 @@ public class CHARMM_GUI_db extends WizardPage {
     
     private ObservableList<DB_model> obsList;
 
-    public CHARMM_GUI_db(Settings _settings) {
+    public GUI_compounds_DB(Settings _settings) {
         super(title);
         this.settings = _settings;
         

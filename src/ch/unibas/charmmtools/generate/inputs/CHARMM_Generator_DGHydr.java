@@ -13,6 +13,7 @@ import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
 import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
 import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
 
     public CHARMM_Generator_DGHydr(String _solu_cor, String _solu_top,
             String _par, String _lpun,
-            String _ti_type, double _l_min, double _l_space, double _l_max) {
+            String _ti_type, double _l_min, double _l_space, double _l_max, File _mydir) {
 
         this.solu_cor = _solu_cor;
         this.solv_cor = null;
@@ -56,8 +57,9 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
         this.l_space = _l_space;
         this.l_max = _l_max;
 
-        this.myDir = new File("test/gas_" + ti_type);
-        this.myDir.mkdirs();
+//        this.myDir = new File("test/gas_" + ti_type + "_" + Instant.now().getEpochSecond());
+//        this.myDir.mkdirs();
+        this.myDir=_mydir;
 
         this.runner = new PythonScriptRunner();
         this.runner.setWorkingDir(this.myDir);
@@ -71,7 +73,7 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
     public CHARMM_Generator_DGHydr(String _solu_cor, String _solv_cor,
             String _solu_top, String _solv_top,
             String _par, String _lpun,
-            String _ti_type, double _l_min, double _l_space, double _l_max) {
+            String _ti_type, double _l_min, double _l_space, double _l_max, File _mydir) {
 
         this.solu_cor = _solu_cor;
         this.solv_cor = _solv_cor;
@@ -84,8 +86,9 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
         this.l_space = _l_space;
         this.l_max = _l_max;
 
-        this.myDir = new File("test/solvent_" + ti_type);
-        this.myDir.mkdirs();
+//        this.myDir = new File("test/solvent_" + ti_type + "_" + Instant.now().getEpochSecond());
+//        this.myDir.mkdirs();
+        this.myDir=_mydir;
 
         this.runner = new PythonScriptRunner();
         this.runner.setWorkingDir(this.myDir);

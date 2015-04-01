@@ -2,4 +2,10 @@
 /*.out
 /*.inp
 /tmp.*
+/.directory
+/1.0/
+/gas_*
+/scalar_test/
+/scaled_par/
+/solv_*
 

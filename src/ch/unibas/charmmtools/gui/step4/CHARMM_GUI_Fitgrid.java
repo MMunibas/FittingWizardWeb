@@ -8,6 +8,7 @@
  */
 package ch.unibas.charmmtools.gui.step4;
 
+import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_InputAssistant;
 import ch.unibas.fittingwizard.application.scripts.base.ScriptExecutionException;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import ch.unibas.fittingwizard.presentation.base.WizardPage;
@@ -62,6 +63,7 @@ public class CHARMM_GUI_Fitgrid extends WizardPage {
 
     private Button button_reset;
     private Button button_save_files;
+    private Button button_goRunSim;
 
     /**
      * Represents a group of grid values
@@ -177,11 +179,12 @@ public class CHARMM_GUI_Fitgrid extends WizardPage {
         }
 
         // set content of cells
+        // epsilons on rows and sigmas on columns
         for (int i = 1; i < ngrid; i++) {
             for (int j = 1; j < ngrid; j++) {
-                if (i != j) {
-                    continue;
-                }
+//                if (i != j) {
+//                    continue;
+//                }
                 GridPane loc = new GridPane();
                 loc.add(new Label("ρ"), 0, 0);
                 loc.add(new Label("..."), 1, 0);
@@ -243,19 +246,21 @@ public class CHARMM_GUI_Fitgrid extends WizardPage {
         ProcessBuilder pb = new ProcessBuilder();
         pb.directory(myDir);
 
-        String script = new File("./scripts/lj-fit/src/reparametrize-eps-par").getAbsolutePath();
+        String script = new File("./scripts/lj-fit/src/reparametrize-eps-sig-par").getAbsolutePath();
 
         int ngrid = Integer.valueOf(textfield_ngrid.getText()) + 1;
 
+        //epsilon on rows and sigma on columns
         for (int i = 1; i < ngrid; i++) {
+            String e_scale = list_gridValues.get(i - 1).getValue();
             for (int j = 1; j < ngrid; j++) {
-                if (i != j) {
-                    continue;
-                }
-                String scaleV = list_gridValues.get(i - 1).getValue();
+//                if (i != j) {
+//                    continue;
+//                }
+                String s_scale = list_gridValues.get(j - 1).getValue();
                 pb.command("/bin/bash", script,
-                        flist.get(0).getAbsolutePath(), scaleV);
-                pb.redirectOutput(new File(myDir, "scaled_" + scaleV + ".par"));
+                        flist.get(0).getAbsolutePath(), e_scale, s_scale);
+                pb.redirectOutput(new File(myDir, "scaled_e" + e_scale + "_s" + s_scale +".par"));
                 logger.info("Running bash script\n" + pb.command()
                         + "\nin directory:\n" + pb.directory()
                         + "\nwith environment:\n" + pb.environment());
@@ -281,6 +286,15 @@ public class CHARMM_GUI_Fitgrid extends WizardPage {
     @Override
     protected void fillButtonBar() {
 
+        button_goRunSim = ButtonFactory.createButtonBarButton("Go to Input Assistant", new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                logger.info("Goin Back to input assistant.");
+                navigateTo(CHARMM_GUI_InputAssistant.class,null);
+            }
+        });
+        addButtonToButtonBar(button_goRunSim);
+        
         button_reset = ButtonFactory.createButtonBarButton("Reset", new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {

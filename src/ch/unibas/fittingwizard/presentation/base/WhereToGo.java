@@ -8,8 +8,9 @@
  */
 package ch.unibas.fittingwizard.presentation.base;
 
-import ch.unibas.charmmtools.gui.database.CHARMM_GUI_db;
+import ch.unibas.charmmtools.gui.database.GUI_compounds_DB;
 import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_InputAssistant;
+import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Fitgrid;
 import ch.unibas.fittingwizard.presentation.MoleculeListPage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -39,6 +40,9 @@ public class WhereToGo extends WizardPage{
 
     @FXML // fx:id="goMTP"
     private RadioButton goMTP; // Value injected by FXMLLoader
+    
+    @FXML // fx:id="goGridScale"
+    private RadioButton goGridScale; // Value injected by FXMLLoader
 
     
     public WhereToGo() {
@@ -60,7 +64,9 @@ public class WhereToGo extends WizardPage{
         else if(selected.equals(goCHARMM))
             navigateTo(CHARMM_GUI_InputAssistant.class, null);
         else if (selected.equals(goDB))
-            navigateTo(CHARMM_GUI_db.class, null);
+            navigateTo(GUI_compounds_DB.class, null);
+        else if (selected.equals(goGridScale))
+             navigateTo(CHARMM_GUI_Fitgrid.class, null);
     }
     
 }

@@ -77,7 +77,7 @@ import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_DGHydr_solvent;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_GasPhase;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_PureLiquid;
 import ch.unibas.charmmtools.gui.RunningCHARMM_DG;
-import ch.unibas.charmmtools.gui.database.CHARMM_GUI_db;
+import ch.unibas.charmmtools.gui.database.GUI_compounds_DB;
 import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Fitgrid;
 import ch.unibas.charmmtools.scripts.ICHARMMScript;
 import ch.unibas.charmmtools.scripts.CHARMMScript_Den_Vap;
@@ -278,8 +278,8 @@ public class WizardPageFactory {
             else if (type == CHARMM_GUI_Fitgrid.class){
                 page = new CHARMM_GUI_Fitgrid();
             }
-            else if (type == CHARMM_GUI_db.class){
-                page = new CHARMM_GUI_db(settings);
+            else if (type == GUI_compounds_DB.class){
+                page = new GUI_compounds_DB(settings);
             }
             else if (type == WhereToGo.class){
                 page = new WhereToGo();

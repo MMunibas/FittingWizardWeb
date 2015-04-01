@@ -14,6 +14,8 @@ package ch.unibas.fittingwizard.presentation.base;
  * Time: 11:17
  */
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -30,7 +32,7 @@ import org.apache.log4j.Logger;
 public abstract class WizardPage<TParam> extends VBox {
 
     protected final Logger logger;
-
+    protected Button button_initialSelection;
     private HBox buttonBar;
 
     public WizardPage(String title) {
@@ -49,6 +51,16 @@ public abstract class WizardPage<TParam> extends VBox {
         VBox.setVgrow(spring, Priority.ALWAYS);
         this.buttonBar = createButtonBar();
         getChildren().addAll(getContent(), spring, buttonBar);
+        
+        button_initialSelection = ButtonFactory.createButtonBarButton("Back to initial selection screen", new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                logger.info("Going back to initial panel selection");
+                navigateTo(WhereToGo.class,null);
+            }
+        });
+        addButtonToButtonBar(button_initialSelection);
+        
         fillButtonBar();
     }
 

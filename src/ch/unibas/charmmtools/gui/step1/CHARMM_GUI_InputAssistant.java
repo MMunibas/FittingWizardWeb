@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.event.ActionEvent;
@@ -87,12 +88,12 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
 
     @FXML
     protected void setDefault(ActionEvent e) {
-        textfield_PAR.setText(new File("test","phenol_cgenff.par").getAbsolutePath());
-        textfield_RTF.setText(new File("test","phenol_cgenff_mtp_0.01.top").getAbsolutePath());
-        textfield_COR_gas.setText(new File("test","phenol_gas.pdb").getAbsolutePath());
-        textfield_COR_liquid.setText(new File("test","phenol_liquid.pdb").getAbsolutePath());
-        textfield_COR_solv.setText(new File("test","solvent.pdb").getAbsolutePath());
-        textfield_LPUN.setText(new File("test","phenol_cgenff_mtp_0.01.lpun").getAbsolutePath());
+        textfield_PAR.setText(new File("test", "phenol_cgenff.par").getAbsolutePath());
+        textfield_RTF.setText(new File("test", "phenol_cgenff_mtp_0.01.top").getAbsolutePath());
+        textfield_COR_gas.setText(new File("test", "phenol_gas.pdb").getAbsolutePath());
+        textfield_COR_liquid.setText(new File("test", "phenol_liquid.pdb").getAbsolutePath());
+        textfield_COR_solv.setText(new File("test", "solvent.pdb").getAbsolutePath());
+        textfield_LPUN.setText(new File("test", "phenol_cgenff_mtp_0.01.lpun").getAbsolutePath());
         this.button_generate.setDisable(PAR_selected);
     }
 
@@ -266,54 +267,81 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
     @FXML
     protected void GenerateInputFile() {
 
+//        try {
+        String folderPath = new File("test").getAbsolutePath();
+
+        // get filenames
+        String corname_gas = ResourceUtils.getRelativePath(textfield_COR_gas.getText(), folderPath);
+        String corname_liquid = ResourceUtils.getRelativePath(textfield_COR_liquid.getText(), folderPath);
+        String rtfname = ResourceUtils.getRelativePath(textfield_RTF.getText(), folderPath);
+        String parname = ResourceUtils.getRelativePath(textfield_PAR.getText(), folderPath);
+        String lpunname = ResourceUtils.getRelativePath(textfield_LPUN.getText(), folderPath);
+
+        String time = Long.toString(Instant.now().getEpochSecond());
+
+        File gas_vdw_dir = new File("test/gas_" + time + "/vdw");
+        File gas_mtp_dir = new File("test/gas_" + time + "/mtp");
+        File solv_vdw_dir = new File("test/solv_" + time + "/vdw");
+        File solv_mtp_dir = new File("test/solv_" + time + "/mtp");
+
+        gas_vdw_dir.mkdirs();
+        gas_mtp_dir.mkdirs();
+        solv_vdw_dir.mkdirs();
+        solv_mtp_dir.mkdirs();
+//        } catch (IOException ex) {
+//            logger.error(ex);
+//        }
+
+        File gasFile = null;
+        CHARMM_Input gasInp = null;
         try {
-
-            String folderPath = new File("test").getAbsolutePath();
-
-            // get filenames
-            String corname_gas = ResourceUtils.getRelativePath(textfield_COR_gas.getText(), folderPath);
-            String corname_liquid = ResourceUtils.getRelativePath(textfield_COR_liquid.getText(), folderPath);
-            String rtfname = ResourceUtils.getRelativePath(textfield_RTF.getText(), folderPath);
-            String parname = ResourceUtils.getRelativePath(textfield_PAR.getText(), folderPath);
-            String lpunname = ResourceUtils.getRelativePath(textfield_LPUN.getText(), folderPath);
-
-            File gasFile = new File("test", "gas_phase.inp");
-            CHARMM_Input gasInp = new CHARMM_Input_GasPhase(corname_gas, rtfname, parname, lpunname, gasFile);
+            gasFile = new File(gas_vdw_dir.getParent(), "gas_phase.inp");
+            gasInp = new CHARMM_Input_GasPhase(corname_gas, rtfname, parname, lpunname, gasFile);
             tab_list.add(
                     new MyTab("ρ/ΔH Gas Phase",
                             new String(Files.readAllBytes(Paths.get(gasFile.getAbsolutePath())))
                     )
             );
             inp.add(gasInp);
+        } catch (IOException ex) {
+            logger.error("Error while generating " + gasFile.getAbsolutePath() + " : " + ex);
+        }
 
-            File liqFile = new File("test", "pure_liquid.inp");
-            CHARMM_Input liqInp = new CHARMM_Input_PureLiquid(corname_liquid, rtfname, parname, lpunname, liqFile);
+        File liqFile = null;
+        CHARMM_Input liqInp = null;
+        try {
+            liqFile = new File(solv_vdw_dir.getParent(), "pure_liquid.inp");
+            liqInp = new CHARMM_Input_PureLiquid(corname_liquid, rtfname, parname, lpunname, liqFile);
             tab_list.add(
                     new MyTab("ρ/ΔH Pure Liquid",
                             new String(Files.readAllBytes(Paths.get(liqFile.getAbsolutePath())))
                     )
             );
             inp.add(liqInp);
+        } catch (IOException ex) {
+            logger.error("Error while generating " + liqFile.getAbsolutePath() + " : " + ex);
+        }
 
 //            RedLabel_Notice.setVisible(true);
-            String corname_solv = ResourceUtils.getRelativePath(textfield_COR_solv.getText(), folderPath);
-            double lamb_spacing_val = Double.valueOf(lambda_space.getText());
+        String corname_solv = ResourceUtils.getRelativePath(textfield_COR_solv.getText(), folderPath);
+        double lamb_spacing_val = Double.valueOf(lambda_space.getText());
 
-            in_gas_vdw = new CHARMM_Generator_DGHydr(corname_gas, rtfname, parname, lpunname, "vdw",
-                    0.0, lamb_spacing_val, 1.0);
+        in_gas_vdw = new CHARMM_Generator_DGHydr(corname_gas, rtfname, parname, lpunname, "vdw",
+                0.0, lamb_spacing_val, 1.0, gas_vdw_dir);
 //            CHARMM_inFile.addAll(in_gas_vdw.getMyFiles());
 //
-            in_gas_mtp = new CHARMM_Generator_DGHydr(corname_gas, rtfname, parname, lpunname, "mtp",
-                    0.0, lamb_spacing_val, 1.0);
+        in_gas_mtp = new CHARMM_Generator_DGHydr(corname_gas, rtfname, parname, lpunname, "mtp",
+                0.0, lamb_spacing_val, 1.0, gas_mtp_dir);
 //            CHARMM_inFile.addAll(in_gas_mtp.getMyFiles());
 //
-            in_solv_vdw = new CHARMM_Generator_DGHydr(corname_gas, corname_solv, rtfname, rtfname,
-                    parname, lpunname, "vdw", 0.0, lamb_spacing_val, 1.0);
+        in_solv_vdw = new CHARMM_Generator_DGHydr(corname_gas, corname_solv, rtfname, rtfname,
+                parname, lpunname, "vdw", 0.0, lamb_spacing_val, 1.0, solv_vdw_dir);
 //            CHARMM_inFile.addAll(in_solv_vdw.getMyFiles());
 //
-            in_solv_mtp = new CHARMM_Generator_DGHydr(corname_gas, corname_solv, rtfname, rtfname,
-                    parname, lpunname, "mtp", 0.0, lamb_spacing_val, 1.0);
+        in_solv_mtp = new CHARMM_Generator_DGHydr(corname_gas, corname_solv, rtfname, rtfname,
+                parname, lpunname, "mtp", 0.0, lamb_spacing_val, 1.0, solv_mtp_dir);
 
+        try {
             for (File fi : in_gas_vdw.getMyFiles()) {
                 tab_list.add(new MyTab(
                         "Gas & VDW", new String(Files.readAllBytes(Paths.get(fi.getAbsolutePath())))
@@ -337,9 +365,8 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
                         "Solv & MTP", new String(Files.readAllBytes(Paths.get(fi.getAbsolutePath())))
                 ));
             }
-
         } catch (IOException ex) {
-            logger.error(ex);
+            logger.error("Error while generating DG files : " + ex);
         }
 
         tab_pane.getTabs().addAll(tab_list);

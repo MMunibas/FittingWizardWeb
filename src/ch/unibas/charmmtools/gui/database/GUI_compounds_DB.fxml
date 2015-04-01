@@ -105,7 +105,7 @@
       </GridPane>
    </top>
    <center>
-      <TableView fx:id="tabview_db" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <TableView fx:id="tabview_db" prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
          <columns>
             <TableColumn fx:id="tabcol_name" editable="false" minWidth="50.0" prefWidth="180.0" text="Name" />
             <TableColumn fx:id="tabcol_formula" editable="false" minWidth="50.0" prefWidth="170.0" text="Formula" />
@@ -117,4 +117,19 @@
          </columns>
       </TableView>
    </center>
+   <bottom>
+      <GridPane BorderPane.alignment="CENTER">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button disable="true" mnemonicParsing="false" text="Add a compound..." GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+         </children>
+      </GridPane>
+   </bottom>
 </BorderPane>

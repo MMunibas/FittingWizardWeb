@@ -8,7 +8,7 @@
  */
 package ch.unibas.fittingwizard;
 
-import ch.unibas.charmmtools.gui.database.CHARMM_GUI_db;
+import ch.unibas.charmmtools.gui.database.GUI_compounds_DB;
 import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_InputAssistant;
 import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Fitgrid;
 import ch.unibas.fittingwizard.presentation.base.WhereToGo;
@@ -123,7 +123,7 @@ public class WizardApplication extends Application {
 //        wizard.navigateTo(MoleculeListPage.class, null);
 //        wizard.navigateTo(CHARMM_GUI_InputAssistant.class, null);
 //        wizard.navigateTo(CHARMM_GUI_Fitgrid.class,null);
-//        wizard.navigateTo(CHARMM_GUI_db.class,null);
+//        wizard.navigateTo(GUI_compounds_DB.class,null);
         wizard.navigateTo(WhereToGo.class,null);
         this.settings = factory.getSettings();
         return wizard;
