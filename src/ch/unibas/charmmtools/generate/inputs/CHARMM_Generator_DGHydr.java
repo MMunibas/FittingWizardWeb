@@ -10,10 +10,8 @@ package ch.unibas.charmmtools.generate.inputs;
 
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
-import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
 import java.io.File;
 import java.io.IOException;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +33,7 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
     protected String whoami;
 
     protected PythonScriptRunner runner = null;
-    protected final File workDir = new File("test");
+//    protected final File workDir = new File("test");
     protected File myDir = null;
 
     private List<File> myFiles = new ArrayList<>();
@@ -59,7 +57,7 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
 
 //        this.myDir = new File("test/gas_" + ti_type + "_" + Instant.now().getEpochSecond());
 //        this.myDir.mkdirs();
-        this.myDir=_mydir;
+        this.myDir = _mydir;
 
         this.runner = new PythonScriptRunner();
         this.runner.setWorkingDir(this.myDir);
@@ -88,7 +86,7 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
 
 //        this.myDir = new File("test/solvent_" + ti_type + "_" + Instant.now().getEpochSecond());
 //        this.myDir.mkdirs();
-        this.myDir=_mydir;
+        this.myDir = _mydir;
 
         this.runner = new PythonScriptRunner();
         this.runner.setWorkingDir(this.myDir);
@@ -101,34 +99,36 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
 
     private void copyAndFixPaths() {
         try {
-            FileUtils.copyFileToDirectory(new File(workDir, solu_cor), myDir);
+            FileUtils.copyFileToDirectory(new File(solu_cor), myDir);
 
             if (this.solv_cor != null) {
-                FileUtils.copyFileToDirectory(new File(workDir, solv_cor), myDir);
+                FileUtils.copyFileToDirectory(new File(solv_cor), myDir);
             }
 
-            FileUtils.copyFileToDirectory(new File(workDir, solu_top), myDir);
+            FileUtils.copyFileToDirectory(new File(solu_top), myDir);
 
             if (this.solv_top != null) {
-                FileUtils.copyFileToDirectory(new File(workDir, solv_top), myDir);
+                FileUtils.copyFileToDirectory(new File(solv_top), myDir);
             }
 
-            FileUtils.copyFileToDirectory(new File(workDir, par), myDir);
+            FileUtils.copyFileToDirectory(new File(par), myDir);
 
-            FileUtils.copyFileToDirectory(new File(workDir, lpun), myDir);
+            FileUtils.copyFileToDirectory(new File(lpun), myDir);
 
         } catch (IOException | NullPointerException ex) {
             logger.error("An error append while copying files to subdirectory " + this.myDir.getAbsolutePath() + " : " + ex.getMessage());
         }
 
-//        String folderPath = new File("test").getAbsolutePath();
-//
-//        this.solu_cor = ResourceUtils.getRelativePath(solu_cor,folderPath);
-//        if(this.solv_cor != null) this.solv_cor = ResourceUtils.getRelativePath(solv_cor,folderPath);
-//        this.solu_top = ResourceUtils.getRelativePath(solu_top,folderPath);
-//        if(this.solv_top != null) this.solv_top = ResourceUtils.getRelativePath(solv_top,folderPath);
-//        this.par = ResourceUtils.getRelativePath(par,folderPath);
-//        this.lpun = ResourceUtils.getRelativePath(lpun,folderPath);
+        this.solu_cor = new File(solu_cor).getName();
+        if (this.solv_cor != null) {
+            this.solv_cor = new File(solv_cor).getName();
+        }
+        this.solu_top = new File(solu_top).getName();
+        if (this.solv_top != null) {
+            this.solv_top = new File(solv_top).getName();
+        }
+        this.par = new File(par).getName();
+        this.lpun = new File(lpun).getName();
     }
 
     private void genInputPythonGas(boolean genOnly) {
@@ -173,9 +173,9 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
         File output = null;
 
         if (genOnly) {
-            output = new File("test/dg_gen_" + this.ti_type + "_gas" + ".out");
+            output = new File(myDir + "/dg_gen_" + this.ti_type + "_gas" + ".out");
         } else {
-            output = new File("test/dg_run_" + this.ti_type + "_gas" + ".out");
+            output = new File(myDir + "/dg_run_" + this.ti_type + "_gas" + ".out");
         }
 
         int returnCode;
@@ -234,9 +234,9 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
         File output = null;
 
         if (genOnly) {
-            output = new File("test/dg_gen_" + this.ti_type + "_solv" + ".out");
+            output = new File(myDir + "/dg_gen_" + this.ti_type + "_solv" + ".out");
         } else {
-            output = new File("test/dg_run_" + this.ti_type + "_solv" + ".out");
+            output = new File(myDir + "/dg_run_" + this.ti_type + "_solv" + ".out");
         }
 
         int returnCode;
@@ -295,6 +295,11 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
     public String getType() {
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         return "";
+    }
+
+    @Override
+    public String getWorkDir() {
+        return myDir.getAbsolutePath();
     }
 
 }

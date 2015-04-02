@@ -30,6 +30,7 @@ public abstract class ProgressPage extends WizardPage implements Context {
 
     public ProgressPage(String title) {
         super(title);
+        removeButtonFromButtonBar(button_initialSelection);
     }
 
     protected abstract boolean run(final Context ctx) throws Exception;

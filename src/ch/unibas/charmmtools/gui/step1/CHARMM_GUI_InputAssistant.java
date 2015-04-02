@@ -94,7 +94,9 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
         textfield_COR_liquid.setText(new File("test", "phenol_liquid.pdb").getAbsolutePath());
         textfield_COR_solv.setText(new File("test", "solvent.pdb").getAbsolutePath());
         textfield_LPUN.setText(new File("test", "phenol_cgenff_mtp_0.01.lpun").getAbsolutePath());
-        this.button_generate.setDisable(PAR_selected);
+        
+        PAR_selected = RTF_selected = COR_selected_gas = COR_selected_liquid = COR_selected_solv = LPUN_selected = true;
+        this.button_generate.setDisable(false);
     }
 
 //    public CHARMM_GUI_InputAssistant(RunCHARMMWorkflow chWflow, List<CHARMM_InOut> ioList) {
@@ -271,12 +273,16 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
         String folderPath = new File("test").getAbsolutePath();
 
         // get filenames
-        String corname_gas = ResourceUtils.getRelativePath(textfield_COR_gas.getText(), folderPath);
-        String corname_liquid = ResourceUtils.getRelativePath(textfield_COR_liquid.getText(), folderPath);
-        String rtfname = ResourceUtils.getRelativePath(textfield_RTF.getText(), folderPath);
-        String parname = ResourceUtils.getRelativePath(textfield_PAR.getText(), folderPath);
-        String lpunname = ResourceUtils.getRelativePath(textfield_LPUN.getText(), folderPath);
-
+//        String corname_gas = ResourceUtils.getRelativePath(textfield_COR_gas.getText(), folderPath);
+//        String corname_liquid = ResourceUtils.getRelativePath(textfield_COR_liquid.getText(), folderPath);
+//        String rtfname = ResourceUtils.getRelativePath(textfield_RTF.getText(), folderPath);
+//        String parname = ResourceUtils.getRelativePath(textfield_PAR.getText(), folderPath);
+//        String lpunname = ResourceUtils.getRelativePath(textfield_LPUN.getText(), folderPath);
+        String corname_gas = textfield_COR_gas.getText();
+        String corname_liquid = textfield_COR_liquid.getText();
+        String rtfname = textfield_RTF.getText();
+        String parname = textfield_PAR.getText();
+        String lpunname = textfield_LPUN.getText();
         String time = Long.toString(Instant.now().getEpochSecond());
 
         File gas_vdw_dir = new File("test/gas_" + time + "/vdw");
@@ -323,7 +329,7 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
         }
 
 //            RedLabel_Notice.setVisible(true);
-        String corname_solv = ResourceUtils.getRelativePath(textfield_COR_solv.getText(), folderPath);
+        String corname_solv = textfield_COR_solv.getText();
         double lamb_spacing_val = Double.valueOf(lambda_space.getText());
 
         in_gas_vdw = new CHARMM_Generator_DGHydr(corname_gas, rtfname, parname, lpunname, "vdw",

@@ -29,19 +29,19 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
      * @param _par
      * @throws java.io.IOException
      */
-    public CHARMM_Input_PureLiquid(String _cor, String _top, String _par) throws IOException {
-        
-        super(_cor, _top, _par, "Pure Liquid");
-        
-        this.expectedFormats.clear();
-        this.expectedFormats.add(".cor");
-        
-        writer = new CharArrayWriter();
-        
-        //build the input file by calling all the print_* sections
-        this.build();
-
-    }
+//    public CHARMM_Input_PureLiquid(String _cor, String _top, String _par) throws IOException {
+//        
+//        super(_cor, _top, _par, "Pure Liquid");
+//        
+//        this.expectedFormats.clear();
+//        this.expectedFormats.add(".cor");
+//        
+//        writer = new CharArrayWriter();
+//        
+//        //build the input file by calling all the print_* sections
+//        this.build();
+//
+//    }
 
     /**
      * If content of the field has to be directly written to a file we use a BufferedWriter type
@@ -78,19 +78,19 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
      * @param _lpun
      * @throws java.io.IOException
      */
-    public CHARMM_Input_PureLiquid(String _cor, String _top, String _par, String _lpun) throws IOException {
-
-        super(_cor, _top, _par, _lpun, "Pure Liquid");
-        
-        this.expectedFormats.clear();
-        this.expectedFormats.add(".cor");
-        
-        writer = new CharArrayWriter();
-        
-        //build the input file by calling all the print_* sections
-        this.build();
-
-    }
+//    public CHARMM_Input_PureLiquid(String _cor, String _top, String _par, String _lpun) throws IOException {
+//
+//        super(_cor, _top, _par, _lpun, "Pure Liquid");
+//        
+//        this.expectedFormats.clear();
+//        this.expectedFormats.add(".cor");
+//        
+//        writer = new CharArrayWriter();
+//        
+//        //build the input file by calling all the print_* sections
+//        this.build();
+//
+//    }
 
     /**
      * If content of the field has to be directly written to a file we use a BufferedWriter type

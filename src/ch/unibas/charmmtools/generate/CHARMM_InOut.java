@@ -15,4 +15,5 @@ package ch.unibas.charmmtools.generate;
 public interface CHARMM_InOut {
     public String getText();
     public String getType();
+    public String getWorkDir();
 }

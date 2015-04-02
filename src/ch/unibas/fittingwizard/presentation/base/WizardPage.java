@@ -94,6 +94,10 @@ public abstract class WizardPage<TParam> extends VBox {
     protected void addButtonToButtonBar(Button button) {
         buttonBar.getChildren().add(button);
     }
+    
+    protected void removeButtonFromButtonBar(Button button){
+        buttonBar.getChildren().remove(button);
+    }
 
     /**
      * Gets the content of the view. 

@@ -15,26 +15,27 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 /**
  *
  * @author hedin
  */
-public abstract class CHARMM_Input implements CHARMM_InOut{
-    
+public abstract class CHARMM_Input implements CHARMM_InOut {
+
     protected static final Logger logger = Logger.getLogger(CHARMM_Input.class);
-    
+
     protected Writer writer = null;
     protected String title = "";
     protected Date d = new Date();
-    
+
     /**
-     * contains the acceptable types of coordinate files, by default only *.pdb 
-     * (the extension may be *.ent but that's the same type of file)
+     * contains the acceptable types of coordinate files, by default only *.pdb (the extension may be *.ent but that's
+     * the same type of file)
      */
     protected final List<String> expectedFormats;
-        
+
     /*
      * bomlev is the error level causing abortion of CHARMM
      * prnlev regulates the level of output from CHARMM
@@ -42,69 +43,101 @@ public abstract class CHARMM_Input implements CHARMM_InOut{
      */
     protected int bomlev = 0;
     protected int prnlev = 2;
-    
-    protected String par,top,lpun,cor;
+
+    protected String par = null, top = null, lpun = null, cor = null;
 //    protected File inp;
-    protected File out;
-    
-    protected final String type;
-    
-    protected CHARMM_Input(String _cor, String _top, String _par, String _type)
-    {
-        this.cor = _cor;
-        this.top = _top;
-        this.par = _par;
-        this.type = _type;
-        
-        this.expectedFormats = new ArrayList<>();
-        this.expectedFormats.add("*.pdb");
-        this.expectedFormats.add("*.ent");
-    }
-    
-    public CHARMM_Input(String _cor, String _top, String _par, File _outf, String _type){
+    protected File out = null;
+
+    protected String type = null;
+
+//    protected CHARMM_Input(String _cor, String _top, String _par, String _type)
+//    {
+//        this.cor = _cor;
+//        this.top = _top;
+//        this.par = _par;
+//        this.type = _type;
+//        
+//        this.expectedFormats = new ArrayList<>();
+//        this.expectedFormats.add("*.pdb");
+//        this.expectedFormats.add("*.ent");
+//    }
+    public CHARMM_Input(String _cor, String _top, String _par, File _outf, String _type) {
         this.cor = _cor;
         this.top = _top;
         this.par = _par;
         this.out = _outf;
         this.type = _type;
-        
+
         this.expectedFormats = new ArrayList<>();
         this.expectedFormats.add("*.pdb");
         this.expectedFormats.add("*.ent");
+        
+        this.normalisePathAndCopyFiles();
     }
 
-    protected CHARMM_Input(String _cor, String _top, String _par, String _lpun, String _type)
-    {
-        this.cor = _cor;
-        this.top = _top;
-        this.par = _par;
-        this.lpun = _lpun;
-        this.type = _type;
-                
-        this.expectedFormats = new ArrayList<>();
-        this.expectedFormats.add("*.pdb");
-        this.expectedFormats.add("*.ent");
-    }
-    
-    protected CHARMM_Input(String _cor, String _top, String _par, String _lpun, File _outf, String _type)
-    {
+//    protected CHARMM_Input(String _cor, String _top, String _par, String _lpun, String _type)
+//    {
+//        this.cor = _cor;
+//        this.top = _top;
+//        this.par = _par;
+//        this.lpun = _lpun;
+//        this.type = _type;
+//                
+//        this.expectedFormats = new ArrayList<>();
+//        this.expectedFormats.add("*.pdb");
+//        this.expectedFormats.add("*.ent");
+//    }
+    protected CHARMM_Input(String _cor, String _top, String _par, String _lpun, File _outf, String _type) {
         this.cor = _cor;
         this.top = _top;
         this.par = _par;
         this.lpun = _lpun;
         this.out = _outf;
         this.type = _type;
-                
+
         this.expectedFormats = new ArrayList<>();
         this.expectedFormats.add("*.pdb");
         this.expectedFormats.add("*.ent");
+        
+        this.normalisePathAndCopyFiles();
     }
+
+    private void normalisePathAndCopyFiles() {
+
+        File parentFile = out.getParentFile();
+
+        try {
+
+            FileUtils.copyFileToDirectory(new File(cor), parentFile);
+            FileUtils.copyFileToDirectory(new File(top), parentFile);
+            FileUtils.copyFileToDirectory(new File(par), parentFile);
+
+            if (lpun != null) {
+                FileUtils.copyFileToDirectory(new File(lpun), parentFile);
+            }
+
+        } catch (IOException ex) {
+            logger.error("Error while copying required files : " + ex);
+        }
+                
+        cor = new File(cor).getName();
+        top = new File(top).getName();
+        par = new File(par).getName();
+
+        if (lpun != null) {
+            lpun = new File(lpun).getName();
+        }
+
+    }
+
     /**
-     * Calls all the print_* sections for effectively creating an input file either in a String or directly to a file depending on the constructor that was initially called
+     * Calls all the print_* sections for effectively creating an input file either in a String or directly to a file
+     * depending on the constructor that was initially called
+     *
      * @throws java.io.IOException
      */
     protected abstract void build() throws IOException;
-            
+
     /**
      * Creates the header part of charmm input file, i.e. containing a title and bomlev and prnlev parameters
      *
@@ -146,11 +179,13 @@ public abstract class CHARMM_Input implements CHARMM_InOut{
         writer.write("CLOSE UNIT 10" + "\n\n");
     }
 
-    protected void print_crystalSection() throws IOException{}
-    
+    protected void print_crystalSection() throws IOException {
+    }
+
     /**
-     * Creates the section where nonbonded parameters are defined
-     * Abstract because this may vary a lot between the different types of simulations
+     * Creates the section where nonbonded parameters are defined Abstract because this may vary a lot between the
+     * different types of simulations
+     *
      * @throws IOException
      */
     protected abstract void print_nbondsSection() throws IOException;
@@ -160,22 +195,25 @@ public abstract class CHARMM_Input implements CHARMM_InOut{
     }
 
     /**
-     * Prints the part that calls the MTPL module
-     * Abstract because this may vary a lot between the different types of simulations
+     * Prints the part that calls the MTPL module Abstract because this may vary a lot between the different types of
+     * simulations
+     *
      * @throws IOException
      */
     protected abstract void print_lpunfile() throws IOException;
 
     /**
-     * Prints the part in charge of the minimisation procedure
-     * Abstract because this may vary a lot between the different types of simulations
+     * Prints the part in charge of the minimisation procedure Abstract because this may vary a lot between the
+     * different types of simulations
+     *
      * @throws IOException
      */
     protected abstract void print_MiniSection() throws IOException;
 
     /**
-     * Prints the part in charge of the molecular dynamics procedure
-     * Abstract because this may vary a lot between the different types of simulations
+     * Prints the part in charge of the molecular dynamics procedure Abstract because this may vary a lot between the
+     * different types of simulations
+     *
      * @throws IOException
      */
     protected abstract void print_DynaSection() throws IOException;
@@ -235,16 +273,13 @@ public abstract class CHARMM_Input implements CHARMM_InOut{
 //    public File getInp() {
 //        return inp;
 //    }
-
     /**
      * @param inp the inp to set
      */
 //    public void setInp(File inp) {
 //        this.inp = inp;
 //    }
-    
 //    protected abstract void convertCoordinates(); 
-
     /**
      * @return the type
      */
@@ -253,4 +288,9 @@ public abstract class CHARMM_Input implements CHARMM_InOut{
         return type;
     }
     
+    @Override
+    public String getWorkDir() {
+        return out.getParent();
+    }
+
 }

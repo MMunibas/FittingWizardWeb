@@ -1,3 +1,3 @@
 #!/bin/bash
-rm -rf *.inp *.out gas_vdw gas_mtp solvent_vdw solvent_mtp
+rm -rf *.inp *.out gas_1* solv_1*
 

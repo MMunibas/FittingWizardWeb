@@ -82,5 +82,10 @@ public abstract class CHARMM_Output implements CHARMM_InOut{
     public String getType() {
         return type;
     }
+    
+    @Override
+    public String getWorkDir(){
+        return fileOut.getParent();
+    }
   
 }

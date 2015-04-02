@@ -21,7 +21,7 @@ import java.io.File;
 public class CHARMMScript_Den_Vap extends CHARMMScript_Base implements ICHARMMScriptWithPython{
     
     private static final String ScriptNameKey = "scripts.submitCHARMM_Den_Vap";
-    private static final String OutputDirName = "test";
+//    private static final String OutputDirName = "test";
     
     public CHARMMScript_Den_Vap(File _sessionDir, Settings _settings)
     {
@@ -37,6 +37,8 @@ public class CHARMMScript_Den_Vap extends CHARMMScript_Base implements ICHARMMSc
 
         String FileName = "generic.out";
         File charmmout = null;
+        
+        String OutputDirName = input.getWorkDir();
         
         Class c = input.getClass();
         if(c==CHARMM_Input_GasPhase.class)
@@ -91,7 +93,7 @@ public class CHARMMScript_Den_Vap extends CHARMMScript_Base implements ICHARMMSc
         
         logger.info("Preparing PYTHON call with parameters : " + inpPath + " " + outPath + " " + parPath + " " + topPath + " " + lpunPath);
         
-        runner.setWorkingDir(new File(OutputDirName));
+        runner.setWorkingDir(new File(input.getWorkDir()));
         
         args.clear();
         args.add("-inp");   args.add(inpPath);

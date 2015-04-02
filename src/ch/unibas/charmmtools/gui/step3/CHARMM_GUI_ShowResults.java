@@ -17,7 +17,6 @@ import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output_GasPhase;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output_PureLiquid;
-import ch.unibas.charmmtools.gui.obsolete.CHARMM_GUI_Step4;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import java.io.BufferedWriter;
@@ -274,11 +273,11 @@ public class CHARMM_GUI_ShowResults extends CHARMM_GUI_base{
     @FXML
     protected void calc_dg()
     {
-        double gas_mtp = -13.09403;
-        double gas_vdw = 11.43775;
-        double solvent_mtp = -21.11868;
-        double solvent_vdw = 12.96885;
-        dg = (solvent_mtp+solvent_vdw) - (gas_mtp+gas_vdw);
+//        double gas_mtp = -13.09403;
+//        double gas_vdw = 11.43775;
+//        double solvent_mtp = -21.11868;
+//        double solvent_vdw = 12.96885;
+//        dg = (solvent_mtp+solvent_vdw) - (gas_mtp+gas_vdw);
     }
     
     
