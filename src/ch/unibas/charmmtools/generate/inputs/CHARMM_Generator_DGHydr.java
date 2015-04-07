@@ -151,7 +151,7 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
             args.add("../../scripts/charmm");
         } else {
             args.add("--rem");
-            args.add("beethoven");
+            args.add("verdi");
             args.add("--num");
             args.add("8");
         }
@@ -212,7 +212,7 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
             args.add("../../scripts/charmm");
         } else {
             args.add("--rem");
-            args.add("beethoven");
+            args.add("verdi");
             args.add("--num");
             args.add("8");
         }

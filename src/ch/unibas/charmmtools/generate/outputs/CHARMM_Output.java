@@ -19,24 +19,24 @@ import org.apache.log4j.Logger;
  *
  * @author hedin
  */
-public abstract class CHARMM_Output implements CHARMM_InOut{
-    
+public abstract class CHARMM_Output implements CHARMM_InOut {
+
     private final static Logger logger = Logger.getLogger(CHARMM_Output.class);
-    
+
     private String textOut;
-    
+
     private final File fileOut;
-    
+
     private final String type;
-    
+
     private Boolean errorOccured = false;
     private final static String hasFailed = "NORMAL TERMINATION BY NORMAL STOP";
-    
-    public CHARMM_Output(File _charmmout, String _type){
-        
+
+    public CHARMM_Output(File _charmmout, String _type) {
+
         fileOut = _charmmout;
         type = _type;
-        
+
         try {
             textOut = new String(
                     Files.readAllBytes(
@@ -45,12 +45,13 @@ public abstract class CHARMM_Output implements CHARMM_InOut{
             );
         } catch (IOException ex) {
             logger.error("Error when loading the CHARMM output file " + fileOut.getAbsolutePath());
+            textOut = "";
         }
-        
-        if (!textOut.contains(hasFailed)){
-            errorOccured=true;
+
+        if (!textOut.contains(hasFailed)) {
+            errorOccured = true;
         }
-        
+
     }// ctor
 
     /**
@@ -82,10 +83,10 @@ public abstract class CHARMM_Output implements CHARMM_InOut{
     public String getType() {
         return type;
     }
-    
+
     @Override
-    public String getWorkDir(){
+    public String getWorkDir() {
         return fileOut.getParent();
     }
-  
+
 }

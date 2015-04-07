@@ -8,9 +8,6 @@
  */
 package ch.unibas.fittingwizard;
 
-import ch.unibas.charmmtools.gui.database.GUI_compounds_DB;
-import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_InputAssistant;
-import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Fitgrid;
 import ch.unibas.fittingwizard.presentation.base.WhereToGo;
 import ch.unibas.fittingwizard.presentation.base.Wizard;
 import ch.unibas.fittingwizard.presentation.base.WizardPageFactory;
@@ -40,8 +37,7 @@ public class WizardApplication extends Application {
     private static final Logger logger = Logger.getLogger(WizardApplication.class);
 
     /**
-     * For checking that there is a config file and that it contains proper
-     * keywords
+     * For checking that there is a config file and that it contains proper keywords
      */
     private Settings settings;
 
@@ -124,7 +120,8 @@ public class WizardApplication extends Application {
 //        wizard.navigateTo(CHARMM_GUI_InputAssistant.class, null);
 //        wizard.navigateTo(CHARMM_GUI_Fitgrid.class,null);
 //        wizard.navigateTo(GUI_compounds_DB.class,null);
-        wizard.navigateTo(WhereToGo.class,null);
+        wizard.navigateTo(WhereToGo.class, null);
+//        wizard.navigateTo(CHARMM_GUI_ShowResults.class,null);
         this.settings = factory.getSettings();
         return wizard;
     }
