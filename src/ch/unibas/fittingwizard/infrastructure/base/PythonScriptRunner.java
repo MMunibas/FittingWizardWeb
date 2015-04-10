@@ -142,8 +142,9 @@ public class PythonScriptRunner {
         }
 
         if (outputFile != null) {
-            logger.debug("redirectOutput set to " + FilenameUtils.normalize(outputFile.getAbsolutePath()));
+            logger.debug("redirectOutput an redirectError set to " + FilenameUtils.normalize(outputFile.getAbsolutePath()));
             pb.redirectOutput(outputFile);
+            pb.redirectError(outputFile);
         } else {
             logger.debug("redirectOutput set to inheritIO");
             pb.inheritIO();
