@@ -179,12 +179,12 @@ public class FitResultPage extends WizardPageWithVisualization {
             Fit fit = cbFitResults.getSelectionModel().getSelectedItem().getFit();
             exportFitWorkflow.execute(WorkflowContext.withInput(new ExportFitInput(fit, destination)));
 
-            Desktop desktop = Desktop.getDesktop();
-            try {
-                desktop.open(destination);
-            } catch (IOException e) {
-                logger.error("Could not open export directory.");
-            }
+//            Desktop desktop = Desktop.getDesktop();
+//            try {
+//                desktop.open(destination);
+//            } catch (IOException e) {
+//                logger.error("Could not open export directory.");
+//            }
         }
     }
 
