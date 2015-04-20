@@ -1,9 +1,0 @@
-[submodule "esp-fit"]
-	path = scripts/esp-fit
-	url = git@bitbucket.org:tbereau/esp-fit.pc-mtp.git
-[submodule "lj-fit"]
-	path = scripts/lj-fit
-	url = git@bitbucket.org:tbereau/lj-fit.pc-mtp.git
-[submodule "charmm-ti"]
-	path = scripts/charmm-ti
-	url = git@github.com:FHedin/charmm.ti.git

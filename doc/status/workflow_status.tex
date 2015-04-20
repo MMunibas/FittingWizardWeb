@@ -1,0 +1,302 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+
+\usepackage{lmodern}
+
+%\usepackage{url}
+%\usepackage{hyperref}
+%\hypersetup{colorlinks=true,urlcolor=blue}
+
+\usepackage{graphicx}
+
+\usepackage[top=3cm, bottom=3cm, left=2.5cm, right=2.5cm]{geometry}
+
+\setlength\parindent{0pt}
+
+\author{Florent Hédin}
+\title{FittingWizard : Status of the current implementation}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{Overview of the workflow for the current version}
+
+\subsection{Welcome screen}
+
+At initial run, welcome screen for choosing what to do : Figure \ref{fig0} \\
+
+%\medskip
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\linewidth]{pics/scr0}
+\caption{Welcome screen}
+\label{fig0}
+\end{figure}
+
+\subsection{MTP parameters from Ab Initio}
+
+\subsubsection{Loading coordinates}
+
+First selection in welcome screen gives access to the Gaussian optimization procedure, where first 
+a molecule 
+is loaded : Figure \ref{fig1} \\
+
+%\medskip
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\linewidth]{pics/scr1}
+\caption{Loading molecule}
+\label{fig1}
+\end{figure}
+
+\subsubsection{MTP fit}
+
+Then after success of the Ab Initio calculation the user defines initial charges for the atoms, 
+chooses fit parameters (Figure \ref{fig2}) and runs the optimization. \\
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\linewidth]{pics/scr2}
+\caption{Choosing fit parameters}
+\label{fig2}
+\end{figure}
+
+After a short time a table displays the results : Figure \ref{fig3} \\
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\linewidth]{pics/scr3}
+\caption{Visualizing results in table}
+\label{fig3}
+\end{figure}
+
+It is then possible to go to the CHARMM fit section by using the bottom right button.
+
+\clearpage
+
+\subsection{CHARMM fitting procedure}
+
+From the Welcome screen (Figure \ref{fig0}) user can access directly to the CHARMM fitting 
+procedure (useful if the previous section was already performed before). Otherwise the screen is 
+the next step reached in the workflow : Figure \ref{fig4} \\
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\linewidth]{pics/scr4}
+\caption{CHARMM fitting procedure : choose files}
+\label{fig4}
+\end{figure}
+
+\subsubsection{Generating input files}
+
+Then input files can be generated, and they are displayed in several tabs, and if required the user 
+can review and edit some of those files. When ready the user can submit all the simulations by 
+pressing the bottom right button that will internally call all the required scripts : Figure 
+\ref{fig5} \\
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\linewidth]{pics/scr5}
+\caption{CHARMM fitting procedure : all input files generated and editable if required}
+\label{fig5}
+\end{figure}
+
+\subsubsection{Visualizing output files}
+
+If for some reason simulation failed an error window appears where the user can visualize failing 
+output files : Figure \ref{fig6} \\
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\linewidth]{pics/scr6}
+\caption{CHARMM fitting procedure : error window}
+\label{fig6}
+\end{figure}
+
+Otherwise at the end of all simulations the user gets a successful run window : Figure \ref{fig7}\\
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\linewidth]{pics/scr7}
+\caption{CHARMM fitting procedure : success window}
+\label{fig7}
+\end{figure}
+
+\subsubsection{Obtaining thermodynamic properties}
+
+Then output files are parsed for extracting for extracting Temperature, molar mass and number of 
+residues and then the density, Enthalpy of Vaporization and Free Energy of Solvation are estimated 
+: Figure \ref{fig8}\\
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\linewidth]{pics/scr8}
+\caption{CHARMM fitting procedure : obtaining the calculated thermodynamic properties}
+\label{fig8}
+\end{figure}
+
+\clearpage
+
+\subsection{Running a set of CHARMM simulations with altered PAR and TOP files}
+
+\subsubsection{Define list of scaling parameters}
+
+The third possibility in Welcome screen (Figure \ref{fig0}) gives the user the possibility to 
+generate a set of scaled PAR and TOP files for CHARMM where the LJ parameters $\sigma$ and 
+$\epsilon$ are scaled : the user first chooses how many modifications to perform : Figure 
+\ref{fig9}\\
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\linewidth]{pics/scr9}
+\caption{CHARMM fitting procedure : defining number of grid values}
+\label{fig9}
+\end{figure}
+
+Then the user chooses the scaling parameters : Figure \ref{fig10}\\
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\linewidth]{pics/scr10}
+\caption{CHARMM fitting procedure : defining grid values}
+\label{fig10}
+\end{figure}
+
+\subsubsection{Save all files and run all simulations}
+
+Then it is possible to save all those files an to run all simulations : Figure \ref{fig11}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\linewidth]{pics/scr11}
+\caption{CHARMM fitting procedure : saving FF files and running}
+\label{fig11}
+\end{figure}
+
+\clearpage
+
+\subsection{Database of chemical compounds}
+
+The fourth possibility in Welcome screen (Figure \ref{fig0}) gives access to a database of 
+compounds where the user can obtain experimental values for the density, Enthalpy of vaporization 
+and Free Energy of solvation.\\
+
+Compounds can be searched by : 
+
+\begin{itemize}
+\item By name : Figure \ref{fig12}
+\item By formula : Figure \ref{fig13}
+\item By SMILES notation : Figure \ref{fig14}
+\end{itemize}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\linewidth]{pics/scr12}
+\caption{Database of compounds : search by name}
+\label{fig12}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\linewidth]{pics/scr13}
+\caption{Database of compounds : search by formula}
+\label{fig13}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\linewidth]{pics/scr14}
+\caption{Database of compounds : search by SMILES notation}
+\label{fig14}
+\end{figure}
+
+\clearpage
+
+%-------------------------------------------------
+%-------------------------------------------------
+
+\section{Future improvements}
+
+...
+
+%-------------------------------------------------
+%-------------------------------------------------
+
+\section{Database details}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\linewidth]{pics/db}
+\caption{Database of compounds : Design and relations}
+\label{dbFig}
+\end{figure}
+
+%-------------------------------------------------
+%-------------------------------------------------
+
+\section{List of known Bugs}
+
+\subsection{From the GUI}
+
+...
+
+\subsection{From Tristan's python scripts}
+
+Found by Florent :
+\begin{itemize}
+\item PRNLEV 2 in input file while using MPI is problematic and unnecessary as this is already the 
+default with newer versions of CHARMM, because the I/O is messy and then difficult to parse later.
+\item with CHARMM c40a2 it is necessary to increase the value of ECHECK which is bt default 20.0 
+(maximum energy fluctuation between 2 steps allowed by CHARMM, it can go over 20. with some scaled 
+epsilon/sigma : maybe minimisation should be longer ?)
+\item ssh submission fails if the private keys are encrypted : need to use ones which are not 
+password protected. but this is unsafe, need to check python reference of this ssh module for an 
+alternative. 
+\end{itemize}
+
+Found by Krystel : 
+\begin{itemize}
+\item the use of IC in the topology file (top,rtf) may lead to incorrect results.
+\end{itemize}
+
+%-------------------------------------------------
+%-------------------------------------------------
+
+\section{Results}
+
+\subsection{Phenol}
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

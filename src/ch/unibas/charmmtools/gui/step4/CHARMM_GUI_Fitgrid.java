@@ -64,6 +64,7 @@ public class CHARMM_GUI_Fitgrid extends WizardPage {
     private Button button_reset;
     private Button button_save_files;
     private Button button_goRunSim;
+    private Button button_run_all;
 
     /**
      * Represents a group of grid values
@@ -227,6 +228,8 @@ public class CHARMM_GUI_Fitgrid extends WizardPage {
         list_gridValues.clear();
         textfield_ngrid.clear();
         gpane_fullgrid.getChildren().clear();
+        button_save_files.setDisable(true);
+        button_run_all.setDisable(true);
     }
 
     private void SaveFiles() {
@@ -280,7 +283,13 @@ public class CHARMM_GUI_Fitgrid extends WizardPage {
                 }
             }
         }
+        
+        button_run_all.setDisable(false);
 
+    }
+    
+    private void RunAll(){
+        
     }
 
     @Override
@@ -313,6 +322,16 @@ public class CHARMM_GUI_Fitgrid extends WizardPage {
         });
         addButtonToButtonBar(button_save_files);
         button_save_files.setDisable(true);
+        
+        button_run_all = ButtonFactory.createButtonBarButton("Run all simulations", new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                logger.info("Running all simulations");
+                RunAll();
+            }
+        });
+        addButtonToButtonBar(button_run_all);
+        button_run_all.setDisable(true);
 
     }
 

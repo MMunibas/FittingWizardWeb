@@ -148,10 +148,10 @@ public class RunningCHARMM_DenVap extends ProgressPage {
         if (successful) {
 //            logger.info("Going to CHARMM input assistant Step 2");
 //            if (c==CHARMM_Input_GasPhase.class || c==CHARMM_Input_PureLiquid.class)
-//            navigateTo(CHARMM_GUI_ShowOutput.class,myList);
+            navigateTo(CHARMM_GUI_ShowOutput.class,myList);
 //            else if (c==CHARMM_Input_DGHydr.class)
 //                navigateTo(CHARMM_GUI_Step4.class,myList);  
-            navigateTo(RunningCHARMM_DG.class, dglist);
+//            navigateTo(RunningCHARMM_DG.class, dglist);
         } else {
 //            logger.info("CHARMM run failed : going back to CHARMM input assistant Step1.");
 //            if (c==CHARMM_Input_GasPhase.class || c==CHARMM_Input_PureLiquid.class)
