@@ -6,8 +6,9 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.gui.database;
+package ch.unibas.charmmtools.gui.database.interfaces;
 
+import ch.unibas.charmmtools.gui.database.dataModel.DB_model;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;

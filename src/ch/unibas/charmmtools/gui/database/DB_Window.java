@@ -8,8 +8,8 @@
  */
 package ch.unibas.charmmtools.gui.database;
 
-import ch.unibas.charmmtools.gui.database.interfaces.DB_interface;
 import ch.unibas.charmmtools.gui.database.dataModel.DB_model;
+import ch.unibas.charmmtools.gui.database.interfaces.DB_interface;
 import ch.unibas.charmmtools.gui.database.interfaces.MYSQL_DB_interface;
 import ch.unibas.charmmtools.gui.database.interfaces.SQLITE_DB_interface;
 import ch.unibas.fittingwizard.Settings;
@@ -25,15 +25,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 /**
- * This class allows the user to search for a compound in a given database instead of providing himself guess values for
- * density, deltaH and deltaG
  *
  * @author hedin
  */
-public class ViewAndEdit_compounds_DB extends WizardPage {
+public abstract class DB_Window extends WizardPage{
 
-    private static final String title = "Explore database of compounds and their properties";
-    
     protected Settings settings;
 
     @FXML // fx:id="tabcol_mass"
@@ -91,7 +87,7 @@ public class ViewAndEdit_compounds_DB extends WizardPage {
     
     private ObservableList<DB_model> obsList;
 
-    public ViewAndEdit_compounds_DB(Settings _settings) {
+    public DB_Window(String title, Settings _settings) {
         super(title);
         this.settings = _settings;
         
@@ -177,5 +173,5 @@ public class ViewAndEdit_compounds_DB extends WizardPage {
  
 
    
-
+   
 }

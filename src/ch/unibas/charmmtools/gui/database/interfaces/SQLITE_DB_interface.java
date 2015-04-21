@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.gui.database;
+package ch.unibas.charmmtools.gui.database.interfaces;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
