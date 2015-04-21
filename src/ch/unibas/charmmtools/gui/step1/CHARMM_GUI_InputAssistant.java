@@ -8,6 +8,7 @@
  */
 package ch.unibas.charmmtools.gui.step1;
 
+import ch.unibas.babelBinding.BabelConverterAPI;
 import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
 import ch.unibas.charmmtools.gui.RunningCHARMM_DenVap;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
@@ -15,10 +16,8 @@ import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_GasPhase;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_PureLiquid;
-import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
 import ch.unibas.charmmtools.gui.MyTab;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
-import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import java.io.File;
 import java.io.IOException;
@@ -31,10 +30,12 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
+import org.apache.commons.io.FilenameUtils;
 
 public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
 
@@ -70,6 +71,12 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
 
     @FXML
     private TextField lambda_space;
+    
+    @FXML
+    private Label autoFilledLabel;
+    
+    @FXML // fx:id="button_search_DB"
+    private Button button_search_DB; // Value injected by FXMLLoader
 
     /**
      * Internal variables
@@ -85,18 +92,57 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
     public CHARMM_GUI_InputAssistant(RunCHARMMWorkflow chWflow) {
         super(title, chWflow);
     }
-
-    @FXML
-    protected void setDefault(ActionEvent e) {
-        textfield_PAR.setText(new File("test", "phenol_cgenff.par").getAbsolutePath());
-        textfield_RTF.setText(new File("test", "phenol_cgenff_mtp_0.01.top").getAbsolutePath());
-        textfield_COR_gas.setText(new File("test", "phenol_gas.pdb").getAbsolutePath());
-        textfield_COR_liquid.setText(new File("test", "phenol_liquid.pdb").getAbsolutePath());
-        textfield_COR_solv.setText(new File("test", "solvent.pdb").getAbsolutePath());
-        textfield_LPUN.setText(new File("test", "phenol_cgenff_mtp_0.01.lpun").getAbsolutePath());
+    
+    public CHARMM_GUI_InputAssistant(RunCHARMMWorkflow chWflow, List<File> flist) {
+        super(title, chWflow);
         
-        PAR_selected = RTF_selected = COR_selected_gas = COR_selected_liquid = COR_selected_solv = LPUN_selected = true;
-        this.button_generate.setDisable(false);
+        logger.info("Creating a new instance of CHARMM_GUI_InputAssistant with a list<File> as parameter.");
+        
+        for(File f : flist)
+        {
+            String path = f.getAbsolutePath();
+            String ext = FilenameUtils.getExtension(path);
+            
+            logger.info("File " + path + " is of type '" + ext + "' ");
+            
+            switch(ext){
+                case "xyz":
+                    textfield_COR_gas.setText(convertWithBabel(f).getAbsolutePath());
+                    COR_selected_gas = true;
+                    logger.info("xyz override detected ; converting to a CHARMM compatible format");
+                    break;
+                case "lpun":
+                    textfield_LPUN.setText(path);
+                    LPUN_selected = true;
+                    logger.info("lpun override detected");
+                    break;
+                default:
+                    break;
+            }
+        }
+        
+        autoFilledLabel.setVisible(true);
+    }
+    
+    private File convertWithBabel(File xyz){
+        String parent = FilenameUtils.getFullPath(xyz.getAbsolutePath());
+        String basename = FilenameUtils.getBaseName(xyz.getAbsolutePath());
+        
+        File pdbOut = new File(parent + basename + ".pdb");
+        
+        BabelConverterAPI babelc = new BabelConverterAPI("xyz","pdb");
+        babelc.convert(xyz.getAbsolutePath(), pdbOut.getAbsolutePath());
+        
+        if (pdbOut.exists()){
+            try {
+                logger.info("Content of pdb file obtained from babel : \n" +
+                        Files.readAllBytes(Paths.get(pdbOut.getAbsolutePath()))
+                );
+            } catch (IOException ex) {
+            }
+        }
+        
+        return pdbOut;
     }
 
 //    public CHARMM_GUI_InputAssistant(RunCHARMMWorkflow chWflow, List<CHARMM_InOut> ioList) {
@@ -152,6 +198,20 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
 ////        later_COR_liquid.setDisable(true);
 ////        later_LPUN.setDisable(true);
 //    }
+    
+    @FXML
+    protected void setDefault(ActionEvent e) {
+        textfield_PAR.setText(new File("test", "phenol_cgenff.par").getAbsolutePath());
+        textfield_RTF.setText(new File("test", "phenol_cgenff_mtp_0.01.top").getAbsolutePath());
+        textfield_COR_gas.setText(new File("test", "phenol_gas.pdb").getAbsolutePath());
+        textfield_COR_liquid.setText(new File("test", "phenol_liquid.pdb").getAbsolutePath());
+        textfield_COR_solv.setText(new File("test", "solvent.pdb").getAbsolutePath());
+        textfield_LPUN.setText(new File("test", "phenol_cgenff_mtp_0.01.lpun").getAbsolutePath());
+        
+        PAR_selected = RTF_selected = COR_selected_gas = COR_selected_liquid = COR_selected_solv = LPUN_selected = true;
+        this.button_generate.setDisable(false);
+    }
+    
     /**
      * Here we can add actions done just before showing the window
      */
@@ -484,6 +544,8 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
         tab_pane.getTabs().clear();
 
         lambda_space.setText("0.1");
+        
+        autoFilledLabel.setVisible(false);
 
     }
 
@@ -546,6 +608,13 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
         myList.add(in_solv_mtp);
         navigateTo(RunningCHARMM_DenVap.class, myList);
 
+    }
+    
+    @FXML
+    protected void searchInDB(){
+    
+        // TODO : popup window ?
+        
     }
 
     @Override

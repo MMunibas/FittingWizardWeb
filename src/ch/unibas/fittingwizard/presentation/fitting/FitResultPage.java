@@ -54,6 +54,7 @@ import ch.unibas.fittingwizard.presentation.MoleculeListPage;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import ch.unibas.fittingwizard.presentation.base.WizardPageWithVisualization;
 import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
+import java.util.List;
 
 /**
  * User: mhelmer
@@ -167,11 +168,18 @@ public class FitResultPage extends WizardPageWithVisualization {
             @Override
             public void handle(ActionEvent actionEvent) {
                 logger.info("Now switching to the CHARMM Lennard-Jones fit section.");
-                navigateTo(CHARMM_GUI_InputAssistant.class);
+                goToCHARMM_Fit();
             }
         });
         addButtonToButtonBar(gotoCharmmFit); 
     }// end of fillButtonBar
+    
+    private void goToCHARMM_Fit(){
+        List<File> flist = new ArrayList<>();
+        flist.add(this.selectedMolecule.getXyzFile().getSource());
+//        flist.add(null);
+        navigateTo(CHARMM_GUI_InputAssistant.class,flist);
+    }
 
     private void exportFitData() {
         File destination = selectExportDirectory();

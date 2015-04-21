@@ -5,9 +5,9 @@
 
 \usepackage{lmodern}
 
-%\usepackage{url}
-%\usepackage{hyperref}
-%\hypersetup{colorlinks=true,urlcolor=blue}
+\usepackage{url}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,urlcolor=blue}
 
 \usepackage{graphicx}
 
@@ -222,14 +222,45 @@ Compounds can be searched by :
 %-------------------------------------------------
 %-------------------------------------------------
 
-\section{Future improvements}
-
-...
+%\section{Future improvements}
+%
+%...
 
 %-------------------------------------------------
 %-------------------------------------------------
 
 \section{Database details}
+
+We provide as an experimental feature the access to a database of 
+mass -- density -- Enthalpy of Vaporization -- Free Energy of solvation, where the user can search 
+for a molecule and get those values for then comparing to results of the CHARMM simulations.\\
+
+The user can search molecules by name, formula or SMILES notation 
+\href{http://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system}{Wikipedia 
+details}.\\
+
+Mass, Density come from \href{https://pubchem.ncbi.nlm.nih.gov/search/}{PubChem}, Free Energy by 
+results provided by David Mobley et al. (\href{http://escholarship.org/uc/item/6sd403pz}{Link})\\
+
+The current database was designed using the \href{http://en.wikipedia.org/wiki/SQL}{SQL} 
+language, see Figure \ref{dbFig} for a description of the tables an relationship between them.\\
+
+The database is accessed either by : 
+\begin{itemize}
+\item As an embedded file provided with the software that is accessed using the 
+\href{http://www.sqlite.org/}{SQLite} software.
+\item Or as a \href{http://www.mysql.com/}{MySQL} database that is hosted on a server and then 
+accessed by Local or Internet connection.
+\end{itemize}
+
+The server database is read only, and the local database should be read/write (for the moment only 
+read access is provided), so that the user can easily add new molecules, add missing values, 
+etc...\\
+
+Ideas of improvements :
+The user should have the possibility to ``propose'' new compounds or new values to the 
+development team, then the online server-hosted database could grow interactively (of course after 
+a checking procedure).
 
 \begin{figure}[h!]
 \centering
@@ -273,7 +304,50 @@ Found by Krystel :
 
 \subsection{Phenol}
 
+Experimental results for phenol :
 
+\begin{itemize}
+\item $\rho$ (g/cm$^-3$) : 1.073
+\item $\Delta H$ (kcal/mol) : 13.75
+\item $\Delta G$ (kcal/mol) : -6.60
+\end{itemize}
+
+\medskip
+
+Simulation: $\epsilon$ and $\sigma$ were scaled by multiplying by $1.00$ or $1.05$ or $1.10$
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline  &  & $\sigma$*1.00 & $\sigma$*1.05 & $\sigma$*1.10 \\ 
+\hline $\epsilon*1.00$ & $\rho$ (g/cm$^-3$) & 1.099 & 0.9934 & 0.9004 \\ 
+\hline  & $\Delta H$ (kcal/mol) & 19.871 & 18.4993 & 17.563 \\ 
+\hline  & $\Delta G$ (kcal/mol) & -6.496 & -12.78375 & -28.96785 \\ 
+\hline  &  &  &  &  \\ 
+\hline $\epsilon*1.05$ & $\rho$ (g/cm$^-3$) & 1.093 & 0.9973 & 0.9068 \\ 
+\hline  & $\Delta H$ (kcal/mol) & 20.19 & 18.8933 & 18.0134 \\ 
+\hline  & $\Delta G$ (kcal/mol) & -3.76869 & -13.69526 & -30.26755 \\ 
+\hline  &  &  &  &  \\ 
+\hline $\epsilon*1.10$ & $\rho$ (g/cm$^-3$)& 1.099 & 0.9951 & 0.8999 \\ 
+\hline  & $\Delta H$ (kcal/mol) & 20.604 & 18.3849 & 17.67194 \\ 
+\hline  & $\Delta G$ (kcal/mol) & -3.74234 & -14.03508 & -32.66905 \\
+\hline  &  &  &  &  \\ 
+\hline 
+\end{tabular} 
+\end{center}
+
+Discussion : \\
+
+
+The evolution of $\rho$ and $\Delta H$ looks coherent, but the estimates of 
+$\Delta G$ are, for scaled  $\sigma$, really reaching non realistic values. One need to investigate 
+scaling factors lower than one to see if such things also happen in that case.\\
+
+
+
+Nevertheless, all the $\rho$ - $\Delta H$, and also the $\Delta G$ for $\sigma$*1.00, are similar 
+to results obtained by from Prashant (unpublished work : Thermodynamic study of the intercalation 
+process for various
+pharmacaphore in the chromatographic system).
 
 \end{document}
 

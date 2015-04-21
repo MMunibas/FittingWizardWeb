@@ -26,7 +26,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
  *
  * @author hedin
  */
-public class GUI_compounds_DB extends WizardPage {
+public class ViewAndEdit_compounds_DB extends WizardPage {
 
     private static final String title = "Explore database of compounds and their properties";
     
@@ -83,11 +83,11 @@ public class GUI_compounds_DB extends WizardPage {
     @FXML // fx:id="search_byname"
     private Button search_byname; // Value injected by FXMLLoader
 
-    private DB_interface dbi;
+    private final DB_interface dbi;
     
     private ObservableList<DB_model> obsList;
 
-    public GUI_compounds_DB(Settings _settings) {
+    public ViewAndEdit_compounds_DB(Settings _settings) {
         super(title);
         this.settings = _settings;
         

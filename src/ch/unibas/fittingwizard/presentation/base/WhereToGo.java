@@ -8,10 +8,13 @@
  */
 package ch.unibas.fittingwizard.presentation.base;
 
-import ch.unibas.charmmtools.gui.database.GUI_compounds_DB;
+import ch.unibas.charmmtools.gui.database.ViewAndEdit_compounds_DB;
 import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_InputAssistant;
 import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Fitgrid;
 import ch.unibas.fittingwizard.presentation.MoleculeListPage;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -59,14 +62,28 @@ public class WhereToGo extends WizardPage{
     protected void goToScreen(ActionEvent e){
         RadioButton selected = (RadioButton) Choices.getSelectedToggle();
         
-        if (selected.equals(goMTP))
+        if (selected.equals(goMTP)){
+            
             navigateTo(MoleculeListPage.class, null);
-        else if(selected.equals(goCHARMM))
-            navigateTo(CHARMM_GUI_InputAssistant.class, null);
-        else if (selected.equals(goDB))
-            navigateTo(GUI_compounds_DB.class, null);
-        else if (selected.equals(goGridScale))
+        
+        }
+        else if(selected.equals(goCHARMM)){
+            
+//            List<File> test = new ArrayList<>();
+//            test.add(new File("/home/hedin/progra/fittingWizard/test/ph_br.xyz"));
+            navigateTo(CHARMM_GUI_InputAssistant.class);
+            
+        }
+        else if (selected.equals(goDB)){
+            
+            navigateTo(ViewAndEdit_compounds_DB.class, null);
+            
+        }
+        else if (selected.equals(goGridScale)){
+            
              navigateTo(CHARMM_GUI_Fitgrid.class, null);
+        }
+        
     }
     
 }

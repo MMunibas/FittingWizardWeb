@@ -72,7 +72,7 @@ import ch.unibas.charmmtools.gui.RunningCHARMM_DenVap;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.charmmtools.gui.RunningCHARMM_DG;
-import ch.unibas.charmmtools.gui.database.GUI_compounds_DB;
+import ch.unibas.charmmtools.gui.database.ViewAndEdit_compounds_DB;
 import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Fitgrid;
 import ch.unibas.charmmtools.scripts.ICHARMMScript;
 import ch.unibas.charmmtools.scripts.CHARMMScript_Den_Vap;
@@ -245,41 +245,39 @@ public class WizardPageFactory {
                 List<CHARMM_Generator_DGHydr> dgList = throwIfParameterIsNull(parameter);
                 page = new RunningCHARMM_DG(charmmWorkflow_DG, dgList);
             } else if (type == CHARMM_GUI_InputAssistant.class) {
-//                if (parameter == null) {
-                page = new CHARMM_GUI_InputAssistant(charmmWorkflow_Den_Vap);
-//                } else {
+                if (parameter == null) {
+                    page = new CHARMM_GUI_InputAssistant(charmmWorkflow_Den_Vap);
+                } else {
 //                    List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
 //                    page = new CHARMM_GUI_InputAssistant(charmmWorkflow_Den_Vap, ioList);
-//                }
+                    List<File> ioList = throwIfParameterIsNull(parameter);
+                    page = new CHARMM_GUI_InputAssistant(charmmWorkflow_Den_Vap, ioList);
+                }
             } else if (type == CHARMM_GUI_ShowOutput.class) {
                 List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
                 page = new CHARMM_GUI_ShowOutput(charmmWorkflow_Den_Vap, ioList);
             } else if (type == CHARMM_GUI_ShowResults.class) {
                 List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
                 page = new CHARMM_GUI_ShowResults(charmmWorkflow_Den_Vap, ioList);
-            } 
-//            else if (type == CHARMM_GUI_Step4.class) {
-//                if (parameter == null) {
-//                    page = new CHARMM_GUI_Step4(charmmWorkflow_DG);
-//                } //                else{
-//                //                    boolean success = throwIfParameterIsNull(parameter);
-//                //                    page = new CHARMM_GUI_Step4(charmmWorkflow_DG,success);
-//                //                }
-//                else {
-//                    List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
-//                    page = new CHARMM_GUI_Step4(charmmWorkflow_DG, ioList);
-//                }
-//            } 
-            else if (type == CHARMM_GUI_Fitgrid.class){
+            } //            else if (type == CHARMM_GUI_Step4.class) {
+            //                if (parameter == null) {
+            //                    page = new CHARMM_GUI_Step4(charmmWorkflow_DG);
+            //                } //                else{
+            //                //                    boolean success = throwIfParameterIsNull(parameter);
+            //                //                    page = new CHARMM_GUI_Step4(charmmWorkflow_DG,success);
+            //                //                }
+            //                else {
+            //                    List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
+            //                    page = new CHARMM_GUI_Step4(charmmWorkflow_DG, ioList);
+            //                }
+            //            } 
+            else if (type == CHARMM_GUI_Fitgrid.class) {
                 page = new CHARMM_GUI_Fitgrid();
-            }
-            else if (type == GUI_compounds_DB.class){
-                page = new GUI_compounds_DB(settings);
-            }
-            else if (type == WhereToGo.class){
+            } else if (type == ViewAndEdit_compounds_DB.class) {
+                page = new ViewAndEdit_compounds_DB(settings);
+            } else if (type == WhereToGo.class) {
                 page = new WhereToGo();
-            }
-            // MISC
+            } // MISC
             else {
                 page = type.newInstance();
             }
