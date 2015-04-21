@@ -26,11 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * User: mhelmer
- * Date: 13.12.13
- * Time: 15:39
+ * User: mhelmer Date: 13.12.13 Time: 15:39
  */
-public class ExportFitWorkflow extends Workflow<ExportFitInput,Void> {
+public class ExportFitWorkflow extends Workflow<ExportFitInput, Void> {
 
     private static final Logger logger = Logger.getLogger(ExportFitWorkflow.class);
 
@@ -42,6 +40,12 @@ public class ExportFitWorkflow extends Workflow<ExportFitInput,Void> {
         this.sessionDir = sessionDir;
     }
 
+    /**
+     *
+     * @param input
+     * @return
+     */
+    @Override
     public Void execute(WorkflowContext<ExportFitInput> input) {
         logger.info("Executing export workflow.");
         Fit fit = input.getParameter().getFit();
@@ -59,6 +63,26 @@ public class ExportFitWorkflow extends Workflow<ExportFitInput,Void> {
         }
         copyToDestinationIfNecessary(exportedFiles, destination);
         return null;
+    }
+
+    public List<File> execute(WorkflowContext<ExportFitInput> input, boolean charmm_export) {
+        logger.info("Executing export workflow with return of List<File> for CHARMM");
+        Fit fit = input.getParameter().getFit();
+        File destination = input.getParameter().getDestination();
+
+        if (destination == null) {
+            destination = getDefaultExportDir();
+            logger.info("No destination passed. Using default destination: "
+                    + FilenameUtils.normalize(destination.getAbsolutePath()));
+        }
+        List<File> exportedFiles = new ArrayList<>();
+        for (MoleculeId moleculeId : fit.getAllMoleculeIds()) {
+            ExportScriptOutput output = exportScript.execute(new ExportScriptInput(fit.getId(), moleculeId));
+            exportedFiles.add(output.getExportFile());
+        }
+        copyToDestinationIfNecessary(exportedFiles, destination);
+        
+        return exportedFiles;
     }
 
     private void copyToDestinationIfNecessary(List<File> exportedFiles, File destination) {

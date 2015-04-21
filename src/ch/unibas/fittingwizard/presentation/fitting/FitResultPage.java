@@ -70,6 +70,10 @@ public class FitResultPage extends WizardPageWithVisualization {
     private final RunVmdDisplayWorkflow vmdDisplayWorkflow;
 
     private Molecule selectedMolecule;
+    
+    private List<File> flist_for_charmm;
+    
+    private Button backButton, exportButton, vmdButton, anotherFit, gotoCharmmFit;
 
     @FXML
     private Label lblRmse;
@@ -124,7 +128,7 @@ public class FitResultPage extends WizardPageWithVisualization {
 
     @Override
     protected void fillButtonBar() {
-        Button backButton = ButtonFactory.createButtonBarButton("Go back to molecule list", new EventHandler<ActionEvent>() {
+        backButton = ButtonFactory.createButtonBarButton("Go back to molecule list", new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 logger.info("Going back to molecule list.");
@@ -133,7 +137,7 @@ public class FitResultPage extends WizardPageWithVisualization {
         });
         addButtonToButtonBar(backButton);
 
-        Button exportButton = ButtonFactory.createButtonBarButton("Export data", new EventHandler<ActionEvent>() {
+        exportButton = ButtonFactory.createButtonBarButton("Export data", new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 logger.info("Exporting data.");
@@ -145,7 +149,7 @@ public class FitResultPage extends WizardPageWithVisualization {
         
         Settings settings = Settings.loadConfig();
         if (settings.getValue("mocks.enabled").equals("false") && VmdRunner.isAvailable() /*&& FieldcompRunner.isAvailable(settings.getScriptsDir())*/) {
-	        Button vmdButton = ButtonFactory.createButtonBarButton("Show in VMD", new EventHandler<ActionEvent>() {
+	        vmdButton = ButtonFactory.createButtonBarButton("Show in VMD", new EventHandler<ActionEvent>() {
 	            @Override
 	            public void handle(ActionEvent actionEvent) {
 	                logger.info("Show in VMD.");
@@ -155,7 +159,7 @@ public class FitResultPage extends WizardPageWithVisualization {
 	        addButtonToButtonBar(vmdButton);
         }
 
-        Button anotherFit = ButtonFactory.createButtonBarButton("Do another fit", new EventHandler<ActionEvent>() {
+        anotherFit = ButtonFactory.createButtonBarButton("Do another fit", new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 logger.info("Going for another fit.");
@@ -164,7 +168,7 @@ public class FitResultPage extends WizardPageWithVisualization {
         });
         addButtonToButtonBar(anotherFit);
         
-        Button gotoCharmmFit = ButtonFactory.createButtonBarButton("Go to CHARMM section", new EventHandler<ActionEvent>() {
+        gotoCharmmFit = ButtonFactory.createButtonBarButton("Go to CHARMM section", new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 logger.info("Now switching to the CHARMM Lennard-Jones fit section.");
@@ -172,21 +176,28 @@ public class FitResultPage extends WizardPageWithVisualization {
             }
         });
         addButtonToButtonBar(gotoCharmmFit); 
+        gotoCharmmFit.setDisable(true);
+        
     }// end of fillButtonBar
     
     private void goToCHARMM_Fit(){
         List<File> flist = new ArrayList<>();
         flist.add(this.selectedMolecule.getXyzFile().getSource());
+        flist.addAll(this.flist_for_charmm);
 //        flist.add(null);
         navigateTo(CHARMM_GUI_InputAssistant.class,flist);
     }
 
     private void exportFitData() {
         File destination = selectExportDirectory();
+        
         if (destination != null) {
+            
             Fit fit = cbFitResults.getSelectionModel().getSelectedItem().getFit();
-            exportFitWorkflow.execute(WorkflowContext.withInput(new ExportFitInput(fit, destination)));
-
+            flist_for_charmm = exportFitWorkflow.execute(WorkflowContext.withInput(new ExportFitInput(fit, destination)),true);
+            
+            this.gotoCharmmFit.setDisable(false);
+            
 //            Desktop desktop = Desktop.getDesktop();
 //            try {
 //                desktop.open(destination);
