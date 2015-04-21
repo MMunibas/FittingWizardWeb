@@ -21,7 +21,9 @@ import ch.unibas.charmmtools.gui.database.DB_SelectForCHARMM;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -39,7 +41,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import org.apache.commons.io.FilenameUtils;
 
-public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base{
+public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
 
     private static final String title = "LJ fitting procedure : preparing CHARMM input files";
 
@@ -622,16 +624,14 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base{
 //        stage.initOwner(
 //                ((Node) event.getSource()).getScene().getWindow());
 //        stage.show();
-        
         //another (failing) attempt of popup like
 //        Parent root = FxmlUtil.getFxmlContent(DB_SelectForCHARMM.class, this);
 //        Stage stage = new Stage();
 //        stage.setTitle("My New Stage Title");
 //        stage.setScene(new Scene(root, this.getWidth(), this.getHeight()));
 //        stage.show();
-        
         this.serialize(this.getClass().getName(), this);
-        
+
 //        List<File> flist = new ArrayList<>();
 //        navigateTo(DB_SelectForCHARMM.class,flist);
     }
@@ -667,6 +667,64 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base{
                 });
         addButtonToButtonBar(button_run_CHARMM);
         button_run_CHARMM.setDisable(true);
+    }
+
+    @Override
+    protected void serialize() {
+        ObjectOutputStream outser = null;
+        try {
+            File serFile = new File(whoami + ".ser");
+            outser = new ObjectOutputStream(new FileOutputStream(serFile));
+
+            outser.writeObject(PAR_selected);
+            outser.writeObject(RTF_selected);
+            outser.writeObject(COR_selected_gas);
+            outser.writeObject(COR_selected_liquid);
+            outser.writeObject(COR_selected_solv);
+            outser.writeObject(LPUN_selected);
+
+            outser.writeObject(textfield_PAR.getText());
+            outser.writeObject(textfield_RTF.getText());
+            outser.writeObject(textfield_COR_gas.getText());
+            outser.writeObject(textfield_COR_liquid.getText());
+            outser.writeObject(textfield_COR_solv.getText());
+            outser.writeObject(textfield_LPUN.getText());
+
+            outser.close();
+            logger.info("Serialized data is saved in " + serFile.getAbsolutePath());
+            outser.close();
+        } catch (Exception ex) {
+            logger.error("Error while serializing object of class " + whoami + "\t" + ex.getMessage());
+        }
+    }
+
+    @Override
+    protected void unserialize() {
+        ObjectOutputStream outser = null;
+        try {
+            File serFile = new File(whoami + ".ser");
+            outser = new ObjectOutputStream(new FileOutputStream(serFile));
+
+            outser.writeObject(PAR_selected);
+            outser.writeObject(RTF_selected);
+            outser.writeObject(COR_selected_gas);
+            outser.writeObject(COR_selected_liquid);
+            outser.writeObject(COR_selected_solv);
+            outser.writeObject(LPUN_selected);
+
+            outser.writeObject(textfield_PAR.getText());
+            outser.writeObject(textfield_RTF.getText());
+            outser.writeObject(textfield_COR_gas.getText());
+            outser.writeObject(textfield_COR_liquid.getText());
+            outser.writeObject(textfield_COR_solv.getText());
+            outser.writeObject(textfield_LPUN.getText());
+
+            outser.close();
+            logger.info("Serialized data is saved in " + serFile.getAbsolutePath());
+            outser.close();
+        } catch (Exception ex) {
+            logger.error("Error while serializing object of class " + whoami + "\t" + ex.getMessage());
+        }
     }
 
 }//end of controller class

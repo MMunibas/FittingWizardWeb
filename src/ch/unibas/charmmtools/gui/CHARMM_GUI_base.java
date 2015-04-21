@@ -43,26 +43,8 @@ public abstract class CHARMM_GUI_base extends WizardPage  implements Serializabl
         //this.logger.info("Style for class : '" + this.getClass().toGenericString() + "' is : " + this.getStyle());
     }
 
-    protected void serialize(String whoami, CHARMM_GUI_base obj )
-    {
-        
-        ObjectOutputStream outser = null;
-        try {
-            File serFile = new File(whoami + ".ser");
-            outser = new ObjectOutputStream(new FileOutputStream(serFile));
-            outser.writeObject(obj);
-            outser.close();
-            logger.info("Serialized data is saved in " + serFile.getAbsolutePath());
-            outser.close();
-        } catch (Exception ex) {
-            logger.error("Error while serializing object of class " + whoami + ex.getMessage());
-        }
-        
-    }
+    protected abstract void serialize();
     
-    protected void unserialize()
-    {
-        
-    }
+    protected abstract void unserialize();
     
 }
