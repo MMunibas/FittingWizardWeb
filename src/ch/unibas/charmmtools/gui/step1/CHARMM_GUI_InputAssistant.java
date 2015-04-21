@@ -17,10 +17,12 @@ import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_GasPhase;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_PureLiquid;
 import ch.unibas.charmmtools.gui.MyTab;
+import ch.unibas.charmmtools.gui.database.DB_SelectForCHARMM;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Instant;
@@ -37,7 +39,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import org.apache.commons.io.FilenameUtils;
 
-public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
+public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base{
 
     private static final String title = "LJ fitting procedure : preparing CHARMM input files";
 
@@ -71,10 +73,10 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
 
     @FXML
     private TextField lambda_space;
-    
+
     @FXML
     private Label autoFilledLabel;
-    
+
     @FXML // fx:id="button_search_DB"
     private Button button_search_DB; // Value injected by FXMLLoader
 
@@ -92,20 +94,19 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
     public CHARMM_GUI_InputAssistant(RunCHARMMWorkflow chWflow) {
         super(title, chWflow);
     }
-    
+
     public CHARMM_GUI_InputAssistant(RunCHARMMWorkflow chWflow, List<File> flist) {
         super(title, chWflow);
-        
+
         logger.info("Creating a new instance of CHARMM_GUI_InputAssistant with a list<File> as parameter.");
-        
-        for(File f : flist)
-        {
+
+        for (File f : flist) {
             String path = f.getAbsolutePath();
             String ext = FilenameUtils.getExtension(path);
-            
+
             logger.info("File " + path + " is of type '" + ext + "' ");
-            
-            switch(ext){
+
+            switch (ext) {
                 case "xyz":
                     textfield_COR_gas.setText(convertWithBabel(f).getAbsolutePath());
                     COR_selected_gas = true;
@@ -120,28 +121,28 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
                     break;
             }
         }
-        
+
         autoFilledLabel.setVisible(true);
     }
-    
-    private File convertWithBabel(File xyz){
+
+    private File convertWithBabel(File xyz) {
         String parent = FilenameUtils.getFullPath(xyz.getAbsolutePath());
         String basename = FilenameUtils.getBaseName(xyz.getAbsolutePath());
-        
+
         File pdbOut = new File(parent + basename + ".pdb");
-        
-        BabelConverterAPI babelc = new BabelConverterAPI("xyz","pdb");
+
+        BabelConverterAPI babelc = new BabelConverterAPI("xyz", "pdb");
         babelc.convert(xyz.getAbsolutePath(), pdbOut.getAbsolutePath());
-        
-        if (pdbOut.exists()){
+
+        if (pdbOut.exists()) {
             try {
-                logger.info("Content of pdb file obtained from babel : \n" +
-                        Files.readAllBytes(Paths.get(pdbOut.getAbsolutePath()))
+                logger.info("Content of pdb file obtained from babel : \n"
+                        + Files.readAllBytes(Paths.get(pdbOut.getAbsolutePath()))
                 );
             } catch (IOException ex) {
             }
         }
-        
+
         return pdbOut;
     }
 
@@ -198,7 +199,6 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
 ////        later_COR_liquid.setDisable(true);
 ////        later_LPUN.setDisable(true);
 //    }
-    
     @FXML
     protected void setDefault(ActionEvent e) {
         textfield_PAR.setText(new File("test", "phenol_cgenff.par").getAbsolutePath());
@@ -207,11 +207,11 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
         textfield_COR_liquid.setText(new File("test", "phenol_liquid.pdb").getAbsolutePath());
         textfield_COR_solv.setText(new File("test", "solvent.pdb").getAbsolutePath());
         textfield_LPUN.setText(new File("test", "phenol_cgenff_mtp_0.01.lpun").getAbsolutePath());
-        
+
         PAR_selected = RTF_selected = COR_selected_gas = COR_selected_liquid = COR_selected_solv = LPUN_selected = true;
         this.button_generate.setDisable(false);
     }
-    
+
     /**
      * Here we can add actions done just before showing the window
      */
@@ -544,7 +544,7 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
         tab_pane.getTabs().clear();
 
         lambda_space.setText("0.1");
-        
+
         autoFilledLabel.setVisible(false);
 
     }
@@ -609,12 +609,31 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
         navigateTo(RunningCHARMM_DenVap.class, myList);
 
     }
-    
+
     @FXML
-    protected void searchInDB(){
-    
+    protected void searchInDB(ActionEvent event) {
+
         // TODO : popup window ?
+//        Stage stage = new Stage();
+//        Parent root = this;
+//        stage.setScene(new Scene(root));
+//        stage.setTitle("My modal window");
+//        stage.initModality(Modality.WINDOW_MODAL);
+//        stage.initOwner(
+//                ((Node) event.getSource()).getScene().getWindow());
+//        stage.show();
         
+        //another (failing) attempt of popup like
+//        Parent root = FxmlUtil.getFxmlContent(DB_SelectForCHARMM.class, this);
+//        Stage stage = new Stage();
+//        stage.setTitle("My New Stage Title");
+//        stage.setScene(new Scene(root, this.getWidth(), this.getHeight()));
+//        stage.show();
+        
+        this.serialize(this.getClass().getName(), this);
+        
+//        List<File> flist = new ArrayList<>();
+//        navigateTo(DB_SelectForCHARMM.class,flist);
     }
 
     @Override

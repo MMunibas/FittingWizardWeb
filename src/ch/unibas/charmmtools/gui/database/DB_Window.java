@@ -33,59 +33,59 @@ public abstract class DB_Window extends WizardPage{
     protected Settings settings;
 
     @FXML // fx:id="tabcol_mass"
-    private TableColumn<DB_model, String> tabcol_mass; // Value injected by FXMLLoader
+    protected TableColumn<DB_model, String> tabcol_mass; // Value injected by FXMLLoader
 
     @FXML // fx:id="tabcol_dg"
-    private TableColumn<DB_model, String> tabcol_dg; // Value injected by FXMLLoader
+    protected TableColumn<DB_model, String> tabcol_dg; // Value injected by FXMLLoader
 
     @FXML // fx:id="text_mass"
-    private TextField text_mass; // Value injected by FXMLLoader
+    protected TextField text_mass; // Value injected by FXMLLoader
 
     @FXML // fx:id="text_formula"
-    private TextField text_formula; // Value injected by FXMLLoader
+    protected TextField text_formula; // Value injected by FXMLLoader
 
     @FXML // fx:id="search_bymass"
-    private Button search_bymass; // Value injected by FXMLLoader
+    protected Button search_bymass; // Value injected by FXMLLoader
 
     @FXML // fx:id="text_smiles"
-    private TextField text_smiles; // Value injected by FXMLLoader
+    protected TextField text_smiles; // Value injected by FXMLLoader
 
     @FXML // fx:id="search_bysmiles"
-    private Button search_bysmiles; // Value injected by FXMLLoader
+    protected Button search_bysmiles; // Value injected by FXMLLoader
 
     @FXML // fx:id="tabcol_dh"
-    private TableColumn<DB_model, String> tabcol_dh; // Value injected by FXMLLoader
+    protected TableColumn<DB_model, String> tabcol_dh; // Value injected by FXMLLoader
 
     @FXML // fx:id="search_byformula"
-    private Button search_byformula; // Value injected by FXMLLoader
+    protected Button search_byformula; // Value injected by FXMLLoader
 
     @FXML // fx:id="tabcol_formula"
-    private TableColumn<DB_model, String> tabcol_formula; // Value injected by FXMLLoader
+    protected TableColumn<DB_model, String> tabcol_formula; // Value injected by FXMLLoader
 
     @FXML // fx:id="tabcol_smiles"
-    private TableColumn<DB_model, String> tabcol_smiles; // Value injected by FXMLLoader
+    protected TableColumn<DB_model, String> tabcol_smiles; // Value injected by FXMLLoader
 
     @FXML // fx:id="tabcol_name"
-    private TableColumn<DB_model, String> tabcol_name; // Value injected by FXMLLoader
+    protected TableColumn<DB_model, String> tabcol_name; // Value injected by FXMLLoader
 
     @FXML // fx:id="tabview_db"
-    private TableView<DB_model> tabview_db; // Value injected by FXMLLoader
+    protected TableView<DB_model> tabview_db; // Value injected by FXMLLoader
 
     @FXML // fx:id="text_mass_threshold"
-    private TextField text_mass_threshold; // Value injected by FXMLLoader
+    protected TextField text_mass_threshold; // Value injected by FXMLLoader
 
     @FXML // fx:id="text_fullname"
-    private TextField text_fullname; // Value injected by FXMLLoader
+    protected TextField text_fullname; // Value injected by FXMLLoader
 
     @FXML // fx:id="tabcol_density"
-    private TableColumn<DB_model, String> tabcol_density; // Value injected by FXMLLoader
+    protected TableColumn<DB_model, String> tabcol_density; // Value injected by FXMLLoader
 
     @FXML // fx:id="search_byname"
-    private Button search_byname; // Value injected by FXMLLoader
+    protected Button search_byname; // Value injected by FXMLLoader
 
-    private final DB_interface dbi;
+    protected final DB_interface dbi;
     
-    private ObservableList<DB_model> obsList;
+    protected ObservableList<DB_model> obsList;
 
     public DB_Window(String title, Settings _settings) {
         super(title);
@@ -164,14 +164,5 @@ public abstract class DB_Window extends WizardPage{
         }
 
     }
-
-    @Override
-    protected void fillButtonBar() {
-
-    }
-
- 
-
-   
-   
+    
 }

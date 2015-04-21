@@ -8,7 +8,7 @@
  */
 package ch.unibas.fittingwizard.presentation.base;
 
-import ch.unibas.charmmtools.gui.database.ViewAndEdit_compounds_DB;
+import ch.unibas.charmmtools.gui.database.DB_View_Edit;
 import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_InputAssistant;
 import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Fitgrid;
 import ch.unibas.fittingwizard.presentation.MoleculeListPage;
@@ -50,6 +50,7 @@ public class WhereToGo extends WizardPage{
     
     public WhereToGo() {
         super(title);
+        removeButtonFromButtonBar(button_initialSelection);
         logger.info("Choosing where to go and what to do");
     }
 
@@ -76,7 +77,7 @@ public class WhereToGo extends WizardPage{
         }
         else if (selected.equals(goDB)){
             
-            navigateTo(ViewAndEdit_compounds_DB.class, null);
+            navigateTo(DB_View_Edit.class, null);
             
         }
         else if (selected.equals(goGridScale)){

@@ -57,9 +57,7 @@ import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
 import java.util.List;
 
 /**
- * User: mhelmer
- * Date: 29.11.13
- * Time: 17:40
+ * User: mhelmer Date: 29.11.13 Time: 17:40
  */
 public class FitResultPage extends WizardPageWithVisualization {
 
@@ -70,9 +68,9 @@ public class FitResultPage extends WizardPageWithVisualization {
     private final RunVmdDisplayWorkflow vmdDisplayWorkflow;
 
     private Molecule selectedMolecule;
-    
+
     private List<File> flist_for_charmm;
-    
+
     private Button backButton, exportButton, vmdButton, anotherFit, gotoCharmmFit;
 
     @FXML
@@ -87,10 +85,10 @@ public class FitResultPage extends WizardPageWithVisualization {
     private TableColumn<FitResultViewModel, String> atomTypeColumn;
 
     public FitResultPage(MoleculeRepository moleculeRepository,
-                         FitRepository fitRepository,
-                         Visualization visualization,
-                         ExportFitWorkflow exportFitWorkflow,
-                         RunVmdDisplayWorkflow vmdDisplayWorkflow) {
+            FitRepository fitRepository,
+            Visualization visualization,
+            ExportFitWorkflow exportFitWorkflow,
+            RunVmdDisplayWorkflow vmdDisplayWorkflow) {
         super(visualization, "Fit result");
         this.moleculeRepository = moleculeRepository;
         this.fitRepository = fitRepository;
@@ -146,17 +144,17 @@ public class FitResultPage extends WizardPageWithVisualization {
         });
 //        exportButton.setDisable(true);
         addButtonToButtonBar(exportButton);
-        
+
         Settings settings = Settings.loadConfig();
         if (settings.getValue("mocks.enabled").equals("false") && VmdRunner.isAvailable() /*&& FieldcompRunner.isAvailable(settings.getScriptsDir())*/) {
-	        vmdButton = ButtonFactory.createButtonBarButton("Show in VMD", new EventHandler<ActionEvent>() {
-	            @Override
-	            public void handle(ActionEvent actionEvent) {
-	                logger.info("Show in VMD.");
-	                showInVmd();
-	            }
-	        });
-	        addButtonToButtonBar(vmdButton);
+            vmdButton = ButtonFactory.createButtonBarButton("Show in VMD", new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    logger.info("Show in VMD.");
+                    showInVmd();
+                }
+            });
+            addButtonToButtonBar(vmdButton);
         }
 
         anotherFit = ButtonFactory.createButtonBarButton("Do another fit", new EventHandler<ActionEvent>() {
@@ -167,7 +165,7 @@ public class FitResultPage extends WizardPageWithVisualization {
             }
         });
         addButtonToButtonBar(anotherFit);
-        
+
         gotoCharmmFit = ButtonFactory.createButtonBarButton("Go to CHARMM section", new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -175,29 +173,35 @@ public class FitResultPage extends WizardPageWithVisualization {
                 goToCHARMM_Fit();
             }
         });
-        addButtonToButtonBar(gotoCharmmFit); 
+        addButtonToButtonBar(gotoCharmmFit);
         gotoCharmmFit.setDisable(true);
-        
+
     }// end of fillButtonBar
-    
-    private void goToCHARMM_Fit(){
-        List<File> flist = new ArrayList<>();
-        flist.add(this.selectedMolecule.getXyzFile().getSource());
-        flist.addAll(this.flist_for_charmm);
-//        flist.add(null);
-        navigateTo(CHARMM_GUI_InputAssistant.class,flist);
+
+    private void goToCHARMM_Fit() {
+
+        if (selectedMolecule != null) {
+            List<File> flist = new ArrayList<>();
+            flist.add(this.selectedMolecule.getXyzFile().getSource());
+            flist.addAll(this.flist_for_charmm);
+            navigateTo(CHARMM_GUI_InputAssistant.class, flist);
+        } else {
+            OverlayDialog.informUser("Attention", "You have not selected a molecule from the molecules dropdown menu.\n"
+                    + "Please select one before accessing the CHARMM Lennard-Jones fitting section.");
+        }
+
     }
 
     private void exportFitData() {
         File destination = selectExportDirectory();
-        
+
         if (destination != null) {
-            
+
             Fit fit = cbFitResults.getSelectionModel().getSelectedItem().getFit();
-            flist_for_charmm = exportFitWorkflow.execute(WorkflowContext.withInput(new ExportFitInput(fit, destination)),true);
-            
+            flist_for_charmm = exportFitWorkflow.execute(WorkflowContext.withInput(new ExportFitInput(fit, destination)), true);
+
             this.gotoCharmmFit.setDisable(false);
-            
+
 //            Desktop desktop = Desktop.getDesktop();
 //            try {
 //                desktop.open(destination);
@@ -219,17 +223,17 @@ public class FitResultPage extends WizardPageWithVisualization {
         File file = dirChooser.showDialog(this.getScene().getWindow());
         return file;
     }
-    
+
     private void showInVmd() {
-    	if (selectedMolecule != null) {
+        if (selectedMolecule != null) {
             Fit fit = cbFitResults.getSelectionModel().getSelectedItem().getFit();
             VmdDisplayInput input = new VmdDisplayInput(selectedMolecule.getId(), fit.getRank(), fit.getId());
             vmdDisplayWorkflow.execute(WorkflowContext.withInput(input));
         } else {
-            OverlayDialog.informUser("Attention", "You have not selected a molecule from the molecules dropdown menu.\n" +
-                    "It is not possible to show the visualization for ALL molecules!");
+            OverlayDialog.informUser("Attention", "You have not selected a molecule from the molecules dropdown menu.\n"
+                    + "It is not possible to show the visualization for ALL molecules!");
         }
-        
+
     }
 
     @Override
@@ -345,13 +349,15 @@ public class FitResultPage extends WizardPageWithVisualization {
         if (selectedMolecule != null) {
             visualization.show(selectedMolecule.getXyzFile().getSource());
         } else {
-            OverlayDialog.informUser("Attention", "You have not selected a molecule from the molecules dropdown menu.\n" +
-                    "It is not possible to show the visualization for ALL molecules!");
+            OverlayDialog.informUser("Attention", "You have not selected a molecule from the molecules dropdown menu.\n"
+                    + "It is not possible to show the visualization for ALL molecules!");
         }
     }
 
     private class FitListCell extends ListCell<Fit> {
-        @Override protected void updateItem(Fit item, boolean empty) {
+
+        @Override
+        protected void updateItem(Fit item, boolean empty) {
             super.updateItem(item, empty);
             if (item != null) {
                 setText("Fit " + item.getId());
@@ -363,6 +369,7 @@ public class FitResultPage extends WizardPageWithVisualization {
      * View model
      */
     private class FitViewModel {
+
         private final Fit fit;
 
         private FitViewModel(Fit fit) {
@@ -380,6 +387,7 @@ public class FitResultPage extends WizardPageWithVisualization {
     }
 
     private class MoleculeViewModel {
+
         private final Molecule molecule;
 
         public MoleculeViewModel(Molecule molecule) {
@@ -427,7 +435,7 @@ public class FitResultPage extends WizardPageWithVisualization {
 
         private String getCssBackgroundString(Color col) {
             String hex = getHexForColor(col);
-            String style = "-fx-background-color: " + hex  + ";";
+            String style = "-fx-background-color: " + hex + ";";
             return style;
         }
 

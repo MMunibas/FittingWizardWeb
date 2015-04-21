@@ -72,7 +72,7 @@ import ch.unibas.charmmtools.gui.RunningCHARMM_DenVap;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.charmmtools.gui.RunningCHARMM_DG;
-import ch.unibas.charmmtools.gui.database.ViewAndEdit_compounds_DB;
+import ch.unibas.charmmtools.gui.database.DB_View_Edit;
 import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Fitgrid;
 import ch.unibas.charmmtools.scripts.ICHARMMScript;
 import ch.unibas.charmmtools.scripts.CHARMMScript_Den_Vap;
@@ -273,8 +273,8 @@ public class WizardPageFactory {
             //            } 
             else if (type == CHARMM_GUI_Fitgrid.class) {
                 page = new CHARMM_GUI_Fitgrid();
-            } else if (type == ViewAndEdit_compounds_DB.class) {
-                page = new ViewAndEdit_compounds_DB(settings);
+            } else if (type == DB_View_Edit.class) {
+                page = new DB_View_Edit(settings);
             } else if (type == WhereToGo.class) {
                 page = new WhereToGo();
             } // MISC

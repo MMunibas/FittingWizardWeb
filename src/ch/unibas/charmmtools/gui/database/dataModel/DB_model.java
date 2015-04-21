@@ -129,6 +129,21 @@ public class DB_model {
         this.setDh(_dh);
         this.setDg(_dg);
     }
+
+    @Override
+    public String toString() {
+        String ret="";
+        
+        ret += "name : " + name.get() + '\n';
+        ret += "formula : " + formula.get() + '\n';
+        ret += "smiles : " + smiles.get() + '\n';
+        ret += "mass : " + mass.get() + '\n';
+        ret += "density : " + density.get() + '\n';
+        ret += "dh : " + dh.get() + '\n';
+        ret += "dg : " + dg.get() + '\n';
+        
+        return ret;
+    }
     
     
         

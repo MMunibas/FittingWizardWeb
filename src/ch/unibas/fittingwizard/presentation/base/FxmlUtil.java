@@ -8,6 +8,7 @@
  */
 package ch.unibas.fittingwizard.presentation.base;
 
+import ch.unibas.charmmtools.gui.database.DB_Window;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import org.apache.log4j.Logger;
@@ -24,7 +25,14 @@ public class FxmlUtil {
     private static final Logger logger = Logger.getLogger(FxmlUtil.class);
 
     public static Parent getFxmlContent(Class type, Object controller) {
-        String resourceName = type.getSimpleName() + ".fxml";
+        
+        String resourceName;
+        
+        if(type.getSuperclass()==DB_Window.class)
+            resourceName = type.getSuperclass().getSimpleName() + ".fxml";
+        else
+            resourceName = type.getSimpleName() + ".fxml";
+        
         logger.info("Loading FXML " + resourceName);
         URL url = type.getResource(resourceName);
         Parent content = null;

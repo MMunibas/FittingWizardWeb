@@ -13,14 +13,21 @@ import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.presentation.base.WizardPage;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author hedin
  */
-public abstract class CHARMM_GUI_base extends WizardPage{
+public abstract class CHARMM_GUI_base extends WizardPage  implements Serializable{
     
     protected RunCHARMMWorkflow charmmWorkflow;
     
@@ -36,6 +43,26 @@ public abstract class CHARMM_GUI_base extends WizardPage{
         //this.logger.info("Style for class : '" + this.getClass().toGenericString() + "' is : " + this.getStyle());
     }
 
-
+    protected void serialize(String whoami, CHARMM_GUI_base obj )
+    {
+        
+        ObjectOutputStream outser = null;
+        try {
+            File serFile = new File(whoami + ".ser");
+            outser = new ObjectOutputStream(new FileOutputStream(serFile));
+            outser.writeObject(obj);
+            outser.close();
+            logger.info("Serialized data is saved in " + serFile.getAbsolutePath());
+            outser.close();
+        } catch (Exception ex) {
+            logger.error("Error while serializing object of class " + whoami + ex.getMessage());
+        }
+        
+    }
+    
+    protected void unserialize()
+    {
+        
+    }
     
 }
