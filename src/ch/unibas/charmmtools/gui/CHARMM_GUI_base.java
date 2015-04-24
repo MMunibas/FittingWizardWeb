@@ -29,13 +29,13 @@ import java.util.logging.Logger;
  */
 public abstract class CHARMM_GUI_base extends WizardPage  implements Serializable{
     
-    protected RunCHARMMWorkflow charmmWorkflow;
+    protected transient RunCHARMMWorkflow charmmWorkflow;
     
-    protected List<CHARMM_Input>  inp = new ArrayList<>();
-    protected List<CHARMM_Output> out = new ArrayList<>();
+    protected transient List<CHARMM_Input>  inp = new ArrayList<>();
+    protected transient List<CHARMM_Output> out = new ArrayList<>();
     
-    protected List<File> CHARMM_inFile = new ArrayList<>();
-    protected List<File> CHARMM_outFile = new ArrayList<>();
+    protected transient List<File> CHARMM_inFile = new ArrayList<>();
+    protected transient List<File> CHARMM_outFile = new ArrayList<>();
     
     public CHARMM_GUI_base(String title, RunCHARMMWorkflow flow) {
         super(title);

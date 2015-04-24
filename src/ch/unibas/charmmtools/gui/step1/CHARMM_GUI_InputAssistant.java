@@ -21,8 +21,10 @@ import ch.unibas.charmmtools.gui.database.DB_SelectForCHARMM;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.nio.file.Files;
@@ -49,38 +51,38 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
      * All FXML variables
      */
     @FXML
-    private Button button_open_PAR, button_open_RTF, button_open_COR_gas,
+    private transient Button button_open_PAR, button_open_RTF, button_open_COR_gas,
             button_open_COR_liquid, button_open_COR_solv, button_open_LPUN;
 
     @FXML
-    private TextField textfield_PAR, textfield_RTF, textfield_COR_gas,
+    private transient TextField textfield_PAR, textfield_RTF, textfield_COR_gas,
             textfield_COR_liquid, textfield_COR_solv, textfield_LPUN;
 
 //    @FXML
 //    private Label RedLabel_Notice;
     @FXML
-    private Button button_generate;
+    private transient Button button_generate;
 
 //    @FXML
 //    private TextArea textarea_left, textarea_right;
     // those buttons are NOT exposed to FXML but handles locally with fillbuttonbar
-    private Button button_reset;
+    private transient Button button_reset;
 //    private Button button_save_to_file;
-    private Button button_run_CHARMM;
-    private Button button_default;
+    private transient Button button_run_CHARMM;
+    private transient Button button_default;
 
     //where the generated input files are added
     @FXML
-    private TabPane tab_pane;
+    private transient TabPane tab_pane;
 
     @FXML
-    private TextField lambda_space;
+    private transient TextField lambda_space;
 
     @FXML
-    private Label autoFilledLabel;
+    private transient Label autoFilledLabel;
 
     @FXML // fx:id="button_search_DB"
-    private Button button_search_DB; // Value injected by FXMLLoader
+    private transient Button button_search_DB; // Value injected by FXMLLoader
 
     /**
      * Internal variables
@@ -672,23 +674,24 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
     @Override
     protected void serialize() {
         ObjectOutputStream outser = null;
+        String whoami = this.getClass().getSimpleName();
         try {
             File serFile = new File(whoami + ".ser");
             outser = new ObjectOutputStream(new FileOutputStream(serFile));
 
-            outser.writeObject(PAR_selected);
-            outser.writeObject(RTF_selected);
-            outser.writeObject(COR_selected_gas);
-            outser.writeObject(COR_selected_liquid);
-            outser.writeObject(COR_selected_solv);
-            outser.writeObject(LPUN_selected);
+            outser.writeBoolean(PAR_selected);
+            outser.writeBoolean(RTF_selected);
+            outser.writeBoolean(COR_selected_gas);
+            outser.writeBoolean(COR_selected_liquid);
+            outser.writeBoolean(COR_selected_solv);
+            outser.writeBoolean(LPUN_selected);
 
-            outser.writeObject(textfield_PAR.getText());
-            outser.writeObject(textfield_RTF.getText());
-            outser.writeObject(textfield_COR_gas.getText());
-            outser.writeObject(textfield_COR_liquid.getText());
-            outser.writeObject(textfield_COR_solv.getText());
-            outser.writeObject(textfield_LPUN.getText());
+            outser.writeChars(textfield_PAR.getText());
+            outser.writeChars(textfield_RTF.getText());
+            outser.writeChars(textfield_COR_gas.getText());
+            outser.writeChars(textfield_COR_liquid.getText());
+            outser.writeChars(textfield_COR_solv.getText());
+            outser.writeChars(textfield_LPUN.getText());
 
             outser.close();
             logger.info("Serialized data is saved in " + serFile.getAbsolutePath());
@@ -700,17 +703,18 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base {
 
     @Override
     protected void unserialize() {
-        ObjectOutputStream outser = null;
+        ObjectInputStream outser = null;
+        String whoami = this.getClass().getSimpleName();
         try {
             File serFile = new File(whoami + ".ser");
-            outser = new ObjectOutputStream(new FileOutputStream(serFile));
+            outser = new ObjectInputStream(new FileInputStream(serFile));
 
-            outser.writeObject(PAR_selected);
-            outser.writeObject(RTF_selected);
-            outser.writeObject(COR_selected_gas);
-            outser.writeObject(COR_selected_liquid);
-            outser.writeObject(COR_selected_solv);
-            outser.writeObject(LPUN_selected);
+            PAR_selected = outser.readBoolean();
+            RTF_selected = outser.readBoolean();
+            COR_selected_gas = outser.readBoolean();
+            COR_selected_liquid = outser.readBoolean();
+            COR_selected_solv = outser.readBoolean();
+            LPUN_selected = outser.readBoolean();
 
             outser.writeObject(textfield_PAR.getText());
             outser.writeObject(textfield_RTF.getText());
