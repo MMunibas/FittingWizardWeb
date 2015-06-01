@@ -304,7 +304,13 @@ a checking procedure).
 
 \subsection{From the GUI}
 
-...
+\begin{itemize}
+\item PDB : The Gaussian coordinates are saved to a XYZ file, but for the CHARMM simulation we need 
+a PDB or COR file : unfortunately PDB files generated from VMD or OpenBabel are not readable by 
+CHARMM directly. A code for converting the XYZ file to PDB directly from the code is currently 
+being written, it will reused code from the section generating RTF and PSF files (from Figures 
+\ref{fig15} and \ref{fig16}).
+\end{itemize}
 
 \subsection{From Tristan's python scripts}
 
@@ -327,6 +333,25 @@ Found by Krystel :
 
 %-------------------------------------------------
 %-------------------------------------------------
+
+\section{Outlook}
+
+\begin{itemize}
+\item For the moment the interface is blocked (waiting screen) as long as jobs are
+running : not convenient
+
+\item Linked to previous point : add possibility to resume properly a previous
+session ("data serialization" / possibility to save the whole working session)
+
+\item Add a proper comparison (with graphs ?) of exp. vs. calculated values
+
+\item Add the last section that will modify the epsilon parameters with a fit and run again 
+simulations.
+\end{itemize}
+
+%-------------------------------------------------
+%-------------------------------------------------
+
 
 \section{Results}
 
