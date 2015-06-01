@@ -11,10 +11,9 @@ package ch.unibas.charmmtools.files.structure;
 
 import ch.unibas.charmmtools.files.topology.RTF;
 import ch.unibas.charmmtools.internals.Atom;
-import ch.unibas.charmmtools.internals.Bond;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+import java.io.CharArrayWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.Date;
 
 /**
@@ -30,7 +29,7 @@ public final class PSF_generate extends PSF {
     private String format02, format02a, format02b, format03;
     private String format04, format05, format06, format07, format08;
 
-    private BufferedWriter writer = null;
+    private Writer writer = null;
 
     public PSF_generate(RTF topolInfo) throws IOException {
 
@@ -62,9 +61,12 @@ public final class PSF_generate extends PSF {
         this.fixMass(topolInfo);
 
         //generate psf file
-        writer = new BufferedWriter(new FileWriter(this.myname + ".psf"));
+//        writer = new BufferedWriter(new FileWriter(this.myname + ".psf"));
+//        this.generate();
+//        writer.close();
+        writer = new CharArrayWriter();
         this.generate();
-        writer.close();
+        
     }
 
     private void fixMass(RTF topolInfo) {
@@ -203,6 +205,12 @@ public final class PSF_generate extends PSF {
             writer.write("\n");
         }
         writer.write("\n");
+    }
+    
+    @Override
+    public String getTextContent()
+    {
+        return writer.toString();
     }
 
 

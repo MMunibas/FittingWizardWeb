@@ -53,32 +53,34 @@ public abstract class PSF {
     protected List<Dihedral> diheList = null;
     protected List<Improper> imprList = null;
     
-        /**
+    public abstract String getTextContent();
+    
+    /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-
-        try {
-            // initialise logger
-            BasicConfigurator.configure();
-
-            //path to xyz file and csv file
-            String xyzName = args[0];
-            String csvName = args[1];
-
-            //reads a coordinates file (xyz format only)
-            XyzFile xyzf = XyzFileParser.parse(new File(xyzName));
-
-            //generates a topology file
-            RTF rtff = new RTF_generate(xyzf, csvName);
-            
-            //then a PSF file re-using data from PSF 
-            PSF psff = new PSF_generate(rtff);
-            
-        } catch (IOException ex) {
-            Logger.getLogger(RTF_generate.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
+//    public static void main(String[] args) {
+//
+//        try {
+//            // initialise logger
+//            BasicConfigurator.configure();
+//
+//            //path to xyz file and csv file
+//            String xyzName = args[0];
+//            String csvName = args[1];
+//
+//            //reads a coordinates file (xyz format only)
+//            XyzFile xyzf = XyzFileParser.parse(new File(xyzName));
+//
+//            //generates a topology file
+//            RTF rtff = new RTF_generate(xyzf, csvName);
+//            
+//            //then a PSF file re-using data from PSF 
+//            PSF psff = new PSF_generate(rtff);
+//            
+//        } catch (IOException ex) {
+//            Logger.getLogger(RTF_generate.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//
+//    }
 
 } // end of class PSF

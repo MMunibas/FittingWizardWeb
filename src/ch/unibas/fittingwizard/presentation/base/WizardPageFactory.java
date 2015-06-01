@@ -75,6 +75,7 @@ import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.charmmtools.gui.RunningCHARMM_DG;
 import ch.unibas.charmmtools.gui.database.DB_View_Edit;
 import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Fitgrid;
+import ch.unibas.charmmtools.gui.topology.GenerateTopology;
 import ch.unibas.charmmtools.scripts.ICHARMMScript;
 import ch.unibas.charmmtools.scripts.CHARMMScript_Den_Vap;
 import ch.unibas.charmmtools.scripts.CHARMMScript_DG_gas;
@@ -278,7 +279,10 @@ public class WizardPageFactory {
                 page = new DB_View_Edit(settings);
             } else if (type == WhereToGo.class) {
                 page = new WhereToGo();
-            } // MISC
+            } else if (type == GenerateTopology.class) {
+                page = new GenerateTopology();
+            }
+            // MISC
             else {
                 page = type.newInstance();
             }

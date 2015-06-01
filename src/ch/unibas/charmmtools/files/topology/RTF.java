@@ -16,9 +16,11 @@ import ch.unibas.charmmtools.internals.Bond;
 import ch.unibas.charmmtools.internals.Dihedral;
 import ch.unibas.charmmtools.internals.Improper;
 import ch.unibas.charmmtools.internals.InternalCoordinates;
+import java.io.CharArrayWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +34,8 @@ import java.util.logging.Logger;
 public abstract class RTF {
 
     protected String fname = null;
-
+    protected Writer writer = null;
+    
     protected List<?> InputDataAtoms = null;
 
     protected int natom = 0;
@@ -96,12 +99,14 @@ public abstract class RTF {
                 put("F", 18.998);
             }
         };
+        this.writer = new CharArrayWriter();
     }//ctor
 
     public RTF(String atomicInfo) {
         this.covRad = new HashMap<String, Double>();
         this.atomicWeight = new HashMap<String, Double>();
         readAtomicInfo(atomicInfo);
+        this.writer = new CharArrayWriter();
     }//ctor
 
     public final void readAtomicInfo(String atInfoFileName) {
@@ -200,6 +205,11 @@ public abstract class RTF {
 
     public double findMass(String atname) {
         return atomicWeight.get(atname);
+    }
+    
+    public String getTextContent()
+    {
+        return writer.toString();
     }
 
 }//end of RTF class

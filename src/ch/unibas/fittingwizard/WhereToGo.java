@@ -11,6 +11,7 @@ package ch.unibas.fittingwizard;
 import ch.unibas.charmmtools.gui.database.DB_View_Edit;
 import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_InputAssistant;
 import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Fitgrid;
+import ch.unibas.charmmtools.gui.topology.GenerateTopology;
 import ch.unibas.fittingwizard.presentation.MoleculeListPage;
 import ch.unibas.fittingwizard.presentation.base.WizardPage;
 import java.io.File;
@@ -26,10 +27,10 @@ import javafx.scene.control.ToggleGroup;
  *
  * @author hedin
  */
-public class WhereToGo extends WizardPage{
+public class WhereToGo extends WizardPage {
 
     private static final String title = "Please choose what to do : ";
-    
+
     @FXML // fx:id="Choices"
     private ToggleGroup Choices; // Value injected by FXMLLoader
 
@@ -44,11 +45,13 @@ public class WhereToGo extends WizardPage{
 
     @FXML // fx:id="goMTP"
     private RadioButton goMTP; // Value injected by FXMLLoader
-    
+
     @FXML // fx:id="goGridScale"
     private RadioButton goGridScale; // Value injected by FXMLLoader
 
-    
+    @FXML // fx:id="goGridScale"
+    private RadioButton goTopology; // Value injected by FXMLLoader
+
     public WhereToGo() {
         super(title);
         removeButtonFromButtonBar(button_initialSelection);
@@ -59,33 +62,36 @@ public class WhereToGo extends WizardPage{
     protected void fillButtonBar() {
 
     }
-    
+
     @FXML
-    protected void goToScreen(ActionEvent e){
+    protected void goToScreen(ActionEvent e) {
         RadioButton selected = (RadioButton) Choices.getSelectedToggle();
-        
-        if (selected.equals(goMTP)){
-            
+
+        if (selected.equals(goMTP)) {
+
             navigateTo(MoleculeListPage.class, null);
-        
-        }
-        else if(selected.equals(goCHARMM)){
-            
+
+        } else if (selected.equals(goCHARMM)) {
+
 //            List<File> test = new ArrayList<>();
 //            test.add(new File("/home/hedin/progra/fittingWizard/test/ph_br.xyz"));
             navigateTo(CHARMM_GUI_InputAssistant.class);
-            
-        }
-        else if (selected.equals(goDB)){
-            
+
+        } else if (selected.equals(goDB)) {
+
             navigateTo(DB_View_Edit.class, null);
+
+        } else if (selected.equals(goGridScale)) {
+
+            navigateTo(CHARMM_GUI_Fitgrid.class, null);
+            
+        } else if (selected.equals(goTopology)) {
+
+            logger.info("Going to topology generate page");
+            navigateTo(GenerateTopology.class, null);
             
         }
-        else if (selected.equals(goGridScale)){
-            
-             navigateTo(CHARMM_GUI_Fitgrid.class, null);
-        }
-        
+
     }
-    
+
 }

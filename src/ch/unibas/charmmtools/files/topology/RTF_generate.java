@@ -533,8 +533,9 @@ public final class RTF_generate extends RTF {
     }//end find_IC()
 
     private void write_topology_file() throws IOException {
+        
         Date d = new Date();
-        BufferedWriter writer = new BufferedWriter(new FileWriter(this.fname + ".rtf"));
+        //BufferedWriter writer = new BufferedWriter(new FileWriter(this.fname + ".rtf"));
 
         writer.write("* ...\n");
         writer.write("* Build RTF for " + this.fname + ".xyz\n");
