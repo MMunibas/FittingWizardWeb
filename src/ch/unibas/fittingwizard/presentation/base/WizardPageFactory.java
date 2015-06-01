@@ -8,6 +8,7 @@
  */
 package ch.unibas.fittingwizard.presentation.base;
 
+import ch.unibas.fittingwizard.WhereToGo;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;

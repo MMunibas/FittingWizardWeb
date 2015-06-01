@@ -6,12 +6,13 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.fittingwizard.presentation.base;
+package ch.unibas.fittingwizard;
 
 import ch.unibas.charmmtools.gui.database.DB_View_Edit;
 import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_InputAssistant;
 import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Fitgrid;
 import ch.unibas.fittingwizard.presentation.MoleculeListPage;
+import ch.unibas.fittingwizard.presentation.base.WizardPage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

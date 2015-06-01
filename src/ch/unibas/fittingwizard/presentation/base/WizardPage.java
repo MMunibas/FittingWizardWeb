@@ -14,6 +14,7 @@ package ch.unibas.fittingwizard.presentation.base;
  * Time: 11:17
  */
 
+import ch.unibas.fittingwizard.WhereToGo;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
