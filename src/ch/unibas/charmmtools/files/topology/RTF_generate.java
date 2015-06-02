@@ -15,12 +15,13 @@ import ch.unibas.charmmtools.internals.Improper;
 import ch.unibas.charmmtools.internals.InternalCoordinates;
 import ch.unibas.fittingwizard.application.xyz.XyzAtom;
 import ch.unibas.fittingwizard.application.xyz.XyzFile;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  *
@@ -534,11 +535,14 @@ public final class RTF_generate extends RTF {
 
     private void write_topology_file() throws IOException {
         
-        Date d = new Date();
+        DateFormat df = new SimpleDateFormat();
+        df.setTimeZone(TimeZone.getDefault());
+        Date d = new Date(df.format(new Date()));
+        
         //BufferedWriter writer = new BufferedWriter(new FileWriter(this.fname + ".rtf"));
 
-        writer.write("* ...\n");
-        writer.write("* Build RTF for " + this.fname + ".xyz\n");
+//        writer.write("* ...\n");
+        writer.write("* RTF file for " + this.fname + ".xyz\n");
         writer.write("* generated on " + d.toString() + "\n");
         writer.write("* by user " + System.getProperty("user.name") + " on machine "
                 + System.getProperty("os.name") + " " + System.getProperty("os.arch") + " "

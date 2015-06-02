@@ -182,5 +182,11 @@ public final class PSF_read extends PSF {
         }
 
     } //end of parse routine
+    
+    @Override
+    public String getTextContent()
+    {
+        return "";
+    }
 
 }//end class

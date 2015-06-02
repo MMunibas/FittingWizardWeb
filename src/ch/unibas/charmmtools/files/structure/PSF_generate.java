@@ -14,7 +14,10 @@ import ch.unibas.charmmtools.internals.Atom;
 import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * This class derived from the abstract PSF class is used for generating a new psf file useful for CHARMM
@@ -28,8 +31,9 @@ public final class PSF_generate extends PSF {
     private String format00, format01, format01a, format01b;
     private String format02, format02a, format02b, format03;
     private String format04, format05, format06, format07, format08;
-
-    private Writer writer = null;
+    
+    protected Writer writer = null;
+    
 
     public PSF_generate(RTF topolInfo) throws IOException {
 
@@ -59,6 +63,7 @@ public final class PSF_generate extends PSF {
 
         //fix possibly missing mass of atoms
         this.fixMass(topolInfo);
+        this.fixResSegNames();
 
         //generate psf file
 //        writer = new BufferedWriter(new FileWriter(this.myname + ".psf"));
@@ -74,6 +79,19 @@ public final class PSF_generate extends PSF {
             if (at.getMass() < 1.0) {
                 at.setMass(topolInfo.findMass(at.getAtomName()));
             }
+        }
+    }
+    
+    private void fixResSegNames()
+    {
+        for (Atom at : atomList) {
+            
+            if(at.getResName().compareToIgnoreCase("UNK")==0)
+                at.setResName(myname.substring(0, 3).toUpperCase());
+            
+            if(at.getSegName().compareToIgnoreCase("UNK")==0)
+                at.setSegName(myname.substring(0, 3).toUpperCase());
+            
         }
     }
 
@@ -96,8 +114,10 @@ public final class PSF_generate extends PSF {
             format02 = "%10d %-8s %-8s %-8s %-8s %-6s %14.6G%14.6G%8d%14.6G%14.6G";
             format02a = "%10d %-8s %-8s %-8s %-8s %-6s %14.6G%14.6G%8d%14.6G%14.6G";
             format02b = "%10d %-8s %-8s %-8s %-8s %-6s %14.6G%14.6G%8d%14.6G%14.6G";
-            format03 = "%10d%10d%10d%10d%10d%10d%10d%10d";
-            format04 = "%10d%10d%10d%10d%10d%10d%10d%10d%10d";
+//            format03 = "%10d%10d%10d%10d%10d%10d%10d%10d";
+//            format04 = "%10d%10d%10d%10d%10d%10d%10d%10d%10d";
+            format03 = "%10d%10d";
+            format04 = "%10d%10d%10d";
             format05 = "%10d%10d%s";
             format06 = "%10d%10d   %1b%14.6G%14.6G%14.6G";
             format07 = "          %14.6G%14.6G%14.6G";
@@ -110,8 +130,10 @@ public final class PSF_generate extends PSF {
             format01a = "%8d %-4s %-4s %-4s %-4s %4d %14.6G%14.6G%8d%14.6G%14.6G";
             format02 = "%8d %-4s %-4s %-4s %-4s %-4s %14.6G%14.6G%8d";
             format02a = "%8d %-4s %-4s %-4s %-4s %-4s %14.6G%14.6G%8d%14.6G%14.6G";
-            format03 = "%8d%8d%8d%8d%8d%8d%8d%8d";
-            format04 = "%8d%8d%8d%8d%8d%8d%8d%8d%8d";
+//            format03 = "%8d%8d%8d%8d%8d%8d%8d%8d";
+//            format04 = "%8d%8d%8d%8d%8d%8d%8d%8d%8d";
+            format03 = "%8d%8d";
+            format04 = "%8d%8d%8d";
             format05 = "%8d%8d%s";
             format06 = "%8d%8d   %1b%14.6G%14.6G%14.6G";
             format07 = "        %14.6G%14.6G%14.6G";
@@ -121,7 +143,9 @@ public final class PSF_generate extends PSF {
 
     private void writeHeaderAndTitle() throws IOException {
 
-        Date d = new Date();
+        DateFormat df = new SimpleDateFormat();
+        df.setTimeZone(TimeZone.getDefault());
+        Date d = new Date(df.format(new Date()));
 
         //keywords at the top of file : PSF, EXT, CMAP, CHECK ...
         writer.write(header + "\n");
@@ -149,60 +173,95 @@ public final class PSF_generate extends PSF {
     }
 
     private void writeBondSection() throws IOException {
+        String line;
         writer.write(String.format(format00, this.nbond, " !NBOND: bonds\n"));
         for (int bnd = 0; bnd < nbond; bnd++) {
-            writer.write(String.format(
-                    format03,
-                    bondList.get(bnd).getA1().getCHARMMAtomID(), bondList.get(bnd).getA2().getCHARMMAtomID(),
-                    bondList.get(++bnd).getA1().getCHARMMAtomID(), bondList.get(bnd).getA2().getCHARMMAtomID(),
-                    bondList.get(++bnd).getA1().getCHARMMAtomID(), bondList.get(bnd).getA2().getCHARMMAtomID(),
-                    bondList.get(++bnd).getA1().getCHARMMAtomID(), bondList.get(bnd).getA2().getCHARMMAtomID()
-            ));
-            writer.write("\n");
+//            writer.write(String.format(
+//                    format03,
+//                    bondList.get(bnd).getA1().getCHARMMAtomID(), bondList.get(bnd).getA2().getCHARMMAtomID(),
+//                    bondList.get(++bnd).getA1().getCHARMMAtomID(), bondList.get(bnd).getA2().getCHARMMAtomID(),
+//                    bondList.get(++bnd).getA1().getCHARMMAtomID(), bondList.get(bnd).getA2().getCHARMMAtomID(),
+//                    bondList.get(++bnd).getA1().getCHARMMAtomID(), bondList.get(bnd).getA2().getCHARMMAtomID()
+//            ));
+            line = String.format(format03,bondList.get(bnd).getA1().getCHARMMAtomID(), bondList.get(bnd).getA2().getCHARMMAtomID());
+            int loc = bnd+1;
+            if(loc<nbond)
+                line += String.format(format03,bondList.get(++bnd).getA1().getCHARMMAtomID(), bondList.get(bnd).getA2().getCHARMMAtomID());
+            loc = bnd+1;
+            if(loc<nbond)
+                line += String.format(format03,bondList.get(++bnd).getA1().getCHARMMAtomID(), bondList.get(bnd).getA2().getCHARMMAtomID());
+            loc = bnd+1;
+            if(loc<nbond)
+                line += String.format(format03,bondList.get(++bnd).getA1().getCHARMMAtomID(), bondList.get(bnd).getA2().getCHARMMAtomID());
+            writer.write(line+"\n");
         }
         writer.write("\n");
     }
 
     private void writeAngleSection() throws IOException {
+        String line;
         writer.write(String.format(format00, this.ntheta, " !NTHETA: angles\n"));
         for (int ang = 0; ang < ntheta; ang++) {
-            writer.write(String.format(
-                    format04,
-                    angleList.get(ang).getA1().getCHARMMAtomID(), angleList.get(ang).getA2().getCHARMMAtomID(), angleList.get(ang).getA3().getCHARMMAtomID(),
-                    angleList.get(++ang).getA1().getCHARMMAtomID(), angleList.get(ang).getA2().getCHARMMAtomID(), angleList.get(ang).getA3().getCHARMMAtomID(),
-                    angleList.get(++ang).getA1().getCHARMMAtomID(), angleList.get(ang).getA2().getCHARMMAtomID(), angleList.get(ang).getA3().getCHARMMAtomID()
-            ));
-            writer.write("\n");
+//            writer.write(String.format(
+//                    format04,
+//                    angleList.get(ang).getA1().getCHARMMAtomID(), angleList.get(ang).getA2().getCHARMMAtomID(), angleList.get(ang).getA3().getCHARMMAtomID(),
+//                    angleList.get(++ang).getA1().getCHARMMAtomID(), angleList.get(ang).getA2().getCHARMMAtomID(), angleList.get(ang).getA3().getCHARMMAtomID(),
+//                    angleList.get(++ang).getA1().getCHARMMAtomID(), angleList.get(ang).getA2().getCHARMMAtomID(), angleList.get(ang).getA3().getCHARMMAtomID()
+//            ));
+            line = String.format(format04,angleList.get(ang).getA1().getCHARMMAtomID(), angleList.get(ang).getA2().getCHARMMAtomID(), angleList.get(ang).getA3().getCHARMMAtomID());
+            int loc = ang+1;
+            if(loc<ntheta)
+                line += String.format(format04,angleList.get(++ang).getA1().getCHARMMAtomID(), angleList.get(ang).getA2().getCHARMMAtomID(), angleList.get(ang).getA3().getCHARMMAtomID());
+            loc = ang+1;
+            if(loc<ntheta)
+                line += String.format(format04,angleList.get(++ang).getA1().getCHARMMAtomID(), angleList.get(ang).getA2().getCHARMMAtomID(), angleList.get(ang).getA3().getCHARMMAtomID());
+            writer.write(line+"\n");
         }
         writer.write("\n");
     }
 
     private void writeDiheSection() throws IOException {
+        String line;
         writer.write(String.format(format00, this.nphi, " !NPHI: dihedrals\n"));
         for (int dihe = 0; dihe < nphi; dihe++) {
-            writer.write(String.format(
-                    format03,
-                    diheList.get(dihe).getA1().getCHARMMAtomID(), diheList.get(dihe).getA2().getCHARMMAtomID(),
-                    diheList.get(dihe).getA3().getCHARMMAtomID(), diheList.get(dihe).getA4().getCHARMMAtomID(),
-                    diheList.get(++dihe).getA1().getCHARMMAtomID(), diheList.get(dihe).getA2().getCHARMMAtomID(),
-                    diheList.get(dihe).getA3().getCHARMMAtomID(), diheList.get(dihe).getA4().getCHARMMAtomID()
-            ));
-            writer.write("\n");
+//            writer.write(String.format(
+//                    format03,
+//                    diheList.get(dihe).getA1().getCHARMMAtomID(), diheList.get(dihe).getA2().getCHARMMAtomID(),
+//                    diheList.get(dihe).getA3().getCHARMMAtomID(), diheList.get(dihe).getA4().getCHARMMAtomID(),
+//                    diheList.get(++dihe).getA1().getCHARMMAtomID(), diheList.get(dihe).getA2().getCHARMMAtomID(),
+//                    diheList.get(dihe).getA3().getCHARMMAtomID(), diheList.get(dihe).getA4().getCHARMMAtomID()
+//            ));
+            line =  String.format(format03,diheList.get(dihe).getA1().getCHARMMAtomID(), diheList.get(dihe).getA2().getCHARMMAtomID());
+            line += String.format(format03,diheList.get(dihe).getA3().getCHARMMAtomID(), diheList.get(dihe).getA4().getCHARMMAtomID());
+            int loc = dihe+1;
+            if(loc<nphi){
+                line += String.format(format03,diheList.get(++dihe).getA1().getCHARMMAtomID(), diheList.get(dihe).getA2().getCHARMMAtomID());
+                line += String.format(format03,diheList.get(dihe).getA3().getCHARMMAtomID(), diheList.get(dihe).getA4().getCHARMMAtomID());
+            }
+            writer.write(line+"\n");
         }
         writer.write("\n");
     }
 
     private void writeImprSection() throws IOException {
+        String line;
         writer.write(String.format(format00, this.nimphi, " !NIMPHI: impropers\n"));
         for (int impr = 0; impr < nimphi; impr++) {
-            writer.write(String.format(
-                    format03,
-                    diheList.get(impr).getA1().getCHARMMAtomID(), diheList.get(impr).getA2().getCHARMMAtomID(),
-                    diheList.get(impr).getA3().getCHARMMAtomID(), diheList.get(impr).getA4().getCHARMMAtomID(),
-                    diheList.get(++impr).getA1().getCHARMMAtomID(), diheList.get(impr).getA2().getCHARMMAtomID(),
-                    diheList.get(impr).getA3().getCHARMMAtomID(), diheList.get(impr).getA4().getCHARMMAtomID()
-            ));
-            writer.write("\n");
+//            writer.write(String.format(
+//                    format03,
+//                    diheList.get(impr).getA1().getCHARMMAtomID(), diheList.get(impr).getA2().getCHARMMAtomID(),
+//                    diheList.get(impr).getA3().getCHARMMAtomID(), diheList.get(impr).getA4().getCHARMMAtomID(),
+//                    diheList.get(++impr).getA1().getCHARMMAtomID(), diheList.get(impr).getA2().getCHARMMAtomID(),
+//                    diheList.get(impr).getA3().getCHARMMAtomID(), diheList.get(impr).getA4().getCHARMMAtomID()
+//            ));
+            line =  String.format(format03,imprList.get(impr).getA1().getCHARMMAtomID(), imprList.get(impr).getA2().getCHARMMAtomID());
+            line += String.format(format03,imprList.get(impr).getA3().getCHARMMAtomID(), imprList.get(impr).getA4().getCHARMMAtomID());
+            int loc = impr+1;
+            if(loc<nimphi){
+                line += String.format(format03,imprList.get(++impr).getA1().getCHARMMAtomID(), imprList.get(impr).getA2().getCHARMMAtomID());
+                line += String.format(format03,imprList.get(impr).getA3().getCHARMMAtomID(), imprList.get(impr).getA4().getCHARMMAtomID());
+            }
+            writer.write(line+"\n");
         }
         writer.write("\n");
     }

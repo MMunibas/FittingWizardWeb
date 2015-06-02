@@ -9,21 +9,13 @@
 
 package ch.unibas.charmmtools.files.structure;
 
-import ch.unibas.charmmtools.files.topology.RTF;
-import ch.unibas.charmmtools.files.topology.RTF_generate;
 import ch.unibas.charmmtools.internals.Atom;
 import ch.unibas.charmmtools.internals.Angle;
 import ch.unibas.charmmtools.internals.Bond;
 import ch.unibas.charmmtools.internals.Dihedral;
 import ch.unibas.charmmtools.internals.Improper;
-import ch.unibas.fittingwizard.application.xyz.XyzFile;
-import ch.unibas.fittingwizard.application.xyz.XyzFileParser;
-import java.io.File;
-import java.io.IOException;
+import java.io.Writer;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.log4j.BasicConfigurator;
 
 /**
  * This abstract class contains attributes and setters/getters useful for reading or generating a CHARMM PSF file.
@@ -54,6 +46,118 @@ public abstract class PSF {
     protected List<Improper> imprList = null;
     
     public abstract String getTextContent();
+
+    /**
+     * @return the myname
+     */
+    public String getMyname() {
+        return myname;
+    }
+
+    /**
+     * @return the isExtendedFormat
+     */
+    public boolean isIsExtendedFormat() {
+        return isExtendedFormat;
+    }
+
+    /**
+     * @return the isUsingCMAP
+     */
+    public boolean isIsUsingCMAP() {
+        return isUsingCMAP;
+    }
+
+    /**
+     * @return the isUsingCHEQ
+     */
+    public boolean isIsUsingCHEQ() {
+        return isUsingCHEQ;
+    }
+
+    /**
+     * @return the isUsingDRUDE
+     */
+    public boolean isIsUsingDRUDE() {
+        return isUsingDRUDE;
+    }
+
+    /**
+     * @return the ntitle
+     */
+    public int getNtitle() {
+        return ntitle;
+    }
+
+    /**
+     * @return the natom
+     */
+    public int getNatom() {
+        return natom;
+    }
+
+    /**
+     * @return the nbond
+     */
+    public int getNbond() {
+        return nbond;
+    }
+
+    /**
+     * @return the ntheta
+     */
+    public int getNtheta() {
+        return ntheta;
+    }
+
+    /**
+     * @return the nphi
+     */
+    public int getNphi() {
+        return nphi;
+    }
+
+    /**
+     * @return the nimphi
+     */
+    public int getNimphi() {
+        return nimphi;
+    }
+
+    /**
+     * @return the atomList
+     */
+    public List<Atom> getAtomList() {
+        return atomList;
+    }
+
+    /**
+     * @return the bondList
+     */
+    public List<Bond> getBondList() {
+        return bondList;
+    }
+
+    /**
+     * @return the angleList
+     */
+    public List<Angle> getAngleList() {
+        return angleList;
+    }
+
+    /**
+     * @return the diheList
+     */
+    public List<Dihedral> getDiheList() {
+        return diheList;
+    }
+
+    /**
+     * @return the imprList
+     */
+    public List<Improper> getImprList() {
+        return imprList;
+    }
     
     /**
      * @param args the command line arguments
