@@ -6,7 +6,6 @@
  * see LICENSE.txt
  *
  */
-
 package ch.unibas.charmmtools.files.topology;
 
 import ch.unibas.charmmtools.internals.Atom;
@@ -15,7 +14,11 @@ import ch.unibas.charmmtools.internals.Improper;
 import ch.unibas.charmmtools.internals.InternalCoordinates;
 import ch.unibas.fittingwizard.application.xyz.XyzAtom;
 import ch.unibas.fittingwizard.application.xyz.XyzFile;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -147,10 +150,10 @@ public final class RTF_generate extends RTF {
     }// end of gen_hybridation
 
     /**
-     * depending on hybridisation of a given atom find the type used for forcefield, i.e. CT2, CT3, CA, ...
-     * it is called 3 times consecutively
+     * depending on hybridisation of a given atom find the type used for forcefield, i.e. CT2, CT3, CA, ... it is called
+     * 3 times consecutively
      */
-    private void gen_type(){
+    private void gen_type() {
 
         int connect = 0;
 
@@ -441,7 +444,7 @@ public final class RTF_generate extends RTF {
                 }
             }//loop on H atoms
         }//loop on all atoms
-    
+
     }//end gen_type()
 
     /**
@@ -534,13 +537,12 @@ public final class RTF_generate extends RTF {
     }//end find_IC()
 
     private void write_topology_file() throws IOException {
-        
+
         DateFormat df = new SimpleDateFormat();
         df.setTimeZone(TimeZone.getDefault());
         Date d = new Date(df.format(new Date()));
-        
-        //BufferedWriter writer = new BufferedWriter(new FileWriter(this.fname + ".rtf"));
 
+        //BufferedWriter writer = new BufferedWriter(new FileWriter(this.fname + ".rtf"));
 //        writer.write("* ...\n");
         writer.write("* RTF file for " + this.fname + ".xyz\n");
         writer.write("* generated on " + d.toString() + "\n");
@@ -587,8 +589,25 @@ public final class RTF_generate extends RTF {
 
         writer.write("\nEND\n");
 
-        writer.close();
+//        writer.close();
 
     }//end write_topology_file()
+
+    @Override
+    public String getTextContent() {
+        return writer.toString();
+    }
+
+    @Override
+    public void writeFile() throws IOException{
+        
+        Writer writerf = new BufferedWriter(
+                new FileWriter(
+                        new File("test",fname+".top")
+                )
+        );
+        writerf.write(writer.toString());
+        writerf.close();
+    }
 
 }//end of class

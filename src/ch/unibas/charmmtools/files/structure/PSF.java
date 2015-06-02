@@ -9,13 +9,16 @@
 
 package ch.unibas.charmmtools.files.structure;
 
+import ch.unibas.charmmtools.files.coordinates.PDB;
 import ch.unibas.charmmtools.internals.Atom;
 import ch.unibas.charmmtools.internals.Angle;
 import ch.unibas.charmmtools.internals.Bond;
 import ch.unibas.charmmtools.internals.Dihedral;
 import ch.unibas.charmmtools.internals.Improper;
+import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
+import org.apache.log4j.Logger;
 
 /**
  * This abstract class contains attributes and setters/getters useful for reading or generating a CHARMM PSF file.
@@ -24,6 +27,8 @@ import java.util.List;
  */
 public abstract class PSF {
 
+    protected static final Logger logger = Logger.getLogger(PSF.class);
+    
     protected String myname;
 
     protected boolean isExtendedFormat = false;
@@ -46,7 +51,8 @@ public abstract class PSF {
     protected List<Improper> imprList = null;
     
     public abstract String getTextContent();
-
+    public abstract void writeFile() throws IOException;
+    
     /**
      * @return the myname
      */

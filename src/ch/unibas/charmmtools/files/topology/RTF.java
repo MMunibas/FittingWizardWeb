@@ -24,8 +24,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -33,6 +32,8 @@ import java.util.logging.Logger;
  */
 public abstract class RTF {
 
+    protected static final Logger logger = Logger.getLogger(RTF.class);
+    
     protected String fname = null;
     protected Writer writer = null;
     
@@ -126,9 +127,9 @@ public abstract class RTF {
             }
    
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(RTF.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex);
         } catch (IOException ex) {
-            Logger.getLogger(RTF.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex);
         }
 
     }//end readAtomicInfo
@@ -207,9 +208,7 @@ public abstract class RTF {
         return atomicWeight.get(atname);
     }
     
-    public String getTextContent()
-    {
-        return writer.toString();
-    }
+    public abstract String getTextContent();
+    public abstract void writeFile() throws IOException;
 
 }//end of RTF class

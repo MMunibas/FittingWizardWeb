@@ -104,11 +104,14 @@ public class GenerateTopology extends WizardPage {
         try {
             //generates a topology file
             rtff = new RTF_generate(myXYZ, csvName);
+            rtff.writeFile();
             //then a PSF file re-using data from PSF 
             psff = new PSF_generate(rtff);
+            psff.writeFile();
             //then pdb file
             pdbf = new PDB_generate(psff);
-
+            pdbf.writeFile();
+            
             tab_list.add(new MyTab("RTF file", rtff.getTextContent()));
             tab_list.add(new MyTab("PSF file", psff.getTextContent()));
             tab_list.add(new MyTab("PDB file", pdbf.getTextContent()));

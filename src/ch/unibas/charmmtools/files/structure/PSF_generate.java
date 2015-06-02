@@ -11,7 +11,10 @@ package ch.unibas.charmmtools.files.structure;
 
 import ch.unibas.charmmtools.files.topology.RTF;
 import ch.unibas.charmmtools.internals.Atom;
+import java.io.BufferedWriter;
 import java.io.CharArrayWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.text.DateFormat;
@@ -272,5 +275,15 @@ public final class PSF_generate extends PSF {
         return writer.toString();
     }
 
+    @Override
+    public void writeFile() throws IOException{
+        Writer writerf = new BufferedWriter(
+                new FileWriter(
+                        new File("test",myname+".psf")
+                )
+        );
+        writerf.write(writer.toString());
+        writerf.close();
+    }
 
 }//end class

@@ -10,7 +10,10 @@ package ch.unibas.charmmtools.files.coordinates;
 
 import ch.unibas.charmmtools.files.structure.PSF;
 import ch.unibas.charmmtools.internals.Atom;
+import java.io.BufferedWriter;
 import java.io.CharArrayWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.text.DateFormat;
@@ -34,7 +37,7 @@ public class PDB_generate extends PDB {
 
         //this.xyzf = _xyzf;
         this.psff = _psff;
-
+        this.fname = this.psff.getMyname();
         try {
 
             writer = new CharArrayWriter();
@@ -56,8 +59,8 @@ public class PDB_generate extends PDB {
         df.setTimeZone(TimeZone.getDefault());
         Date d = new Date(df.format(new Date()));
         
-        String myname = psff.getMyname();
-        writer.write("REMARK PDB file for " + myname + ".xyz\n");
+//        String myname = psff.getMyname();
+        writer.write("REMARK PDB file for " + fname + ".xyz\n");
         writer.write("REMARK generated on " + d.toString() + "\n");
         writer.write("REMARK by user " + System.getProperty("user.name") + " on machine "
                 + System.getProperty("os.name") + " " + System.getProperty("os.arch") + " "
@@ -94,8 +97,20 @@ public class PDB_generate extends PDB {
         writer.write("END\n");
     }
 
+    @Override
     public String getTextContent() {
         return writer.toString();
+    }
+    
+    @Override
+    public void writeFile() throws IOException{
+        Writer writerf = new BufferedWriter(
+                new FileWriter(
+                        new File("test",fname+".pdb")
+                )
+        );
+        writerf.write(writer.toString());
+        writerf.close();
     }
 
 }

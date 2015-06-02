@@ -8,8 +8,7 @@
  */
 package ch.unibas.charmmtools.files.coordinates;
 
-import ch.unibas.charmmtools.files.structure.PSF;
-import ch.unibas.fittingwizard.application.xyz.XyzFile;
+import java.io.IOException;
 import org.apache.log4j.Logger;
 
 /**
@@ -20,6 +19,7 @@ public abstract class PDB {
     
     protected static final Logger logger = Logger.getLogger(PDB.class);
     
+    protected String fname = null;
     protected boolean charmmPDBtype = true;
     
 //        if (this.isExtendedFormat) {
@@ -53,4 +53,5 @@ public abstract class PDB {
     protected final static String charmmFormat = "%-6s%5d %-4s %-4s %-5s   %8.3f%8.3f%8.3f%6.2f%6.2f      %-4s";
     
     public abstract String getTextContent();
+    public abstract void writeFile() throws IOException;
 }

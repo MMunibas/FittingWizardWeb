@@ -14,9 +14,13 @@ import ch.unibas.charmmtools.internals.Atom;
 import ch.unibas.charmmtools.internals.Bond;
 import ch.unibas.charmmtools.internals.Dihedral;
 import ch.unibas.charmmtools.internals.Improper;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -188,5 +192,8 @@ public final class PSF_read extends PSF {
     {
         return "";
     }
+    
+    @Override
+    public void writeFile() throws IOException{}
 
 }//end class
