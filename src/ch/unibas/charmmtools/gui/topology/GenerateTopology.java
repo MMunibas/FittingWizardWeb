@@ -10,6 +10,7 @@ package ch.unibas.charmmtools.gui.topology;
 
 import ch.unibas.charmmtools.files.coordinates.PDB;
 import ch.unibas.charmmtools.files.coordinates.PDB_generate;
+import ch.unibas.charmmtools.files.coordinates.coordinates_writer;
 import ch.unibas.charmmtools.files.structure.PSF;
 import ch.unibas.charmmtools.files.structure.PSF_generate;
 import ch.unibas.charmmtools.files.topology.RTF;
@@ -46,6 +47,9 @@ public class GenerateTopology extends WizardPage {
     @FXML // fx:id="buttonGenerate"
     protected Button buttonGenerate; // Value injected by FXMLLoader
 
+    @FXML // fx:id="buttonGenerate"
+    protected Button buttonSave; // Value injected by FXMLLoader
+
     @FXML // fx:id="xyzPath"
     protected TextField xyzPath; // Value injected by FXMLLoader
 
@@ -54,9 +58,11 @@ public class GenerateTopology extends WizardPage {
 
     //private variables
     private XyzFile myXYZ;
-    private boolean xyzSelected;
+    private boolean xyzSelected = false;
+    private boolean canSaveFiles = false;
 
     private List<MyTab> tab_list = new ArrayList<>();
+    private List<coordinates_writer> filesList = new ArrayList<>();
 
     public GenerateTopology() {
         super(title);
@@ -97,29 +103,52 @@ public class GenerateTopology extends WizardPage {
     @FXML
     protected void GenerateFiles(ActionEvent event) {
 
-        RTF rtff = null;
-        PSF psff = null;
-        PDB pdbf = null;
+        RTF_generate rtff = null;
+        PSF_generate psff = null;
+        PDB_generate pdbf = null;
 
         try {
             //generates a topology file
             rtff = new RTF_generate(myXYZ, csvName);
-            rtff.writeFile();
+
             //then a PSF file re-using data from PSF 
             psff = new PSF_generate(rtff);
-            psff.writeFile();
+
             //then pdb file
             pdbf = new PDB_generate(psff);
-            pdbf.writeFile();
-            
+
             tab_list.add(new MyTab("RTF file", rtff.getTextContent()));
+            filesList.add(rtff);
+
             tab_list.add(new MyTab("PSF file", psff.getTextContent()));
+            filesList.add(psff);
+
             tab_list.add(new MyTab("PDB file", pdbf.getTextContent()));
-            
+            filesList.add(pdbf);
+
             tabPane.getTabs().addAll(tab_list);
 
         } catch (IOException ex) {
             logger.error("Exception while generating rtf and psf files : " + ex);
+        }
+
+        canSaveFiles = true;
+        this.buttonSave.setDisable(false);
+
+    }
+
+    @FXML
+    protected void saveFiles(ActionEvent event) {
+
+        for(int i=0;i<tab_list.size();i++)
+        {
+            try {
+                String s = tab_list.get(i).getContentText();
+                filesList.get(i).setModifiedTextContent(s);
+                filesList.get(i).writeFile();
+            } catch (IOException ex) {
+                logger.error("Error while saving to file : " + ex);
+            }
         }
 
     }

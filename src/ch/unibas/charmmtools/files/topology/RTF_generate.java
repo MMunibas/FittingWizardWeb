@@ -8,6 +8,7 @@
  */
 package ch.unibas.charmmtools.files.topology;
 
+import ch.unibas.charmmtools.files.coordinates.coordinates_writer;
 import ch.unibas.charmmtools.internals.Atom;
 import ch.unibas.charmmtools.internals.Bond;
 import ch.unibas.charmmtools.internals.Improper;
@@ -15,6 +16,7 @@ import ch.unibas.charmmtools.internals.InternalCoordinates;
 import ch.unibas.fittingwizard.application.xyz.XyzAtom;
 import ch.unibas.fittingwizard.application.xyz.XyzFile;
 import java.io.BufferedWriter;
+import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -30,7 +32,7 @@ import java.util.TimeZone;
  *
  * @author hedin
  */
-public final class RTF_generate extends RTF {
+public final class RTF_generate extends RTF implements coordinates_writer{
 
     public RTF_generate(XyzFile xyz) throws IOException {
 
@@ -608,6 +610,14 @@ public final class RTF_generate extends RTF {
         );
         writerf.write(writer.toString());
         writerf.close();
+    }
+
+    @Override
+    public void setModifiedTextContent(String content) throws IOException{
+        writer.close();
+        writer = null;
+        writer = new CharArrayWriter();
+        writer.write(content);
     }
 
 }//end of class

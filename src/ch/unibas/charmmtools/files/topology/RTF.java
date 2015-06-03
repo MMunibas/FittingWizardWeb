@@ -207,8 +207,5 @@ public abstract class RTF {
     public double findMass(String atname) {
         return atomicWeight.get(atname);
     }
-    
-    public abstract String getTextContent();
-    public abstract void writeFile() throws IOException;
 
 }//end of RTF class

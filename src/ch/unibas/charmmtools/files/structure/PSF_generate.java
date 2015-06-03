@@ -9,6 +9,7 @@
 
 package ch.unibas.charmmtools.files.structure;
 
+import ch.unibas.charmmtools.files.coordinates.coordinates_writer;
 import ch.unibas.charmmtools.files.topology.RTF;
 import ch.unibas.charmmtools.internals.Atom;
 import java.io.BufferedWriter;
@@ -27,7 +28,7 @@ import java.util.TimeZone;
  *
  * @author hedin
  */
-public final class PSF_generate extends PSF {
+public final class PSF_generate extends PSF implements coordinates_writer{
 
     private String header = "PSF";
 
@@ -284,6 +285,14 @@ public final class PSF_generate extends PSF {
         );
         writerf.write(writer.toString());
         writerf.close();
+    }
+    
+    @Override
+    public void setModifiedTextContent(String content) throws IOException{
+        writer.close();
+        writer = null;
+        writer = new CharArrayWriter();
+        writer.write(content);
     }
 
 }//end class

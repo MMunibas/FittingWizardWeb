@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -27,7 +26,7 @@ import java.util.TimeZone;
  *
  * @author hedin
  */
-public class PDB_generate extends PDB {
+public class PDB_generate extends PDB implements coordinates_writer{
 
     protected Writer writer = null;
     //private XyzFile xyzf;
@@ -103,7 +102,7 @@ public class PDB_generate extends PDB {
     }
     
     @Override
-    public void writeFile() throws IOException{
+    public void writeFile() throws IOException {
         Writer writerf = new BufferedWriter(
                 new FileWriter(
                         new File("test",fname+".pdb")
@@ -111,6 +110,14 @@ public class PDB_generate extends PDB {
         );
         writerf.write(writer.toString());
         writerf.close();
+    }
+    
+    @Override
+    public void setModifiedTextContent(String content) throws IOException{
+        writer.close();
+        writer = null;
+        writer = new CharArrayWriter();
+        writer.write(content);
     }
 
 }

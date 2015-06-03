@@ -14,28 +14,24 @@ import ch.unibas.charmmtools.internals.Atom;
 import ch.unibas.charmmtools.internals.Bond;
 import ch.unibas.charmmtools.internals.Dihedral;
 import ch.unibas.charmmtools.internals.Improper;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This class is derived from the abstract PSF class, it contains a parse method reading a PSF file and storing all the stuff in inherited attributes .
+ * This class is derived from the abstract PSF class, it contains a parse method reading a PSF file and storing all the
+ * stuff in inherited attributes .
  *
  * @author hedin
  */
 public final class PSF_read extends PSF {
 
-    
     private Scanner s = null;
     private final String delims = "\\s+";
-    
+
     public PSF_read(String filename) {
         myname = filename;
 
@@ -106,7 +102,6 @@ public final class PSF_read extends PSF {
 
 //        allocate();
 //        atomList = new Atom[natom];
-
         // read params of atom section
         for (int i = 0; i < natom; i++) {
             inp = s.nextLine();
@@ -149,7 +144,7 @@ public final class PSF_read extends PSF {
 //        System.out.println("nangles from PSF : " + ntheta);
         // Fill bond array
 //        angleList =  new Angle[ntheta]; 
-       for (int i = 0; i < ntheta; i++) {
+        for (int i = 0; i < ntheta; i++) {
             angleList.add(
                     new Angle(atomList.get(s.nextInt()), atomList.get(s.nextInt()), atomList.get(s.nextInt()))
             );
@@ -180,20 +175,11 @@ public final class PSF_read extends PSF {
         // Fill bond array
 //        imprList = new Improper[nimphi];
         for (int i = 0; i < nphi; i++) {
-            imprList.add( 
+            imprList.add(
                     new Improper(atomList.get(s.nextInt()), atomList.get(s.nextInt()), atomList.get(s.nextInt()), atomList.get(s.nextInt()))
             );
         }
 
     } //end of parse routine
-    
-    @Override
-    public String getTextContent()
-    {
-        return "";
-    }
-    
-    @Override
-    public void writeFile() throws IOException{}
 
 }//end class
