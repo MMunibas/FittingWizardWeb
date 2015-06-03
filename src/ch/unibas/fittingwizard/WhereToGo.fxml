@@ -41,7 +41,7 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </GridPane.margin>
             </RadioButton>
-            <RadioButton fx:id="goTopology" mnemonicParsing="false" text="Generate custom topology file" toggleGroup="$Choices" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="CENTER">
+            <RadioButton fx:id="goTopology" mnemonicParsing="false" text="Generate custom CHARMM files from a XYZ" toggleGroup="$Choices" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </GridPane.margin>

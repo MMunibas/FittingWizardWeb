@@ -558,7 +558,7 @@ public final class RTF_generate extends RTF implements coordinates_writer{
         writer.write("AUTOGENERATE ANGLES DIHE\n");
         writer.write("DEFA FIRS NONE LAST NONE\n\n");
 
-        writer.write("RESI LIG   0.000\n");
+        writer.write("RESI "+fname.substring(0,3).toUpperCase()+"   0.000\n");
         writer.write("GROUP\n");
 
         for (Atom at : atmTypeList) {

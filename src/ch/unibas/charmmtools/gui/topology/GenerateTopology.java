@@ -8,12 +8,10 @@
  */
 package ch.unibas.charmmtools.gui.topology;
 
-import ch.unibas.charmmtools.files.coordinates.PDB;
+import ch.unibas.charmmtools.files.coordinates.COR_generate;
 import ch.unibas.charmmtools.files.coordinates.PDB_generate;
 import ch.unibas.charmmtools.files.coordinates.coordinates_writer;
-import ch.unibas.charmmtools.files.structure.PSF;
 import ch.unibas.charmmtools.files.structure.PSF_generate;
-import ch.unibas.charmmtools.files.topology.RTF;
 import ch.unibas.charmmtools.files.topology.RTF_generate;
 import ch.unibas.charmmtools.gui.MyTab;
 import ch.unibas.fittingwizard.application.xyz.XyzFile;
@@ -37,7 +35,7 @@ import javafx.stage.Window;
  */
 public class GenerateTopology extends WizardPage {
 
-    private static final String title = "Generating custom PSF and TOP files using a XYZ file";
+    private static final String title = "Generating custom PSF TOP PDB COR files using a XYZ file";
     private static final String csvName = "test/atomic_db.csv";
 
     // from FXML file
@@ -106,7 +104,8 @@ public class GenerateTopology extends WizardPage {
         RTF_generate rtff = null;
         PSF_generate psff = null;
         PDB_generate pdbf = null;
-
+        COR_generate corf = null;
+        
         try {
             //generates a topology file
             rtff = new RTF_generate(myXYZ, csvName);
@@ -116,6 +115,9 @@ public class GenerateTopology extends WizardPage {
 
             //then pdb file
             pdbf = new PDB_generate(psff);
+            
+            //and cor file
+            corf = new COR_generate(psff);
 
             tab_list.add(new MyTab("RTF file", rtff.getTextContent()));
             filesList.add(rtff);
@@ -125,6 +127,9 @@ public class GenerateTopology extends WizardPage {
 
             tab_list.add(new MyTab("PDB file", pdbf.getTextContent()));
             filesList.add(pdbf);
+            
+            tab_list.add(new MyTab("COR file", corf.getTextContent()));
+            filesList.add(corf);
 
             tabPane.getTabs().addAll(tab_list);
 

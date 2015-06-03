@@ -24,7 +24,7 @@ public class Atom {
      */
     private int atomID = 0;
     private String segName = "UNK";
-    private int resID = 0;
+    private int resID = 1;
     private String resName = "UNK";
     private String atomName = "UNK";
     private int typeID = 0;

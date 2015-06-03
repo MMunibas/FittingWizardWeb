@@ -152,7 +152,7 @@ public final class PSF_generate extends PSF implements coordinates_writer{
         Date d = new Date(df.format(new Date()));
 
         //keywords at the top of file : PSF, EXT, CMAP, CHECK ...
-        writer.write(header + "\n");
+        writer.write(header + "\n\n");
 
         //write a title of a few lines with file name, date, ...
         writer.write(String.format(format00, 3, " !NTITLE\n"));

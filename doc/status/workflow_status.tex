@@ -11,6 +11,8 @@
 
 \usepackage{graphicx}
 
+\usepackage{ulem} % sor \sout command
+
 \usepackage[top=3cm, bottom=3cm, left=2.5cm, right=2.5cm]{geometry}
 
 \setlength\parindent{0pt}
@@ -305,11 +307,22 @@ a checking procedure).
 \subsection{From the GUI}
 
 \begin{itemize}
-\item PDB : The Gaussian coordinates are saved to a XYZ file, but for the CHARMM simulation we need 
+\item \sout{ 
+PDB : The Gaussian coordinates are saved to a XYZ file, but for the CHARMM simulation 
+we need 
 a PDB or COR file : unfortunately PDB files generated from VMD or OpenBabel are not readable by 
 CHARMM directly. A code for converting the XYZ file to PDB directly from the code is currently 
 being written, it will reused code from the section generating RTF and PSF files (from Figures 
-\ref{fig15} and \ref{fig16}).
+\ref{fig15} and \ref{fig16}). 
+}
+
+\item \textbf{This is now solved} : code was included inside the fittingWizard for generating 
+internally PDB 
+/ COR / PSF CHARMM files directly from the software. The CHARMM atom typing for the atoms is also 
+done using an internal code, although it may fail assigning a type for some of them, but the user 
+has the possibility to manually edit those types.
+
+
 \end{itemize}
 
 \subsection{From Tristan's python scripts}

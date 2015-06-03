@@ -9,14 +9,18 @@
 package ch.unibas.charmmtools.files.coordinates;
 
 import ch.unibas.charmmtools.files.structure.PSF;
+import ch.unibas.charmmtools.internals.Atom;
 import java.io.BufferedWriter;
 import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 /**
  *
@@ -34,9 +38,33 @@ public class COR_generate extends COR implements coordinates_writer{
         psff = _psff;
         OutFileName = psff.getMyname();
         writer = new CharArrayWriter();
+        this.copyData();
         this.generate();
     }
 
+    private void copyData(){
+
+        this.natom = psff.getNatom();
+        this.allocate();
+        
+        int i=0;
+        for(Atom a : psff.getAtomList())
+        {
+            this.atomID[i] = a.getCHARMMAtomID();
+            this.resID[i]  = a.getResID();
+            this.resName[i] = a.getResName();
+            this.atomName[i] = a.getAtomName();
+            this.x[i] = (float) a.getX();
+            this.y[i] = (float) a.getY();
+            this.z[i] = (float) a.getZ();
+            this.segName[i] = a.getSegName();
+            this.segID[i] = a.getResID(); // TODO : for the moment segID=ResID as we will use only small molecules
+            this.weight[i] = 0.f;
+            i++;
+        }
+        //psff.
+    }
+    
     private void generate() {
 
         String line;
@@ -58,10 +86,21 @@ public class COR_generate extends COR implements coordinates_writer{
         try {
 
             // First put some comment line
-            writer.write("* Generated with CHARMM_tools\n");
-            writer.write("* User : " + System.getProperty("user.name") + "\n");
-            writer.write("* Date : " + new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z").format(Calendar.getInstance().getTime()) + "\n");
+            DateFormat df = new SimpleDateFormat();
+            df.setTimeZone(TimeZone.getDefault());
+            Date d = new Date(df.format(new Date()));
+
+            writer.write("* COR file for " + OutFileName + ".xyz\n");
+            writer.write("* generated on " + d.toString() + "\n");
+            writer.write("* by user " + System.getProperty("user.name") + " on machine "
+                    + System.getProperty("os.name") + " " + System.getProperty("os.arch") + " "
+                    + System.getProperty("os.version") + "\n");
             writer.write("*\n");
+            
+//            writer.write("* Generated with CHARMM_tools\n");
+//            writer.write("* User : " + System.getProperty("user.name") + "\n");
+//            writer.write("* Date : " + new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z").format(Calendar.getInstance().getTime()) + "\n");
+//            writer.write("*\n");
 
             // then the number of atoms and possibly the extended keyword
             if (this.isExtendedFormat) {

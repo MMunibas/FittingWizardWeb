@@ -12,7 +12,7 @@ package ch.unibas.charmmtools.files.coordinates;
 import org.apache.log4j.Logger;
 
 /**
- * This class reads a COR file but can also be used for writing a COR with a similar structure but updated coordinates
+ * This class defines a Charmm coordinates COR file
  *
  * @author hedin
  */
