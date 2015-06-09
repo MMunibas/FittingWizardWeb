@@ -201,12 +201,12 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base{
 //    }
     @FXML
     protected void setDefault(ActionEvent e) {
-        textfield_PAR.setText(new File("test", "phenol_cgenff.par").getAbsolutePath());
-        textfield_RTF.setText(new File("test", "phenol_cgenff_mtp_0.01.top").getAbsolutePath());
-        textfield_COR_gas.setText(new File("test", "phenol_gas.pdb").getAbsolutePath());
-        textfield_COR_liquid.setText(new File("test", "phenol_liquid.pdb").getAbsolutePath());
+        textfield_PAR.setText(new File("test", "nma.par").getAbsolutePath());
+        textfield_RTF.setText(new File("test", "nma.rtf").getAbsolutePath());
+        textfield_COR_gas.setText(new File("test", "solute.pdb").getAbsolutePath());
+        textfield_COR_liquid.setText(new File("test", "pureliquid.pdb").getAbsolutePath());
         textfield_COR_solv.setText(new File("test", "solvent.pdb").getAbsolutePath());
-        textfield_LPUN.setText(new File("test", "phenol_cgenff_mtp_0.01.lpun").getAbsolutePath());
+        textfield_LPUN.setText(new File("test", "fit_0_nma.lpun").getAbsolutePath());
 
         PAR_selected = RTF_selected = COR_selected_gas = COR_selected_liquid = COR_selected_solv = LPUN_selected = true;
         this.button_generate.setDisable(false);
