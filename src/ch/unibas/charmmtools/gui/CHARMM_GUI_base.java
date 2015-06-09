@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  *
  * @author hedin
  */
-public abstract class CHARMM_GUI_base extends WizardPage  implements Serializable{
+public abstract class CHARMM_GUI_base extends WizardPage implements Serializable{
     
     protected RunCHARMMWorkflow charmmWorkflow;
     

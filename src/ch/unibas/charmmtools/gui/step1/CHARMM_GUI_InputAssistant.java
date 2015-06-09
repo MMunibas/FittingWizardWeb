@@ -17,12 +17,10 @@ import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_GasPhase;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_PureLiquid;
 import ch.unibas.charmmtools.gui.MyTab;
-import ch.unibas.charmmtools.gui.database.DB_SelectForCHARMM;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Instant;
@@ -630,7 +628,7 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base{
 //        stage.setScene(new Scene(root, this.getWidth(), this.getHeight()));
 //        stage.show();
         
-        this.serialize(this.getClass().getName(), this);
+        //this.serialize(this.getClass().getName(), this);
         
 //        List<File> flist = new ArrayList<>();
 //        navigateTo(DB_SelectForCHARMM.class,flist);

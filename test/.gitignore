@@ -8,4 +8,14 @@
 /scalar_test/
 /scaled_par/
 /solv_*
-
+/*.cor
+/*.pdb
+/*.psf
+/*.top
+/*.par
+/*.rtf
+/old
+/*.log
+/*.crd
+/*.sh
+/generate*

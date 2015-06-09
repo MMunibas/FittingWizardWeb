@@ -54,6 +54,7 @@ public class CHARMM_GUI_ShowResults extends CHARMM_GUI_base{
     private int natom,nconstr;
     private double egas, eliq;
     private double deltaH;
+    
     // boltzmann constant in kcal/mol-1/k-1
     private final static double kBoltz = 0.0019872041;
     private final static String find_temp = "FINALT =";
@@ -61,7 +62,12 @@ public class CHARMM_GUI_ShowResults extends CHARMM_GUI_base{
     private final static String find_nres = "Number of residues";
     private int nres;
     private double mmass;
+    
     private double dg;
+    private double gas_mtp;
+    private double gas_vdw;
+    private double solvent_mtp;
+    private double solvent_vdw;
     
     List<String> gasPhaseOut;
     List<String> pureLiqOut;
@@ -207,7 +213,7 @@ public class CHARMM_GUI_ShowResults extends CHARMM_GUI_base{
 //        box = Math.pow(box, 1.0/3.0);
 //        logger.info("Box length [A] : " + box);
         
-        
+        //get data for delta g
         
     }
     
@@ -283,10 +289,10 @@ public class CHARMM_GUI_ShowResults extends CHARMM_GUI_base{
     @FXML
     protected void calc_dg()
     {
-        double gas_mtp = -13.09403;
-        double gas_vdw = 11.43775;
-        double solvent_mtp = -21.11868;
-        double solvent_vdw = 12.96885;
+//        double gas_mtp = -13.09403;
+//        double gas_vdw = 11.43775;
+//        double solvent_mtp = -21.11868;
+//        double solvent_vdw = 12.96885;
         dg = (solvent_mtp+solvent_vdw) - (gas_mtp+gas_vdw);
     }
     
