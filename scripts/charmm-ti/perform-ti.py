@@ -1034,3 +1034,6 @@ if args.generateOnly == False:
       rmtChm.delRemoteSubDir()
 
 print "# Normal termination"
+
+os._exit(0)
+

@@ -174,8 +174,10 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
 
         if (genOnly) {
             output = new File(myDir + "/dg_gen_" + this.ti_type + "_gas" + ".out");
+            logger.info("OUTPUT file from perform-ti generate is : " + output.getAbsolutePath());
         } else {
             output = new File(myDir + "/dg_run_" + this.ti_type + "_gas" + ".out");
+            logger.info("OUTPUT file from perform-ti running  is : " + output.getAbsolutePath());
         }
 
         int returnCode;
@@ -235,8 +237,10 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
 
         if (genOnly) {
             output = new File(myDir + "/dg_gen_" + this.ti_type + "_solv" + ".out");
+            logger.info("OUTPUT file from perform-ti generate is : " + output.getAbsolutePath());
         } else {
             output = new File(myDir + "/dg_run_" + this.ti_type + "_solv" + ".out");
+            logger.info("OUTPUT file from perform-ti running  is : " + output.getAbsolutePath());
         }
 
         int returnCode;
