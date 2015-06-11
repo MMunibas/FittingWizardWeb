@@ -27,7 +27,7 @@ public abstract class CHARMM_Output implements CHARMM_InOut {
 
     private final File fileOut;
 
-    private final String type;
+    private String type;
 
     private Boolean errorOccured = false;
     private final static String hasFailed = "NORMAL TERMINATION BY NORMAL STOP";
@@ -36,6 +36,27 @@ public abstract class CHARMM_Output implements CHARMM_InOut {
 
         fileOut = _charmmout;
         type = _type;
+
+        try {
+            textOut = new String(
+                    Files.readAllBytes(
+                            Paths.get(fileOut.getAbsolutePath())
+                    )
+            );
+        } catch (IOException ex) {
+            logger.error("Error when loading the CHARMM output file " + fileOut.getAbsolutePath());
+            textOut = "";
+        }
+
+        if (!textOut.contains(hasFailed)) {
+            errorOccured = true;
+        }
+
+    }// ctor
+    
+    public CHARMM_Output(File _charmmout) {
+
+        fileOut = _charmmout;
 
         try {
             textOut = new String(

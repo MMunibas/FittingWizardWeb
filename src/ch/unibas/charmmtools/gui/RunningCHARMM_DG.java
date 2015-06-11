@@ -27,6 +27,7 @@ public class RunningCHARMM_DG extends ProgressPage{
     private final RunCHARMMWorkflow cflow;
     private List<CHARMM_InOut> ioList;
     private List<CHARMM_Generator_DGHydr> dgList;
+//    private double myDgContribution = 0.0;
     
     public RunningCHARMM_DG(RunCHARMMWorkflow charmmWorkflow, List<CHARMM_Generator_DGHydr> simList) {
         super("Running CHARMM calculation");
@@ -37,28 +38,29 @@ public class RunningCHARMM_DG extends ProgressPage{
         this.dgList.addAll(simList);
 
         this.ioList = new ArrayList<>();
+        this.ioList.addAll(cflow.getIOList(ioList));
+        
+//        this.setIOList(cflow.getIOList(ioList));
+
+    }
+        
+//    public RunningCHARMM_DG(RunCHARMMWorkflow charmmWorkflow, List<CHARMM_Generator_DGHydr> simList, List<CHARMM_InOut> inpList) {
+//        super("Running CHARMM calculation");
+//                
+//        this.cflow = charmmWorkflow;
+//        
+//        this.dgList = new ArrayList<>();
+//        this.dgList.addAll(simList);
+//
+//        this.ioList = new ArrayList<>();
 //        this.ioList.addAll(inpList);
-        this.setIOList(cflow.getIOList(ioList));
-
-    }
-        
-    public RunningCHARMM_DG(RunCHARMMWorkflow charmmWorkflow, List<CHARMM_Generator_DGHydr> simList, List<CHARMM_InOut> inpList) {
-        super("Running CHARMM calculation");
-                
-        this.cflow = charmmWorkflow;
-        
-        this.dgList = new ArrayList<>();
-        this.dgList.addAll(simList);
-
-        this.ioList = new ArrayList<>();
-        this.ioList.addAll(inpList);
-
-    }
+//
+//    }
     
-    private void setIOList( List<CHARMM_InOut> inpList)
-    {
-        this.ioList.addAll(inpList);
-    }
+//    private void setIOList( List<CHARMM_InOut> inpList)
+//    {
+//        this.ioList.addAll(inpList);
+//    }
 
     /**
      *
@@ -91,8 +93,16 @@ public class RunningCHARMM_DG extends ProgressPage{
     protected void handleFinishedRun(boolean successful) {
         logger.info("Normal termination");
 //        navigateTo(CHARMM_GUI_Step4.class,ioList);
+//        getDgContribution();
+        ioList.addAll(dgList);
         navigateTo(CHARMM_GUI_ShowResults.class,ioList);
     }
+    
+//    private void getDgContribution(){
+//        
+//        
+//        
+//    }
 
   
 }
