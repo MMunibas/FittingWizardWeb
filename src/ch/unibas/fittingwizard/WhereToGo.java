@@ -9,6 +9,7 @@
 package ch.unibas.fittingwizard;
 
 import ch.unibas.charmmtools.gui.database.DB_View_Edit;
+import ch.unibas.charmmtools.gui.loadOutput.CHARMM_GUI_LoadOutput;
 import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_InputAssistant;
 import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Fitgrid;
 import ch.unibas.charmmtools.gui.topology.GenerateTopology;
@@ -40,6 +41,9 @@ public class WhereToGo extends WizardPage {
     @FXML // fx:id="goCHARMM"
     private RadioButton goCHARMM; // Value injected by FXMLLoader
 
+    @FXML // fx:id="goCHARMM"
+    private RadioButton goAnalysis; // Value injected by FXMLLoader
+
     @FXML // fx:id="goMTP"
     private RadioButton goMTP; // Value injected by FXMLLoader
 
@@ -69,11 +73,13 @@ public class WhereToGo extends WizardPage {
             navigateTo(MoleculeListPage.class, null);
 
         } else if (selected.equals(goCHARMM)) {
-
-//            List<File> test = new ArrayList<>();
-//            test.add(new File("/home/hedin/progra/fittingWizard/test/ph_br.xyz"));
+            
             navigateTo(CHARMM_GUI_InputAssistant.class);
 
+        } else if (selected.equals(goAnalysis)) {
+
+            navigateTo(CHARMM_GUI_LoadOutput.class);
+            
         } else if (selected.equals(goDB)) {
 
             navigateTo(DB_View_Edit.class, null);
@@ -81,12 +87,12 @@ public class WhereToGo extends WizardPage {
         } else if (selected.equals(goGridScale)) {
 
             navigateTo(CHARMM_GUI_Fitgrid.class, null);
-            
+
         } else if (selected.equals(goTopology)) {
 
             logger.info("Going to topology generate page");
             navigateTo(GenerateTopology.class, null);
-            
+
         }
 
     }

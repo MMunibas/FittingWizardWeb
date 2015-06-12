@@ -19,7 +19,8 @@
         </columnConstraints>
         <rowConstraints>
           <RowConstraints vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="517.0" minHeight="0.0" prefHeight="234.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="517.0" minHeight="0.0" prefHeight="200.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="32.0" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
             <RowConstraints vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
@@ -46,7 +47,18 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TableView>
-            <Button fx:id="genGrid" disable="true" mnemonicParsing="false" onAction="#GenButtonPressed" text="Generate grid" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+            <Button fx:id="genGrid" disable="true" mnemonicParsing="false" onAction="#GenButtonPressed" text="Generate grid" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+               <GridPane.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </GridPane.margin>
+            </Button>
+            <Label text="PAR file to scale :" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <TextField fx:id="textPar" GridPane.columnIndex="2" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </GridPane.margin>
+            </TextField>
+            <Button fx:id="buttonPar" mnemonicParsing="false" onAction="#chooseParFile" text="Choose file ..." GridPane.columnIndex="3" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
@@ -55,7 +67,7 @@
       </GridPane>
    </top>
    <center>
-      <GridPane fx:id="gpane_fullgrid" BorderPane.alignment="CENTER">
+      <GridPane fx:id="gpane_fullgrid" prefHeight="381.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>

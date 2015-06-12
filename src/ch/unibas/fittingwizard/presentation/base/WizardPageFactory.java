@@ -74,6 +74,7 @@ import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.charmmtools.gui.RunningCHARMM_DG;
 import ch.unibas.charmmtools.gui.database.DB_View_Edit;
+import ch.unibas.charmmtools.gui.loadOutput.CHARMM_GUI_LoadOutput;
 import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Fitgrid;
 import ch.unibas.charmmtools.gui.topology.GenerateTopology;
 import ch.unibas.charmmtools.scripts.ICHARMMScript;
@@ -261,19 +262,7 @@ public class WizardPageFactory {
             } else if (type == CHARMM_GUI_ShowResults.class) {
                 List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
                 page = new CHARMM_GUI_ShowResults(charmmWorkflow_Den_Vap, ioList);
-            } //            else if (type == CHARMM_GUI_Step4.class) {
-            //                if (parameter == null) {
-            //                    page = new CHARMM_GUI_Step4(charmmWorkflow_DG);
-            //                } //                else{
-            //                //                    boolean success = throwIfParameterIsNull(parameter);
-            //                //                    page = new CHARMM_GUI_Step4(charmmWorkflow_DG,success);
-            //                //                }
-            //                else {
-            //                    List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
-            //                    page = new CHARMM_GUI_Step4(charmmWorkflow_DG, ioList);
-            //                }
-            //            } 
-            else if (type == CHARMM_GUI_Fitgrid.class) {
+            } else if (type == CHARMM_GUI_Fitgrid.class) {
                 page = new CHARMM_GUI_Fitgrid();
             } else if (type == DB_View_Edit.class) {
                 page = new DB_View_Edit(settings);
@@ -281,8 +270,9 @@ public class WizardPageFactory {
                 page = new WhereToGo();
             } else if (type == GenerateTopology.class) {
                 page = new GenerateTopology();
-            }
-            // MISC
+            } else if (type == CHARMM_GUI_LoadOutput.class) {
+                page = new CHARMM_GUI_LoadOutput();
+            } // MISC
             else {
                 page = type.newInstance();
             }

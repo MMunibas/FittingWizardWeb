@@ -36,6 +36,8 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
 import org.apache.commons.io.FileUtils;
 
 /**
@@ -60,6 +62,15 @@ public class CHARMM_GUI_Fitgrid extends WizardPage {
 
     @FXML
     private GridPane gpane_fullgrid;
+
+    @FXML // fx:id="textPar"
+    private TextField textPar; // Value injected by FXMLLoader
+
+    @FXML // fx:id="buttonPar"
+    private Button buttonPar; // Value injected by FXMLLoader
+
+    private File parFile;
+    private boolean PAR_selected = false;
 
     private Button button_reset;
     private Button button_save_files;
@@ -237,15 +248,14 @@ public class CHARMM_GUI_Fitgrid extends WizardPage {
         File myDir = new File("./test/scaled_par");
         myDir.mkdirs();
 
-        String[] exts = {"par"};
-        List<File> flist = new ArrayList<>();
-        flist.addAll(FileUtils.listFiles(new File("./test"), exts, false));
-
-        logger.info("Found par files : ");
-        for (File f : flist) {
-            logger.info(f.getAbsolutePath());
-        }
-
+//        String[] exts = {"par"};
+//        List<File> flist = new ArrayList<>();
+//        flist.addAll(FileUtils.listFiles(new File("./test"), exts, false));
+//
+//        logger.info("Found par files : ");
+//        for (File f : flist) {
+//            logger.info(f.getAbsolutePath());
+//        }
         ProcessBuilder pb = new ProcessBuilder();
         pb.directory(myDir);
 
@@ -262,8 +272,8 @@ public class CHARMM_GUI_Fitgrid extends WizardPage {
 //                }
                 String s_scale = list_gridValues.get(j - 1).getValue();
                 pb.command("/bin/bash", script,
-                        flist.get(0).getAbsolutePath(), e_scale, s_scale);
-                pb.redirectOutput(new File(myDir, "scaled_e" + e_scale + "_s" + s_scale +".par"));
+                        parFile.getAbsolutePath(), e_scale, s_scale);
+                pb.redirectOutput(new File(myDir, "scaled_e" + e_scale + "_s" + s_scale + ".par"));
                 logger.info("Running bash script\n" + pb.command()
                         + "\nin directory:\n" + pb.directory()
                         + "\nwith environment:\n" + pb.environment());
@@ -283,13 +293,13 @@ public class CHARMM_GUI_Fitgrid extends WizardPage {
                 }
             }
         }
-        
+
         button_run_all.setDisable(false);
 
     }
-    
-    private void RunAll(){
-        
+
+    private void RunAll() {
+
     }
 
     @Override
@@ -299,11 +309,11 @@ public class CHARMM_GUI_Fitgrid extends WizardPage {
             @Override
             public void handle(ActionEvent actionEvent) {
                 logger.info("Goin Back to input assistant.");
-                navigateTo(CHARMM_GUI_InputAssistant.class,null);
+                navigateTo(CHARMM_GUI_InputAssistant.class, null);
             }
         });
         addButtonToButtonBar(button_goRunSim);
-        
+
         button_reset = ButtonFactory.createButtonBarButton("Reset", new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -322,7 +332,7 @@ public class CHARMM_GUI_Fitgrid extends WizardPage {
         });
         addButtonToButtonBar(button_save_files);
         button_save_files.setDisable(true);
-        
+
         button_run_all = ButtonFactory.createButtonBarButton("Run all simulations", new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -335,4 +345,27 @@ public class CHARMM_GUI_Fitgrid extends WizardPage {
 
     }
 
+    @FXML
+    void chooseParFile(ActionEvent event) {
+        Window myParent = buttonPar.getScene().getWindow();
+        FileChooser chooser = new FileChooser();
+        chooser.setInitialDirectory(new File("./test"));
+        File selectedFile = null;
+
+        chooser.setTitle("Open File");
+
+        if (event.getSource().equals(buttonPar)) {
+            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CHARMM FF parameters file (*.par,*.prm)",
+                    "*.par", "*.prm"));
+            selectedFile = chooser.showOpenDialog(myParent);
+            if (selectedFile != null) {
+                textPar.setText(selectedFile.getAbsolutePath());
+                parFile = new File(selectedFile.getAbsolutePath());
+                PAR_selected = true;
+            }
+        }
+
+    }
+    
+    
 }
