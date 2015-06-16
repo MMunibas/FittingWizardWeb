@@ -1035,5 +1035,6 @@ if args.generateOnly == False:
 
 print "# Normal termination"
 
+sys.stdout.flush()
 os._exit(0)
 

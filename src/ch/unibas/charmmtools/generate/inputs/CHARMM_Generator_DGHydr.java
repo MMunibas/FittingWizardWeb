@@ -101,6 +101,11 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
         
     }
     
+    public CHARMM_Generator_DGHydr(File _out, String _type){
+        output = _out;
+        whoami = _type;
+    }
+    
     private void copyAndFixPaths() {
         try {
             FileUtils.copyFileToDirectory(new File(solu_cor), myDir);
@@ -165,7 +170,7 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
         args.add(Double.toString(this.l_space));
         args.add(Double.toString(this.l_max));
 //        args.add("--nst");
-//        args.add("3000");
+//        args.add("5000");
 //        args.add("--neq");
 //        args.add("1000");
 
@@ -203,8 +208,8 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
         args.add(this.ti_type);
         args.add("--tps");
         args.add(this.solu_top);
-        args.add("--top");
-        args.add(this.solv_top);
+//        args.add("--top");
+//        args.add(this.solv_top);
         args.add("--slu");
         args.add(this.solu_cor);
         args.add("--slv");
@@ -228,7 +233,7 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
         args.add(Double.toString(this.l_space));
         args.add(Double.toString(this.l_max));
 //        args.add("--nst");
-//        args.add("3000");
+//        args.add("5000");
 //        args.add("--neq");
 //        args.add("1000");
 

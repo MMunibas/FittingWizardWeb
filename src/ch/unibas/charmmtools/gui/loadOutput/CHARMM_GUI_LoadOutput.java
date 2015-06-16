@@ -9,6 +9,7 @@
 package ch.unibas.charmmtools.gui.loadOutput;
 
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
+import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output_GasPhase;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output_PureLiquid;
 import ch.unibas.charmmtools.gui.step3.CHARMM_GUI_ShowResults;
@@ -71,9 +72,9 @@ public class CHARMM_GUI_LoadOutput extends WizardPage {
     @FXML // fx:id="button_process"
     private Button button_process; // Value injected by FXMLLoader
         
-    private File gas_file, liquid_file;
-    private File gas_vdw_file, gas_mtp_file;
-    private File solvent_vdw_file, solvent_mtp_file;
+    private File gas_file=null, liquid_file=null;
+    private File gas_vdw_file=null, gas_mtp_file=null;
+    private File solvent_vdw_file=null, solvent_mtp_file=null;
 
     private boolean gas_selected = false;
     private boolean liquid_selected = false;
@@ -183,9 +184,32 @@ public class CHARMM_GUI_LoadOutput extends WizardPage {
     void parseFiles(ActionEvent event) {
         
         List<CHARMM_InOut> ioList = new ArrayList<>();
+        
+        if(gas_file==null)
+            gas_file = new File(text_gas.getText());
+        
+        if(liquid_file==null)
+            liquid_file = new File(text_liquid.getText());
+        
+        if(gas_vdw_file==null)
+            gas_vdw_file = new File(text_gas_vdw.getText());
+        
+        if(gas_mtp_file==null)
+            gas_mtp_file = new File(text_gas_mtp.getText());
+        
+        if(solvent_vdw_file==null)
+            solvent_vdw_file = new File(text_solvent_vdw.getText());
+        
+        if(solvent_mtp_file==null)
+            solvent_mtp_file = new File(text_solvent_mtp.getText());
+                
         ioList.add(new CHARMM_Output_GasPhase(gas_file));
         ioList.add(new CHARMM_Output_PureLiquid(liquid_file));
-                
+        
+        ioList.add(new CHARMM_Generator_DGHydr(gas_vdw_file,"gas_vdw"));
+        ioList.add(new CHARMM_Generator_DGHydr(gas_mtp_file,"gas_mtp"));
+        ioList.add(new CHARMM_Generator_DGHydr(solvent_vdw_file,"solvent_vdw"));
+        ioList.add(new CHARMM_Generator_DGHydr(solvent_mtp_file,"solvent_mtp"));
         
         this.navigateTo(CHARMM_GUI_ShowResults.class, ioList);
         

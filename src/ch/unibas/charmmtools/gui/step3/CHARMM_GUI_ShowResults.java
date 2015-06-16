@@ -290,6 +290,9 @@ public class CHARMM_GUI_ShowResults extends CHARMM_GUI_base {
         mmass_field.setText(Double.toString(mmass));
         nres_field.setText(Integer.toString(nres));
 
+        //calc_dg();
+        //dghydr_field.setText(Double.toString(dg));
+        
 //        dens_field.setText(Double.toString(density));
 //        dhvap_field.setText(Double.toString(deltaH));
     }
@@ -308,6 +311,7 @@ public class CHARMM_GUI_ShowResults extends CHARMM_GUI_base {
         dens_field.setText(Double.toString(density));
         dhvap_field.setText(Double.toString(deltaH));
         dghydr_field.setText(Double.toString(dg));
+        
     }
 
     @FXML
