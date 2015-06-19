@@ -102,33 +102,37 @@ public class CHARMM_GUI_ShowResults extends CHARMM_GUI_base {
                 }
 
             } else if (c == CHARMM_Generator_DGHydr.class) {
-                
-                List<String> myDgString = splitOutFile(ioListIt.getText().split("\n"));
-                String myDgType = ioListIt.getType();
-                String line = findInArray(myDgString, "kcal/mol").get(0);
-                String value = line.split("\\s+")[4];
-                
-                switch(myDgType){
-                    case "gas_vdw":
-                        gas_vdw = Double.valueOf(value);
-                        break;
-                        
-                    case "gas_mtp":
-                        gas_mtp = Double.valueOf(value);
-                        break;
-                        
-                    case "solvent_vdw":
-                        solvent_vdw = Double.valueOf(value);
-                        break;
-                        
-                    case "solvent_mtp":
-                        solvent_mtp = Double.valueOf(value);
-                        break;
-                        
-                    default:
-                        break;
+
+                try {
+                    List<String> myDgString = splitOutFile(ioListIt.getText().split("\n"));
+                    String myDgType = ioListIt.getType();
+                    String line = findInArray(myDgString, "kcal/mol").get(0);
+                    String value = line.split("\\s+")[4];
+
+                    switch (myDgType) {
+                        case "gas_vdw":
+                            gas_vdw = Double.valueOf(value);
+                            break;
+
+                        case "gas_mtp":
+                            gas_mtp = Double.valueOf(value);
+                            break;
+
+                        case "solvent_vdw":
+                            solvent_vdw = Double.valueOf(value);
+                            break;
+
+                        case "solvent_mtp":
+                            solvent_mtp = Double.valueOf(value);
+                            break;
+
+                        default:
+                            break;
+                    }
+                } catch (IndexOutOfBoundsException ex) {
+                    logger.info("Skipping object " + c.toString() + " : data missing : " + ex.getMessage());
                 }
-                
+
             } else {
                 throw new UnknownError("Unknown type of object in List<CHARMM_InOut> : get "
                         + ioListIt.getClass() + " but expected types are " + CHARMM_Input.class
@@ -292,7 +296,6 @@ public class CHARMM_GUI_ShowResults extends CHARMM_GUI_base {
 
         //calc_dg();
         //dghydr_field.setText(Double.toString(dg));
-        
 //        dens_field.setText(Double.toString(density));
 //        dhvap_field.setText(Double.toString(deltaH));
     }
@@ -311,7 +314,7 @@ public class CHARMM_GUI_ShowResults extends CHARMM_GUI_base {
         dens_field.setText(Double.toString(density));
         dhvap_field.setText(Double.toString(deltaH));
         dghydr_field.setText(Double.toString(dg));
-        
+
     }
 
     @FXML
