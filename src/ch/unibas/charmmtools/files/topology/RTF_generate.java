@@ -601,11 +601,11 @@ public final class RTF_generate extends RTF implements coordinates_writer{
     }
 
     @Override
-    public void writeFile() throws IOException{
+    public void writeFile(File dir) throws IOException{
         
         Writer writerf = new BufferedWriter(
                 new FileWriter(
-                        new File("test",fname+".top")
+                        new File(dir,fname+".top")
                 )
         );
         writerf.write(writer.toString());

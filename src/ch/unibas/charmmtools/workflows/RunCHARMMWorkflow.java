@@ -32,6 +32,8 @@ public class RunCHARMMWorkflow extends Workflow<CHARMM_Input, CHARMM_Output> {
     
     private List<CHARMM_InOut> ioList;
     
+    protected File work_directory;
+    
     /**
      * if there is only one script registered for this workflow
      * @param chScr a charmm script
@@ -40,6 +42,7 @@ public class RunCHARMMWorkflow extends Workflow<CHARMM_Input, CHARMM_Output> {
         charmmScript.clear();
         this.charmmScript.add(chScr);
         this.ioList = new ArrayList<>();
+        work_directory = chScr.getWorkingDirectory();
     }
         
     /**
@@ -100,6 +103,13 @@ public class RunCHARMMWorkflow extends Workflow<CHARMM_Input, CHARMM_Output> {
     public List<CHARMM_Output> execute(){
         List<CHARMM_Output> out = new ArrayList<>();
         return out;
+    }
+
+    /**
+     * @return the work_directory
+     */
+    public File getWork_directory() {
+        return work_directory;
     }
 
 }

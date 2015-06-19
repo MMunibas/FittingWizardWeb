@@ -13,7 +13,9 @@ import ch.unibas.charmmtools.files.coordinates.PDB_generate;
 import ch.unibas.charmmtools.files.coordinates.coordinates_writer;
 import ch.unibas.charmmtools.files.structure.PSF_generate;
 import ch.unibas.charmmtools.files.topology.RTF_generate;
+import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
 import ch.unibas.charmmtools.gui.MyTab;
+import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.application.xyz.XyzFile;
 import ch.unibas.fittingwizard.application.xyz.XyzFileParser;
 import ch.unibas.fittingwizard.presentation.base.WizardPage;
@@ -33,10 +35,10 @@ import javafx.stage.Window;
  *
  * @author hedin
  */
-public class GenerateTopology extends WizardPage {
+public class GenerateTopology extends CHARMM_GUI_base {
 
     private static final String title = "Generating custom PSF TOP PDB COR files using a XYZ file";
-    private static final String csvName = "test/atomic_db.csv";
+    private static final String csvName = "scripts/atomic_db.csv";
 
     // from FXML file
     @FXML // fx:id="xyzOpen"
@@ -62,8 +64,8 @@ public class GenerateTopology extends WizardPage {
     private List<MyTab> tab_list = new ArrayList<>();
     private List<coordinates_writer> filesList = new ArrayList<>();
 
-    public GenerateTopology() {
-        super(title);
+    public GenerateTopology(RunCHARMMWorkflow flow) {
+        super(title,flow);
     }
 
     @Override
@@ -76,7 +78,7 @@ public class GenerateTopology extends WizardPage {
 
         Window myParent = buttonGenerate.getScene().getWindow();
         FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(new File("./test"));
+        chooser.setInitialDirectory(new File("."));
 
         chooser.setTitle("Open File");
 
@@ -150,7 +152,7 @@ public class GenerateTopology extends WizardPage {
             try {
                 String s = tab_list.get(i).getContentText();
                 filesList.get(i).setModifiedTextContent(s);
-                filesList.get(i).writeFile();
+                filesList.get(i).writeFile(work_directory);
             } catch (IOException ex) {
                 logger.error("Error while saving to file : " + ex);
             }

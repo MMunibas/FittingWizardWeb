@@ -199,15 +199,15 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base{
 //    }
     @FXML
     protected void setDefault(ActionEvent e) {
-        textfield_PAR.setText(new File("test", "nma.par").getAbsolutePath());
-        textfield_RTF.setText(new File("test", "nma.rtf").getAbsolutePath());
-        textfield_COR_gas.setText(new File("test", "solute.pdb").getAbsolutePath());
-        textfield_COR_liquid.setText(new File("test", "pureliquid.pdb").getAbsolutePath());
-        textfield_COR_solv.setText(new File("test", "solvent.pdb").getAbsolutePath());
-        textfield_LPUN.setText(new File("test", "fit_0_nma.lpun").getAbsolutePath());
-
-        PAR_selected = RTF_selected = COR_selected_gas = COR_selected_liquid = COR_selected_solv = LPUN_selected = true;
-        this.button_generate.setDisable(false);
+//        textfield_PAR.setText(new File("test", "nma.par").getAbsolutePath());
+//        textfield_RTF.setText(new File("test", "nma.rtf").getAbsolutePath());
+//        textfield_COR_gas.setText(new File("test", "solute.pdb").getAbsolutePath());
+//        textfield_COR_liquid.setText(new File("test", "pureliquid.pdb").getAbsolutePath());
+//        textfield_COR_solv.setText(new File("test", "solvent.pdb").getAbsolutePath());
+//        textfield_LPUN.setText(new File("test", "fit_0_nma.lpun").getAbsolutePath());
+//
+//        PAR_selected = RTF_selected = COR_selected_gas = COR_selected_liquid = COR_selected_solv = LPUN_selected = true;
+//        this.button_generate.setDisable(false);
     }
 
     /**
@@ -264,7 +264,7 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base{
 
         Window myParent = button_generate.getScene().getWindow();
         FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(new File("./test"));
+        chooser.setInitialDirectory(new File("."));
         File selectedFile = null;
 
         chooser.setTitle("Open File");
@@ -328,7 +328,7 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base{
     protected void GenerateInputFile() {
 
 //        try {
-        String folderPath = new File("test").getAbsolutePath();
+        String folderPath = this.work_directory.getAbsolutePath();
 
         // get filenames
 //        String corname_gas = ResourceUtils.getRelativePath(textfield_COR_gas.getText(), folderPath);
@@ -343,10 +343,10 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base{
         String lpunname = textfield_LPUN.getText();
         String time = Long.toString(Instant.now().getEpochSecond());
 
-        File gas_vdw_dir = new File("test/gas_" + time + "/vdw");
-        File gas_mtp_dir = new File("test/gas_" + time + "/mtp");
-        File solv_vdw_dir = new File("test/solv_" + time + "/vdw");
-        File solv_mtp_dir = new File("test/solv_" + time + "/mtp");
+        File gas_vdw_dir  = new File(folderPath + "/gas_" + time + "/vdw");
+        File gas_mtp_dir  = new File(folderPath + "/gas_" + time + "/mtp");
+        File solv_vdw_dir = new File(folderPath + "/solv_" + time + "/vdw");
+        File solv_mtp_dir = new File(folderPath + "/solv_" + time + "/mtp");
 
         gas_vdw_dir.mkdirs();
         gas_mtp_dir.mkdirs();

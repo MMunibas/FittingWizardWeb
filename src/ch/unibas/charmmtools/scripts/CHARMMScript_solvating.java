@@ -21,7 +21,7 @@ import java.io.File;
 public class CHARMMScript_solvating extends CHARMMScript_Base implements ICHARMMScriptWithBash{
 
     private static final String ScriptNameKey = "scripts.solvate";
-    private static final String OutputDirName = "test";
+    //private static final String OutputDirName = "test";
     
     public CHARMMScript_solvating(File _sessionDir, Settings _settings)
     {
@@ -32,7 +32,7 @@ public class CHARMMScript_solvating extends CHARMMScript_Base implements ICHARMM
     public CHARMM_Output execute(CHARMM_Input input) {
         
         String FileName = "solvating.out";
-        File charmmout = new File(OutputDirName,FileName);
+        File charmmout = new File(this.sessionDir,FileName);
         
         this.prepare_Bash(input, null);
         

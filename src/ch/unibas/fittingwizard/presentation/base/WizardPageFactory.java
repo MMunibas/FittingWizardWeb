@@ -77,6 +77,7 @@ import ch.unibas.charmmtools.gui.database.DB_View_Edit;
 import ch.unibas.charmmtools.gui.loadOutput.CHARMM_GUI_LoadOutput;
 import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Fitgrid;
 import ch.unibas.charmmtools.gui.topology.GenerateTopology;
+import ch.unibas.charmmtools.scripts.CHARMMScript_Base;
 import ch.unibas.charmmtools.scripts.ICHARMMScript;
 import ch.unibas.charmmtools.scripts.CHARMMScript_Den_Vap;
 import ch.unibas.charmmtools.scripts.CHARMMScript_DG_gas;
@@ -110,13 +111,13 @@ public class WizardPageFactory {
     private IFitMtpScript fitMtpScript;
     private IExportScript exportScript;
     private IVmdDisplayScript vmdScript;
-    private ICHARMMScript charmmScript_Den_Vap, charmmScript_DG_gas, charmmScript_DG_solvent;
+    private ICHARMMScript charmmScript_Den_Vap, charmmScript_DG_gas, charmmScript_DG_solvent, charmmScript_default;
 
     private RunFitWorkflow runFitWorkflow;
     private ExportFitWorkflow exportFitWorkflow;
     private RunGaussianWorkflow runGaussianWorkflow;
     private RunVmdDisplayWorkflow vmdDisplayWorkflow;
-    private RunCHARMMWorkflow charmmWorkflow_Den_Vap, charmmWorkflow_DG;
+    private RunCHARMMWorkflow charmmWorkflow_Den_Vap, charmmWorkflow_DG, charmmWorkflow_other;
 
     public WizardPageFactory(Stage primaryStage) {
         initializeDependencies(primaryStage);
@@ -174,6 +175,7 @@ public class WizardPageFactory {
         charmmScript_Den_Vap = new CHARMMScript_Den_Vap(sessionDir, settings);
         charmmScript_DG_gas = new CHARMMScript_DG_gas(sessionDir, settings);
         charmmScript_DG_solvent = new CHARMMScript_DG_solvent(sessionDir, settings);
+        charmmScript_default = new CHARMMScript_Den_Vap(sessionDir, settings);
     }
 
     private void initializeWorkflows() {
@@ -195,6 +197,7 @@ public class WizardPageFactory {
 
         charmmWorkflow_Den_Vap = new RunCHARMMWorkflow(charmmScript_Den_Vap);
         charmmWorkflow_DG = new RunCHARMMWorkflow(charmmScript_DG_gas, charmmScript_DG_solvent);
+        charmmWorkflow_other = new RunCHARMMWorkflow(charmmScript_default);
     }
 
     public <T extends WizardPage> WizardPage create(Class<T> type, Object parameter) {
@@ -263,13 +266,13 @@ public class WizardPageFactory {
                 List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
                 page = new CHARMM_GUI_ShowResults(charmmWorkflow_Den_Vap, ioList);
             } else if (type == CHARMM_GUI_Fitgrid.class) {
-                page = new CHARMM_GUI_Fitgrid();
+                page = new CHARMM_GUI_Fitgrid(charmmWorkflow_other);
             } else if (type == DB_View_Edit.class) {
                 page = new DB_View_Edit(settings);
             } else if (type == WhereToGo.class) {
                 page = new WhereToGo();
             } else if (type == GenerateTopology.class) {
-                page = new GenerateTopology();
+                page = new GenerateTopology(charmmWorkflow_other);
             } else if (type == CHARMM_GUI_LoadOutput.class) {
                 page = new CHARMM_GUI_LoadOutput();
             } // MISC

@@ -8,7 +8,9 @@
  */
 package ch.unibas.charmmtools.gui.step4;
 
+import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
 import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_InputAssistant;
+import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.application.scripts.base.ScriptExecutionException;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import ch.unibas.fittingwizard.presentation.base.WizardPage;
@@ -44,7 +46,7 @@ import org.apache.commons.io.FileUtils;
  *
  * @author hedin
  */
-public class CHARMM_GUI_Fitgrid extends WizardPage {
+public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
 
     private static final String title = "LJ fitting procedure : preparing fitting grid";
 
@@ -104,8 +106,8 @@ public class CHARMM_GUI_Fitgrid extends WizardPage {
 
     }
 
-    public CHARMM_GUI_Fitgrid() {
-        super(title);
+    public CHARMM_GUI_Fitgrid(RunCHARMMWorkflow flow) {
+        super(title,flow);
 //        this.tableview_gridValues = new TableView<gridValuesModel>();
 
         this.list_gridValues = FXCollections.observableArrayList();
@@ -245,7 +247,7 @@ public class CHARMM_GUI_Fitgrid extends WizardPage {
 
     private void SaveFiles() {
 
-        File myDir = new File("./test/scaled_par");
+        File myDir = new File(this.work_directory,"scaled_par");
         myDir.mkdirs();
 
 //        String[] exts = {"par"};
@@ -349,7 +351,7 @@ public class CHARMM_GUI_Fitgrid extends WizardPage {
     void chooseParFile(ActionEvent event) {
         Window myParent = buttonPar.getScene().getWindow();
         FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(new File("./test"));
+        chooser.setInitialDirectory(new File("."));
         File selectedFile = null;
 
         chooser.setTitle("Open File");

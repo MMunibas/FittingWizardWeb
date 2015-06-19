@@ -8,6 +8,7 @@
  */
 package ch.unibas.charmmtools.files.coordinates;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -17,6 +18,6 @@ import java.io.IOException;
 public interface coordinates_writer {
     
     public abstract String getTextContent();
-    public void writeFile() throws IOException;
+    public void writeFile(File dir) throws IOException;
     public void setModifiedTextContent(String content) throws IOException;
 }

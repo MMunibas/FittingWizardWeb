@@ -21,7 +21,7 @@ import java.io.File;
 public abstract class CHARMMScript_DG extends CHARMMScript_Base implements ICHARMMScriptWithPython{
 
     protected static final String ScriptNameKey = "scripts.submitCHARMM_DG";
-    protected static final String OutputDirName = "test";
+    //protected static final String OutputDirName = "test";
     
     public CHARMMScript_DG(File _sessionDir, Settings _settings)
     {
@@ -32,7 +32,7 @@ public abstract class CHARMMScript_DG extends CHARMMScript_Base implements ICHAR
     public CHARMM_Output execute(CHARMM_Input input) {
         
         String FileName = "dg_hydr.out";
-        File charmmout = new File(OutputDirName,FileName);
+        File charmmout = new File(this.sessionDir,FileName);
         
         this.prepare_Python(input, null);
         

@@ -54,4 +54,9 @@ public abstract class CHARMMScript_Base implements ICHARMMScript{
         return ScriptFile.getName();
     }
     
+    @Override
+    public File getWorkingDirectory(){
+        return sessionDir;
+    }
+    
 }

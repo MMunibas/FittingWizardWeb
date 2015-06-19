@@ -102,10 +102,10 @@ public class PDB_generate extends PDB implements coordinates_writer{
     }
     
     @Override
-    public void writeFile() throws IOException {
+    public void writeFile(File dir) throws IOException {
         Writer writerf = new BufferedWriter(
                 new FileWriter(
-                        new File("test",fname+".pdb")
+                        new File(dir,fname+".pdb")
                 )
         );
         writerf.write(writer.toString());

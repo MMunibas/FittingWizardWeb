@@ -189,7 +189,7 @@
               </rowConstraints>
                <children>
                           <Button fx:id="button_generate" disable="true" mnemonicParsing="false" onAction="#GenerateInputFile" text="Generate input file(s)" GridPane.halignment="CENTER" />
-                  <Button fx:id="button_default" mnemonicParsing="false" onAction="#setDefault" text="Default values" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+                  <Button fx:id="button_default" mnemonicParsing="false" onAction="#setDefault" text="Default values" visible="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
                </children>
             </GridPane>
             <Button fx:id="button_search_DB" disable="true" mnemonicParsing="false" onAction="#searchInDB" text="Search in DB" visible="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">

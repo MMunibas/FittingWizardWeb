@@ -277,10 +277,10 @@ public final class PSF_generate extends PSF implements coordinates_writer{
     }
 
     @Override
-    public void writeFile() throws IOException{
+    public void writeFile(File dir) throws IOException{
         Writer writerf = new BufferedWriter(
                 new FileWriter(
-                        new File("test",myname+".psf")
+                        new File(dir,myname+".psf")
                 )
         );
         writerf.write(writer.toString());

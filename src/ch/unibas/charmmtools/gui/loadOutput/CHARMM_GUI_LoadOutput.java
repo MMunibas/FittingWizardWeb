@@ -98,7 +98,7 @@ public class CHARMM_GUI_LoadOutput extends WizardPage {
     void openFile(ActionEvent event) {
         Window myParent = open_gas.getScene().getWindow();
         FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(new File("./test"));
+        chooser.setInitialDirectory(new File("."));
         File selectedFile = null;
 
         chooser.setTitle("Open File");

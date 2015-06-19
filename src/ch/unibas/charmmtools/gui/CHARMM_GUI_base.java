@@ -33,9 +33,12 @@ public abstract class CHARMM_GUI_base extends WizardPage implements Serializable
     protected List<File> CHARMM_inFile = new ArrayList<>();
     protected List<File> CHARMM_outFile = new ArrayList<>();
     
+    protected File work_directory;
+    
     public CHARMM_GUI_base(String title, RunCHARMMWorkflow flow) {
         super(title);
         this.charmmWorkflow = flow;
+        work_directory = charmmWorkflow.getWork_directory();
         //this.logger.info("Style for class : '" + this.getClass().toGenericString() + "' is : " + this.getStyle());
     }
 
