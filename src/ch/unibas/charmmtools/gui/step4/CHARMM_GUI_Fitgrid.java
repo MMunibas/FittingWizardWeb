@@ -13,11 +13,8 @@ import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_InputAssistant;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.application.scripts.base.ScriptExecutionException;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
-import ch.unibas.fittingwizard.presentation.base.WizardPage;
+import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -40,7 +37,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
-import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -247,6 +243,8 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
 
     private void SaveFiles() {
 
+        boolean failed=false;
+        
         File myDir = new File(this.work_directory,"scaled_par");
         myDir.mkdirs();
 
@@ -288,12 +286,19 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
                 }
                 logger.info("Bash return value: " + exitCode);
                 if (exitCode != 0) {
+                    failed=true;
                     throw new ScriptExecutionException(
                             String.format("Bash script [%s] did not exit correctly. Exit code: %s",
                                     script,
                                     String.valueOf(exitCode)));
                 }
             }
+        }
+        
+        if (failed) {
+            OverlayDialog.showError("Error while saving files","Error while saving your files in directory : " + this.work_directory.getAbsolutePath());
+        } else {
+            OverlayDialog.informUser("Files saved properly","All your files were saved in directory : " + this.work_directory.getAbsolutePath());
         }
 
         button_run_all.setDisable(false);

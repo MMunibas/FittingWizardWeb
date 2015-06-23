@@ -19,6 +19,7 @@ import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.application.xyz.XyzFile;
 import ch.unibas.fittingwizard.application.xyz.XyzFileParser;
 import ch.unibas.fittingwizard.presentation.base.WizardPage;
+import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,7 +66,7 @@ public class GenerateTopology extends CHARMM_GUI_base {
     private List<coordinates_writer> filesList = new ArrayList<>();
 
     public GenerateTopology(RunCHARMMWorkflow flow) {
-        super(title,flow);
+        super(title, flow);
     }
 
     @Override
@@ -107,7 +108,7 @@ public class GenerateTopology extends CHARMM_GUI_base {
         PSF_generate psff = null;
         PDB_generate pdbf = null;
         COR_generate corf = null;
-        
+
         try {
             //generates a topology file
             rtff = new RTF_generate(myXYZ, csvName);
@@ -117,7 +118,7 @@ public class GenerateTopology extends CHARMM_GUI_base {
 
             //then pdb file
             pdbf = new PDB_generate(psff);
-            
+
             //and cor file
             corf = new COR_generate(psff);
 
@@ -129,7 +130,7 @@ public class GenerateTopology extends CHARMM_GUI_base {
 
             tab_list.add(new MyTab("PDB file", pdbf.getTextContent()));
             filesList.add(pdbf);
-            
+
             tab_list.add(new MyTab("COR file", corf.getTextContent()));
             filesList.add(corf);
 
@@ -147,15 +148,22 @@ public class GenerateTopology extends CHARMM_GUI_base {
     @FXML
     protected void saveFiles(ActionEvent event) {
 
-        for(int i=0;i<tab_list.size();i++)
-        {
+        boolean failure = false;
+        for (int i = 0; i < tab_list.size(); i++) {
             try {
                 String s = tab_list.get(i).getContentText();
                 filesList.get(i).setModifiedTextContent(s);
                 filesList.get(i).writeFile(work_directory);
             } catch (IOException ex) {
                 logger.error("Error while saving to file : " + ex);
+                failure = true;
             }
+        }
+
+        if (failure) {
+            OverlayDialog.showError("Error while saving files", "Error while saving your files in directory : " + this.work_directory.getAbsolutePath());
+        } else {
+            OverlayDialog.informUser("Files saved properly", "All your files were saved in directory : " + this.work_directory.getAbsolutePath());
         }
 
     }
