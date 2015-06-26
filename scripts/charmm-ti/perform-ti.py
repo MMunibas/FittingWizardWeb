@@ -336,7 +336,12 @@ CLOSE UNIT 40
       pressureSnippet = '-'
     noPSSPSnippet = "NOPSSP -"
   procSnippet = \
-'''DYNA LEAP STRT NSTEP %s TIMESTEP 0.001 -
+'''
+  
+  MINI SD 
+  MINI ABNR
+  
+  DYNA LEAP STRT NSTEP %s TIMESTEP 0.001 -
   NTRFRQ 100 -
   IPRFRQ 0 INBFRQ -1 IMGFRQ 250 -
   LSTART %s  LAMBDA %s  LSTOP %s  PSTART  %s -

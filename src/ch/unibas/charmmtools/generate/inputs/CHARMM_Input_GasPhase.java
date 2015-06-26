@@ -171,7 +171,8 @@ public class CHARMM_Input_GasPhase extends CHARMM_Input {
     
     @Override
     protected void print_MiniSection() throws IOException {
-        writer.write("mini sd nstep 500 print 10" + "\n\n");
+        writer.write("mini sd nstep 1000  " + "\n\n");
+        writer.write("mini abnr nstep 100 " + "\n\n");
     }
 
     @Override

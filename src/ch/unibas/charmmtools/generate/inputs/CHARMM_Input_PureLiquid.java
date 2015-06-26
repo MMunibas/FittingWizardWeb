@@ -200,7 +200,8 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
         writer.write("calc pmass = int ( ?stot  /  50.0 )" + "\n");
         writer.write("calc tmass = @pmass * 10" + "\n\n");
         
-        writer.write("mini sd nstep 200 nprint 10" + "\n\n");
+        writer.write("mini sd nstep 1000  " + "\n\n");
+        writer.write("mini abnr nstep 100 " + "\n\n");
         
         writer.write("calc tmin = 298 - 200.0" + "\n");
     }
