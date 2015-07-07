@@ -8,12 +8,20 @@
  */
 package ch.unibas.charmmtools.gui.database;
 
+import ch.unibas.babelBinding.BabelConverterAPI;
 import ch.unibas.charmmtools.gui.database.dataModel.DB_model;
 import ch.unibas.charmmtools.gui.database.interfaces.DB_interface;
 import ch.unibas.charmmtools.gui.database.interfaces.MYSQL_DB_interface;
 import ch.unibas.charmmtools.gui.database.interfaces.SQLITE_DB_interface;
 import ch.unibas.fittingwizard.Settings;
-import ch.unibas.fittingwizard.presentation.base.WizardPage;
+import ch.unibas.fittingwizard.application.Visualization;
+import ch.unibas.fittingwizard.presentation.base.WizardPageWithVisualization;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -28,7 +36,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
  *
  * @author hedin
  */
-public abstract class DB_Window extends WizardPage{
+public abstract class DB_Window extends WizardPageWithVisualization {
 
     protected Settings settings;
 
@@ -84,25 +92,44 @@ public abstract class DB_Window extends WizardPage{
     protected Button search_byname; // Value injected by FXMLLoader
 
     protected final DB_interface dbi;
-    
+
     protected ObservableList<DB_model> obsList;
 
-    public DB_Window(String title, Settings _settings) {
-        super(title);
+    File smi = null;
+    File xyz = null;
+    BabelConverterAPI converter = null;
+
+    public DB_Window(Visualization _visualization, String title, Settings _settings) {
+
+        super(_visualization, title);
         this.settings = _settings;
-        
+
         String DB_type = settings.getValue("DB.type");
         String DB_conn = settings.getValue("DB.connect");
         String DB_user = settings.getValue("DB.user");
         String DB_pass = settings.getValue("DB.password");
 
-        
         // if not mysql default to sqlite
-        if(DB_type.compareToIgnoreCase("mysql")==0)
+        if (DB_type.compareToIgnoreCase("mysql") == 0) {
             dbi = new MYSQL_DB_interface(DB_conn, DB_user, DB_pass);
-        else
+        } else {
             dbi = new SQLITE_DB_interface(DB_conn);
-        
+        }
+
+        try {
+            smi = File.createTempFile("tempMol", ".smi");
+            xyz = File.createTempFile("tempMol", ".xyz");
+            Writer str = new BufferedWriter(new FileWriter(smi));
+            str.write("CCO");
+            str.close();
+        } catch (IOException e) {
+            logger.error("Error while writing temp files : " + e.getMessage());
+        }
+
+        converter = new BabelConverterAPI("smiles", "xyz");
+        converter.convert(smi, xyz);
+        visualization.show(xyz);
+
     }
 
     @Override
@@ -114,12 +141,10 @@ public abstract class DB_Window extends WizardPage{
         tabcol_density.setCellValueFactory(new PropertyValueFactory<>("density"));
         tabcol_dh.setCellValueFactory(new PropertyValueFactory<>("dh"));
         tabcol_dg.setCellValueFactory(new PropertyValueFactory<>("dg"));
-        
+
         obsList = FXCollections.observableArrayList();
         tabview_db.getItems().addAll(obsList);
     }
-    
-    
 
     /**
      * Cleans the tableview before adding more stuff
@@ -164,5 +189,5 @@ public abstract class DB_Window extends WizardPage{
         }
 
     }
-    
+
 }

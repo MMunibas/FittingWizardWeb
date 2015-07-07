@@ -5,3 +5,6 @@
 /nbproject/private
 /build
 /dist
+/test
+/scripts/charmm-ti/setup.py
+/doc/status

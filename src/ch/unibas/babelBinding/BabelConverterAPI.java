@@ -8,6 +8,7 @@
  */
 package ch.unibas.babelBinding;
 
+import java.io.File;
 import org.apache.log4j.Logger;
 import org.openbabel.OBConversion;
 import org.openbabel.OBMol;
@@ -38,12 +39,21 @@ public class BabelConverterAPI {
 
         conv.SetInFormat(typeIN);
         conv.SetOutFormat(typeOUT);
+        
+        conv.AddOption("h");
+//        conv.AddOption("gen3D",OBConversion.Option_type.GENOPTIONS);
     }
 
-    public void convert(String inFile, String outFile) {
+    public void convert(File inFile, File outFile) {
         logger.info("Converting " + inFile + " to " + outFile);
-        conv.ReadFile(mol, inFile);
-        conv.WriteFile(mol, outFile);
+        conv.ReadFile(mol, inFile.getAbsolutePath());
+        conv.WriteFile(mol, outFile.getAbsolutePath());
     }
+    
+//    public void convert(String inString, File outFile) {
+//        logger.info("Converting " + inString + " to " + outFile);
+//        conv.ReadString(mol, inString);
+//        conv.WriteFile(mol, outFile.getAbsolutePath());
+//    }
 
 }// class

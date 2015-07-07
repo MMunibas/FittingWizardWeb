@@ -11,6 +11,7 @@ package ch.unibas.charmmtools.gui.database;
 import ch.unibas.charmmtools.gui.database.dataModel.DB_model;
 import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_InputAssistant;
 import ch.unibas.fittingwizard.Settings;
+import ch.unibas.fittingwizard.application.Visualization;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -24,8 +25,8 @@ public class DB_SelectForCHARMM extends DB_Window {
 
     private static final String title = "Selecting a compound from database";
 
-    public DB_SelectForCHARMM(Settings _settings) {
-        super(title, _settings);
+    public DB_SelectForCHARMM(Visualization visualization, Settings _settings) {
+        super(visualization, title, _settings);
         removeButtonFromButtonBar(button_initialSelection);
     }
 

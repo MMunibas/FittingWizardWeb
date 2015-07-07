@@ -130,7 +130,7 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base{
         File pdbOut = new File(parent + basename + ".pdb");
 
         BabelConverterAPI babelc = new BabelConverterAPI("xyz", "pdb");
-        babelc.convert(xyz.getAbsolutePath(), pdbOut.getAbsolutePath());
+        babelc.convert(xyz,pdbOut);
 
         if (pdbOut.exists()) {
             try {

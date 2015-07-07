@@ -9,6 +9,7 @@
 package ch.unibas.charmmtools.gui.database;
 
 import ch.unibas.fittingwizard.Settings;
+import ch.unibas.fittingwizard.application.Visualization;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -24,8 +25,8 @@ public class DB_View_Edit extends DB_Window {
 
     private static final String title = "Explore database of compounds and their properties";
 
-    public DB_View_Edit(Settings _settings) {
-        super(title, _settings);
+    public DB_View_Edit(Visualization visualization, Settings _settings) {
+        super(visualization, title, _settings);
     }
 
     @Override
