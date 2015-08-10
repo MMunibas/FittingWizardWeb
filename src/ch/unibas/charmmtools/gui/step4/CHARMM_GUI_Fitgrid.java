@@ -301,12 +301,12 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
             OverlayDialog.informUser("Files saved properly","All your files were saved in directory : " + this.work_directory.getAbsolutePath());
         }
 
-        button_run_all.setDisable(false);
+        //button_run_all.setDisable(false);
 
     }
 
     private void RunAll() {
-
+        OverlayDialog.informUser("Unavailable","Unefortunately this feature is not enabled yet.");
     }
 
     @Override

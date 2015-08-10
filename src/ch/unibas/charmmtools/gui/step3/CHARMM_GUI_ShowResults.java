@@ -21,6 +21,7 @@ import ch.unibas.charmmtools.generate.outputs.CHARMM_Output_PureLiquid;
 import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Fitgrid;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
+import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -144,7 +145,12 @@ public class CHARMM_GUI_ShowResults extends CHARMM_GUI_base {
 //        gasPhaseOut = splitOutFile(out.get(0).getText().split("\n"));
         // get the output file for pure liquid
 //        pureLiqOut = splitOutFile(out.get(1).getText().split("\n"));
-        parse_required_data();
+        try{
+            parse_required_data();
+        }catch (NullPointerException e)
+        {
+            OverlayDialog.showError("Error while parsing CHARMM output files","Error while reading some terms  : " + this.work_directory.getAbsolutePath());
+        }
 
     }
 
@@ -247,7 +253,7 @@ public class CHARMM_GUI_ShowResults extends CHARMM_GUI_base {
         //get data for delta g
     }
 
-    private static List<String> splitOutFile(String[] Array) {
+    private static List<String> splitOutFile(String[] Array) throws NullPointerException{
 
         List<String> arrList = new ArrayList<>();
 
@@ -259,7 +265,7 @@ public class CHARMM_GUI_ShowResults extends CHARMM_GUI_base {
 
     }
 
-    private static List<String> findInArray(List<String> arr, String pattern) {
+    private static List<String> findInArray(List<String> arr, String pattern) throws NullPointerException{
 
         List<String> res = new ArrayList<>();
 

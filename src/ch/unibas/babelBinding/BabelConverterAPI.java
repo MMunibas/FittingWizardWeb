@@ -13,19 +13,12 @@ import org.apache.log4j.Logger;
 import org.openbabel.OBConversion;
 import org.openbabel.OBMol;
 
-/**
- *
- * @author hedin
- */
-
-
 public class BabelConverterAPI {
 
-    OBConversion conv;
-    OBMol mol;
+    OBConversion conv = null;
+    OBMol mol = null;
     
     private final static Logger logger = Logger.getLogger(BabelConverterAPI.class);
-
 
     public BabelConverterAPI(String typeIN, String typeOUT) {
         
@@ -36,24 +29,23 @@ public class BabelConverterAPI {
 
         conv = new OBConversion();
         mol = new OBMol();
-
-        conv.SetInFormat(typeIN);
-        conv.SetOutFormat(typeOUT);
         
-        conv.AddOption("h");
-//        conv.AddOption("gen3D",OBConversion.Option_type.GENOPTIONS);
-    }
+        conv.SetInAndOutFormats(typeIN, typeOUT);
+        conv.AddOption("h",OBConversion.Option_type.GENOPTIONS);
+        conv.AddOption("gen3D",OBConversion.Option_type.GENOPTIONS);
 
-    public void convert(File inFile, File outFile) {
-        logger.info("Converting " + inFile + " to " + outFile);
+    }
+    
+    public void convert(String inFile, String outFile){
+        conv.OpenInAndOutFiles(inFile, outFile);
+        //conv.ReadFile(mol, inFile);
+        conv.Convert();
+        //conv.WriteFile(mol, outFile);
+    }
+    
+    public void convert(File inFile, File outFile){
         conv.ReadFile(mol, inFile.getAbsolutePath());
         conv.WriteFile(mol, outFile.getAbsolutePath());
     }
-    
-//    public void convert(String inString, File outFile) {
-//        logger.info("Converting " + inString + " to " + outFile);
-//        conv.ReadString(mol, inString);
-//        conv.WriteFile(mol, outFile.getAbsolutePath());
-//    }
 
 }// class

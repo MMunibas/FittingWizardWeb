@@ -18,7 +18,6 @@ import ch.unibas.fittingwizard.application.Visualization;
 import ch.unibas.fittingwizard.presentation.base.WizardPageWithVisualization;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -126,9 +125,9 @@ public abstract class DB_Window extends WizardPageWithVisualization {
             logger.error("Error while writing temp files : " + e.getMessage());
         }
 
-        converter = new BabelConverterAPI("smiles", "xyz");
-        converter.convert(smi, xyz);
-        visualization.show(xyz);
+        converter = new BabelConverterAPI("smi", "xyz");
+        converter.convert(smi.getAbsolutePath(), xyz.getAbsolutePath());
+        //visualization.show(xyz);
 
     }
 

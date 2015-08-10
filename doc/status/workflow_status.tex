@@ -17,7 +17,7 @@
 
 \setlength\parindent{0pt}
 
-\author{Florent Hédin}
+\author{Florent H\'{e}din}
 \title{FittingWizard : Status of the current implementation}
 
 \begin{document}
@@ -142,6 +142,26 @@ residues and then the density, Enthalpy of Vaporization and Free Energy of Solva
 \includegraphics[width=0.9\linewidth]{pics/scr8}
 \caption{CHARMM fitting procedure : obtaining the calculated thermodynamic properties}
 \label{fig8}
+\end{figure}
+
+\subsubsection{Analyze CHARMM output files}
+
+All the output files from a given simulation are stored in the \texttt{data} directory (it possible 
+to 
+change the path of this directory and its name from the \texttt{\detokenize{config_gui.ini}} file).
+By choosing the option ``Analyze CHARMM output files'' from the main window (Figure \ref{fig0}) it 
+is 
+possible to reload existing output files from a subdirectory of \texttt{data} (see Figure 
+\ref{fig8b}). Once loaded the 
+files will bring the user again to the window of Figure \ref{fig8} for obtaining again all the 
+estimated properties.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\linewidth]{pics/scr17}
+\caption{CHARMM fitting procedure : \textit{a posteriori} extraction of data from existing output 
+files from a previous run}
+\label{fig8b}
 \end{figure}
 
 \clearpage
@@ -302,65 +322,65 @@ a checking procedure).
 %-------------------------------------------------
 %-------------------------------------------------
 
-\section{List of known Bugs}
-
-\subsection{From the GUI}
-
-\begin{itemize}
-\item \sout{ 
-PDB : The Gaussian coordinates are saved to a XYZ file, but for the CHARMM simulation 
-we need 
-a PDB or COR file : unfortunately PDB files generated from VMD or OpenBabel are not readable by 
-CHARMM directly. A code for converting the XYZ file to PDB directly from the code is currently 
-being written, it will reused code from the section generating RTF and PSF files (from Figures 
-\ref{fig15} and \ref{fig16}). 
-}
-
-\item \textbf{This is now solved} : code was included inside the fittingWizard for generating 
-internally PDB 
-/ COR / PSF CHARMM files directly from the software. The CHARMM atom typing for the atoms is also 
-done using an internal code, although it may fail assigning a type for some of them, but the user 
-has the possibility to manually edit those types.
-
-
-\end{itemize}
-
-\subsection{From Tristan's python scripts}
-
-Found by Florent :
-\begin{itemize}
-\item PRNLEV 2 in input file while using MPI is problematic and unnecessary as this is already the 
-default with newer versions of CHARMM, because the I/O is messy and then difficult to parse later.
-\item with CHARMM c40a2 it is necessary to increase the value of ECHECK which is bt default 20.0 
-(maximum energy fluctuation between 2 steps allowed by CHARMM, it can go over 20. with some scaled 
-epsilon/sigma : maybe minimisation should be longer ?)
-\item ssh submission fails if the private keys are encrypted : need to use ones which are not 
-password protected. but this is unsafe, need to check python reference of this ssh module for an 
-alternative. 
-\end{itemize}
-
-Found by Krystel : 
-\begin{itemize}
-\item the use of IC in the topology file (top,rtf) may lead to incorrect results.
-\end{itemize}
+%\section{List of known Bugs}
+%
+%\subsection{From the GUI}
+%
+%\begin{itemize}
+%\item \sout{ 
+%PDB : The Gaussian coordinates are saved to a XYZ file, but for the CHARMM simulation 
+%we need 
+%a PDB or COR file : unfortunately PDB files generated from VMD or OpenBabel are not readable by 
+%CHARMM directly. A code for converting the XYZ file to PDB directly from the code is currently 
+%being written, it will reused code from the section generating RTF and PSF files (from Figures 
+%\ref{fig15} and \ref{fig16}). 
+%}
+%
+%\item \textbf{This is now solved} : code was included inside the fittingWizard for generating 
+%internally PDB 
+%/ COR / PSF CHARMM files directly from the software. The CHARMM atom typing for the atoms is also 
+%done using an internal code, although it may fail assigning a type for some of them, but the user 
+%has the possibility to manually edit those types.
+%
+%
+%\end{itemize}
+%
+%\subsection{From Tristan's python scripts}
+%
+%Found by Florent :
+%\begin{itemize}
+%\item PRNLEV 2 in input file while using MPI is problematic and unnecessary as this is already the 
+%default with newer versions of CHARMM, because the I/O is messy and then difficult to parse later.
+%\item with CHARMM c40a2 it is necessary to increase the value of ECHECK which is bt default 20.0 
+%(maximum energy fluctuation between 2 steps allowed by CHARMM, it can go over 20. with some scaled 
+%epsilon/sigma : maybe minimisation should be longer ?)
+%\item ssh submission fails if the private keys are encrypted : need to use ones which are not 
+%password protected. but this is unsafe, need to check python reference of this ssh module for an 
+%alternative. 
+%\end{itemize}
+%
+%Found by Krystel : 
+%\begin{itemize}
+%\item the use of IC in the topology file (top,rtf) may lead to incorrect results.
+%\end{itemize}
 
 %-------------------------------------------------
 %-------------------------------------------------
 
-\section{Outlook}
-
-\begin{itemize}
-\item For the moment the interface is blocked (waiting screen) as long as jobs are
-running : not convenient
-
-\item Linked to previous point : add possibility to resume properly a previous
-session ("data serialization" / possibility to save the whole working session)
-
-\item Add a proper comparison (with graphs ?) of exp. vs. calculated values
-
-\item Add the last section that will modify the epsilon parameters with a fit and run again 
-simulations.
-\end{itemize}
+%\section{Outlook}
+%
+%\begin{itemize}
+%\item For the moment the interface is blocked (waiting screen) as long as jobs are
+%running : not convenient
+%
+%\item Linked to previous point : add possibility to resume properly a previous
+%session ("data serialization" / possibility to save the whole working session)
+%
+%\item Add a proper comparison (with graphs ?) of exp. vs. calculated values
+%
+%\item Add the last section that will modify the epsilon parameters with a fit and run again 
+%simulations.
+%\end{itemize}
 
 %-------------------------------------------------
 %-------------------------------------------------
@@ -368,75 +388,179 @@ simulations.
 
 \section{Results}
 
-\subsection{Phenol}
+%\subsection{Phenol}
 
-Experimental results for phenol :
+%Experimental results for phenol :
+%
+%\begin{itemize}
+%\item $\rho$ (g/cm$^-3$) : 1.073
+%\item $\Delta H$ (kcal/mol) : 13.75
+%\item $\Delta G$ (kcal/mol) : -6.60
+%\end{itemize}
+%
+%\medskip
+%
+%Simulation: $\epsilon$ and $\sigma$ were scaled by multiplying by $1.00$ or $1.05$ or $1.10$
+%
+%\begin{center}
+%\begin{tabular}{|c|c|c|c|c|}
+%\hline  &  & $\sigma$*1.00 & $\sigma$*1.05 & $\sigma$*1.10 \\ 
+%\hline $\epsilon*1.00$ & $\rho$ (g/cm$^-3$) & 1.099 & 0.9934 & 0.9004 \\ 
+%\hline  & $\Delta H$ (kcal/mol) & 19.871 & 18.4993 & 17.563 \\ 
+%\hline  & $\Delta G$ (kcal/mol) & -6.496 & -12.78375 & -28.96785 \\ 
+%\hline  &  &  &  &  \\ 
+%\hline $\epsilon*1.05$ & $\rho$ (g/cm$^-3$) & 1.093 & 0.9973 & 0.9068 \\ 
+%\hline  & $\Delta H$ (kcal/mol) & 20.19 & 18.8933 & 18.0134 \\ 
+%\hline  & $\Delta G$ (kcal/mol) & -3.76869 & -13.69526 & -30.26755 \\ 
+%\hline  &  &  &  &  \\ 
+%\hline $\epsilon*1.10$ & $\rho$ (g/cm$^-3$)& 1.099 & 0.9951 & 0.8999 \\ 
+%\hline  & $\Delta H$ (kcal/mol) & 20.604 & 18.3849 & 17.67194 \\ 
+%\hline  & $\Delta G$ (kcal/mol) & -3.74234 & -14.03508 & -32.66905 \\
+%\hline  &  &  &  &  \\ 
+%\hline 
+%\end{tabular} 
+%\end{center}
+%
+%Discussion : \\
+%
+%
+%The evolution of $\rho$ and $\Delta H$ looks coherent, but the estimates of 
+%$\Delta G$ are, for scaled  $\sigma$, really reaching non realistic values. One need to 
+%investigate 
+%scaling factors lower than one to see if such things also happen in that case.\\
+%
+%
+%
+%Nevertheless, all the $\rho$ - $\Delta H$, and also the $\Delta G$ for $\sigma$*1.00, are similar 
+%to results obtained by from Prashant (unpublished work : Thermodynamic study of the intercalation 
+%process for various
+%pharmacaphore in the chromatographic system).
+
+\clearpage
+
+%-------------------------------------------------
+
+\subsection{NMA}
+Figures \ref{nma_val} \ref{nma_dens} \ref{nma_dh} \ref{nma_dg} show results obtained with current 
+version of the fittingWizard when working with the NMA molecule.\\
+
+With Figure \ref{nma_val} one can see a summary of the 3 computed properties : 
 
 \begin{itemize}
-\item $\rho$ (g/cm$^-3$) : 1.073
-\item $\Delta H$ (kcal/mol) : 13.75
-\item $\Delta G$ (kcal/mol) : -6.60
+\item Density $\rho$
+\item Enthalpy of vaporization $\Delta H$
+\item Free energy of solvation $\Delta G$
 \end{itemize}
 
-\medskip
+As experimental reference values from PubChem and the Mobley DB were used (see ``Database details'' 
+section for links and references).\\
 
-Simulation: $\epsilon$ and $\sigma$ were scaled by multiplying by $1.00$ or $1.05$ or $1.10$
+We also compare to results from Cazade \& Bereau \& Meuwly published in 
+\href{http://pubs.acs.org/doi/abs/10.1021/jp5011692}{JPCB} \\
 
-\begin{center}
-\begin{tabular}{|c|c|c|c|c|}
-\hline  &  & $\sigma$*1.00 & $\sigma$*1.05 & $\sigma$*1.10 \\ 
-\hline $\epsilon*1.00$ & $\rho$ (g/cm$^-3$) & 1.099 & 0.9934 & 0.9004 \\ 
-\hline  & $\Delta H$ (kcal/mol) & 19.871 & 18.4993 & 17.563 \\ 
-\hline  & $\Delta G$ (kcal/mol) & -6.496 & -12.78375 & -28.96785 \\ 
-\hline  &  &  &  &  \\ 
-\hline $\epsilon*1.05$ & $\rho$ (g/cm$^-3$) & 1.093 & 0.9973 & 0.9068 \\ 
-\hline  & $\Delta H$ (kcal/mol) & 20.19 & 18.8933 & 18.0134 \\ 
-\hline  & $\Delta G$ (kcal/mol) & -3.76869 & -13.69526 & -30.26755 \\ 
-\hline  &  &  &  &  \\ 
-\hline $\epsilon*1.10$ & $\rho$ (g/cm$^-3$)& 1.099 & 0.9951 & 0.8999 \\ 
-\hline  & $\Delta H$ (kcal/mol) & 20.604 & 18.3849 & 17.67194 \\ 
-\hline  & $\Delta G$ (kcal/mol) & -3.74234 & -14.03508 & -32.66905 \\
-\hline  &  &  &  &  \\ 
+One can see in the table at the top of Figure \ref{nma_val} that $\rho$ and $\Delta H$ are always 
+really close to what is found by experiments, and 
+that $\Delta G$ is underestimated by 3 kcal/mol. Results are almost the same than the one published 
+in JPCB, as same paramters and similar procedure/scripts were used.\\
+
+By having a look at the 2 lower tables of \ref{nma_val} one can see results obtained when scaling 
+all the $\sigma$ and $\epsilon$ parameters by $1.025~1.05~1.075~1.1$, again results are really 
+similar to what was published, small differences and the lack of error estimate come from the fact 
+that only one simulation only was running for each set of scaled parameters, as this was just a 
+validation.\\
+
+Figures \ref{nma_dens} to \ref{nma_dg} show graphical evolution of the estimated properties 
+according to the Scaling factor, and are just a way of visualizing values from the previous tables.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\linewidth]{pics/nma}
+\caption{Computed values with current version of the Wizard compared to previously published ones, 
+for NMA}
+\label{nma_val}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\linewidth]{pics/nma_dens}
+\caption{Density $\rho$ evolution for NMA, for different scaling parameters applied to the LJ 
+$\sigma$ and $\epsilon$}
+\label{nma_dens}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\linewidth]{pics/nma_dh}
+\caption{Enthalpy of vaporization $\Delta H$ evolution for NMA, for different scaling parameters 
+applied to the LJ $\sigma$ and $\epsilon$}
+\label{nma_dh}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\linewidth]{pics/nma_dg}
+\caption{Free energy of solvation $\Delta G$ evolution for NMA, for different scaling parameters 
+applied to the LJ $\sigma$ and $\epsilon$}
+\label{nma_dg}
+\end{figure}
+
+\clearpage
+
+%-------------------------------------------------
+
+\subsection{Benzonitrile}
+
+%-------------------------------------------------
+
+A second validation was performed for Benzonitrile : experimental parameters from Pubchem and 
+the Mobley DB are in Table \ref{tab:benzonitrile_ref}:\\
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|}
+\hline  & Values (g/cm$^3$ and kcal/mol) \\ 
+\hline $\rho$ & 1.0093 \\ 
+\hline $\Delta H$ & 10.639 \\ 
+\hline $\Delta G$ & -4.10 \\ 
 \hline 
 \end{tabular} 
-\end{center}
+\caption{Experimental values for Benzonitrile}
+\label{tab:benzonitrile_ref}
+\end{table}
 
-Discussion : \\
+Using the fittingWizard we obtained two set of values, see Table \ref{tab:benzonitrile_new} : \\
 
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline  & Run 1 & Run 2 \\ 
+\hline $\rho$ & 0.998 & 1.0035 \\ 
+\hline $\Delta H$ & 19.28 & 16.02 \\ 
+\hline $\Delta G$ & -3.90 & -4.74 \\ 
+\hline 
+\end{tabular} 
+\caption{Experimental values for Benzonitrile}
+\label{tab:benzonitrile_new}
+\end{table}
 
-The evolution of $\rho$ and $\Delta H$ looks coherent, but the estimates of 
-$\Delta G$ are, for scaled  $\sigma$, really reaching non realistic values. One need to investigate 
-scaling factors lower than one to see if such things also happen in that case.\\
+The difference between the Run 1 and Run2 was in the choice of the MTP parameters obtained from the 
+fit from Gaussian : because the $\Delta H$ was twice what is expected for Run 1, a more careful 
+choice was made for Run 2, by using different starting values for the fit, and by trying to 
+minimize further the RMSE for each multipole term. In the end it reduced $\Delta H$ from 19 to 16 
+which is still too high but closer to ref. from Table \ref{tab:benzonitrile_ref}.\\
 
+\subsection{Conclusion : On the choice of the MTP and LJ parameters and their influence on the 
+estimated properties}
 
+One should notice that density is really not sensitive to a change of the MTP initial parameters 
+(less than one percent of fluctuation in Table \ref{tab:benzonitrile_ref}), but that $\Delta G$ and 
+$\Delta H$ are more impacted (18 \% and 17\% of fluctuations respectively).\\
 
-Nevertheless, all the $\rho$ - $\Delta H$, and also the $\Delta G$ for $\sigma$*1.00, are similar 
-to results obtained by from Prashant (unpublished work : Thermodynamic study of the intercalation 
-process for various
-pharmacaphore in the chromatographic system).
+When scaling the LJ parameters as done fo the NMA example, we notice that the $\Delta H$ shows 
+the smallest relative fluctuations (maximum 4\%). But for $\rho$ and $\Delta G$ the observed 
+fluctuations are for the worst case of 15\% and 20\% respectively.\\
+
+Thus it seems that an approach combining both LJ scaling and a careful choice of the MTP parameters 
+is necessary in order to fit as closely as possible to the experimental results.
 
 \end{document}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -460,6 +460,10 @@ def opt_esp(list_files,penalize,rnk):
             if not (off_hyd == True and name[0] == 'H' and int(name[idx_+2:idx_+3]) > 0):
                 coeffs_names.append(name) 
 
+    print coeffs_names_all
+    print coeffs_names
+    #exit(0)
+
     read_coeffs(list_files)
     try:
         x_comb_init
