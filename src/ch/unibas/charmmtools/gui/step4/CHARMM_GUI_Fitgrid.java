@@ -66,6 +66,9 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
 
     @FXML // fx:id="buttonPar"
     private Button buttonPar; // Value injected by FXMLLoader
+    
+    @FXML // fx:id="buttonSelectAtTypes"
+    private Button buttonUnselectAtTypes; // Value injected by FXMLLoader
 
     private File parFile;
     private boolean PAR_selected = false;
@@ -104,7 +107,6 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
 
     public CHARMM_GUI_Fitgrid(RunCHARMMWorkflow flow) {
         super(title,flow);
-//        this.tableview_gridValues = new TableView<gridValuesModel>();
 
         this.list_gridValues = FXCollections.observableArrayList();
 
@@ -112,34 +114,7 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
     }
 
     private void setupGridTable() {
-//        list_gridValues.add(new gridValuesModel("0.95"));
-//        list_gridValues.add(new gridValuesModel("1.00"));
-//        list_gridValues.add(new gridValuesModel("1.05"));
 
-//        column_gridValues.setCellValueFactory(
-//                new PropertyValueFactory<gridValuesModel,String>("value")
-//        );
-//        
-//        column_gridValues.setCellFactory(new Callback<TableColumn<gridValuesModel, String>, TableCell<gridValuesModel, String>>() {
-//            @Override
-//            public TableCell<gridValuesModel, String> call(TableColumn<gridValuesModel, String> atomChargeGroupViewModelStringTableColumn) {
-//                return new EditingCell<>();
-//            }
-//        });
-//        
-//        column_gridValues.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<gridValuesModel, String>>() {
-//            @Override
-//            public void handle(TableColumn.CellEditEvent<gridValuesModel, String> event) {
-//                logger.debug("onEditCommit event occured");
-//                event.getRowValue().setValue(event.getNewValue());
-//            }
-//        });
-//        
-//        cellFactory = new Callback<TableColumn<gridValuesModel,String>, TableCell<gridValuesModel, String>>() {
-//                    public TableCell call(TableColumn p) {
-//                        return new EditingCell();
-//                    }
-//                };
         column_gridValues.setCellValueFactory(
                 new PropertyValueFactory<gridValuesModel, String>("value")
         );
@@ -315,7 +290,7 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
         button_goRunSim = ButtonFactory.createButtonBarButton("Go to Input Assistant", new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                logger.info("Goin Back to input assistant.");
+                logger.info("Going Back to input assistant.");
                 navigateTo(CHARMM_GUI_InputAssistant.class, null);
             }
         });
@@ -372,6 +347,11 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
             }
         }
 
+    }
+    
+    @FXML
+    void unselectAtoms(ActionEvent event) {
+        
     }
     
     
