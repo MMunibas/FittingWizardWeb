@@ -9,7 +9,7 @@
 
 <BorderPane prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <top>
-      <GridPane prefHeight="302.0" prefWidth="1191.0" BorderPane.alignment="CENTER">
+      <GridPane BorderPane.alignment="CENTER">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" />
           <ColumnConstraints hgrow="SOMETIMES" />
@@ -19,10 +19,13 @@
         </columnConstraints>
         <rowConstraints>
           <RowConstraints vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="200.0" minHeight="171.0" prefHeight="172.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="44.0" minHeight="22.0" prefHeight="43.0" vgrow="SOMETIMES" />
-            <RowConstraints vgrow="SOMETIMES" />
-            <RowConstraints vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="200.0" minHeight="171.0" prefHeight="188.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="53.0" minHeight="22.0" prefHeight="37.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="44.0" minHeight="21.0" prefHeight="33.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="45.0" minHeight="22.0" prefHeight="32.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="51.0" minHeight="0.0" prefHeight="32.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="27.0" minHeight="10.0" prefHeight="11.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="26.0" minHeight="10.0" prefHeight="11.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Label text="Number of grid values : " GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
@@ -48,7 +51,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TableView>
-            <Button fx:id="genGrid" disable="true" mnemonicParsing="false" onAction="#GenButtonPressed" text="Generate grid" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+            <Button fx:id="load" disable="true" mnemonicParsing="false" onAction="#LoadButtonPressed" text="Load" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
@@ -64,7 +67,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Button>
-            <GridPane GridPane.columnIndex="2" GridPane.rowIndex="3">
+            <GridPane GridPane.columnIndex="2" GridPane.rowIndex="4">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -73,20 +76,21 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <CheckBox disable="true" mnemonicParsing="false" selected="true" text="Ignore TIP3P water" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                  <CheckBox fx:id="ignoreTip3" disable="true" mnemonicParsing="false" selected="true" text="Ignore TIP3P water" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </CheckBox>
-                  <Button fx:id="buttonUnselectAtTypes" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#unselectAtoms" text="Choose more ...." GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <Button fx:id="buttonUnselectAtTypes" alignment="CENTER" contentDisplay="CENTER" disable="true" mnemonicParsing="false" onAction="#unselectAtoms" text="Choose more ..." GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                </children>
             </GridPane>
-            <Label text="Ignore atoms :" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+            <Label text="Ignore atoms :" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+            <Button fx:id="genGrid" disable="true" mnemonicParsing="false" onAction="#GenButtonPressed" text="Generate" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
          </children>
       </GridPane>
    </top>
    <bottom>
-      <GridPane fx:id="gpane_fullgrid" prefHeight="393.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+      <GridPane fx:id="gpane_fullgrid" prefHeight="301.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>

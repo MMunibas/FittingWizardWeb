@@ -15,6 +15,8 @@ import ch.unibas.fittingwizard.application.scripts.base.ScriptExecutionException
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -24,6 +26,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
@@ -49,7 +52,7 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
     @FXML
     private TextField textfield_ngrid;
     @FXML
-    private Button goButton, genGrid;
+    private Button goButton, load, genGrid;
 
     @FXML
     private TableView<gridValuesModel> tableview_gridValues;
@@ -67,6 +70,9 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
     @FXML // fx:id="buttonPar"
     private Button buttonPar; // Value injected by FXMLLoader
     
+    @FXML // fx:id="ignoreTip3"
+    private CheckBox ignoreTip3; // Value injected by FXMLLoader
+    
     @FXML // fx:id="buttonSelectAtTypes"
     private Button buttonUnselectAtTypes; // Value injected by FXMLLoader
 
@@ -77,6 +83,8 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
     private Button button_save_files;
     private Button button_goRunSim;
     private Button button_run_all;
+    
+    List<SelectScalingModel> AtomTypesList = new ArrayList<>();
 
     /**
      * Represents a group of grid values
@@ -195,15 +203,37 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
             }
         }
 
-        genGrid.setDisable(false);
+//        genGrid.setDisable(false);
     }
 
+    @FXML
+    private void LoadButtonPressed(ActionEvent event) {
+        if (event.getSource().equals(load)) {
+            
+            buttonUnselectAtTypes.setDisable(false);
+            ignoreTip3.setDisable(false);  
+            genGrid.setDisable(false);
+            
+            //Dummy values for the data model
+            AtomTypesList.add( new SelectScalingModel("NC=O", true) );
+            AtomTypesList.add( new SelectScalingModel("HNCO", true) );
+            AtomTypesList.add( new SelectScalingModel("CR", true) );
+            AtomTypesList.add( new SelectScalingModel("HCMM", true) );
+            AtomTypesList.add( new SelectScalingModel("C=O", true) );
+            AtomTypesList.add( new SelectScalingModel("O=C", true) );
+            AtomTypesList.add( new SelectScalingModel("OT", false) );
+            AtomTypesList.add( new SelectScalingModel("HT", false) );
+        }
+    }
+    
     @FXML
     private void GenButtonPressed(ActionEvent event) {
         if (event.getSource().equals(genGrid)) {
             setupFullGrid();
             button_save_files.setDisable(false);
+            
             genGrid.setDisable(true);
+            
         }
     }
 
@@ -344,6 +374,7 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
                 textPar.setText(selectedFile.getAbsolutePath());
                 parFile = new File(selectedFile.getAbsolutePath());
                 PAR_selected = true;
+                load.setDisable(false);
             }
         }
 
@@ -352,6 +383,25 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
     @FXML
     void unselectAtoms(ActionEvent event) {
         
+        Choose_Ignored_atoms_Scaling edit = new Choose_Ignored_atoms_Scaling();
+        
+//        LinkedHashSet<AtomTypeId> atomTypesRequiringUserInput = new LinkedHashSet<>();
+//        
+//        atomTypesRequiringUserInput.add(new AtomTypeId("TypeA"));
+//        atomTypesRequiringUserInput.add(new AtomTypeId("TypeB"));
+//        atomTypesRequiringUserInput.add(new AtomTypeId("TypeC"));
+        
+//        LinkedHashSet<ChargeValue> editAtomTypes = edit.editAtomTypes(atomTypesRequiringUserInput);
+//        
+//        List<SelectScalingModel> AtomTypesList2 = edit.editAtomTypes(AtomTypesList);
+        
+        edit.editAtomTypes(AtomTypesList);
+        
+//        for(int i=0; i<AtomTypesList2.size(); i++)
+//        {
+//            logger.info(AtomTypesList2.get(i).getFFAtomType() + '\t' + AtomTypesList.get(i).isSelected() + '\t' + AtomTypesList2.get(i).isSelected());
+//        }
+      
     }
     
     
