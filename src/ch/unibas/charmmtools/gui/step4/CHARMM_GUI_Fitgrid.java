@@ -15,6 +15,9 @@ import ch.unibas.fittingwizard.application.scripts.base.ScriptExecutionException
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
@@ -26,7 +29,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
@@ -69,10 +71,9 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
 
     @FXML // fx:id="buttonPar"
     private Button buttonPar; // Value injected by FXMLLoader
-    
-    @FXML // fx:id="ignoreTip3"
-    private CheckBox ignoreTip3; // Value injected by FXMLLoader
-    
+
+//    @FXML // fx:id="ignoreTip3"
+//    private CheckBox ignoreTip3; // Value injected by FXMLLoader
     @FXML // fx:id="buttonSelectAtTypes"
     private Button buttonUnselectAtTypes; // Value injected by FXMLLoader
 
@@ -83,7 +84,7 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
     private Button button_save_files;
     private Button button_goRunSim;
     private Button button_run_all;
-    
+
     List<SelectScalingModel> AtomTypesList = new ArrayList<>();
 
     /**
@@ -114,7 +115,7 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
     }
 
     public CHARMM_GUI_Fitgrid(RunCHARMMWorkflow flow) {
-        super(title,flow);
+        super(title, flow);
 
         this.list_gridValues = FXCollections.observableArrayList();
 
@@ -209,31 +210,55 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
     @FXML
     private void LoadButtonPressed(ActionEvent event) {
         if (event.getSource().equals(load)) {
-            
+
             buttonUnselectAtTypes.setDisable(false);
-            ignoreTip3.setDisable(false);  
+//            ignoreTip3.setDisable(false);
             genGrid.setDisable(false);
-            
-            //Dummy values for the data model
-            AtomTypesList.add( new SelectScalingModel("NC=O", true) );
-            AtomTypesList.add( new SelectScalingModel("HNCO", true) );
-            AtomTypesList.add( new SelectScalingModel("CR", true) );
-            AtomTypesList.add( new SelectScalingModel("HCMM", true) );
-            AtomTypesList.add( new SelectScalingModel("C=O", true) );
-            AtomTypesList.add( new SelectScalingModel("O=C", true) );
-            AtomTypesList.add( new SelectScalingModel("OT", false) );
-            AtomTypesList.add( new SelectScalingModel("HT", false) );
-        }
-    }
-    
+
+            AtomTypesList.clear();
+            File myDir = this.work_directory;
+            File outfile = new File(myDir, "atom_types.txt");
+            ProcessBuilder pb = new ProcessBuilder();
+            pb.directory(myDir);
+            String script = new File("./scripts/lj-fit/src/list-atom-types").getAbsolutePath();
+            pb.command("/bin/bash", script, parFile.getAbsolutePath());
+//            pb.redirectOutput(new File(myDir, "scaled_e" + e_scale + "_s" + s_scale + ".par"));
+            pb.redirectOutput(outfile);
+            logger.info("Running bash script\n" + pb.command()
+                    + "\nin directory:\n" + pb.directory()
+                    + "\nwith environment:\n" + pb.environment());
+            int exitCode = 0;
+            try {
+                Process p = pb.start();
+                exitCode = p.waitFor();
+
+                logger.info("Bash return value: " + exitCode);
+                if (exitCode != 0) {
+                    throw new ScriptExecutionException(
+                            String.format("Bash script [%s] did not exit correctly. Exit code: %s",
+                                    script,
+                                    String.valueOf(exitCode)));
+                } else {
+                    //successfull atom types parsing
+                    List<String> fileLines = Files.readAllLines(Paths.get(outfile.getAbsolutePath()));
+                    for(String line : fileLines)
+                        AtomTypesList.add(new SelectScalingModel(line, true));
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(String.format("Bash script [%s] failed.", script), e);
+            }
+
+        }//if (event.getSource().equals(load))
+    }// end of LoadButtonPressed
+
     @FXML
     private void GenButtonPressed(ActionEvent event) {
         if (event.getSource().equals(genGrid)) {
             setupFullGrid();
             button_save_files.setDisable(false);
-            
+
             genGrid.setDisable(true);
-            
+
         }
     }
 
@@ -244,13 +269,21 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
         gpane_fullgrid.getChildren().clear();
         button_save_files.setDisable(true);
         button_run_all.setDisable(true);
+        textPar.clear();
+//        buttonPar.setDisable(true);
+        PAR_selected = false;
+        load.setDisable(true);
+//        ignoreTip3.setDisable(true);
+        buttonUnselectAtTypes.setDisable(true);
+        genGrid.setDisable(true);
+        AtomTypesList.clear();
     }
 
     private void SaveFiles() {
 
-        boolean failed=false;
-        
-        File myDir = new File(this.work_directory,"scaled_par");
+        boolean failed = false;
+
+        File myDir = new File(this.work_directory, "scaled_par");
         myDir.mkdirs();
 
 //        String[] exts = {"par"};
@@ -291,7 +324,7 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
                 }
                 logger.info("Bash return value: " + exitCode);
                 if (exitCode != 0) {
-                    failed=true;
+                    failed = true;
                     throw new ScriptExecutionException(
                             String.format("Bash script [%s] did not exit correctly. Exit code: %s",
                                     script,
@@ -299,19 +332,18 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
                 }
             }
         }
-        
+
         if (failed) {
-            OverlayDialog.showError("Error while saving files","Error while saving your files in directory : " + this.work_directory.getAbsolutePath());
+            OverlayDialog.showError("Error while saving files", "Error while saving your files in directory : " + this.work_directory.getAbsolutePath());
         } else {
-            OverlayDialog.informUser("Files saved properly","All your files were saved in directory : " + this.work_directory.getAbsolutePath());
+            OverlayDialog.informUser("Files saved properly", "All your files were saved in directory : " + this.work_directory.getAbsolutePath());
         }
 
         //button_run_all.setDisable(false);
-
     }
 
     private void RunAll() {
-        OverlayDialog.informUser("Unavailable","Unefortunately this feature is not enabled yet.");
+        OverlayDialog.informUser("Unavailable", "Unefortunately this feature is not enabled yet.");
     }
 
     @Override
@@ -379,30 +411,26 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
         }
 
     }
-    
+
     @FXML
     void unselectAtoms(ActionEvent event) {
-        
+
         Choose_Ignored_atoms_Scaling edit = new Choose_Ignored_atoms_Scaling();
-        
+
 //        LinkedHashSet<AtomTypeId> atomTypesRequiringUserInput = new LinkedHashSet<>();
 //        
 //        atomTypesRequiringUserInput.add(new AtomTypeId("TypeA"));
 //        atomTypesRequiringUserInput.add(new AtomTypeId("TypeB"));
 //        atomTypesRequiringUserInput.add(new AtomTypeId("TypeC"));
-        
 //        LinkedHashSet<ChargeValue> editAtomTypes = edit.editAtomTypes(atomTypesRequiringUserInput);
 //        
 //        List<SelectScalingModel> AtomTypesList2 = edit.editAtomTypes(AtomTypesList);
-        
         edit.editAtomTypes(AtomTypesList);
-        
+
 //        for(int i=0; i<AtomTypesList2.size(); i++)
 //        {
 //            logger.info(AtomTypesList2.get(i).getFFAtomType() + '\t' + AtomTypesList.get(i).isSelected() + '\t' + AtomTypesList2.get(i).isSelected());
 //        }
-      
     }
-    
-    
+
 }

@@ -67,25 +67,9 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Button>
-            <GridPane GridPane.columnIndex="2" GridPane.rowIndex="4">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <CheckBox fx:id="ignoreTip3" disable="true" mnemonicParsing="false" selected="true" text="Ignore TIP3P water" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                     <GridPane.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </GridPane.margin>
-                  </CheckBox>
-                  <Button fx:id="buttonUnselectAtTypes" alignment="CENTER" contentDisplay="CENTER" disable="true" mnemonicParsing="false" onAction="#unselectAtoms" text="Choose more ..." GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-               </children>
-            </GridPane>
             <Label text="Ignore atoms :" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
             <Button fx:id="genGrid" disable="true" mnemonicParsing="false" onAction="#GenButtonPressed" text="Generate" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
+            <Button fx:id="buttonUnselectAtTypes" alignment="CENTER" contentDisplay="CENTER" disable="true" mnemonicParsing="false" onAction="#unselectAtoms" text="Select ..." GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
          </children>
       </GridPane>
    </top>

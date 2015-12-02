@@ -8,14 +8,10 @@
  */
 package ch.unibas.charmmtools.gui.step4;
 
-import ch.unibas.fittingwizard.application.fitting.ChargeValue;
-import ch.unibas.fittingwizard.application.molecule.AtomTypeId;
 import ch.unibas.fittingwizard.presentation.base.dialog.ModalDialog;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
