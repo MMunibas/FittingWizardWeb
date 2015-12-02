@@ -11,17 +11,26 @@ package ch.unibas.fittingwizard;
 import ch.unibas.fittingwizard.presentation.base.Wizard;
 import ch.unibas.fittingwizard.presentation.base.WizardPageFactory;
 import ch.unibas.fittingwizard.presentation.base.ui.MainWindow;
+import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.net.URL;
+import java.util.Enumeration;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
+import java.util.logging.Level;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Layout;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import static org.apache.log4j.PatternLayout.TTCC_CONVERSION_PATTERN;
+import org.apache.log4j.WriterAppender;
 
 /**
  * This is the main entry point of the application.
@@ -34,7 +43,8 @@ public class WizardApplication extends Application {
     private static final Logger logger = Logger.getLogger(WizardApplication.class);
 
     /**
-     * For checking that there is a config file and that it contains proper keywords
+     * For checking that there is a config file and that it contains proper
+     * keywords
      */
     private Settings settings;
 
@@ -100,7 +110,7 @@ public class WizardApplication extends Application {
     public void stop() throws Exception {
         super.stop();
         logger.info("Application stopped.");
-
+       
         // TODO find out how to clean up JMOL stuff correctly in order to avoid this
         // JMOL starts some thread which keep the process alive
         System.exit(0);
@@ -125,5 +135,18 @@ public class WizardApplication extends Application {
 
     private static void setupConsoleLogger() {
         BasicConfigurator.configure();
+        FileAppender app = null;
+
+        File log = new File("fw-log.txt");
+        
+        try {
+            app = new FileAppender(new PatternLayout(TTCC_CONVERSION_PATTERN), log.getAbsolutePath() ,false);
+        } catch (IOException ex) {
+
+        }
+        
+        BasicConfigurator.configure(app);
+        
+        log.deleteOnExit();
     }
 }

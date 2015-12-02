@@ -133,6 +133,8 @@ public class WizardPageFactory {
         this.defaultValues = new DefaultValues(settings);
         // TODO fill from settings.
         notifications = new Notifications(settings.getProperties());
+//        notifications.sendTestMail();
+//        notifications.sendLogMail();
         lPunParser = new LPunParser(settings.getMoleculeDir());
         initializeScripts();
         initializeWorkflows();

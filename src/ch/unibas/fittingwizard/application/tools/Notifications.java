@@ -8,19 +8,23 @@
  */
 package ch.unibas.fittingwizard.application.tools;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 import javax.mail.Session;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.apache.log4j.Logger;
 
 /**
- * User: mhelmer
- * Date: 16.12.13
- * Time: 13:28
+ * User: mhelmer Date: 16.12.13 Time: 13:28
  */
 public class Notifications {
+
     public static final String SenderKey = "mail.sender";
     public static final String RecipientKey = "mail.recipient";
 
@@ -30,18 +34,54 @@ public class Notifications {
         this.props = props;
     }
 
-    public void sendGaussianDoneNotification(boolean isLogValid) {
-        if (isMailRecipientAndSenderDefined()) {
-            sendMail(isLogValid);
-        }
+    private String getSender() {
+        return props.getProperty(SenderKey);
+    }
+
+    private String getRecipient() {
+        return props.getProperty(RecipientKey);
     }
 
     public boolean isMailRecipientAndSenderDefined() {
-        return EmailValidator.getInstance().isValid(getRecipient()) &&
-                EmailValidator.getInstance().isValid(getSender());
+        return EmailValidator.getInstance().isValid(getRecipient())
+                && EmailValidator.getInstance().isValid(getSender());
     }
 
-    private void sendMail(boolean isLogValid) {
+    public void sendGaussianDoneNotification(boolean isLogValid) {
+        if (isMailRecipientAndSenderDefined()) {
+            sendMailGaussian(isLogValid);
+        }
+    }
+
+    public void sendTestMail() {
+        if (isMailRecipientAndSenderDefined()) {
+            sendMailTesting();
+        }
+    }
+    
+    public void sendLogMail() {
+        if (isMailRecipientAndSenderDefined()) {
+            sendErrorLogByMail();
+        }
+    }
+
+    private void sendMailTesting() {
+        try {
+            Email email = new SimpleEmail();
+            email.setMailSession(Session.getDefaultInstance(props));
+
+            email.setSubject("Test mail");
+            email.setMsg("This is a test mail for checking parameters from config file");
+            email.setFrom(getSender().trim());
+            email.addTo(getRecipient().trim());
+
+            email.send();
+        } catch (EmailException e) {
+            throw new RuntimeException("Could not send notification.", e);
+        }
+    }
+
+    private void sendMailGaussian(boolean isLogValid) {
         try {
             Email email = new SimpleEmail();
             email.setMailSession(Session.getDefaultInstance(props));
@@ -57,11 +97,22 @@ public class Notifications {
         }
     }
 
-    private String getSender() {
-        return props.getProperty(SenderKey);
-    }
+    private void sendErrorLogByMail()
+    {
+        try {
+            Email email = new SimpleEmail();
+            email.setMailSession(Session.getDefaultInstance(props));
 
-    private String getRecipient() {
-        return props.getProperty(RecipientKey);
+            email.setSubject("Log of FW session");
+            email.setMsg(
+                    new String(Files.readAllBytes(Paths.get("fw-log.txt")))
+            );
+            email.setFrom(getSender().trim());
+            email.addTo(getRecipient().trim());
+
+            email.send();
+        } catch (IOException | EmailException e) {
+            throw new RuntimeException("Could not send notification.", e);
+        }
     }
 }
