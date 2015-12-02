@@ -8,12 +8,9 @@
  */
 package ch.unibas.fittingwizard.application.xyz;
 
-import org.apache.commons.io.FilenameUtils;
-
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * User: mhelmer

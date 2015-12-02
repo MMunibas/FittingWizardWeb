@@ -8,28 +8,24 @@
  */
 package ch.unibas.fittingwizard.infrastructure;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.NameFileFilter;
-import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.apache.log4j.Logger;
-
 import ch.unibas.fittingwizard.Settings;
 import ch.unibas.fittingwizard.application.molecule.MoleculeId;
-import ch.unibas.fittingwizard.application.scripts.export.ExportScriptInput;
-import ch.unibas.fittingwizard.application.scripts.export.ExportScriptOutput;
 import ch.unibas.fittingwizard.application.scripts.vmd.IVmdDisplayScript;
 import ch.unibas.fittingwizard.application.scripts.vmd.VmdDisplayInput;
 import ch.unibas.fittingwizard.infrastructure.base.FieldcompRunner;
 import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
 import ch.unibas.fittingwizard.infrastructure.base.ScriptUtilities;
 import ch.unibas.fittingwizard.infrastructure.base.VmdRunner;
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.NameFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.log4j.Logger;
 
 public class RealVmdDisplayScript implements IVmdDisplayScript {
 

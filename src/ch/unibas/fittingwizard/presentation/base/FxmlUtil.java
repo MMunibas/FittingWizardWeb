@@ -9,12 +9,11 @@
 package ch.unibas.fittingwizard.presentation.base;
 
 import ch.unibas.charmmtools.gui.database.DB_Window;
+import java.io.IOException;
+import java.net.URL;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import org.apache.log4j.Logger;
-
-import java.io.IOException;
-import java.net.URL;
 
 /**
  * User: mhelmer

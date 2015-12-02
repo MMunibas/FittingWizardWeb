@@ -15,16 +15,15 @@ import ch.unibas.fittingwizard.application.scripts.export.ExportScriptOutput;
 import ch.unibas.fittingwizard.application.scripts.export.IExportScript;
 import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
 import ch.unibas.fittingwizard.infrastructure.base.ScriptUtilities;
+import java.io.File;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.log4j.Logger;
-
-import java.io.File;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * User: mhelmer

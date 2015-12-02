@@ -8,18 +8,16 @@
  */
 package ch.unibas.fittingwizard.mocks;
 
+import ch.unibas.fittingwizard.application.scripts.babel.BabelInput;
+import ch.unibas.fittingwizard.application.scripts.babel.BabelOutput;
+import ch.unibas.fittingwizard.application.scripts.babel.IBabelScript;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
-
-import ch.unibas.fittingwizard.application.scripts.babel.BabelInput;
-import ch.unibas.fittingwizard.application.scripts.babel.BabelOutput;
-import ch.unibas.fittingwizard.application.scripts.babel.IBabelScript;
 
 /**
  * User: mhelmer

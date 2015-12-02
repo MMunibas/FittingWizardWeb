@@ -10,20 +10,17 @@ package ch.unibas.fittingwizard.application;
 
 import ch.unibas.fittingwizard.application.molecule.AtomType;
 import ch.unibas.fittingwizard.application.xyz.XyzAtom;
-
-import javafx.stage.Stage;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.log4j.Logger;
-import org.jmol.adapter.smarter.SmarterJmolAdapter;
-import org.jmol.api.JmolViewer;
-
-import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.*;
+import javafx.stage.Stage;
+import javax.swing.*;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.log4j.Logger;
+import org.jmol.adapter.smarter.SmarterJmolAdapter;
+import org.jmol.api.JmolViewer;
 
 public class Visualization {
 

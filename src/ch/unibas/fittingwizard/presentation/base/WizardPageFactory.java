@@ -8,15 +8,24 @@
  */
 package ch.unibas.fittingwizard.presentation.base;
 
-import ch.unibas.fittingwizard.WhereToGo;
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import javafx.stage.Stage;
-
-import org.apache.log4j.Logger;
-
+import ch.unibas.charmmtools.generate.CHARMM_InOut;
+import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
+import ch.unibas.charmmtools.gui.RunningCHARMM_DG;
+import ch.unibas.charmmtools.gui.RunningCHARMM_DenVap;
+import ch.unibas.charmmtools.gui.database.DB_View_Edit;
+import ch.unibas.charmmtools.gui.loadOutput.CHARMM_GUI_LoadOutput;
+import ch.unibas.charmmtools.gui.step1.mdAssistant.CHARMM_GUI_InputAssistant;
+import ch.unibas.charmmtools.gui.step2.showOutput.CHARMM_GUI_ShowOutput;
+import ch.unibas.charmmtools.gui.step3.showResults.CHARMM_GUI_ShowResults;
+import ch.unibas.charmmtools.gui.step4.ParGrid.CHARMM_GUI_Fitgrid;
+import ch.unibas.charmmtools.gui.topology.GenerateTopology;
+import ch.unibas.charmmtools.scripts.CHARMMScript_DG_gas;
+import ch.unibas.charmmtools.scripts.CHARMMScript_DG_solvent;
+import ch.unibas.charmmtools.scripts.CHARMMScript_Den_Vap;
+import ch.unibas.charmmtools.scripts.ICHARMMScript;
+import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.Settings;
+import ch.unibas.fittingwizard.WhereToGo;
 import ch.unibas.fittingwizard.application.Visualization;
 import ch.unibas.fittingwizard.application.base.MoleculesDir;
 import ch.unibas.fittingwizard.application.fitting.FitRepository;
@@ -65,25 +74,12 @@ import ch.unibas.fittingwizard.presentation.fitting.EditAtomTypeChargesDialog;
 import ch.unibas.fittingwizard.presentation.fitting.FitResultPage;
 import ch.unibas.fittingwizard.presentation.fitting.FittingParameterPage;
 import ch.unibas.fittingwizard.presentation.fitting.RunningFitPage;
-
-import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_InputAssistant;
-import ch.unibas.charmmtools.gui.step2.CHARMM_GUI_ShowOutput;
-import ch.unibas.charmmtools.gui.step3.CHARMM_GUI_ShowResults;
-import ch.unibas.charmmtools.gui.RunningCHARMM_DenVap;
-import ch.unibas.charmmtools.generate.CHARMM_InOut;
-import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
-import ch.unibas.charmmtools.gui.RunningCHARMM_DG;
-import ch.unibas.charmmtools.gui.database.DB_View_Edit;
-import ch.unibas.charmmtools.gui.loadOutput.CHARMM_GUI_LoadOutput;
-import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Fitgrid;
-import ch.unibas.charmmtools.gui.topology.GenerateTopology;
-import ch.unibas.charmmtools.scripts.CHARMMScript_Base;
-import ch.unibas.charmmtools.scripts.ICHARMMScript;
-import ch.unibas.charmmtools.scripts.CHARMMScript_Den_Vap;
-import ch.unibas.charmmtools.scripts.CHARMMScript_DG_gas;
-import ch.unibas.charmmtools.scripts.CHARMMScript_DG_solvent;
-import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import javafx.stage.Stage;
+import org.apache.log4j.Logger;
 
 /**
  * User: mhelmer Date: 26.11.13 Time: 11:31

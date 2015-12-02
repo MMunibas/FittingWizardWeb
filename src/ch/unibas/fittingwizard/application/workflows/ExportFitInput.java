@@ -9,7 +9,6 @@
 package ch.unibas.fittingwizard.application.workflows;
 
 import ch.unibas.fittingwizard.application.fitting.Fit;
-
 import java.io.File;
 
 /**

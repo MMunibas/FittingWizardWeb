@@ -8,12 +8,29 @@
  */
 package ch.unibas.fittingwizard.presentation.fitting;
 
-import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_InputAssistant;
-import java.awt.Desktop;
+import ch.unibas.charmmtools.gui.step1.mdAssistant.CHARMM_GUI_InputAssistant;
+import ch.unibas.fittingwizard.Settings;
+import ch.unibas.fittingwizard.application.Visualization;
+import ch.unibas.fittingwizard.application.fitting.Fit;
+import ch.unibas.fittingwizard.application.fitting.FitRepository;
+import ch.unibas.fittingwizard.application.fitting.FitResult;
+import ch.unibas.fittingwizard.application.molecule.AtomType;
+import ch.unibas.fittingwizard.application.molecule.Molecule;
+import ch.unibas.fittingwizard.application.molecule.MoleculeRepository;
+import ch.unibas.fittingwizard.application.scripts.vmd.VmdDisplayInput;
+import ch.unibas.fittingwizard.application.tools.charges.ChargeTypes;
+import ch.unibas.fittingwizard.application.workflows.ExportFitInput;
+import ch.unibas.fittingwizard.application.workflows.ExportFitWorkflow;
+import ch.unibas.fittingwizard.application.workflows.RunVmdDisplayWorkflow;
+import ch.unibas.fittingwizard.application.workflows.base.WorkflowContext;
+import ch.unibas.fittingwizard.infrastructure.base.VmdRunner;
+import ch.unibas.fittingwizard.presentation.MoleculeListPage;
+import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
+import ch.unibas.fittingwizard.presentation.base.WizardPageWithVisualization;
+import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-
+import java.util.List;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -31,30 +48,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Callback;
-
 import org.apache.commons.io.FilenameUtils;
-
-import ch.unibas.fittingwizard.Settings;
-import ch.unibas.fittingwizard.application.Visualization;
-import ch.unibas.fittingwizard.application.fitting.Fit;
-import ch.unibas.fittingwizard.application.fitting.FitRepository;
-import ch.unibas.fittingwizard.application.fitting.FitResult;
-import ch.unibas.fittingwizard.application.molecule.AtomType;
-import ch.unibas.fittingwizard.application.molecule.Molecule;
-import ch.unibas.fittingwizard.application.molecule.MoleculeRepository;
-import ch.unibas.fittingwizard.application.scripts.vmd.VmdDisplayInput;
-import ch.unibas.fittingwizard.application.tools.charges.ChargeTypes;
-import ch.unibas.fittingwizard.application.workflows.ExportFitInput;
-import ch.unibas.fittingwizard.application.workflows.ExportFitWorkflow;
-import ch.unibas.fittingwizard.application.workflows.RunVmdDisplayWorkflow;
-import ch.unibas.fittingwizard.application.workflows.base.WorkflowContext;
-import ch.unibas.fittingwizard.infrastructure.base.FieldcompRunner;
-import ch.unibas.fittingwizard.infrastructure.base.VmdRunner;
-import ch.unibas.fittingwizard.presentation.MoleculeListPage;
-import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
-import ch.unibas.fittingwizard.presentation.base.WizardPageWithVisualization;
-import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
-import java.util.List;
 
 /**
  * User: mhelmer Date: 29.11.13 Time: 17:40

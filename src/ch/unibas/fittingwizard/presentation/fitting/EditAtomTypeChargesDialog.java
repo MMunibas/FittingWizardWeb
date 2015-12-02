@@ -13,6 +13,7 @@ import ch.unibas.fittingwizard.application.molecule.AtomTypeId;
 import ch.unibas.fittingwizard.application.tools.charges.ChargeTypes;
 import ch.unibas.fittingwizard.presentation.base.dialog.ModalDialog;
 import ch.unibas.fittingwizard.presentation.base.ui.EditingCell;
+import java.util.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
@@ -24,8 +25,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
-
-import java.util.*;
 
 /**
  * User: mhelmer

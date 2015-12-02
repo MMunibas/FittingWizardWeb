@@ -8,12 +8,10 @@
  */
 package ch.unibas.fittingwizard;
 
-import ch.unibas.fittingwizard.infrastructure.base.BabelRunner;
 import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
 import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
-import org.apache.log4j.Logger;
-
 import java.io.File;
+import org.apache.log4j.Logger;
 
 /**
  * User: mhelmer

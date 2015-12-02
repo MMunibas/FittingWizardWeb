@@ -9,19 +9,16 @@
 package ch.unibas.fittingwizard.infrastructure.base;
 
 import ch.unibas.fittingwizard.Settings;
+import ch.unibas.fittingwizard.application.scripts.base.ScriptExecutionException;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-
-import ch.unibas.fittingwizard.application.scripts.base.ScriptExecutionException;
-import java.util.HashMap;
 
 public class PythonScriptRunner {
 

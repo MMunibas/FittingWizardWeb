@@ -8,17 +8,15 @@
  */
 package ch.unibas.fittingwizard.mocks;
 
+import ch.unibas.fittingwizard.application.scripts.multipolegauss.IMultipoleGaussScript;
+import ch.unibas.fittingwizard.application.scripts.multipolegauss.MultipoleGaussInput;
+import ch.unibas.fittingwizard.application.scripts.multipolegauss.MultipoleGaussOutput;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-
-import ch.unibas.fittingwizard.application.scripts.multipolegauss.IMultipoleGaussScript;
-import ch.unibas.fittingwizard.application.scripts.multipolegauss.MultipoleGaussInput;
-import ch.unibas.fittingwizard.application.scripts.multipolegauss.MultipoleGaussOutput;
 
 /**
  * User: mhelmer Date: 28.11.13 Time: 15:13

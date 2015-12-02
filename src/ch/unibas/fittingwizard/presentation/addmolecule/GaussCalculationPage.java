@@ -8,8 +8,6 @@
  */
 package ch.unibas.fittingwizard.presentation.addmolecule;
 
-import java.io.File;
-
 import ch.unibas.fittingwizard.application.scripts.multipolegauss.MultipoleGaussInput;
 import ch.unibas.fittingwizard.application.workflows.RunGaussianResult;
 import ch.unibas.fittingwizard.application.workflows.RunGaussianWorkflow;
@@ -17,6 +15,7 @@ import ch.unibas.fittingwizard.application.workflows.base.WorkflowContext;
 import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
 import ch.unibas.fittingwizard.presentation.base.progress.Context;
 import ch.unibas.fittingwizard.presentation.base.progress.ProgressPage;
+import java.io.File;
 
 /**
  * User: mhelmer

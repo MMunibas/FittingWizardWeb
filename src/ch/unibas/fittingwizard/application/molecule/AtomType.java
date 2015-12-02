@@ -8,8 +8,6 @@
  */
 package ch.unibas.fittingwizard.application.molecule;
 
-import java.util.List;
-
 /**
  * User: mhelmer
  * Date: 05.12.13

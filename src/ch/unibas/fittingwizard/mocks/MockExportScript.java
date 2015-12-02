@@ -12,10 +12,9 @@ import ch.unibas.fittingwizard.application.scripts.export.ExportScriptInput;
 import ch.unibas.fittingwizard.application.scripts.export.ExportScriptOutput;
 import ch.unibas.fittingwizard.application.scripts.export.IExportScript;
 import ch.unibas.fittingwizard.infrastructure.RealFitScript;
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
+import org.apache.commons.io.FileUtils;
 
 /**
  * User: mhelmer

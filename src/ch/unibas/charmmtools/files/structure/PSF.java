@@ -9,8 +9,8 @@
 
 package ch.unibas.charmmtools.files.structure;
 
-import ch.unibas.charmmtools.internals.Atom;
 import ch.unibas.charmmtools.internals.Angle;
+import ch.unibas.charmmtools.internals.Atom;
 import ch.unibas.charmmtools.internals.Bond;
 import ch.unibas.charmmtools.internals.Dihedral;
 import ch.unibas.charmmtools.internals.Improper;

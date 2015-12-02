@@ -8,18 +8,16 @@
  */
 package ch.unibas.fittingwizard.infrastructure;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.commons.io.FilenameUtils;
-import org.apache.log4j.Logger;
-
 import ch.unibas.fittingwizard.application.scripts.babel.BabelInput;
 import ch.unibas.fittingwizard.application.scripts.babel.BabelOutput;
 import ch.unibas.fittingwizard.application.scripts.babel.IBabelScript;
 import ch.unibas.fittingwizard.application.scripts.base.ScriptExecutionException;
 import ch.unibas.fittingwizard.infrastructure.base.BabelRunner;
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.log4j.Logger;
 
 /**
  * User: mhelmer Date: 06.12.13 Time: 13:13

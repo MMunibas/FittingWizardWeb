@@ -6,19 +6,19 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.gui.step3;
+package ch.unibas.charmmtools.gui.step3.showResults;
 
 import au.com.bytecode.opencsv.CSVWriter;
-import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
-import ch.unibas.charmmtools.gui.step2.CHARMM_GUI_ShowOutput;
-import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_InputAssistant;
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output_GasPhase;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output_PureLiquid;
-import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Fitgrid;
+import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
+import ch.unibas.charmmtools.gui.step1.mdAssistant.CHARMM_GUI_InputAssistant;
+import ch.unibas.charmmtools.gui.step2.showOutput.CHARMM_GUI_ShowOutput;
+import ch.unibas.charmmtools.gui.step4.ParGrid.CHARMM_GUI_Fitgrid;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;

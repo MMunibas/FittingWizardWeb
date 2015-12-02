@@ -9,8 +9,6 @@
 package ch.unibas.fittingwizard.application.fitting;
 
 import ch.unibas.fittingwizard.application.molecule.AtomTypeId;
-import org.apache.commons.lang.StringUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -18,7 +18,6 @@ import ch.unibas.charmmtools.gui.MyTab;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.application.xyz.XyzFile;
 import ch.unibas.fittingwizard.application.xyz.XyzFileParser;
-import ch.unibas.fittingwizard.presentation.base.WizardPage;
 import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
 import java.io.File;
 import java.io.IOException;

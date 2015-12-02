@@ -11,13 +11,15 @@ package ch.unibas.fittingwizard.presentation.fitting;
 import ch.unibas.fittingwizard.application.fitting.ChargeValue;
 import ch.unibas.fittingwizard.application.fitting.FitRepository;
 import ch.unibas.fittingwizard.application.molecule.*;
-import ch.unibas.fittingwizard.application.tools.charges.ChargesFileGenerator;
 import ch.unibas.fittingwizard.application.scripts.fitmtp.FitMtpInput;
+import ch.unibas.fittingwizard.application.tools.charges.ChargesFileGenerator;
 import ch.unibas.fittingwizard.presentation.MoleculeListPage;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import ch.unibas.fittingwizard.presentation.base.DefaultValues;
 import ch.unibas.fittingwizard.presentation.base.WizardPage;
 import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
+import java.io.File;
+import java.util.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -26,9 +28,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import org.apache.commons.lang.NotImplementedException;
-
-import java.io.File;
-import java.util.*;
 
 /**
  * User: mhelmer

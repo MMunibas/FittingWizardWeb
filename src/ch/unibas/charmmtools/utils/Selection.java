@@ -10,7 +10,6 @@
 package ch.unibas.charmmtools.utils;
 
 import ch.unibas.charmmtools.files.coordinates.COR;
-import ch.unibas.charmmtools.files.structure.PSF;
 
 /**
  *

@@ -10,8 +10,8 @@ package ch.unibas.fittingwizard;
 
 import ch.unibas.charmmtools.gui.database.DB_View_Edit;
 import ch.unibas.charmmtools.gui.loadOutput.CHARMM_GUI_LoadOutput;
-import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_InputAssistant;
-import ch.unibas.charmmtools.gui.step4.CHARMM_GUI_Fitgrid;
+import ch.unibas.charmmtools.gui.step1.mdAssistant.CHARMM_GUI_InputAssistant;
+import ch.unibas.charmmtools.gui.step4.ParGrid.CHARMM_GUI_Fitgrid;
 import ch.unibas.charmmtools.gui.topology.GenerateTopology;
 import ch.unibas.fittingwizard.presentation.MoleculeListPage;
 import ch.unibas.fittingwizard.presentation.base.WizardPage;

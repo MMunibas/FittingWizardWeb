@@ -9,7 +9,6 @@
 package ch.unibas.fittingwizard.application.fitting;
 
 import ch.unibas.fittingwizard.application.tools.charges.ChargeTypes;
-
 import java.util.List;
 
 /**

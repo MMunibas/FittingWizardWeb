@@ -14,7 +14,6 @@ import ch.unibas.fieldcomp.exceptions.FieldcompParamsException;
 import ch.unibas.fieldcomp.exceptions.FieldcompParamsShellException;
 import ch.unibas.fieldcomp.exceptions.FieldcompParamsUnknownException;
 import ch.unibas.fieldcomp.exceptions.FieldcompUnknownOutputFileType;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,8 +24,6 @@ import static java.lang.Math.abs;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 import java.util.Scanner;
-
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 /**

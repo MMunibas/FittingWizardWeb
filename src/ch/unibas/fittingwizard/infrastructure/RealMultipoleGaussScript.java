@@ -8,12 +8,6 @@
  */
 package ch.unibas.fittingwizard.infrastructure;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.log4j.Logger;
-
 import ch.unibas.fittingwizard.Settings;
 import ch.unibas.fittingwizard.application.base.MoleculesDir;
 import ch.unibas.fittingwizard.application.scripts.base.ScriptExecutionException;
@@ -22,6 +16,10 @@ import ch.unibas.fittingwizard.application.scripts.multipolegauss.MultipoleGauss
 import ch.unibas.fittingwizard.application.scripts.multipolegauss.MultipoleGaussOutput;
 import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
 import ch.unibas.fittingwizard.infrastructure.base.ScriptUtilities;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.log4j.Logger;
 
 public class RealMultipoleGaussScript implements IMultipoleGaussScript {
 

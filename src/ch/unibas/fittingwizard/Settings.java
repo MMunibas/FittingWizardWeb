@@ -8,12 +8,11 @@
  */
 package ch.unibas.fittingwizard;
 
-import org.apache.log4j.Logger;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
+import org.apache.log4j.Logger;
 
 /**
  * A typed wrapper for the settings from the config_gui.ini file.

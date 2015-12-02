@@ -9,14 +9,13 @@
 package ch.unibas.fittingwizard.application.tools;
 
 import ch.unibas.fittingwizard.application.molecule.AtomType;
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.io.FileUtils;
 
 /**
  * User: mhelmer

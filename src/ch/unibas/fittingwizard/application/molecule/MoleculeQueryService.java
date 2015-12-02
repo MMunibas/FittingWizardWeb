@@ -10,7 +10,6 @@ package ch.unibas.fittingwizard.application.molecule;
 
 import ch.unibas.fittingwizard.application.fitting.ChargeValue;
 import ch.unibas.fittingwizard.application.tools.charges.ChargeTypes;
-
 import java.util.*;
 
 /**

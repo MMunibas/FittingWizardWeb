@@ -9,7 +9,6 @@
 package ch.unibas.fittingwizard.application.molecule;
 
 import ch.unibas.fittingwizard.application.xyz.XyzFile;
-
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 

@@ -9,7 +9,6 @@
 package ch.unibas.charmmtools.generate.inputs;
 
 import java.io.BufferedWriter;
-import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

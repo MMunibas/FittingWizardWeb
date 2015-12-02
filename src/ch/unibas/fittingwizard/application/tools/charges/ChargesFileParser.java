@@ -10,17 +10,16 @@ package ch.unibas.fittingwizard.application.tools.charges;
 
 import ch.unibas.fittingwizard.application.fitting.ChargeValue;
 import ch.unibas.fittingwizard.application.fitting.InitialQ00;
-import ch.unibas.fittingwizard.application.molecule.AtomTypeId;
 import ch.unibas.fittingwizard.application.fitting.OutputAtomType;
-import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
-
+import ch.unibas.fittingwizard.application.molecule.AtomTypeId;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 
 /**
  * User: mhelmer

@@ -10,15 +10,11 @@ package ch.unibas.fittingwizard.infrastructure.base;
 
 import ch.unibas.fieldcomp.Fieldcomp;
 import ch.unibas.fieldcomp.exceptions.FieldcompParamsException;
-import ch.unibas.fittingwizard.application.scripts.base.ScriptExecutionException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 public class FieldcompRunner {

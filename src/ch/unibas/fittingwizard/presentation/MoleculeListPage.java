@@ -18,13 +18,15 @@ import ch.unibas.fittingwizard.application.xyz.XyzFile;
 import ch.unibas.fittingwizard.application.xyz.XyzFileParser;
 import ch.unibas.fittingwizard.presentation.addmolecule.AtomChargesDto;
 import ch.unibas.fittingwizard.presentation.addmolecule.AtomTypeChargePage;
+import ch.unibas.fittingwizard.presentation.addmolecule.SelectCoordinateFilePage;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import ch.unibas.fittingwizard.presentation.base.WizardPageWithVisualization;
 import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
-import ch.unibas.fittingwizard.presentation.base.WizardPage;
-import ch.unibas.fittingwizard.presentation.addmolecule.SelectCoordinateFilePage;
 import ch.unibas.fittingwizard.presentation.fitting.FitResultPage;
 import ch.unibas.fittingwizard.presentation.fitting.FittingParameterPage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -37,12 +39,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.DirectoryChooser;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MoleculeListPage extends WizardPageWithVisualization {
 

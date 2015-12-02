@@ -9,7 +9,6 @@
 package ch.unibas.fittingwizard.presentation.addmolecule;
 
 import ch.unibas.fittingwizard.application.xyz.XyzFile;
-
 import java.io.File;
 
 /**

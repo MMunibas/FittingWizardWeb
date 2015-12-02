@@ -8,11 +8,10 @@
  */
 package ch.unibas.fittingwizard.application.base;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-
 import java.io.File;
 import java.io.IOException;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * A typed file with some extra methods.

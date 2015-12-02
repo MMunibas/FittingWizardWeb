@@ -9,13 +9,12 @@
 package ch.unibas.fittingwizard.application.base;
 
 import ch.unibas.fittingwizard.application.fitting.ChargeValue;
+import ch.unibas.fittingwizard.application.fitting.Fit;
+import ch.unibas.fittingwizard.application.fitting.FitResult;
 import ch.unibas.fittingwizard.application.fitting.OutputAtomType;
 import ch.unibas.fittingwizard.application.molecule.*;
-import ch.unibas.fittingwizard.application.fitting.FitResult;
-import ch.unibas.fittingwizard.application.fitting.Fit;
 import ch.unibas.fittingwizard.application.xyz.XyzAtom;
 import ch.unibas.fittingwizard.application.xyz.XyzFile;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -8,10 +8,9 @@
  */
 package ch.unibas.fittingwizard.infrastructure.base;
 
-import org.apache.commons.io.FilenameUtils;
-
 import java.io.File;
 import java.util.regex.Pattern;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
 /**

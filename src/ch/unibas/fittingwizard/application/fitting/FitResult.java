@@ -11,10 +11,9 @@ package ch.unibas.fittingwizard.application.fitting;
 import ch.unibas.fittingwizard.application.molecule.AtomTypeId;
 import ch.unibas.fittingwizard.application.molecule.MoleculeId;
 import ch.unibas.fittingwizard.application.tools.charges.ChargeTypes;
-import org.apache.commons.lang.StringUtils;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * This represents the fit result for on atom type.

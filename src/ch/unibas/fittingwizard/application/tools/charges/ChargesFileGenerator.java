@@ -9,14 +9,13 @@
 package ch.unibas.fittingwizard.application.tools.charges;
 
 import ch.unibas.fittingwizard.application.fitting.ChargeValue;
-import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 
 /**
  * User: mhelmer

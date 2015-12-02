@@ -9,7 +9,7 @@
 package ch.unibas.charmmtools.gui.database;
 
 import ch.unibas.charmmtools.gui.database.dataModel.DB_model;
-import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_InputAssistant;
+import ch.unibas.charmmtools.gui.step1.mdAssistant.CHARMM_GUI_InputAssistant;
 import ch.unibas.fittingwizard.Settings;
 import ch.unibas.fittingwizard.application.Visualization;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;

@@ -8,19 +8,18 @@
  */
 package ch.unibas.fittingwizard.infrastructure;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import ch.unibas.fittingwizard.Settings;
 import ch.unibas.fittingwizard.application.molecule.MoleculeId;
 import ch.unibas.fittingwizard.application.scripts.base.ScriptExecutionException;
-import ch.unibas.fittingwizard.application.scripts.fitmtp.FitMtpOutput;
 import ch.unibas.fittingwizard.application.scripts.fitmtp.FitMtpInput;
+import ch.unibas.fittingwizard.application.scripts.fitmtp.FitMtpOutput;
 import ch.unibas.fittingwizard.application.scripts.fitmtp.IFitMtpScript;
 import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
 import ch.unibas.fittingwizard.infrastructure.base.ResourceUtils;
 import ch.unibas.fittingwizard.infrastructure.base.ScriptUtilities;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;

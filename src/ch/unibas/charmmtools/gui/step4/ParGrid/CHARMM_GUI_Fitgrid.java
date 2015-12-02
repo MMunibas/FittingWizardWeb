@@ -6,17 +6,17 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.gui.step4;
+package ch.unibas.charmmtools.gui.step4.ParGrid;
 
 import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
-import ch.unibas.charmmtools.gui.step1.CHARMM_GUI_InputAssistant;
+import ch.unibas.charmmtools.gui.step1.mdAssistant.CHARMM_GUI_InputAssistant;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.application.scripts.base.ScriptExecutionException;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,6 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -125,22 +124,15 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
     private void setupGridTable() {
 
         column_gridValues.setCellValueFactory(
-                new PropertyValueFactory<gridValuesModel, String>("value")
+                new PropertyValueFactory<>("value")
         );
 
-//        column_gridValues.setCellFactory(cellFactory);
         column_gridValues.setCellFactory(TextFieldTableCell.forTableColumn());
 
-        column_gridValues.setOnEditCommit(
-                new EventHandler<CellEditEvent<gridValuesModel, String>>() {
-                    @Override
-                    public void handle(CellEditEvent<gridValuesModel, String> t) {
-//                    logger.info("hello from handle");
-                        ((gridValuesModel) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())).setValue(t.getNewValue());
-                    }
-                }
-        );
+        column_gridValues.setOnEditCommit((CellEditEvent<gridValuesModel, String> t) -> {
+            ((gridValuesModel) t.getTableView().getItems().get(
+                    t.getTablePosition().getRow())).setValue(t.getNewValue());
+        });
 
         tableview_gridValues.setItems(list_gridValues);
     }
@@ -244,7 +236,7 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
                     for(String line : fileLines)
                         AtomTypesList.add(new SelectScalingModel(line, true));
                 }
-            } catch (Exception e) {
+            } catch (IOException | InterruptedException | ScriptExecutionException e) {
                 throw new RuntimeException(String.format("Bash script [%s] failed.", script), e);
             }
 
@@ -286,14 +278,6 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
         File myDir = new File(this.work_directory, "scaled_par");
         myDir.mkdirs();
 
-//        String[] exts = {"par"};
-//        List<File> flist = new ArrayList<>();
-//        flist.addAll(FileUtils.listFiles(new File("./test"), exts, false));
-//
-//        logger.info("Found par files : ");
-//        for (File f : flist) {
-//            logger.info(f.getAbsolutePath());
-//        }
         ProcessBuilder pb = new ProcessBuilder();
         pb.directory(myDir);
 
@@ -319,7 +303,7 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
                 try {
                     Process p = pb.start();
                     exitCode = p.waitFor();
-                } catch (Exception e) {
+                } catch (IOException | InterruptedException e) {
                     throw new RuntimeException(String.format("Bash script [%s] failed.", script), e);
                 }
                 logger.info("Bash return value: " + exitCode);
@@ -336,7 +320,7 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
         if (failed) {
             OverlayDialog.showError("Error while saving files", "Error while saving your files in directory : " + this.work_directory.getAbsolutePath());
         } else {
-            OverlayDialog.informUser("Files saved properly", "All your files were saved in directory : " + this.work_directory.getAbsolutePath());
+            OverlayDialog.informUserDir("Files saved properly", "All your files were saved in directory : " + this.work_directory.getAbsolutePath(), this.work_directory.getAbsolutePath());
         }
 
         //button_run_all.setDisable(false);
@@ -349,40 +333,28 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
     @Override
     protected void fillButtonBar() {
 
-        button_goRunSim = ButtonFactory.createButtonBarButton("Go to Input Assistant", new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                logger.info("Going Back to input assistant.");
-                navigateTo(CHARMM_GUI_InputAssistant.class, null);
-            }
+        button_goRunSim = ButtonFactory.createButtonBarButton("Go to Input Assistant", (ActionEvent actionEvent) -> {
+            logger.info("Going Back to input assistant.");
+            navigateTo(CHARMM_GUI_InputAssistant.class, null);
         });
         addButtonToButtonBar(button_goRunSim);
 
-        button_reset = ButtonFactory.createButtonBarButton("Reset", new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                logger.info("Resetting all fields.");
-                ResetFields();
-            }
+        button_reset = ButtonFactory.createButtonBarButton("Reset", (ActionEvent actionEvent) -> {
+            logger.info("Resetting all fields.");
+            ResetFields();
         });
         addButtonToButtonBar(button_reset);
 
-        button_save_files = ButtonFactory.createButtonBarButton("Save FF parameter files", new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                logger.info("Saving modified FF params files");
-                SaveFiles();
-            }
+        button_save_files = ButtonFactory.createButtonBarButton("Save FF parameter files", (ActionEvent actionEvent) -> {
+            logger.info("Saving modified FF params files");
+            SaveFiles();
         });
         addButtonToButtonBar(button_save_files);
         button_save_files.setDisable(true);
 
-        button_run_all = ButtonFactory.createButtonBarButton("Run all simulations", new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                logger.info("Running all simulations");
-                RunAll();
-            }
+        button_run_all = ButtonFactory.createButtonBarButton("Run all simulations", (ActionEvent actionEvent) -> {
+            logger.info("Running all simulations");
+            RunAll();
         });
         addButtonToButtonBar(button_run_all);
         button_run_all.setDisable(true);
@@ -415,22 +387,10 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
     @FXML
     void unselectAtoms(ActionEvent event) {
 
+        // choose atoms ignored for the scaling ; the object AtomTypesList will have 
+        // its field isSelected (boolean) automatically modified if a box is unchecked
         Choose_Ignored_atoms_Scaling edit = new Choose_Ignored_atoms_Scaling();
-
-//        LinkedHashSet<AtomTypeId> atomTypesRequiringUserInput = new LinkedHashSet<>();
-//        
-//        atomTypesRequiringUserInput.add(new AtomTypeId("TypeA"));
-//        atomTypesRequiringUserInput.add(new AtomTypeId("TypeB"));
-//        atomTypesRequiringUserInput.add(new AtomTypeId("TypeC"));
-//        LinkedHashSet<ChargeValue> editAtomTypes = edit.editAtomTypes(atomTypesRequiringUserInput);
-//        
-//        List<SelectScalingModel> AtomTypesList2 = edit.editAtomTypes(AtomTypesList);
         edit.editAtomTypes(AtomTypesList);
-
-//        for(int i=0; i<AtomTypesList2.size(); i++)
-//        {
-//            logger.info(AtomTypesList2.get(i).getFFAtomType() + '\t' + AtomTypesList.get(i).isSelected() + '\t' + AtomTypesList2.get(i).isSelected());
-//        }
     }
 
 }

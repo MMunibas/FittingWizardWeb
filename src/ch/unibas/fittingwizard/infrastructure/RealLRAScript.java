@@ -8,19 +8,17 @@
  */
 package ch.unibas.fittingwizard.infrastructure;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-
-import ch.unibas.fittingwizard.infrastructure.base.ScriptUtilities;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.log4j.Logger;
-
 import ch.unibas.fittingwizard.Settings;
 import ch.unibas.fittingwizard.application.scripts.lra.ILRAScript;
 import ch.unibas.fittingwizard.application.scripts.lra.LRAScriptInput;
 import ch.unibas.fittingwizard.application.scripts.lra.LRAScriptOutput;
 import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
+import ch.unibas.fittingwizard.infrastructure.base.ScriptUtilities;
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.log4j.Logger;
 
 
 public class RealLRAScript  implements ILRAScript {

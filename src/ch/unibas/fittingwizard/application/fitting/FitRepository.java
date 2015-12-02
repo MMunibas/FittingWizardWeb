@@ -10,7 +10,6 @@ package ch.unibas.fittingwizard.application.fitting;
 
 import ch.unibas.fittingwizard.application.base.MemoryRepository;
 import ch.unibas.fittingwizard.application.molecule.*;
-
 import java.util.ArrayList;
 import java.util.List;
 

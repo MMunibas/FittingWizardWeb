@@ -9,10 +9,9 @@
 package ch.unibas.fittingwizard.infrastructure.base;
 
 import ch.unibas.fittingwizard.application.scripts.base.ScriptExecutionException;
+import java.io.File;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
-
-import java.io.File;
 
 /**
  * User: mhelmer

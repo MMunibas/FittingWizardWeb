@@ -8,9 +8,10 @@
  */
 package ch.unibas.fittingwizard.presentation.addmolecule;
 
+import ch.unibas.fittingwizard.presentation.MoleculeListPage;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import ch.unibas.fittingwizard.presentation.base.WizardPage;
-import ch.unibas.fittingwizard.presentation.MoleculeListPage;
+import java.io.File;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -21,8 +22,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
-
-import java.io.File;
 
 /**
  * User: mhelmer

@@ -8,13 +8,12 @@
  */
 package ch.unibas.fittingwizard.mocks;
 
-import java.io.File;
-import java.io.IOException;
-
-import ch.unibas.fittingwizard.application.scripts.fitmtp.FitMtpOutput;
 import ch.unibas.fittingwizard.application.scripts.fitmtp.FitMtpInput;
+import ch.unibas.fittingwizard.application.scripts.fitmtp.FitMtpOutput;
 import ch.unibas.fittingwizard.application.scripts.fitmtp.IFitMtpScript;
 import ch.unibas.fittingwizard.infrastructure.RealFitScript;
+import java.io.File;
+import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;

@@ -23,10 +23,7 @@ import ch.unibas.fittingwizard.application.tools.GaussianLogModifier;
 import ch.unibas.fittingwizard.application.tools.Notifications;
 import ch.unibas.fittingwizard.application.workflows.base.Workflow;
 import ch.unibas.fittingwizard.application.workflows.base.WorkflowContext;
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-
-import java.io.IOException;
 
 /**
  * User: mhelmer

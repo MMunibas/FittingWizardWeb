@@ -9,14 +9,12 @@
 
 package ch.unibas.charmmtools.files.trajectory;
 
-import java.io.FileNotFoundException;
-
 import static ch.unibas.charmmtools.errors.IO_Errors.checkFortranIOerror;
-
-import ch.unibas.charmmtools.exceptions.UnsupportedVELDException;
 import ch.unibas.charmmtools.exceptions.UnknownFileTypeException;
+import ch.unibas.charmmtools.exceptions.UnsupportedVELDException;
 import ch.unibas.charmmtools.utils.Endianness;
 import java.io.EOFException;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.logging.Level;

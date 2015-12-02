@@ -10,8 +10,6 @@ package ch.unibas.fittingwizard.application.scripts.fittab;
 
 import ch.unibas.fittingwizard.application.scripts.base.IScript;
 
-import java.io.File;
-
 /**
  * User: mhelmer
  * Date: 05.12.13

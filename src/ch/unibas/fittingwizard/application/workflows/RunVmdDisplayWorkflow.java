@@ -8,25 +8,12 @@
  */
 package ch.unibas.fittingwizard.application.workflows;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.log4j.Logger;
-
-import ch.unibas.fittingwizard.application.fitting.Fit;
-import ch.unibas.fittingwizard.application.molecule.MoleculeId;
-import ch.unibas.fittingwizard.application.scripts.export.ExportScriptInput;
-import ch.unibas.fittingwizard.application.scripts.export.ExportScriptOutput;
-import ch.unibas.fittingwizard.application.scripts.multipolegauss.MultipoleGaussInput;
 import ch.unibas.fittingwizard.application.scripts.vmd.IVmdDisplayScript;
 import ch.unibas.fittingwizard.application.scripts.vmd.VmdDisplayInput;
 import ch.unibas.fittingwizard.application.workflows.base.Workflow;
 import ch.unibas.fittingwizard.application.workflows.base.WorkflowContext;
-import ch.unibas.fittingwizard.infrastructure.RealFitScript;
+import java.io.File;
+import org.apache.log4j.Logger;
 
 public class RunVmdDisplayWorkflow extends Workflow<VmdDisplayInput,Void> {
 

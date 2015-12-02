@@ -8,9 +8,8 @@
  */
 package ch.unibas.fittingwizard.application.base;
 
-import org.apache.log4j.Logger;
-
 import java.util.ArrayList;
+import org.apache.log4j.Logger;
 
 /**
  * User: mhelmer
