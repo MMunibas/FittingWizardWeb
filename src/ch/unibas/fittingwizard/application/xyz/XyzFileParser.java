@@ -36,7 +36,7 @@ public class XyzFileParser {
     }
 
     private XyzFileParser(File file) {
-        logger.setLevel(Level.INFO);
+//        logger.setLevel(Level.INFO);
         logger.info(String.format("Initializing parser for file %s", file.getAbsoluteFile()));
         this.file = file;
     }
@@ -86,7 +86,7 @@ public class XyzFileParser {
     }
 
     private int parseCount() {
-        logger.info("Prasing atom count from file.");
+        logger.info("Parsing atom count from file.");
         int count = Integer.parseInt(content.get(HeaderLine).trim());
         logger.info(String.format("File contains %d atoms.", count));
         return count;

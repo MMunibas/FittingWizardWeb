@@ -285,6 +285,17 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
 
         int ngrid = Integer.valueOf(textfield_ngrid.getText()) + 1;
 
+        String toScale = "";
+        for ( SelectScalingModel model : AtomTypesList)
+        {
+            if(model.isSelected())
+            {
+                toScale += model.getFFAtomType();
+                toScale += ",";
+            }
+        }
+        toScale = toScale.substring(0, toScale.length()-1);
+        
         //epsilon on rows and sigma on columns
         for (int i = 1; i < ngrid; i++) {
             String e_scale = list_gridValues.get(i - 1).getValue();
@@ -294,7 +305,7 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
 //                }
                 String s_scale = list_gridValues.get(j - 1).getValue();
                 pb.command("/bin/bash", script,
-                        parFile.getAbsolutePath(), e_scale, s_scale);
+                        parFile.getAbsolutePath(), e_scale, s_scale, toScale);
                 pb.redirectOutput(new File(myDir, "scaled_e" + e_scale + "_s" + s_scale + ".par"));
                 logger.info("Running bash script\n" + pb.command()
                         + "\nin directory:\n" + pb.directory()
@@ -386,7 +397,6 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
 
     @FXML
     void unselectAtoms(ActionEvent event) {
-
         // choose atoms ignored for the scaling ; the object AtomTypesList will have 
         // its field isSelected (boolean) automatically modified if a box is unchecked
         Choose_Ignored_atoms_Scaling edit = new Choose_Ignored_atoms_Scaling();

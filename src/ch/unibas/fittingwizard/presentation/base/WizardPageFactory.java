@@ -223,6 +223,7 @@ public class WizardPageFactory {
             } else if (type == GaussCalculationPage.class) {
                 GaussCalculationDto dto = throwIfParameterIsNull(parameter);
                 page = new GaussCalculationPage(runGaussianWorkflow, dto);
+//                page = new ProgressWithQstatTest();
             } // GAUSSIAN FITTING PAGES
             else if (type == FittingParameterPage.class) {
                 FitMtpInput dto = (FitMtpInput) parameter;

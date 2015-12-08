@@ -18,7 +18,6 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
-import java.util.logging.Level;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -27,6 +26,7 @@ import javafx.stage.Stage;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Layout;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import static org.apache.log4j.PatternLayout.TTCC_CONVERSION_PATTERN;
@@ -123,12 +123,7 @@ public class WizardApplication extends Application {
     private Parent setupWizard(Stage primaryStage) {
         WizardPageFactory factory = new WizardPageFactory(primaryStage);
         Wizard wizard = new Wizard(factory);
-//        wizard.navigateTo(MoleculeListPage.class, null);
-//        wizard.navigateTo(CHARMM_GUI_InputAssistant.class, null);
-//        wizard.navigateTo(CHARMM_GUI_Fitgrid.class,null);
-//        wizard.navigateTo(GUI_compounds_DB.class,null);
         wizard.navigateTo(WhereToGo.class, null);
-//        wizard.navigateTo(CHARMM_GUI_ShowResults.class,null);
         this.settings = factory.getSettings();
         return wizard;
     }
@@ -148,5 +143,7 @@ public class WizardApplication extends Application {
         BasicConfigurator.configure(app);
         
         log.deleteOnExit();
+        
+        logger.setLevel(Level.WARN);
     }
 }

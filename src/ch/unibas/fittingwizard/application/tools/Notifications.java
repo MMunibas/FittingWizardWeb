@@ -10,7 +10,6 @@ package ch.unibas.fittingwizard.application.tools;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 import javax.mail.Session;
@@ -18,7 +17,6 @@ import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 import org.apache.commons.validator.routines.EmailValidator;
-import org.apache.log4j.Logger;
 
 /**
  * User: mhelmer Date: 16.12.13 Time: 13:28
