@@ -1,0 +1,205 @@
+#!/bin/bash
+
+# Scale epsilons and Rmins of LJ parameters relative to strength of MTP
+# interactions. Scaling is normalized with respect to strength of MTP
+# coefficients of each atom type.
+
+# Tristan BEREAU 2013
+
+
+function show_help
+{
+    echo -ne "Usage: \n$0 <-l file.log> <-m file.lpun> <-t file.top>\n\
+      <-p file.par> <-f NUM> [-v]\n\
+      where:\n\
+        -l: output log of fit.mtp.py (see lj-esp.fit.pc-mtp package)\n\
+        -m: lpun file\n\
+        -t: topology file (caution: same order as the lpun file)\n\
+        -p: parameter file\n\
+        -f: scaling factor for epsilon values\n\
+        -v: verbose mode\n"
+}
+
+function exists_or_die
+{
+    [ -z $1 ] && echo "Missing file $2" && exit 1
+}
+
+function log
+{
+    [ "$verbose" == "1" ] && echo "$@"
+}
+
+fitlog=
+lpun=
+top=
+par=
+factor=
+verbose=0
+
+
+OPTIND=1
+while getopts "h?:l:m:t:p:f:v" opt; do
+    case "$opt" in
+        h|\?)
+            show_help
+            exit 0
+            ;;
+        l)
+            fitlog=$OPTARG
+            ;;
+        m)
+            lpun=$OPTARG
+            ;;
+        t)
+            top=$OPTARG
+            ;;
+        p)
+            par=$OPTARG
+            ;;
+        f)
+            factor=$OPTARG
+            ;;
+        v)
+            verbose=1
+            ;;
+    esac
+done
+shift $((OPTIND-1)) # Shift off the options
+
+if [ -z $fitlog ] || [ -z $lpun ] || [ -z $top ] || \
+    [ -z $par ] || [ -z $factor ]; then
+    show_help
+    exit 1
+fi
+
+exists_or_die $top "file.top"
+exists_or_die $par "file.par"
+exists_or_die $fitlog "MTPfit.log"
+exists_or_die $lpun "file.lpun"
+
+
+# Extract weights for each atom type
+grep ": |Q1| =" $fitlog > norm-mtp.tmp
+attypes=()
+dipnorm=()
+quadnorm=()
+while read line; do
+    line=($line)
+    attypes=(${attypes[@]} ${line[0]%:})
+    dipnorm=(${dipnorm[@]} ${line[3]})
+    quadnorm=(${quadnorm[@]} ${line[6]})
+done < norm-mtp.tmp
+log "Atom types: ${attypes[@]}"
+log ""
+
+# Collection of atom types read in lpun file
+atmlpun=(`awk '{if ($6=="Rank") print $2}' $lpun`)
+log "Atom types in lpun: ${atmlpun[@]}"
+log ""
+# Check all elements of atmlpun are in attypes
+for atm in ${atmlpun[@]}; do
+    if [[ " ${attypes[*]} " != *" $atm "* ]]; then
+        echo "Atom type $atm not in $fitlog"
+        exit 1
+    fi
+done
+
+# Collection of atom types read in top
+atmtop=(`awk '{if ($1=="ATOM") print $3}' $top`)
+atmtopunq=(`echo "${atmtop[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '`)
+log "Atom types in top: ${atmtop[@]}"
+log "Unique atom types in top: ${atmtopunq[@]}"
+if [ ${#atmlpun[@]} != ${#atmtop[@]} ]; then
+    echo "Different number of atoms between lpun and top files."
+    echo "Make sure the top file only contains one molecule."
+    exit 1
+fi
+
+# Read Rmin values from parameter file
+rminpar=()
+for atm in ${atmtop[@]}; do
+    awk -v atm=$atm '{if ($1==atm && $2==0.0) print}' $par > par-atm.tmp
+    if [ `cat par-atm.tmp | wc -l` -ne 1 ]; then
+        echo "Problem identifying nonbonded interaction for $atm in $par"
+        exit 1
+    fi
+    # Minimum rmin: 0.8 (for small H). Interact with water mol (R=1.8)
+    rminpar=(${rminpar[@]} `awk '{if ($4<0.8) print 0.8+1.8; else print 1.8+$4}' par-atm.tmp`)
+    rm par-atm.tmp
+done
+log "Rmins values: ${rminpar[@]}"
+
+# Compute weights for each atom
+weights=()
+for ((i=0; i<${#atmtop[@]}; i++)); do
+    log "${atmtop[$i]} ${atmlpun[$i]}"
+    dip=
+    quad=
+    for ((j=0; j<${#attypes[@]}; j++)); do
+        if [ "${attypes[$j]}" == "${atmlpun[$i]}" ]; then
+            dip=${dipnorm[$j]}
+            quad=${quadnorm[$j]}
+        fi
+    done
+    weights=(${weights[@]} \
+        `echo "scale=4;1/(${rminpar[$i]}*${rminpar[$i]})*($dip+$quad/${rminpar[$i]})" | bc -l`)
+done
+log "Weights: ${weights[@]}"
+# Combine by unique atom types
+weightunq=()
+weightunqmax="0.0"
+for ((i=0; i<${#atmtopunq[@]}; i++)); do
+    weight="0.0"
+    norm=0
+    for ((j=0; j<${#atmtop[@]}; j++)); do
+        if [ "${atmtop[$j]}" == "${atmtopunq[$i]}" ]; then
+            weight=`echo "$weight + ${weights[$j]}" | bc -l`
+            let norm+=1
+        fi
+    done
+    weight=`echo "scale=4;$weight/(1.*$norm)" | bc -l`
+    weightunq=(${weightunq[@]} $weight)
+    if [ `echo "${weightunq[$i]} > $weightunqmax" | bc -l` -eq 1 ]; then
+        weightunqmax=${weightunq[$i]}
+    fi
+done
+# Normalize weights and multiply by factor
+for ((i=0; i<${#weightunq[@]}; i++)); do
+    weightunq[$i]=`echo "scale=6;$factor*${weightunq[$i]}/(1.*$weightunqmax)" | bc -l`
+    log "weight ${atmtopunq[$i]} ${weightunq[$i]}"
+done
+
+# Output parameter file and alter eps and rmin for ${atmtop[@]} types
+cat > par-mtp.tmp <<EOF
+* EDITED BY `whoami` from `hostname` on `date`
+* SCRIPT $0
+* OUTPUT LOG: $fitlog
+* LPUN: $lpun
+* topology file: $top
+* ORIGINAL FILE: $par
+* FACTOR: $factor
+* --
+EOF
+cat $par >> par-mtp.tmp
+linnb=`grep -n NONBONDED $par | awk '{if ($1~"NONBONDED") print $1}'`
+linnb=${linnb%:NONBONDED}
+for ((i=0; i<${#atmtopunq[@]}; i++)); do
+    awk -v typ=${atmtopunq[$i]} -v wei=${weightunq[$i]} -v linnb=$linnb \
+        '{if (NR>linnb && $1==typ && $2==0.0) {
+            gsub($3,$3*(1),$0); 
+            gsub($4,$4*(1+wei),$0);
+            print $0}
+        else print}' par-mtp.tmp > par-mtp-2.tmp
+    mv par-mtp-2.tmp par-mtp.tmp
+done
+
+if [ "$verbose" == 1 ]; then
+    echo "parameter file stored in par-mtp.tmp"
+else
+    cat par-mtp.tmp
+    rm par-mtp.tmp
+fi
+
+rm norm-mtp.tmp
+

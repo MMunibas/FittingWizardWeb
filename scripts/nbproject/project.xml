@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.python.project</type>
+    <configuration>
+        <data xmlns="http://nbpython.dev.java.net/ns/php-project/1">
+            <name>CharmmScripts</name>
+            <sources>
+                <root id="charmm-ti.dir"/>
+                <root id="briz.dir"/>
+                <root id="src.dir"/>
+                <root id="src2.dir"/>
+                <root id="fit.lj.dir"/>
+            </sources>
+            <tests/>
+        </data>
+    </configuration>
+</project>

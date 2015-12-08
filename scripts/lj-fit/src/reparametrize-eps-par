@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Rescale all epsilon parameters in parameter file. Assumes nonbonded
+# interactions are at the end of the file (i.e., after all bonded
+# interactions). Works only with CHARMM-parameter files.
+
+# Tristan BEREAU 2013
+# Florent Hedin 2015
+
+# will by default ignore TIP3P water
+
+[ -z $2 ] && echo "Usage: $0 file.par epsilon_factor" && exit 1
+
+par=$1
+factor=$2
+
+cat $par | awk -v factor=$factor '
+BEGIN{fnb=0}
+{if ($1=="NONBONDED") fnb=1;
+if (fnb==1 && ($1!="OT" && $1!="HT") && $2==0.0) {
+    gsub($3,$3*factor,$3)
+}
+print $0
+}
+'

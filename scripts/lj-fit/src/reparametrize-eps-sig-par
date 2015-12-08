@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# Rescale all epsilon parameters in parameter file. Assumes nonbonded
+# interactions are at the end of the file (i.e., after all bonded
+# interactions). Works only with CHARMM-parameter files.
+
+# Tristan BEREAU 2013
+# Florent Hedin 2015
+
+# will by default ignore TIP3P water
+
+[ -z $4 ] && echo "Usage: $0 file.par epsilon_factor sigma_factor toScaleList" && exit 1
+
+par=$1
+efactor=$2
+sfactor=$3
+scalist=$4
+
+#IFS=',' read -r -a array <<< $scalist
+
+#string="1:2:3:4:5"
+#array=(${scalist//./ })
+#for i in "${!array[@]}"
+#do
+#    echo "$i=>${array[i]}"
+#done
+
+
+cat $par | awk -v efact=$efactor -v sfact=$sfactor -v tosc=$scalist '
+BEGIN{fnb=0; it=1; split(tosc, A, ",");}
+{
+if ($1=="NONBONDED") fnb=1;
+#print tosc
+if (fnb==1 && $1==A[it] && $2==0.0 ) {
+    gsub($3,$3*efact,$3)
+    gsub($4,$4*sfact,$4)
+    it++
+}
+print $0
+}
+'

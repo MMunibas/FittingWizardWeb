@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# list CHARMM FF atom types from a parameter file
+# Florent Hedin 2015
+
+par=$1
+
+cat $par | awk -v efact=$efactor -v sfact=$sfactor '
+BEGIN{fnb=0}
+{if ($1=="NONBONDED") fnb=1;
+if (fnb==1 && ($1!="OT" && $1!="HT") && $2==0.0) {
+    print $1            
+}
+}
+'
+
