@@ -222,7 +222,7 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
             args.add("../../scripts/charmm");
         } else {
             args.add("--rem");
-            args.add("verdi");
+            args.add("studix");
             args.add("--num");
             args.add("8");
         }

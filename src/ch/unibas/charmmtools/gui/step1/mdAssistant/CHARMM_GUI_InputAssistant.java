@@ -78,6 +78,9 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base{
     @FXML // fx:id="button_search_DB"
     private Button button_search_DB; // Value injected by FXMLLoader
 
+    @FXML // fx:id="button_extraparams"
+    private Button button_extraparams; // Value injected by FXMLLoader
+        
     /**
      * Internal variables
      */
@@ -88,6 +91,8 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base{
 
     private CHARMM_Generator_DGHydr in_gas_vdw = null, in_gas_mtp = null,
             in_solv_vdw = null, in_solv_mtp = null;
+    
+    private List<ExtraParamsModel> charmm_parameters = new ArrayList<>();
 
     public CHARMM_GUI_InputAssistant(RunCHARMMWorkflow chWflow) {
         super(title, chWflow);
@@ -241,6 +246,25 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base{
         this.tab_pane.getTabs().clear();
     }
 
+    @Override
+    public void initializeData(){
+        
+        charmm_parameters.clear();
+        
+        charmm_parameters.add(
+                new ExtraParamsModel("Ncpus (ρ/ΔH)", "1")
+        );
+        
+        charmm_parameters.add(
+                new ExtraParamsModel("Ncpus (ΔG)", "1")
+        );
+        
+        charmm_parameters.add(
+                new ExtraParamsModel("Cluster", "beethoven")
+        );
+        
+    }
+    
     /**
      * Enable or Disable the button_generate if required
      */
@@ -634,6 +658,14 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base{
 //        navigateTo(DB_SelectForCHARMM.class,flist);
     }
 
+    @FXML
+    protected void setExtraParameters(ActionEvent event){
+
+        ExtraParamsView view = new ExtraParamsView();
+        view.edit(charmm_parameters);
+        
+    }
+    
     @Override
     protected void fillButtonBar() {
 

@@ -54,6 +54,8 @@ config.readfp(open(args.cfgF))
 #print args.pdbF
 #print args.numCores
 
+#args.numCores=1
+
 # TO REMOVE ; it is here for debugging
 #time.sleep(30)
 #exit(0)

@@ -183,16 +183,18 @@
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
                           <Button fx:id="button_generate" disable="true" mnemonicParsing="false" onAction="#GenerateInputFile" text="Generate input file(s)" GridPane.halignment="CENTER" />
-                  <Button fx:id="button_default" mnemonicParsing="false" onAction="#setDefault" text="Default values" visible="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+                  <Button fx:id="button_default" disable="true" mnemonicParsing="false" onAction="#setDefault" text="Default values" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+                  <Button fx:id="button_extraparams" mnemonicParsing="false" onAction="#setExtraParameters" text="Extra parameters ..." GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                </children>
             </GridPane>
-            <Button fx:id="button_search_DB" disable="true" mnemonicParsing="false" onAction="#searchInDB" text="Search in DB" visible="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+            <Button fx:id="button_search_DB" disable="true" mnemonicParsing="false" onAction="#searchInDB" text="Search in DB" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>

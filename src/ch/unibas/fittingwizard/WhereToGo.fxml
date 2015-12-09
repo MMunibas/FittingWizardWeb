@@ -52,7 +52,7 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </GridPane.margin>
             </RadioButton>
-            <RadioButton fx:id="goDB" mnemonicParsing="false" text="View/Edit database of compounds and their properties" toggleGroup="$Choices" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="6" GridPane.valignment="CENTER">
+            <RadioButton fx:id="goDB" disable="true" mnemonicParsing="false" text="View/Edit database of compounds and their properties" toggleGroup="$Choices" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="6" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </GridPane.margin>
