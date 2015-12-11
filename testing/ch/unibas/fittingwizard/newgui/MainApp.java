@@ -79,6 +79,9 @@ public class MainApp extends javax.swing.JFrame {
         jDesktopPane1.setDoubleBuffered(true);
         jDesktopPane1.setRequestFocusEnabled(false);
 
+        TabsPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        TabsPanel.setDoubleBuffered(true);
+
         javax.swing.GroupLayout MTP_TabLayout = new javax.swing.GroupLayout(MTP_Tab);
         MTP_Tab.setLayout(MTP_TabLayout);
         MTP_TabLayout.setHorizontalGroup(
@@ -142,7 +145,7 @@ public class MainApp extends javax.swing.JFrame {
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(LJ_TabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 441, Short.MAX_VALUE)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -170,12 +173,15 @@ public class MainApp extends javax.swing.JFrame {
                     .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(jButton3))
-                .addContainerGap(393, Short.MAX_VALUE))
+                .addContainerGap(376, Short.MAX_VALUE))
         );
 
         TabsPanel.addTab("LJ fit with CHARMM", LJ_Tab);
 
+        SouthFrame.setClosable(true);
         SouthFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        SouthFrame.setIconifiable(true);
+        SouthFrame.setMaximizable(true);
         SouthFrame.setResizable(true);
         SouthFrame.setTitle("Console");
         SouthFrame.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -197,16 +203,17 @@ public class MainApp extends javax.swing.JFrame {
         SouthFrame.getContentPane().setLayout(SouthFrameLayout);
         SouthFrameLayout.setHorizontalGroup(
             SouthFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(SouthFrameLayout.createSequentialGroup()
-                .addComponent(LogConsole)
-                .addGap(0, 0, 0))
+            .addComponent(LogConsole)
         );
         SouthFrameLayout.setVerticalGroup(
             SouthFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(LogConsole, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
+            .addComponent(LogConsole, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
         );
 
+        WestFrame.setClosable(true);
         WestFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        WestFrame.setIconifiable(true);
+        WestFrame.setMaximizable(true);
         WestFrame.setResizable(true);
         WestFrame.setTitle("File System");
         WestFrame.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -224,13 +231,14 @@ public class MainApp extends javax.swing.JFrame {
         }
 
         DirectoryTree.setModel(model);
+        DirectoryTree.setAutoscrolls(true);
         DirectoryTree.setDragEnabled(true);
 
         javax.swing.GroupLayout WestFrameLayout = new javax.swing.GroupLayout(WestFrame.getContentPane());
         WestFrame.getContentPane().setLayout(WestFrameLayout);
         WestFrameLayout.setHorizontalGroup(
             WestFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(DirectoryTree, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
+            .addComponent(DirectoryTree, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
         );
         WestFrameLayout.setVerticalGroup(
             WestFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -247,8 +255,8 @@ public class MainApp extends javax.swing.JFrame {
             jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDesktopPane1Layout.createSequentialGroup()
                 .addComponent(WestFrame)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(TabsPanel)
                     .addComponent(SouthFrame)))
         );
