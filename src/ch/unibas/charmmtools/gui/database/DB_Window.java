@@ -94,9 +94,9 @@ public abstract class DB_Window extends WizardPageWithVisualization {
 
     protected ObservableList<DB_model> obsList;
 
-    File smi = null;
-    File xyz = null;
-    BabelConverterAPI converter = null;
+//    File smi = null;
+//    File xyz = null;
+//    BabelConverterAPI converter = null;
 
     public DB_Window(Visualization _visualization, String title, Settings _settings) {
 
@@ -115,18 +115,18 @@ public abstract class DB_Window extends WizardPageWithVisualization {
             dbi = new SQLITE_DB_interface(DB_conn);
         }
 
-        try {
-            smi = File.createTempFile("tempMol", ".smi");
-            xyz = File.createTempFile("tempMol", ".xyz");
-            Writer str = new BufferedWriter(new FileWriter(smi));
-            str.write("CCO");
-            str.close();
-        } catch (IOException e) {
-            logger.error("Error while writing temp files : " + e.getMessage());
-        }
-
-        converter = new BabelConverterAPI("smi", "xyz");
-        converter.convert(smi.getAbsolutePath(), xyz.getAbsolutePath());
+//        try {
+//            smi = File.createTempFile("tempMol", ".smi");
+//            xyz = File.createTempFile("tempMol", ".xyz");
+//            Writer str = new BufferedWriter(new FileWriter(smi));
+//            str.write("CCO");
+//            str.close();
+//        } catch (IOException e) {
+//            logger.error("Error while writing temp files : " + e.getMessage());
+//        }
+//
+//        converter = new BabelConverterAPI("smi", "xyz");
+//        converter.convert(smi.getAbsolutePath(), xyz.getAbsolutePath());
         //visualization.show(xyz);
 
     }

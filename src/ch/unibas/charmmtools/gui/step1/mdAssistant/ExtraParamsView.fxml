@@ -33,6 +33,9 @@
     </TableView>
   </center>
   <top>
-    <Label alignment="CENTER" text="Extra parameters used when submitting CHARMM simulations :" textAlignment="CENTER" BorderPane.alignment="CENTER" />
+    <Label alignment="CENTER" text="Extra parameters used when submitting CHARMM simulations :" textAlignment="CENTER" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets top="5.0" />
+         </padding></Label>
   </top>
 </BorderPane>

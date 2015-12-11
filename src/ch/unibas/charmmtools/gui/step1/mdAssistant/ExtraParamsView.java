@@ -13,11 +13,13 @@ import ch.unibas.fittingwizard.presentation.base.ui.MainWindow;
 import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.ChoiceBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.effect.BoxBlur;
@@ -40,7 +42,7 @@ public class ExtraParamsView extends ModalDialog{
 
     private final Window primary;
     
-    CheckBox cb;
+//    CheckBox cb;
     
     public ExtraParamsView()
     {
@@ -60,8 +62,9 @@ public class ExtraParamsView extends ModalDialog{
                 new PropertyValueFactory<>("value")
         );
 
-        ValueColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-
+//        ValueColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        ValueColumn.setCellFactory(ChoiceBoxTableCell.forTableColumn());
+        
         ValueColumn.setOnEditCommit((CellEditEvent<ExtraParamsModel, String> t) -> {
             ((ExtraParamsModel) t.getTableView().getItems().get(
                     t.getTablePosition().getRow())).setValue(t.getNewValue());

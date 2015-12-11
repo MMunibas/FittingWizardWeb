@@ -8,12 +8,18 @@
  */
 package ch.unibas.fittingwizard.newgui;
 
+import java.io.File;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+
 /**
  *
  * @author hedin
  */
 public class MainApp extends javax.swing.JFrame {
 
+    private String consoleStr="";
+    
     /**
      * Creates new form MainApp
      */
@@ -30,7 +36,23 @@ public class MainApp extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        desktopPane = new javax.swing.JDesktopPane();
+        jDesktopPane1 = new javax.swing.JDesktopPane();
+        TabsPanel = new javax.swing.JTabbedPane();
+        MTP_Tab = new javax.swing.JPanel();
+        LJ_Tab = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jTextField1 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JTextField();
+        jTextField3 = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        SouthFrame = new javax.swing.JInternalFrame();
+        LogConsole = new javax.swing.JTextArea();
+        WestFrame = new javax.swing.JInternalFrame();
+        DirectoryTree = new javax.swing.JTree();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -47,7 +69,197 @@ public class MainApp extends javax.swing.JFrame {
         aboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(800, 600));
+        setTitle("Test Application");
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setMinimumSize(new java.awt.Dimension(800, 600));
+        setPreferredSize(new java.awt.Dimension(1024, 768));
+        setSize(new java.awt.Dimension(1024, 768));
+
+        jDesktopPane1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jDesktopPane1.setDoubleBuffered(true);
+        jDesktopPane1.setRequestFocusEnabled(false);
+
+        javax.swing.GroupLayout MTP_TabLayout = new javax.swing.GroupLayout(MTP_Tab);
+        MTP_Tab.setLayout(MTP_TabLayout);
+        MTP_TabLayout.setHorizontalGroup(
+            MTP_TabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        MTP_TabLayout.setVerticalGroup(
+            MTP_TabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        TabsPanel.addTab("MTP fit with Gaussian", MTP_Tab);
+
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("jButton2");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("jButton3");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jTextField1.setText("jTextField1");
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+
+        jTextField2.setText("jTextField2");
+
+        jTextField3.setText("jTextField3");
+
+        jLabel1.setText("jLabel1");
+
+        jLabel2.setText("jLabel2");
+
+        jLabel3.setText("jLabel3");
+
+        javax.swing.GroupLayout LJ_TabLayout = new javax.swing.GroupLayout(LJ_Tab);
+        LJ_Tab.setLayout(LJ_TabLayout);
+        LJ_TabLayout.setHorizontalGroup(
+            LJ_TabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LJ_TabLayout.createSequentialGroup()
+                .addGap(49, 49, 49)
+                .addGroup(LJ_TabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(LJ_TabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 441, Short.MAX_VALUE)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(LJ_TabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton3)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
+                .addGap(54, 54, 54))
+        );
+        LJ_TabLayout.setVerticalGroup(
+            LJ_TabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LJ_TabLayout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addGroup(LJ_TabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addGap(18, 18, 18)
+                .addGroup(LJ_TabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2)
+                    .addComponent(jLabel2)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(LJ_TabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(jButton3))
+                .addContainerGap(393, Short.MAX_VALUE))
+        );
+
+        TabsPanel.addTab("LJ fit with CHARMM", LJ_Tab);
+
+        SouthFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        SouthFrame.setResizable(true);
+        SouthFrame.setTitle("Console");
+        SouthFrame.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        SouthFrame.setDoubleBuffered(true);
+        SouthFrame.setVisible(true);
+
+        LogConsole.setEditable(false);
+        LogConsole.setBackground(new java.awt.Color(0, 0, 0));
+        LogConsole.setColumns(20);
+        LogConsole.setForeground(new java.awt.Color(255, 255, 255));
+        LogConsole.setRows(5);
+        LogConsole.setText("Log console ...");
+        LogConsole.setToolTipText("");
+        LogConsole.setCaretColor(new java.awt.Color(204, 204, 204));
+        LogConsole.setDoubleBuffered(true);
+        LogConsole.setDragEnabled(true);
+
+        javax.swing.GroupLayout SouthFrameLayout = new javax.swing.GroupLayout(SouthFrame.getContentPane());
+        SouthFrame.getContentPane().setLayout(SouthFrameLayout);
+        SouthFrameLayout.setHorizontalGroup(
+            SouthFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(SouthFrameLayout.createSequentialGroup()
+                .addComponent(LogConsole)
+                .addGap(0, 0, 0))
+        );
+        SouthFrameLayout.setVerticalGroup(
+            SouthFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(LogConsole, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
+        );
+
+        WestFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        WestFrame.setResizable(true);
+        WestFrame.setTitle("File System");
+        WestFrame.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        WestFrame.setDoubleBuffered(true);
+        WestFrame.setVisible(true);
+
+        File fileRoot = new File("/home/hedin");
+
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(fileRoot);
+        DefaultTreeModel model = new DefaultTreeModel(root);
+
+        File[] subItems = fileRoot.listFiles();
+        for (File file : subItems) {
+            root.add(new DefaultMutableTreeNode(file));
+        }
+
+        DirectoryTree.setModel(model);
+        DirectoryTree.setDragEnabled(true);
+
+        javax.swing.GroupLayout WestFrameLayout = new javax.swing.GroupLayout(WestFrame.getContentPane());
+        WestFrame.getContentPane().setLayout(WestFrameLayout);
+        WestFrameLayout.setHorizontalGroup(
+            WestFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(DirectoryTree, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
+        );
+        WestFrameLayout.setVerticalGroup(
+            WestFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(DirectoryTree, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        jDesktopPane1.setLayer(TabsPanel, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane1.setLayer(SouthFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane1.setLayer(WestFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
+        jDesktopPane1.setLayout(jDesktopPane1Layout);
+        jDesktopPane1Layout.setHorizontalGroup(
+            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDesktopPane1Layout.createSequentialGroup()
+                .addComponent(WestFrame)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(TabsPanel)
+                    .addComponent(SouthFrame)))
+        );
+        jDesktopPane1Layout.setVerticalGroup(
+            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDesktopPane1Layout.createSequentialGroup()
+                .addComponent(TabsPanel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(SouthFrame))
+            .addComponent(WestFrame)
+        );
 
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
@@ -116,11 +328,11 @@ public class MainApp extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 800, Short.MAX_VALUE)
+            .addComponent(jDesktopPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 579, Short.MAX_VALUE)
+            .addComponent(jDesktopPane1)
         );
 
         pack();
@@ -129,6 +341,28 @@ public class MainApp extends javax.swing.JFrame {
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
         System.exit(0);
     }//GEN-LAST:event_exitMenuItemActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        this.consoleStr += this.jTextField1.getText() + '\n';
+        this.LogConsole.setText(this.consoleStr);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        this.consoleStr += this.jTextField2.getText() + '\n';
+        this.LogConsole.setText(this.consoleStr);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        this.consoleStr += this.jTextField3.getText() + '\n';
+        this.LogConsole.setText(this.consoleStr);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -166,16 +400,32 @@ public class MainApp extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTree DirectoryTree;
+    private javax.swing.JPanel LJ_Tab;
+    private javax.swing.JTextArea LogConsole;
+    private javax.swing.JPanel MTP_Tab;
+    private javax.swing.JInternalFrame SouthFrame;
+    private javax.swing.JTabbedPane TabsPanel;
+    private javax.swing.JInternalFrame WestFrame;
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JMenuItem contentMenuItem;
     private javax.swing.JMenuItem copyMenuItem;
     private javax.swing.JMenuItem cutMenuItem;
     private javax.swing.JMenuItem deleteMenuItem;
-    private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JDesktopPane jDesktopPane1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem pasteMenuItem;

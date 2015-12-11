@@ -356,11 +356,11 @@ public class CHARMM_GUI_ShowResults extends CHARMM_GUI_base {
 
         try {
             final String[] array1 = {"e_gas(kcal/mol)", "e_liquid(kcal/mol)", "temperature(K)", "molar_mass(g/mol)",
-                "density(g/cm^3)", "delta_H_vap(kcal/mol)"};
+                "density(g/cm^3)", "delta_H_vap(kcal/mol)","delta_G_solv(kcal/mol)"};
             csvw.writeNext(array1);
 
             final String[] array2 = {Double.toString(egas), Double.toString(eliq), Double.toString(temp),
-                Double.toString(mmass), Double.toString(density), Double.toString(deltaH)};
+                Double.toString(mmass), Double.toString(density), Double.toString(deltaH), Double.toString(dg)};
             csvw.writeNext(array2);
 
             csvw.close();
