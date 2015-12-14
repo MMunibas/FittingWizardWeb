@@ -41,5 +41,10 @@ public class SQLITE_DB_interface extends DB_interface {
             logger.error("Error when executing test statement 'PRAGMA foreign_keys=ON' on SQLite database ! " + ex.getMessage());
         }
     }
+    
+    @Override
+    public String getConnectionName() {
+        return db_url;
+    }
 
 }

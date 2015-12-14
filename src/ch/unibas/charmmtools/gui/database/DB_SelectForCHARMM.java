@@ -25,8 +25,8 @@ public class DB_SelectForCHARMM extends DB_Window {
 
     private static final String title = "Selecting a compound from database";
 
-    public DB_SelectForCHARMM(Visualization visualization, Settings _settings) {
-        super(visualization, title, _settings);
+    public DB_SelectForCHARMM(Settings _settings) {
+        super(title, _settings);
         removeButtonFromButtonBar(button_initialSelection);
     }
 

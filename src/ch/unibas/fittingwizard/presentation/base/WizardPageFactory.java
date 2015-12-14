@@ -267,7 +267,7 @@ public class WizardPageFactory {
             } else if (type == CHARMM_GUI_Fitgrid.class) {
                 page = new CHARMM_GUI_Fitgrid(charmmWorkflow_other);
             } else if (type == DB_View_Edit.class) {
-                page = new DB_View_Edit(visualization, settings);
+                page = new DB_View_Edit(settings);
             } else if (type == WhereToGo.class) {
                 page = new WhereToGo();
             } else if (type == GenerateTopology.class) {

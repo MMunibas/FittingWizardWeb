@@ -25,8 +25,8 @@ public class DB_View_Edit extends DB_Window {
 
     private static final String title = "Explore database of compounds and their properties";
 
-    public DB_View_Edit(Visualization visualization, Settings _settings) {
-        super(visualization, title, _settings);
+    public DB_View_Edit(Settings _settings) {
+        super(title, _settings);
     }
 
     @Override

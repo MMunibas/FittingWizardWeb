@@ -62,8 +62,8 @@ public class ExtraParamsView extends ModalDialog{
                 new PropertyValueFactory<>("value")
         );
 
-//        ValueColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        ValueColumn.setCellFactory(ChoiceBoxTableCell.forTableColumn());
+        ValueColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+//        ValueColumn.setCellFactory(ChoiceBoxTableCell.forTableColumn());
         
         ValueColumn.setOnEditCommit((CellEditEvent<ExtraParamsModel, String> t) -> {
             ((ExtraParamsModel) t.getTableView().getItems().get(
@@ -83,6 +83,8 @@ public class ExtraParamsView extends ModalDialog{
         fillTable(model_in);
         
         showAndWait();
+        
+        primary.getScene().getRoot().setEffect(null);
         
         return Table.getItems();
     }

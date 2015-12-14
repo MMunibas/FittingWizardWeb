@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
@@ -11,11 +12,9 @@
    <top>
       <GridPane BorderPane.alignment="CENTER">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" percentWidth="10.0" />
           <ColumnConstraints hgrow="SOMETIMES" percentWidth="25.0" />
-            <ColumnConstraints hgrow="SOMETIMES" percentWidth="45.0" />
-            <ColumnConstraints hgrow="SOMETIMES" percentWidth="10.0" />
-            <ColumnConstraints hgrow="SOMETIMES" percentWidth="10.0" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="60.0" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -25,42 +24,42 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Search by full name :" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+            <Label text="Search by full name :" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Label>
-            <Label text="Search by formula :" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+            <Label text="Search by formula :" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Label>
-            <Label layoutX="476.0" layoutY="78.0" text="Search by SMILES notation :" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+            <Label layoutX="476.0" layoutY="78.0" text="Search by SMILES notation :" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Label>
-            <Label disable="true" text="Search by mass (± threshold) :" visible="false" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+            <Label text="Search by mass (± threshold) :" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Label>
-            <TextField fx:id="text_fullname" promptText="Enter molecule name" GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <TextField fx:id="text_fullname" onAction="#searchButtonPressed" promptText="Enter molecule name" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="text_formula" promptText="Enter molecule formula" GridPane.columnIndex="2" GridPane.rowIndex="2">
+            <TextField fx:id="text_formula" onAction="#searchButtonPressed" promptText="Enter molecule formula" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="text_smiles" promptText="Enter molecule SMILES notation" GridPane.columnIndex="2" GridPane.rowIndex="3">
+            <TextField fx:id="text_smiles" onAction="#searchButtonPressed" promptText="Enter molecule SMILES notation" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <GridPane prefHeight="0.0" prefWidth="120.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
+            <GridPane prefHeight="0.0" prefWidth="120.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
                   <ColumnConstraints hgrow="SOMETIMES" />
@@ -69,51 +68,75 @@
                   <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <TextField fx:id="text_mass" disable="true" promptText="Enter mass and adjust threshold if required" visible="false">
+                  <TextField fx:id="text_mass" promptText="Enter mass and adjust threshold if required">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <TextField fx:id="text_mass_threshold" disable="true" layoutX="15.0" layoutY="13.0" promptText="Adjust threshold if required" text="0.5" visible="false" GridPane.columnIndex="1">
+                  <TextField fx:id="text_mass_threshold" layoutX="15.0" layoutY="13.0" promptText="Adjust threshold if required" text="0.5" GridPane.columnIndex="1">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
                </children>
             </GridPane>
-            <Button fx:id="search_byname" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" GridPane.columnIndex="3" GridPane.rowIndex="1">
+            <Button fx:id="search_byname" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="search_bysmiles" layoutX="975.0" layoutY="43.0" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" GridPane.columnIndex="3" GridPane.rowIndex="3">
+            <Button fx:id="search_bysmiles" layoutX="975.0" layoutY="43.0" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" GridPane.columnIndex="2" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="search_byformula" layoutX="975.0" layoutY="43.0" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" GridPane.columnIndex="3" GridPane.rowIndex="2">
+            <Button fx:id="search_byformula" layoutX="975.0" layoutY="43.0" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" GridPane.columnIndex="2" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="search_bymass" disable="true" layoutX="970.0" layoutY="103.0" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="4">
+            <Button fx:id="search_bymass" layoutX="970.0" layoutY="103.0" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" GridPane.columnIndex="2" GridPane.rowIndex="4">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Button>
+            <GridPane GridPane.columnIndex="1">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="263.0" minWidth="97.0" prefWidth="109.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="577.0" minWidth="10.0" prefWidth="577.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Connection : " textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label fx:id="connectionLabel" text="Label" textAlignment="CENTER" textFill="RED" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </Label>
+               </children>
+            </GridPane>
          </children>
       </GridPane>
    </top>
    <center>
-      <TableView fx:id="tabview_db" prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
+      <TableView fx:id="tabview_db" prefHeight="297.0" prefWidth="1200.0" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
          <columns>
-            <TableColumn fx:id="tabcol_name" editable="false" minWidth="50.0" prefWidth="180.0" text="Name" />
-            <TableColumn fx:id="tabcol_formula" editable="false" minWidth="50.0" prefWidth="170.0" text="Formula" />
-            <TableColumn fx:id="tabcol_smiles" editable="false" minWidth="50.0" prefWidth="170.0" text="SMILES" />
-            <TableColumn fx:id="tabcol_mass" editable="false" minWidth="50.0" prefWidth="170.0" text="Mass (g/mol)" />
-            <TableColumn fx:id="tabcol_density" editable="false" minWidth="50.0" prefWidth="170.0" text="Density (g/cm^3)" />
-            <TableColumn fx:id="tabcol_dh" editable="false" minWidth="50.0" prefWidth="170.0" text="ΔH (kcal/mol)" />
-            <TableColumn fx:id="tabcol_dg" editable="false" minWidth="50.0" prefWidth="170.0" text="ΔG (kcal/mol)" />
+            <TableColumn fx:id="tabcol_name" editable="false" minWidth="50.0" prefWidth="180.0" sortable="false" text="Name" />
+            <TableColumn fx:id="tabcol_formula" editable="false" minWidth="50.0" prefWidth="170.0" sortable="false" text="Formula" />
+            <TableColumn fx:id="tabcol_smiles" editable="false" minWidth="50.0" prefWidth="170.0" sortable="false" text="SMILES" />
+            <TableColumn fx:id="tabcol_mass" editable="false" minWidth="50.0" prefWidth="170.0" sortable="false" text="Mass (g/mol)" />
+            <TableColumn fx:id="tabcol_density" editable="false" minWidth="50.0" prefWidth="170.0" sortable="false" text="Density (g/cm^3)" />
+            <TableColumn fx:id="tabcol_dh" editable="false" minWidth="50.0" prefWidth="170.0" sortable="false" text="ΔH (kcal/mol)" />
+            <TableColumn fx:id="tabcol_dg" editable="false" minWidth="50.0" prefWidth="170.0" sortable="false" text="ΔG (kcal/mol)" />
          </columns>
       </TableView>
    </center>

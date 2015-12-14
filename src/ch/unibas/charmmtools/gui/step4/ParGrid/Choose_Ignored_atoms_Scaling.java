@@ -61,7 +61,10 @@ public class Choose_Ignored_atoms_Scaling extends ModalDialog {
     public List<SelectScalingModel> editAtomTypes(List<SelectScalingModel> atomTypeIds) {
 
         fillTable(atomTypeIds);
+        
         showAndWait();
+        
+        primary.getScene().getRoot().setEffect(null);
         
         logger.info("Received close signal ; retuning list of atoms to scale");
 

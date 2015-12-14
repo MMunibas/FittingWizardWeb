@@ -8,24 +8,23 @@
  */
 package ch.unibas.charmmtools.gui.database;
 
-import ch.unibas.babelBinding.BabelConverterAPI;
 import ch.unibas.charmmtools.gui.database.dataModel.DB_model;
 import ch.unibas.charmmtools.gui.database.interfaces.DB_interface;
 import ch.unibas.charmmtools.gui.database.interfaces.MYSQL_DB_interface;
 import ch.unibas.charmmtools.gui.database.interfaces.SQLITE_DB_interface;
 import ch.unibas.fittingwizard.Settings;
+import ch.unibas.fittingwizard.WhereToGo;
 import ch.unibas.fittingwizard.application.Visualization;
+import ch.unibas.fittingwizard.presentation.base.WizardPage;
 import ch.unibas.fittingwizard.presentation.base.WizardPageWithVisualization;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
+import java.sql.SQLException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -35,7 +34,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
  *
  * @author hedin
  */
-public abstract class DB_Window extends WizardPageWithVisualization {
+public abstract class DB_Window extends WizardPage {
 
     protected Settings settings;
 
@@ -89,32 +88,59 @@ public abstract class DB_Window extends WizardPageWithVisualization {
 
     @FXML // fx:id="search_byname"
     protected Button search_byname; // Value injected by FXMLLoader
+    
+    @FXML // fx:id="connectionLabel"
+    protected Label connectionLabel; // Value injected by FXMLLoader
 
-    protected final DB_interface dbi;
+    protected DB_interface dbi;
 
     protected ObservableList<DB_model> obsList;
 
 //    File smi = null;
 //    File xyz = null;
 //    BabelConverterAPI converter = null;
+    public DB_Window(String title, Settings _settings) {
 
-    public DB_Window(Visualization _visualization, String title, Settings _settings) {
-
-        super(_visualization, title);
+        super(title);
         this.settings = _settings;
 
         String DB_type = settings.getValue("DB.type");
         String DB_conn = settings.getValue("DB.connect");
         String DB_user = settings.getValue("DB.user");
         String DB_pass = settings.getValue("DB.password");
-
-        // if not mysql default to sqlite
+        
+        // First try MySQL
         if (DB_type.compareToIgnoreCase("mysql") == 0) {
-            dbi = new MYSQL_DB_interface(DB_conn, DB_user, DB_pass);
-        } else {
-            dbi = new SQLITE_DB_interface(DB_conn);
+
+            try {
+                dbi = new MYSQL_DB_interface(DB_conn, DB_user, DB_pass);
+            } catch (SQLException ex) {
+                logger.info("Either MySQL parameters undefined or they are wrong ; ask user what to do.");
+                boolean rep = OverlayDialog.askYesOrNo("Unable to connect to the external Database. Try the local one instead ?");
+                logger.info("Local DB : user said " + rep);
+                if(rep==true)
+                {
+                    String DB_type2 = settings.getValue("DB.type.local");
+                    String DB_conn2 = settings.getValue("DB.connect.local");
+                    dbi = new SQLITE_DB_interface(DB_conn2); 
+                }
+                else
+                {
+                    navigateTo(WhereToGo.class,null);
+                }
+            }
+
+        }
+        else
+        {
+            String DB_type2 = settings.getValue("DB.type.local");
+            String DB_conn2 = settings.getValue("DB.connect.local");
+            dbi = new SQLITE_DB_interface(DB_conn2);
         }
 
+        this.connectionLabel.setText(dbi.getConnectionName());
+        
+//        boolean trySqlite = OverlayDialog.askYesOrNo("Problem when attempting to connect to external DB : trying local database instead ?");
 //        try {
 //            smi = File.createTempFile("tempMol", ".smi");
 //            xyz = File.createTempFile("tempMol", ".xyz");
@@ -128,7 +154,6 @@ public abstract class DB_Window extends WizardPageWithVisualization {
 //        converter = new BabelConverterAPI("smi", "xyz");
 //        converter.convert(smi.getAbsolutePath(), xyz.getAbsolutePath());
         //visualization.show(xyz);
-
     }
 
     @Override
@@ -156,8 +181,8 @@ public abstract class DB_Window extends WizardPageWithVisualization {
     }
 
     /**
-     * When one of the search button is pressed call the appropriate findBy from DB_interace for performing the DB
-     * search
+     * When one of the search button is pressed call the appropriate findBy from
+     * DB_interace for performing the DB search
      *
      * @param event
      */
@@ -167,22 +192,30 @@ public abstract class DB_Window extends WizardPageWithVisualization {
         // first clean table view before adding something
         cleanTableView();
 
-        if (event.getSource().equals(search_byname)) {
+        if (event.getSource().equals(search_byname) || event.getSource().equals(text_fullname)) {
+
             // search for a compound by name in DB
             obsList.addAll(dbi.findByName(text_fullname.getText()));
             tabview_db.getItems().addAll(obsList);
-        } else if (event.getSource().equals(search_byformula)) {
+
+        } else if (event.getSource().equals(search_byformula) || event.getSource().equals(text_formula)) {
+
             // search for a compound by formula in DB
             obsList.addAll(dbi.findByFormula(text_formula.getText()));
             tabview_db.getItems().addAll(obsList);
-        } else if (event.getSource().equals(search_bysmiles)) {
+
+        } else if (event.getSource().equals(search_bysmiles) || event.getSource().equals(text_smiles)) {
+
             // search for a compound by SMILES notation in DB
             obsList.addAll(dbi.findBySMILES(text_smiles.getText()));
             tabview_db.getItems().addAll(obsList);
-        } else if (event.getSource().equals(search_bymass)) {
+
+        } else if (event.getSource().equals(search_bymass) || event.getSource().equals(text_mass)) {
+
             // search for a compound by Mass in DB
             obsList.addAll(dbi.findByMASS(Double.valueOf(text_mass.getText()), Double.valueOf(text_mass_threshold.getText())));
             tabview_db.getItems().addAll(obsList);
+
         } else {
             throw new UnknownError("Unknown Event in searchButtonPressed(ActionEvent event)");
         }

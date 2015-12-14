@@ -161,4 +161,10 @@ public abstract class DB_interface {
         
         return res;
     }
+    
+    /**
+     *
+     * @return
+     */
+    public abstract String getConnectionName();
 }

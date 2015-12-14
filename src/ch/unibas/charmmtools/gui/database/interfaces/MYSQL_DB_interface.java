@@ -26,8 +26,9 @@ public class MYSQL_DB_interface extends DB_interface {
      * @param _url
      * @param _pass
      * @param _user
+     * @throws java.sql.SQLException
      */
-    public MYSQL_DB_interface(String _url, String _user, String _pass) {
+    public MYSQL_DB_interface(String _url, String _user, String _pass) throws SQLException  {
 
         this.db_url = _url;
         this.db_pass = _pass;
@@ -38,6 +39,7 @@ public class MYSQL_DB_interface extends DB_interface {
             connect = DriverManager.getConnection(db_url, db_user, db_pass);
         } catch (SQLException ex) {
             logger.error("Error when connecting to Mysql database ! " + ex.getMessage());
+            throw ex;
         }
 
         // test statement to check if connection is OK
@@ -49,7 +51,13 @@ public class MYSQL_DB_interface extends DB_interface {
 
         } catch (SQLException ex) {
             logger.error("Error when executing test statement 'show tables' on Mysql database ! " + ex.getMessage());
+            throw ex;
         }
 
+    }
+
+    @Override
+    public String getConnectionName() {
+        return db_url;
     }
 }
