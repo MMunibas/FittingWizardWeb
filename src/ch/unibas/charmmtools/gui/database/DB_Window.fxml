@@ -69,12 +69,12 @@
                   <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <TextField fx:id="text_value" promptText="Enter target value" GridPane.columnIndex="1">
+                  <TextField fx:id="text_value" onAction="#searchButtonPressed" promptText="Enter target value" GridPane.columnIndex="1">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <TextField fx:id="text_value_threshold" layoutX="15.0" layoutY="13.0" promptText="Enter a threshold" GridPane.columnIndex="2">
+                  <TextField fx:id="text_value_threshold" layoutX="15.0" layoutY="13.0" onAction="#searchButtonPressed" promptText="Enter a threshold" GridPane.columnIndex="2">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>

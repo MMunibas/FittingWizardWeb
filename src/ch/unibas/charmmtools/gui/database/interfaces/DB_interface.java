@@ -51,10 +51,10 @@ public abstract class DB_interface {
                 String name = rset.getString(colName);
                 String formula = rset.getString(colFormula);
                 String smiles = rset.getString(colSmiles);
-                String mass = rset.getString(colMass);
-                String density = rset.getString(colDensity);
-                String dh = rset.getString(colHvap);
-                String dg = rset.getString(colGsolv);
+                Double mass = Double.valueOf(rset.getString(colMass));
+                Double density = Double.valueOf(rset.getString(colDensity));
+                Double dh = Double.valueOf(rset.getString(colHvap));
+                Double dg = Double.valueOf(rset.getString(colGsolv));
                 parsedList.add(new DB_model(name, formula, smiles, mass, density, dh, dg));
             }
         } catch (SQLException ex) {

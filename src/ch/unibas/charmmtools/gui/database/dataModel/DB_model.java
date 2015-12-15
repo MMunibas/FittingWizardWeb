@@ -8,6 +8,8 @@
  */
 package ch.unibas.charmmtools.gui.database.dataModel;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -23,11 +25,23 @@ public class DB_model {
     private final StringProperty name = new SimpleStringProperty(this, "name");
     private final StringProperty formula = new SimpleStringProperty(this, "formula");
     private final StringProperty smiles = new SimpleStringProperty(this, "smiles");
-    private final StringProperty mass = new SimpleStringProperty(this, "mass");
-    private final StringProperty density = new SimpleStringProperty(this, "density");
-    private final StringProperty dh = new SimpleStringProperty(this, "dh");
-    private final StringProperty dg = new SimpleStringProperty(this, "dg");
+    private final DoubleProperty mass = new SimpleDoubleProperty(this, "mass");
+    private final DoubleProperty density = new SimpleDoubleProperty(this, "density");
+    private final DoubleProperty dh = new SimpleDoubleProperty(this, "dh");
+    private final DoubleProperty dg = new SimpleDoubleProperty(this, "dg");
 
+    
+    public DB_model(String _name, String _formula, String _smiles,
+            double _mass, double _density, double _dh, double _dg) {
+        this.setName(_name);
+        this.setFormula(_formula);
+        this.setSmiles(_smiles);
+        this.setMass(_mass);
+        this.setDensity(_density);
+        this.setDh(_dh);
+        this.setDg(_dg);
+    }
+        
     //------------------------------------
     public StringProperty nameProperty() {
         return name;
@@ -68,67 +82,56 @@ public class DB_model {
     }
 
     //------------------------------------
-    public StringProperty massProperty() {
+    public DoubleProperty massProperty() {
         return mass;
     }
 
-    public final String getMass() {
+    public final double getMass() {
         return massProperty().get();
     }
 
-    public final void setMass(String _mass) {
+    public final void setMass(double _mass) {
         massProperty().set(_mass);
     }
 
     //------------------------------------
-    public StringProperty densityProperty() {
+    public DoubleProperty densityProperty() {
         return density;
     }
 
-    public final String getDensity() {
+    public final double getDensity() {
         return densityProperty().get();
     }
 
-    public final void setDensity(String _density) {
+    public final void setDensity(double _density) {
         densityProperty().set(_density);
     }
 
     //------------------------------------
-    public StringProperty dhProperty() {
+    public DoubleProperty dhProperty() {
         return dh;
     }
 
-    public final String getDh() {
+    public final double getDh() {
         return dhProperty().get();
     }
 
-    public final void setDh(String _dh) {
+    public final void setDh(double _dh) {
         dhProperty().set(_dh);
     }
     
     //------------------------------------
-    public StringProperty dgProperty() {
+    public DoubleProperty dgProperty() {
         return dg;
     }
 
-    public final String getDg() {
+    public final double getDg() {
         return dgProperty().get();
     }
 
-    public final void setDg(String _dg) {
+    public final void setDg(double _dg) {
         dgProperty().set(_dg);
     }    
-
-    public DB_model(String _name, String _formula, String _smiles,
-            String _mass, String _density, String _dh, String _dg) {
-        this.setName(_name);
-        this.setFormula(_formula);
-        this.setSmiles(_smiles);
-        this.setMass(_mass);
-        this.setDensity(_density);
-        this.setDh(_dh);
-        this.setDg(_dg);
-    }
 
     @Override
     public String toString() {

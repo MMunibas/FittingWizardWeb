@@ -42,10 +42,10 @@ public abstract class DB_Window extends WizardPage {
     protected Settings settings;
 
     @FXML // fx:id="tabcol_mass"
-    protected TableColumn<DB_model, String> tabcol_mass; // Value injected by FXMLLoader
+    protected TableColumn<DB_model, Double> tabcol_mass; // Value injected by FXMLLoader
 
     @FXML // fx:id="tabcol_dg"
-    protected TableColumn<DB_model, String> tabcol_dg; // Value injected by FXMLLoader
+    protected TableColumn<DB_model, Double> tabcol_dg; // Value injected by FXMLLoader
 
     @FXML // fx:id="text_value"
     protected TextField text_value; // Value injected by FXMLLoader
@@ -63,7 +63,7 @@ public abstract class DB_Window extends WizardPage {
     protected Button search_bysmiles; // Value injected by FXMLLoader
 
     @FXML // fx:id="tabcol_dh"
-    protected TableColumn<DB_model, String> tabcol_dh; // Value injected by FXMLLoader
+    protected TableColumn<DB_model, Double> tabcol_dh; // Value injected by FXMLLoader
 
     @FXML // fx:id="search_byformula"
     protected Button search_byformula; // Value injected by FXMLLoader
@@ -87,7 +87,7 @@ public abstract class DB_Window extends WizardPage {
     protected TextField text_fullname; // Value injected by FXMLLoader
 
     @FXML // fx:id="tabcol_density"
-    protected TableColumn<DB_model, String> tabcol_density; // Value injected by FXMLLoader
+    protected TableColumn<DB_model, Double> tabcol_density; // Value injected by FXMLLoader
 
     @FXML // fx:id="search_byname"
     protected Button search_byname; // Value injected by FXMLLoader
@@ -230,7 +230,7 @@ public abstract class DB_Window extends WizardPage {
             obsList.addAll(dbi.findBySMILES(text_smiles.getText()));
             tabview_db.getItems().addAll(obsList);
 
-        } else if (event.getSource().equals(search_byvalue) || event.getSource().equals(text_value)) {
+        } else if (event.getSource().equals(search_byvalue) || event.getSource().equals(text_value) || event.getSource().equals(text_value_threshold)) {
 
             // search for a compound by value in DB
             obsList.addAll(
