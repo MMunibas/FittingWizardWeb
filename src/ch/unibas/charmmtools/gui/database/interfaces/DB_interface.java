@@ -85,7 +85,9 @@ public abstract class DB_interface {
             resultSet = statement.executeQuery("select `compounds`.name,`structure`.formula,"
                     + " `structure`.smiles, `prop`.mass, `prop`.density, `prop`.Hvap, `prop`.Gsolv"
                     + " from `compounds`,`prop`,`structure` where `compounds`.name like '%" + name + "%'"
-                    + " and compounds.id=prop.id and compounds.id=structure.id");
+                    + " and compounds.id=prop.id and compounds.id=structure.id"
+                    + " order by compounds.id"
+            );
             modelList = parseResultSet(resultSet);
         } catch (SQLException ex) {
             logger.error("Error when executing SQL statement in findByName() ! " + ex.getMessage());
@@ -112,7 +114,9 @@ public abstract class DB_interface {
             resultSet = statement.executeQuery("select `compounds`.name,`structure`.formula,"
                     + " `structure`.smiles, `prop`.mass, `prop`.density, `prop`.Hvap, `prop`.Gsolv"
                     + " from `compounds`,`prop`,`structure` where `structure`.formula like '%" + formula + "%'"
-                    + " and compounds.id=prop.id and compounds.id=structure.id");
+                    + " and compounds.id=prop.id and compounds.id=structure.id"
+                    + " order by compounds.id"
+            );
             modelList = parseResultSet(resultSet);
         } catch (SQLException ex) {
             logger.error("Error when executing SQL statement in findByFormula() ! " + ex.getMessage());
@@ -139,7 +143,9 @@ public abstract class DB_interface {
             resultSet = statement.executeQuery("select `compounds`.name,`structure`.formula,"
                     + " `structure`.smiles, `prop`.mass, `prop`.density, `prop`.Hvap, `prop`.Gsolv"
                     + " from `compounds`,`prop`,`structure` where `structure`.smiles like '%" + smiles + "%'"
-                    + " and compounds.id=prop.id and compounds.id=structure.id");
+                    + " and `compounds`.id=`prop`.id and `compounds`.id=`structure`.id"
+                    + " order by `compounds`.id"
+            );
             modelList = parseResultSet(resultSet);
         } catch (SQLException ex) {
             logger.error("Error when executing SQL statement in findBySMILES() ! " + ex.getMessage());
@@ -149,17 +155,62 @@ public abstract class DB_interface {
     }
 
     /**
-     * Find data using compound mass + or - a threshold
+     * Find data using compound value + or - a threshold
      *
+     * @param value_type
      * @param target
      * @param threshold
      * @return 
      */
-    public List<DB_model> findByMASS(double target, double threshold) {
+    public List<DB_model> findByValue(String value_type, double target, double threshold) {
         
-        List<DB_model> res = new ArrayList<>();
+        Statement statement = null;
+        ResultSet resultSet = null;
+        List<DB_model> modelList = null;
         
-        return res;
+        String property = null;
+        
+        switch(value_type)
+        {
+            case "Mass":
+                property = "`prop`.mass";
+                break;
+            
+            case "Density":
+                property = "`prop`.density";
+                break;
+                
+            case "ΔH":
+                property = "`prop`.Hvap";
+                break;
+                
+            case "ΔG":
+                property = "`prop`.Gsolv";
+                break;
+                
+            default:
+                property = "`prop`.mass";
+                break;
+        }
+        
+        double massHigh = target + threshold;
+        double massLow  = target - threshold;
+        
+        try {
+            //prepare statement and execute it
+            statement = connect.createStatement();
+            resultSet = statement.executeQuery("select `compounds`.name,`structure`.formula,"
+                    + " `structure`.smiles, `prop`.mass, `prop`.density, `prop`.Hvap, `prop`.Gsolv"
+                    + " from `compounds`,`prop`,`structure` where " + property + " between " + massLow + " and " + massHigh
+                    + " and `compounds`.id=`prop`.id and `compounds`.id=`structure`.id"
+                    + " order by `compounds`.id"
+            );
+            modelList = parseResultSet(resultSet);
+        } catch (SQLException ex) {
+            logger.error("Error when executing SQL statement in findByMASS() ! " + ex.getMessage());
+        }
+        
+        return modelList;
     }
     
     /**

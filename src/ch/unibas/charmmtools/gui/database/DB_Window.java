@@ -19,11 +19,14 @@ import ch.unibas.fittingwizard.presentation.base.WizardPage;
 import ch.unibas.fittingwizard.presentation.base.WizardPageWithVisualization;
 import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -44,14 +47,14 @@ public abstract class DB_Window extends WizardPage {
     @FXML // fx:id="tabcol_dg"
     protected TableColumn<DB_model, String> tabcol_dg; // Value injected by FXMLLoader
 
-    @FXML // fx:id="text_mass"
-    protected TextField text_mass; // Value injected by FXMLLoader
+    @FXML // fx:id="text_value"
+    protected TextField text_value; // Value injected by FXMLLoader
 
     @FXML // fx:id="text_formula"
     protected TextField text_formula; // Value injected by FXMLLoader
 
-    @FXML // fx:id="search_bymass"
-    protected Button search_bymass; // Value injected by FXMLLoader
+    @FXML // fx:id="search_byvalue"
+    protected Button search_byvalue; // Value injected by FXMLLoader
 
     @FXML // fx:id="text_smiles"
     protected TextField text_smiles; // Value injected by FXMLLoader
@@ -77,8 +80,8 @@ public abstract class DB_Window extends WizardPage {
     @FXML // fx:id="tabview_db"
     protected TableView<DB_model> tabview_db; // Value injected by FXMLLoader
 
-    @FXML // fx:id="text_mass_threshold"
-    protected TextField text_mass_threshold; // Value injected by FXMLLoader
+    @FXML // fx:id="text_value_threshold"
+    protected TextField text_value_threshold; // Value injected by FXMLLoader
 
     @FXML // fx:id="text_fullname"
     protected TextField text_fullname; // Value injected by FXMLLoader
@@ -91,10 +94,22 @@ public abstract class DB_Window extends WizardPage {
     
     @FXML // fx:id="connectionLabel"
     protected Label connectionLabel; // Value injected by FXMLLoader
+    
+    
+    @FXML // fx:id="combo_value"
+    private ComboBox<String> combo_value; // Value injected by FXMLLoader
 
     protected DB_interface dbi;
 
     protected ObservableList<DB_model> obsList;
+    
+    private final ObservableList<String> combo_options = 
+    FXCollections.observableArrayList(
+        "Mass",
+        "Density",
+        "ΔH",
+        "ΔG"
+    );
 
 //    File smi = null;
 //    File xyz = null;
@@ -158,6 +173,11 @@ public abstract class DB_Window extends WizardPage {
 
     @Override
     public void initializeData() {
+
+        
+        combo_value.setItems(combo_options);
+        combo_value.setValue(combo_options.get(0));
+        
         tabcol_name.setCellValueFactory(new PropertyValueFactory<>("name"));
         tabcol_formula.setCellValueFactory(new PropertyValueFactory<>("formula"));
         tabcol_smiles.setCellValueFactory(new PropertyValueFactory<>("smiles"));
@@ -210,10 +230,14 @@ public abstract class DB_Window extends WizardPage {
             obsList.addAll(dbi.findBySMILES(text_smiles.getText()));
             tabview_db.getItems().addAll(obsList);
 
-        } else if (event.getSource().equals(search_bymass) || event.getSource().equals(text_mass)) {
+        } else if (event.getSource().equals(search_byvalue) || event.getSource().equals(text_value)) {
 
-            // search for a compound by Mass in DB
-            obsList.addAll(dbi.findByMASS(Double.valueOf(text_mass.getText()), Double.valueOf(text_mass_threshold.getText())));
+            // search for a compound by value in DB
+            obsList.addAll(
+                    dbi.findByValue(
+                            combo_value.getValue(),Double.valueOf(text_value.getText()), Double.valueOf(text_value_threshold.getText())
+                    )
+            );
             tabview_db.getItems().addAll(obsList);
 
         } else {
