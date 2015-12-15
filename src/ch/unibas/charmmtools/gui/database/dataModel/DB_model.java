@@ -8,6 +8,8 @@
  */
 package ch.unibas.charmmtools.gui.database.dataModel;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -20,14 +22,78 @@ import javafx.beans.property.StringProperty;
  */
 public class DB_model {
 
+    private final IntegerProperty id = new SimpleIntegerProperty(this, "id");
+    private final IntegerProperty idpubchem = new SimpleIntegerProperty(this, "idpubchem");
+    
     private final StringProperty name = new SimpleStringProperty(this, "name");
     private final StringProperty formula = new SimpleStringProperty(this, "formula");
+    private final StringProperty inchi = new SimpleStringProperty(this, "inchi");
     private final StringProperty smiles = new SimpleStringProperty(this, "smiles");
+    
     private final StringProperty mass = new SimpleStringProperty(this, "mass");
     private final StringProperty density = new SimpleStringProperty(this, "density");
     private final StringProperty dh = new SimpleStringProperty(this, "dh");
     private final StringProperty dg = new SimpleStringProperty(this, "dg");
 
+    public DB_model(int _id, int _idpubchem,
+            String _name, String _formula, String _inchi, String _smiles,
+            String _mass, String _density, String _dh, String _dg) {
+        
+        this.setId(_id);
+        this.setIdpubchem(_idpubchem);
+        
+        this.setName(_name);
+        this.setFormula(_formula);
+        this.setInchi(_inchi);
+        this.setSmiles(_smiles);
+        
+        this.setMass(_mass);
+        this.setDensity(_density);
+        this.setDh(_dh);
+        this.setDg(_dg);
+        
+    }
+    
+//    public DB_model(String _name, String _formula, String _smiles,
+//            String _mass, String _density, String _dh, String _dg) {
+//        
+//        this.setName(_name);
+//        this.setFormula(_formula);
+//        this.setSmiles(_smiles);
+//        
+//        this.setMass(_mass);
+//        this.setDensity(_density);
+//        this.setDh(_dh);
+//        this.setDg(_dg);
+//        
+//    }
+        
+    //------------------------------------
+    public IntegerProperty idProperty() {
+        return id;
+    }
+
+    public final int getId() {
+        return idProperty().get();
+    }
+
+    public final void setId(int _id) {
+        idProperty().set(_id);
+    }
+    
+    //------------------------------------
+    public IntegerProperty idpubchemProperty() {
+        return idpubchem;
+    }
+
+    public final int getIdpubchem() {
+        return idpubchemProperty().get();
+    }
+
+    public final void setIdpubchem(int _idpubchem) {
+        idpubchemProperty().set(_idpubchem);
+    }
+    
     //------------------------------------
     public StringProperty nameProperty() {
         return name;
@@ -52,6 +118,19 @@ public class DB_model {
 
     public final void setFormula(String _formula) {
         formulaProperty().set(_formula);
+    }
+    
+    //------------------------------------
+    public StringProperty inchiProperty() {
+        return inchi;
+    }
+
+    public final String getInchi() {
+        return inchiProperty().get();
+    }
+
+    public final void setInchi(String _inchi) {
+        inchiProperty().set(_inchi);
     }
 
     //------------------------------------
@@ -119,31 +198,20 @@ public class DB_model {
         dgProperty().set(_dg);
     }    
 
-    public DB_model(String _name, String _formula, String _smiles,
-            String _mass, String _density, String _dh, String _dg) {
-        this.setName(_name);
-        this.setFormula(_formula);
-        this.setSmiles(_smiles);
-        this.setMass(_mass);
-        this.setDensity(_density);
-        this.setDh(_dh);
-        this.setDg(_dg);
-    }
-
-    @Override
-    public String toString() {
-        String ret="";
-        
-        ret += "name : " + name.get() + '\n';
-        ret += "formula : " + formula.get() + '\n';
-        ret += "smiles : " + smiles.get() + '\n';
-        ret += "mass : " + mass.get() + '\n';
-        ret += "density : " + density.get() + '\n';
-        ret += "dh : " + dh.get() + '\n';
-        ret += "dg : " + dg.get() + '\n';
-        
-        return ret;
-    }
+//    @Override
+//    public String toString() {
+//        String ret="";
+//        
+//        ret += "name : " + name.get() + '\n';
+//        ret += "formula : " + formula.get() + '\n';
+//        ret += "smiles : " + smiles.get() + '\n';
+//        ret += "mass : " + mass.get() + '\n';
+//        ret += "density : " + density.get() + '\n';
+//        ret += "dh : " + dh.get() + '\n';
+//        ret += "dg : " + dg.get() + '\n';
+//        
+//        return ret;
+//    }
     
     
         

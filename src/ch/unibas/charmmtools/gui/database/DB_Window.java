@@ -14,13 +14,9 @@ import ch.unibas.charmmtools.gui.database.interfaces.MYSQL_DB_interface;
 import ch.unibas.charmmtools.gui.database.interfaces.SQLITE_DB_interface;
 import ch.unibas.fittingwizard.Settings;
 import ch.unibas.fittingwizard.WhereToGo;
-import ch.unibas.fittingwizard.application.Visualization;
 import ch.unibas.fittingwizard.presentation.base.WizardPage;
-import ch.unibas.fittingwizard.presentation.base.WizardPageWithVisualization;
 import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -91,25 +87,24 @@ public abstract class DB_Window extends WizardPage {
 
     @FXML // fx:id="search_byname"
     protected Button search_byname; // Value injected by FXMLLoader
-    
+
     @FXML // fx:id="connectionLabel"
     protected Label connectionLabel; // Value injected by FXMLLoader
-    
-    
+
     @FXML // fx:id="combo_value"
     private ComboBox<String> combo_value; // Value injected by FXMLLoader
 
     protected DB_interface dbi;
 
     protected ObservableList<DB_model> obsList;
-    
-    private final ObservableList<String> combo_options = 
-    FXCollections.observableArrayList(
-        "Mass",
-        "Density",
-        "ΔH",
-        "ΔG"
-    );
+
+    private final ObservableList<String> combo_options
+            = FXCollections.observableArrayList(
+                    "Mass",
+                    "Density",
+                    "ΔH",
+                    "ΔG"
+            );
 
 //    File smi = null;
 //    File xyz = null;
@@ -123,7 +118,7 @@ public abstract class DB_Window extends WizardPage {
         String DB_conn = settings.getValue("DB.connect");
         String DB_user = settings.getValue("DB.user");
         String DB_pass = settings.getValue("DB.password");
-        
+
         // First try MySQL
         if (DB_type.compareToIgnoreCase("mysql") == 0) {
 
@@ -133,28 +128,23 @@ public abstract class DB_Window extends WizardPage {
                 logger.info("Either MySQL parameters undefined or they are wrong ; ask user what to do.");
                 boolean rep = OverlayDialog.askYesOrNo("Unable to connect to the external Database. Try the local one instead ?");
                 logger.info("Local DB : user said " + rep);
-                if(rep==true)
-                {
+                if (rep == true) {
                     String DB_type2 = settings.getValue("DB.type.local");
                     String DB_conn2 = settings.getValue("DB.connect.local");
-                    dbi = new SQLITE_DB_interface(DB_conn2); 
-                }
-                else
-                {
-                    navigateTo(WhereToGo.class,null);
+                    dbi = new SQLITE_DB_interface(DB_conn2);
+                } else {
+                    navigateTo(WhereToGo.class, null);
                 }
             }
 
-        }
-        else
-        {
+        } else {
             String DB_type2 = settings.getValue("DB.type.local");
             String DB_conn2 = settings.getValue("DB.connect.local");
             dbi = new SQLITE_DB_interface(DB_conn2);
         }
 
         this.connectionLabel.setText(dbi.getConnectionName());
-        
+
 //        boolean trySqlite = OverlayDialog.askYesOrNo("Problem when attempting to connect to external DB : trying local database instead ?");
 //        try {
 //            smi = File.createTempFile("tempMol", ".smi");
@@ -168,16 +158,15 @@ public abstract class DB_Window extends WizardPage {
 //
 //        converter = new BabelConverterAPI("smi", "xyz");
 //        converter.convert(smi.getAbsolutePath(), xyz.getAbsolutePath());
-        //visualization.show(xyz);
+//        visualization.show(xyz);
     }
 
     @Override
     public void initializeData() {
 
-        
         combo_value.setItems(combo_options);
         combo_value.setValue(combo_options.get(0));
-        
+
         tabcol_name.setCellValueFactory(new PropertyValueFactory<>("name"));
         tabcol_formula.setCellValueFactory(new PropertyValueFactory<>("formula"));
         tabcol_smiles.setCellValueFactory(new PropertyValueFactory<>("smiles"));
@@ -230,12 +219,12 @@ public abstract class DB_Window extends WizardPage {
             obsList.addAll(dbi.findBySMILES(text_smiles.getText()));
             tabview_db.getItems().addAll(obsList);
 
-        } else if (event.getSource().equals(search_byvalue) || event.getSource().equals(text_value)) {
+        } else if (event.getSource().equals(search_byvalue) || event.getSource().equals(text_value) || event.getSource().equals(text_value_threshold)) {
 
             // search for a compound by value in DB
             obsList.addAll(
                     dbi.findByValue(
-                            combo_value.getValue(),Double.valueOf(text_value.getText()), Double.valueOf(text_value_threshold.getText())
+                            combo_value.getValue(), Double.valueOf(text_value.getText()), Double.valueOf(text_value_threshold.getText())
                     )
             );
             tabview_db.getItems().addAll(obsList);

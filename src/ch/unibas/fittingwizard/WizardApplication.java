@@ -13,9 +13,7 @@ import ch.unibas.fittingwizard.presentation.base.WizardPageFactory;
 import ch.unibas.fittingwizard.presentation.base.ui.MainWindow;
 import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.net.URL;
-import java.util.Enumeration;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import javafx.application.Application;
@@ -25,12 +23,10 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.FileAppender;
-import org.apache.log4j.Layout;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import static org.apache.log4j.PatternLayout.TTCC_CONVERSION_PATTERN;
-import org.apache.log4j.WriterAppender;
 
 /**
  * This is the main entry point of the application.
@@ -61,7 +57,7 @@ public class WizardApplication extends Application {
             primaryStage.centerOnScreen();
             primaryStage.setMinWidth(1200);
             primaryStage.setMinHeight(800);
-            primaryStage.setResizable(false);
+//            primaryStage.setResizable(false);
 
             this.loadStylesheets(scene);
             primaryStage.setScene(scene);
