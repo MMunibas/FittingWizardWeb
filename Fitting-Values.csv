@@ -1,0 +1,30 @@
+Compound Name,delta_G Exp,delta_G Calc,Col
+Toluene,-0.9,-0.86,1
+trifluoromethylbenzene,-0.25,-0.34,2
+2-iodophenol,-6.2,-6.50,3
+PhH (MTP),-0.86,-0.89,4
+PhF (MTP),-0.8,-0.75,5
+PhCl (MTP),-1.12,-1.11,6
+PhBr (MTP),-1.46,-1.4,7
+PhI (MTP),-1.83,-1.97,8
+pyrrol (MTP),-4.78,-3.74,9
+PhH (PC),-0.86,-0.77,4
+PhF (PC),-0.8,-0.48,5
+PhCl (PC),-1.12,-0.66,6
+PhBr (PC),-1.46,-0.55,7
+PhI (PC),-1.83,-1.35,8
+pyrrol (PC),-4.78,-4.11,9
+Phenol (unscaled),-6.6,-6.496,10
+Phenol (scaled 1.05),-6.6,-3.76869,10
+Phenol (scaled 1.10),-6.6,-3.74234,10
+Benzonitrile (MTP 1),-4.1,-3.9,11
+Benzonitrile (MTP 2),-4.1,-4.74,11
+"NMA (unscaled, Tristan article)",-10,-7.34,12
+"NMA (unscaled, interface)",-10,-7.09,12
+"NMA (scaled 1.025, interface)",-10,-6.37,12
+"NMA (scaled 1.050, interface)",-10,-6.21,12
+"NMA (scaled 1.075, interface)",-10,-5.68,12
+"NMA (scaled 1.100, interface)",-10,-5.67,12
+"NMA (unscaled, lambda breaking 1)",-10,-3.81,12
+"NMA (unscaled, lambda breaking 2)",-10,-6.22,12
+"NMA (unscaled, lambda breaking 3)",-10,-6.89,12

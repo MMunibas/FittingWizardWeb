@@ -144,13 +144,15 @@
       </GridPane>
       <TableView fx:id="tabview_db" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" tableMenuButtonVisible="true" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
          <columns>
-            <TableColumn fx:id="tabcol_name" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="208.0" text="Name" />
-            <TableColumn fx:id="tabcol_formula" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="172.0" text="Formula" />
-            <TableColumn fx:id="tabcol_smiles" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="172.0" text="SMILES" />
-            <TableColumn fx:id="tabcol_mass" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="131.0" text="Mass (g/mol)" />
-            <TableColumn fx:id="tabcol_density" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="149.0" text="Density (g/cm^3)" />
-            <TableColumn fx:id="tabcol_dh" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="165.0" text="ΔH vap (kcal/mol)" />
-            <TableColumn fx:id="tabcol_dg" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="161.0" text="ΔG hyd (kcal/mol)" />
+            <TableColumn fx:id="tabcol_name" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="70.0" text="Name" />
+            <TableColumn fx:id="tabcol_formula" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="95.0" text="Formula" />
+            <TableColumn fx:id="tabcol_smiles" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="87.0" text="SMILES" />
+            <TableColumn fx:id="tabcol_mass" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="132.0" text="Mass (g/mol)" />
+            <TableColumn fx:id="tabcol_density" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="147.0" text="Density (g/cm^3)" />
+            <TableColumn fx:id="tabcol_dh" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" text="ΔH vap (kcal/mol)" />
+            <TableColumn fx:id="tabcol_dg" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="158.0" text="ΔG hyd (kcal/mol)" />
+            <TableColumn fx:id="tabcol_ref_dh" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="100.0" text="Ref. for ΔH" />
+            <TableColumn fx:id="tabcol_ref_dg" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="100.0" text="Ref. for ΔG" />
          </columns>
          <GridPane.margin>
             <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />

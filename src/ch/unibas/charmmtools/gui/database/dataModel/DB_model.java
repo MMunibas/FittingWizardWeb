@@ -34,10 +34,15 @@ public class DB_model {
     private final StringProperty density = new SimpleStringProperty(this, "density");
     private final StringProperty dh = new SimpleStringProperty(this, "dh");
     private final StringProperty dg = new SimpleStringProperty(this, "dg");
+    
+    private final StringProperty ref_dh = new SimpleStringProperty(this, "ref_dh");
+    private final StringProperty ref_dg = new SimpleStringProperty(this, "ref_dg");
 
     public DB_model(int _id, int _idpubchem,
             String _name, String _formula, String _inchi, String _smiles,
-            String _mass, String _density, String _dh, String _dg) {
+            String _mass, String _density, String _dh, String _dg,
+            String _ref_dh, String _ref_dg
+            ) {
         
         this.setId(_id);
         this.setIdpubchem(_idpubchem);
@@ -51,6 +56,9 @@ public class DB_model {
         this.setDensity(_density);
         this.setDh(_dh);
         this.setDg(_dg);
+        
+        this.setRefDh(_ref_dh);
+        this.setRefDg(_ref_dg);
         
     }
     
@@ -197,6 +205,32 @@ public class DB_model {
     public final void setDg(String _dg) {
         dgProperty().set(_dg);
     }    
+    
+    //------------------------------------
+    public StringProperty refdhProperty() {
+        return ref_dh;
+    }
+
+    public final String getRefDh() {
+        return refdhProperty().get();
+    }
+
+    public final void setRefDh(String _ref_dh) {
+        refdhProperty().set(_ref_dh);
+    }
+    
+    //------------------------------------
+    public StringProperty refdgProperty() {
+        return ref_dg;
+    }
+
+    public final String getRefDg() {
+        return refdgProperty().get();
+    }
+
+    public final void setRefDg(String _ref_dg) {
+        refdgProperty().set(_ref_dg);
+    }  
 
 //    @Override
 //    public String toString() {

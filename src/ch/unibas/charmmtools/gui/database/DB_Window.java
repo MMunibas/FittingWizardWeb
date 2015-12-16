@@ -93,7 +93,13 @@ public abstract class DB_Window extends WizardPage {
 
     @FXML // fx:id="combo_value"
     private ComboBox<String> combo_value; // Value injected by FXMLLoader
+    
+    @FXML // fx:id="tabcol_ref_dg"
+    private TableColumn<DB_model, String> tabcol_ref_dg; // Value injected by FXMLLoader
 
+    @FXML // fx:id="tabcol_ref_dh"
+    private TableColumn<DB_model, String> tabcol_ref_dh; // Value injected by FXMLLoader
+        
     protected DB_interface dbi;
 
     protected ObservableList<DB_model> obsList;
@@ -170,10 +176,14 @@ public abstract class DB_Window extends WizardPage {
         tabcol_name.setCellValueFactory(new PropertyValueFactory<>("name"));
         tabcol_formula.setCellValueFactory(new PropertyValueFactory<>("formula"));
         tabcol_smiles.setCellValueFactory(new PropertyValueFactory<>("smiles"));
+        
         tabcol_mass.setCellValueFactory(new PropertyValueFactory<>("mass"));
         tabcol_density.setCellValueFactory(new PropertyValueFactory<>("density"));
         tabcol_dh.setCellValueFactory(new PropertyValueFactory<>("dh"));
         tabcol_dg.setCellValueFactory(new PropertyValueFactory<>("dg"));
+        
+        tabcol_ref_dh.setCellValueFactory(new PropertyValueFactory<>("ref_dh"));
+        tabcol_ref_dg.setCellValueFactory(new PropertyValueFactory<>("ref_dg"));
 
         obsList = FXCollections.observableArrayList();
         tabview_db.getItems().addAll(obsList);
@@ -191,7 +201,7 @@ public abstract class DB_Window extends WizardPage {
 
     /**
      * When one of the search button is pressed call the appropriate findBy from
-     * DB_interace for performing the DB search
+     * DB_interface for performing the DB search
      *
      * @param event
      */

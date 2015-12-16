@@ -53,6 +53,12 @@ public class DB_edit extends ModalDialog {
 
     @FXML // fx:id="text_dg"
     private TextField text_dg; // Value injected by FXMLLoader
+    
+    @FXML
+    private TextField text_ref_dh;
+
+    @FXML
+    private TextField text_ref_dg;
 
     private final Window primary;
 
@@ -80,7 +86,8 @@ public class DB_edit extends ModalDialog {
         text_density.setText(model.getDensity());
         text_dh.setText(model.getDh());
         text_dg.setText(model.getDg());
-
+        text_ref_dh.setText(model.getRefDh());
+        text_ref_dg.setText(model.getRefDg());
         
         showAndWait();
         
@@ -101,7 +108,9 @@ public class DB_edit extends ModalDialog {
         model.setDensity(text_density.getText());
         model.setDh(text_dh.getText());
         model.setDg(text_dg.getText());
-
+        model.setRefDh(text_ref_dh.getText());
+        model.setRefDg(text_ref_dg.getText());
+        
         close();
 
     }
