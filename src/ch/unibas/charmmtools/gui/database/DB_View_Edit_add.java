@@ -8,10 +8,12 @@
  */
 package ch.unibas.charmmtools.gui.database;
 
+import ch.unibas.charmmtools.gui.database.add.DB_add;
 import ch.unibas.charmmtools.gui.database.edit.DB_edit;
 import ch.unibas.charmmtools.gui.database.dataModel.DB_model;
 import ch.unibas.fittingwizard.Settings;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
+import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -22,11 +24,11 @@ import javafx.scene.control.Button;
  *
  * @author hedin
  */
-public class DB_View_Edit extends DB_Window {
+public class DB_View_Edit_add extends DB_Window {
 
     private static final String title = "Explore database of compounds and their properties";
 
-    public DB_View_Edit(Settings _settings) {
+    public DB_View_Edit_add(Settings _settings) {
         super(title, _settings);
     }
 
@@ -37,23 +39,40 @@ public class DB_View_Edit extends DB_Window {
             @Override
             public void handle(ActionEvent actionEvent) {
                 logger.info("Adding compound to Database");
+                DB_model modelToAdd = new DB_model();
+                DB_add addWindow = new DB_add(modelToAdd);
+                addWindow.add();
+//                if(addWindow.addingOK())
+//                {
+//                    dbi.addRecord(modelToAdd);
+//                }
             }
         });
         addButtonToButtonBar(add_to_db);
-        add_to_db.setDisable(true);
 
         Button edit_db = ButtonFactory.createButtonBarButton("Edit compound",
                 new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 logger.info("Editing Database");
-                DB_model modelToEdit = tabview_db.getSelectionModel().getSelectedItem();
-                DB_edit editor = new DB_edit(modelToEdit);
-                editor.edit();
-                if(editor.wasUpdated())
-                {
-                    dbi.updateRecord(modelToEdit);
+
+                if (tabview_db.getItems().size() > 0) {
+                    DB_model modelToEdit = tabview_db.getSelectionModel().getSelectedItem();
+
+                    if (modelToEdit == null) {
+                        OverlayDialog.informUser("Nothing to edit !", "Please choose a compound in the table before pressing the edit button  !");
+                    } else {
+                        DB_edit editor = new DB_edit(modelToEdit);
+                        editor.edit();
+                        if (editor.wasUpdated()) {
+                            dbi.updateRecord(modelToEdit);
+                        }
+                    }
+                } else {
+                    OverlayDialog.informUser("Nothing to edit !", "Please perform a search before pressing the edit button so that a compound "
+                            + "could be selected !");
                 }
+
             }
         });
         addButtonToButtonBar(edit_db);

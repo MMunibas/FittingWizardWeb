@@ -62,19 +62,8 @@ public class DB_model {
         
     }
     
-//    public DB_model(String _name, String _formula, String _smiles,
-//            String _mass, String _density, String _dh, String _dg) {
-//        
-//        this.setName(_name);
-//        this.setFormula(_formula);
-//        this.setSmiles(_smiles);
-//        
-//        this.setMass(_mass);
-//        this.setDensity(_density);
-//        this.setDh(_dh);
-//        this.setDg(_dg);
-//        
-//    }
+    public DB_model() {
+    }
         
     //------------------------------------
     public IntegerProperty idProperty() {

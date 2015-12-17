@@ -79,16 +79,16 @@ public abstract class DB_Window extends WizardPage {
     protected TableColumn<DB_model, String> tabcol_name; // Value injected by FXMLLoader
 
     @FXML // fx:id="tabcol_mass"
-    protected TableColumn<DB_model, String> tabcol_mass; // Value injected by FXMLLoader
+    protected TableColumn<DB_model, Double> tabcol_mass; // Value injected by FXMLLoader
 
     @FXML // fx:id="tabcol_dg"
-    protected TableColumn<DB_model, String> tabcol_dg; // Value injected by FXMLLoader
+    protected TableColumn<DB_model, Double> tabcol_dg; // Value injected by FXMLLoader
 
     @FXML // fx:id="tabcol_dh"
-    protected TableColumn<DB_model, String> tabcol_dh; // Value injected by FXMLLoader
+    protected TableColumn<DB_model, Double> tabcol_dh; // Value injected by FXMLLoader
 
     @FXML // fx:id="tabcol_density"
-    protected TableColumn<DB_model, String> tabcol_density; // Value injected by FXMLLoader
+    protected TableColumn<DB_model, Double> tabcol_density; // Value injected by FXMLLoader
 
     @FXML // fx:id="tabcol_refdg"
     protected TableColumn<DB_model, String> tabcol_refdg; // Value injected by FXMLLoader
@@ -156,7 +156,7 @@ public abstract class DB_Window extends WizardPage {
     public void initializeData() {
 
         combo_value.setItems(combo_options);
-        combo_value.setValue(combo_options.get(0));
+        combo_value.setValue(combo_options.get(1));
 
         tabcol_name.setCellValueFactory(new PropertyValueFactory<>("name"));
         tabcol_formula.setCellValueFactory(new PropertyValueFactory<>("formula"));
@@ -167,6 +167,8 @@ public abstract class DB_Window extends WizardPage {
         tabcol_dh.setCellValueFactory(new PropertyValueFactory<>("dh"));
         tabcol_dg.setCellValueFactory(new PropertyValueFactory<>("dg"));
 
+        
+        
         tabcol_refdh.setCellValueFactory(new PropertyValueFactory<>("refdh"));
         tabcol_refdg.setCellValueFactory(new PropertyValueFactory<>("refdg"));
 

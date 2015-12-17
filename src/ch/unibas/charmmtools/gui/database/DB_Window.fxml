@@ -8,7 +8,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane maxHeight="10000.0" maxWidth="10000.0" prefHeight="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <columnConstraints>
       <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
    </columnConstraints>
@@ -21,7 +21,8 @@
         <columnConstraints>
           <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" percentWidth="20.0" />
             <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" percentWidth="60.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" percentWidth="20.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" percentWidth="7.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" percentWidth="13.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints maxHeight="1.7976931348623157E308" valignment="CENTER" vgrow="ALWAYS" />
@@ -76,12 +77,12 @@
                   <RowConstraints maxHeight="1.7976931348623157E308" valignment="CENTER" vgrow="ALWAYS" />
                </rowConstraints>
                <children>
-                  <TextField fx:id="text_value" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onAction="#searchButtonPressed" promptText="Enter target value" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                  <TextField fx:id="text_value" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onAction="#searchButtonPressed" promptText="Enter target value" text="1.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <TextField fx:id="text_value_threshold" layoutX="15.0" layoutY="13.0" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onAction="#searchButtonPressed" promptText="Enter a threshold" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                  <TextField fx:id="text_value_threshold" layoutX="15.0" layoutY="13.0" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onAction="#searchButtonPressed" promptText="Enter a threshold" text="0.2" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
@@ -93,22 +94,22 @@
                   </ComboBox>
                </children>
             </GridPane>
-            <Button fx:id="search_byname" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+            <Button fx:id="search_byname" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="search_bysmiles" layoutX="975.0" layoutY="43.0" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="3">
+            <Button fx:id="search_bysmiles" layoutX="975.0" layoutY="43.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="search_byformula" layoutX="975.0" layoutY="43.0" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+            <Button fx:id="search_byformula" layoutX="975.0" layoutY="43.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="search_byvalue" layoutX="970.0" layoutY="103.0" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="4">
+            <Button fx:id="search_byvalue" layoutX="970.0" layoutY="103.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#searchButtonPressed" text="Search" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
@@ -142,7 +143,7 @@
             <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
          </GridPane.margin>
       </GridPane>
-      <TableView fx:id="tabview_db" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMousePressed="#viewCompound" tableMenuButtonVisible="true" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+      <TableView fx:id="tabview_db" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMousePressed="#viewCompound" prefHeight="749.0" prefWidth="1175.0" tableMenuButtonVisible="true" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
          <columns>
             <TableColumn fx:id="tabcol_name" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="136.0" text="Name" />
             <TableColumn fx:id="tabcol_formula" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="103.0" text="Formula" />
@@ -151,8 +152,8 @@
             <TableColumn fx:id="tabcol_density" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="142.0" text="Density (g/cm^3)" />
             <TableColumn fx:id="tabcol_dh" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="153.0" text="ΔH vap (kcal/mol)" />
             <TableColumn fx:id="tabcol_dg" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="148.0" text="ΔG hyd (kcal/mol)" />
-            <TableColumn fx:id="tabcol_refdh" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="117.0" text="Ref. for ΔH" />
-            <TableColumn fx:id="tabcol_refdg" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="134.0" text="Ref. for ΔG" />
+            <TableColumn fx:id="tabcol_refdh" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="117.0" text="Ref. for ΔH" visible="false" />
+            <TableColumn fx:id="tabcol_refdg" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="134.0" text="Ref. for ΔG" visible="false" />
          </columns>
          <GridPane.margin>
             <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />

@@ -8,7 +8,7 @@
  */
 package ch.unibas.fittingwizard;
 
-import ch.unibas.charmmtools.gui.database.DB_View_Edit;
+import ch.unibas.charmmtools.gui.database.DB_View_Edit_add;
 import ch.unibas.charmmtools.gui.loadOutput.CHARMM_GUI_LoadOutput;
 import ch.unibas.charmmtools.gui.step1.mdAssistant.CHARMM_GUI_InputAssistant;
 import ch.unibas.charmmtools.gui.step4.ParGrid.CHARMM_GUI_Fitgrid;
@@ -82,7 +82,7 @@ public class WhereToGo extends WizardPage {
             
         } else if (selected.equals(goDB)) {
 
-            navigateTo(DB_View_Edit.class, null);
+            navigateTo(DB_View_Edit_add.class, null);
 
         } else if (selected.equals(goGridScale)) {
 

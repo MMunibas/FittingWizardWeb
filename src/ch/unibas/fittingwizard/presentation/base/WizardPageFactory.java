@@ -12,7 +12,7 @@ import ch.unibas.charmmtools.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.charmmtools.gui.RunningCHARMM_DG;
 import ch.unibas.charmmtools.gui.RunningCHARMM_DenVap;
-import ch.unibas.charmmtools.gui.database.DB_View_Edit;
+import ch.unibas.charmmtools.gui.database.DB_View_Edit_add;
 import ch.unibas.charmmtools.gui.loadOutput.CHARMM_GUI_LoadOutput;
 import ch.unibas.charmmtools.gui.step1.mdAssistant.CHARMM_GUI_InputAssistant;
 import ch.unibas.charmmtools.gui.step2.showOutput.CHARMM_GUI_ShowOutput;
@@ -266,8 +266,8 @@ public class WizardPageFactory {
                 page = new CHARMM_GUI_ShowResults(charmmWorkflow_Den_Vap, ioList);
             } else if (type == CHARMM_GUI_Fitgrid.class) {
                 page = new CHARMM_GUI_Fitgrid(charmmWorkflow_other);
-            } else if (type == DB_View_Edit.class) {
-                page = new DB_View_Edit(settings);
+            } else if (type == DB_View_Edit_add.class) {
+                page = new DB_View_Edit_add(settings);
             } else if (type == WhereToGo.class) {
                 page = new WhereToGo();
             } else if (type == GenerateTopology.class) {

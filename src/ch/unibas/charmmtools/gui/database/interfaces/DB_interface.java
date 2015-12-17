@@ -241,7 +241,8 @@ public abstract class DB_interface {
                     + " `ref`.ref_dh, `ref`.ref_dg"
                     + " from `compounds`,`prop`,`structure`,`ref` where " + property + " between " + massLow + " and " + massHigh
                     + " and `compounds`.id=`prop`.id and `compounds`.id=`structure`.id and `compounds`.id=`ref`.id "
-                    + " order by `compounds`.id";
+//                    + " order by `compounds`.id";
+                    + " order by " + property;
             
             logger.info("Executing statement : " + sql);
             
@@ -282,10 +283,10 @@ public abstract class DB_interface {
                     + " `structure`.formula='" + model.getFormula() + "',"
                     + " `structure`.inchi='" + model.getInchi() + "',"
                     + " `structure`.smiles='" + model.getSmiles() + "',"
-                    + " `prop`.mass=" + model.getMass() + ","
-                    + " `prop`.density=" + model.getDensity() + ","
-                    + " `prop`.Hvap=" + model.getDh() + ","
-                    + " `prop`.Gsolv=" + model.getDg() + ","
+                    + " `prop`.mass='" + model.getMass() + "',"
+                    + " `prop`.density='" + model.getDensity() + "',"
+                    + " `prop`.Hvap='" + model.getDh() + "',"
+                    + " `prop`.Gsolv='" + model.getDg() + "',"
                     + " `ref`.ref_dh='" + model.getRefDh() + "',"
                     + " `ref`.ref_dg='" + model.getRefDg() + "'"
                     + " where `compounds`.id=" + model.getId()

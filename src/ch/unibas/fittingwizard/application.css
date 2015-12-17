@@ -7,18 +7,21 @@
 *
 */
 
+/* for the border line */
 .root {
     -fx-glass-color: rgba(95, 158, 160, 0.9);
 }
 
+/* outer padding */
 .wizard {
     -fx-padding: 10;
     -fx-background-color: white;
 }
 
+/* inner padding + border line */
 .wizardPage {
     -fx-padding:10;
-    -fx-background-color: honeydew;
+    /*-fx-background-color: honeydew;*/
     -fx-border-color: derive(-fx-glass-color, -20%);
     -fx-border-width: 5;
     -fx-border-radius: 6;
@@ -59,3 +62,4 @@
 .modal-dialog .button:pressed {
   -fx-cursor: default;
 }
+
