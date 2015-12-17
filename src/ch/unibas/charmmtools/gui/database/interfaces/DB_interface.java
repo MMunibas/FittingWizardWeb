@@ -95,19 +95,21 @@ public abstract class DB_interface {
 
         try {
             //prepare statement and execute it
-//            statement = connect.prepareStatement(byNameQuery);
-//            statement.setString(1, name);
             statement = connect.createStatement();
-            resultSet = statement.executeQuery(
-                      "select `compounds`.id, `compounds`.idPubchem, `compounds`.name,"
+            String sql = "select `compounds`.id, `compounds`.idPubchem, `compounds`.name,"
                     + " `structure`.formula, `structure`.inchi, `structure`.smiles,"
                     + " `prop`.mass, `prop`.density, `prop`.Hvap, `prop`.Gsolv,"
                     + " `ref`.ref_dh, `ref`.ref_dg"
                     + " from `compounds`,`prop`,`structure`,`ref` where `compounds`.name like '%" + name + "%'"
                     + " and `compounds`.id=`prop`.id and `compounds`.id=`structure`.id and `compounds`.id=`ref`.id "
-                    + " order by compounds.id"
-            );
+                    + " order by compounds.id";
+            
+            logger.info("Executing statement : " + sql);
+             
+            resultSet = statement.executeQuery(sql);
+            
             modelList = parseResultSet(resultSet);
+            
         } catch (SQLException ex) {
             logger.error("Error when executing SQL statement in findByName() ! " + ex.getMessage());
         }
@@ -132,16 +134,20 @@ public abstract class DB_interface {
         try {
             //prepare statement and execute it
             statement = connect.createStatement();
-            resultSet = statement.executeQuery(
-                      "select `compounds`.id, `compounds`.idPubchem, `compounds`.name,"
+            String sql = "select `compounds`.id, `compounds`.idPubchem, `compounds`.name,"
                     + " `structure`.formula, `structure`.inchi, `structure`.smiles,"
                     + " `prop`.mass, `prop`.density, `prop`.Hvap, `prop`.Gsolv,"
                     + " `ref`.ref_dh, `ref`.ref_dg"
                     + " from `compounds`,`prop`,`structure`,`ref` where `structure`.formula like '%" + formula + "%'"
                     + " and `compounds`.id=`prop`.id and `compounds`.id=`structure`.id and `compounds`.id=`ref`.id "
-                    + " order by compounds.id"
-            );
+                    + " order by compounds.id";
+            
+            logger.info("Executing statement : " + sql);
+            
+            resultSet = statement.executeQuery(sql);
+            
             modelList = parseResultSet(resultSet);
+            
         } catch (SQLException ex) {
             logger.error("Error when executing SQL statement in findByFormula() ! " + ex.getMessage());
         }
@@ -164,16 +170,20 @@ public abstract class DB_interface {
         try {
             //prepare statement and execute it
             statement = connect.createStatement();
-            resultSet = statement.executeQuery(
-                      "select `compounds`.id, `compounds`.idPubchem, `compounds`.name,"
+            String sql = "select `compounds`.id, `compounds`.idPubchem, `compounds`.name,"
                     + " `structure`.formula, `structure`.inchi, `structure`.smiles,"
                     + " `prop`.mass, `prop`.density, `prop`.Hvap, `prop`.Gsolv,"
                     + " `ref`.ref_dh, `ref`.ref_dg"
                     + " from `compounds`,`prop`,`structure`,`ref` where `structure`.smiles like '%" + smiles + "%'"
                     + " and `compounds`.id=`prop`.id and `compounds`.id=`structure`.id and `compounds`.id=`ref`.id "
-                    + " order by `compounds`.id"
-            );
+                    + " order by `compounds`.id";
+            
+            logger.info("Executing statement : " + sql);
+            
+            resultSet = statement.executeQuery(sql);
+            
             modelList = parseResultSet(resultSet);
+            
         } catch (SQLException ex) {
             logger.error("Error when executing SQL statement in findBySMILES() ! " + ex.getMessage());
         }
@@ -225,16 +235,20 @@ public abstract class DB_interface {
         try {
             //prepare statement and execute it
             statement = connect.createStatement();
-            resultSet = statement.executeQuery(
-                      "select `compounds`.id, `compounds`.idPubchem, `compounds`.name,"
+            String sql = "select `compounds`.id, `compounds`.idPubchem, `compounds`.name,"
                     + " `structure`.formula, `structure`.inchi, `structure`.smiles,"
                     + " `prop`.mass, `prop`.density, `prop`.Hvap, `prop`.Gsolv,"
                     + " `ref`.ref_dh, `ref`.ref_dg"
                     + " from `compounds`,`prop`,`structure`,`ref` where " + property + " between " + massLow + " and " + massHigh
                     + " and `compounds`.id=`prop`.id and `compounds`.id=`structure`.id and `compounds`.id=`ref`.id "
-                    + " order by `compounds`.id"
-            );
+                    + " order by `compounds`.id";
+            
+            logger.info("Executing statement : " + sql);
+            
+            resultSet = statement.executeQuery(sql);
+            
             modelList = parseResultSet(resultSet);
+            
         } catch (SQLException ex) {
             logger.error("Error when executing SQL statement in findByMASS() ! " + ex.getMessage());
         }

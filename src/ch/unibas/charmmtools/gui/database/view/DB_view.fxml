@@ -81,84 +81,49 @@
          <GridPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </GridPane.margin>
-         <tooltip>
-            <Tooltip text="Read Only !">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font>
-            </Tooltip>
-         </tooltip>
       </TextField>
       <TextField fx:id="text_idpubchem" editable="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
          <GridPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </GridPane.margin>
-         <tooltip>
-            <Tooltip text="Read Only !">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font>
-            </Tooltip>
-         </tooltip>
       </TextField>
-      <TextField fx:id="text_name" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+      <TextField fx:id="text_name" editable="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
          <GridPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </GridPane.margin>
       </TextField>
-      <TextField fx:id="text_formula" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+      <TextField fx:id="text_formula" editable="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
          <GridPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </GridPane.margin>
       </TextField>
-      <TextField fx:id="text_inchi" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+      <TextField fx:id="text_inchi" editable="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
          <GridPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </GridPane.margin>
       </TextField>
-      <TextField fx:id="text_smiles" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="6" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+      <TextField fx:id="text_smiles" editable="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="6" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
          <GridPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </GridPane.margin>
       </TextField>
-      <TextField fx:id="text_density" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="8" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+      <TextField fx:id="text_density" editable="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="8" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
          <GridPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </GridPane.margin>
       </TextField>
-      <TextField fx:id="text_dh" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="9" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+      <TextField fx:id="text_dh" editable="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="9" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
          <GridPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </GridPane.margin>
       </TextField>
-      <TextField fx:id="text_dg" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="10" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+      <TextField fx:id="text_dg" editable="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="10" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
          <GridPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </GridPane.margin>
       </TextField>
-      <GridPane GridPane.columnIndex="2" GridPane.rowIndex="14">
-         <children>
-            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#updateDB" text="Update" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
-               <GridPane.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </GridPane.margin>
-            </Button>
-            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cancel" text="Cancel" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
-               <GridPane.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </GridPane.margin>
-            </Button>
-         </children>
-         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-         </rowConstraints>
-      </GridPane>
       <Label text="Mass :" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="7" GridPane.valignment="CENTER" />
-      <TextField fx:id="text_mass" layoutX="215.0" layoutY="248.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="7" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+      <TextField fx:id="text_mass" editable="false" layoutX="215.0" layoutY="248.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="7" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
          <GridPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </GridPane.margin>
@@ -173,25 +138,25 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </GridPane.margin>
       </Label>
-      <TextField fx:id="text_ref_dh" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="11" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+      <TextField fx:id="text_refdh" editable="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="11" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
          <GridPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </GridPane.margin>
       </TextField>
-      <TextField fx:id="text_ref_dg" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="12" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+      <TextField fx:id="text_refdg" editable="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="12" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
          <GridPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </GridPane.margin>
       </TextField>
-      <Label text="Read Only" textFill="RED" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+      <Label text="All fields are Read Only" textFill="RED" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
          <GridPane.margin>
             <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
          </GridPane.margin>
       </Label>
-      <Label text="Read Only" textFill="RED" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+      <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#done" text="OK" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="14" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
          <GridPane.margin>
-            <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </GridPane.margin>
-      </Label>
+      </Button>
    </children>
 </GridPane>

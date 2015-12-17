@@ -8,6 +8,7 @@
  */
 package ch.unibas.charmmtools.gui.database;
 
+import ch.unibas.charmmtools.gui.database.edit.DB_edit;
 import ch.unibas.charmmtools.gui.database.dataModel.DB_model;
 import ch.unibas.fittingwizard.Settings;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
@@ -49,11 +50,13 @@ public class DB_View_Edit extends DB_Window {
                 DB_model modelToEdit = tabview_db.getSelectionModel().getSelectedItem();
                 DB_edit editor = new DB_edit(modelToEdit);
                 editor.edit();
-                dbi.updateRecord(modelToEdit);
+                if(editor.wasUpdated())
+                {
+                    dbi.updateRecord(modelToEdit);
+                }
             }
         });
         addButtonToButtonBar(edit_db);
-//        edit_db.setDisable(true);
     }
 
 }

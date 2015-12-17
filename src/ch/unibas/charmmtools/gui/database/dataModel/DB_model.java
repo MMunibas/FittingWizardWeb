@@ -35,13 +35,13 @@ public class DB_model {
     private final StringProperty dh = new SimpleStringProperty(this, "dh");
     private final StringProperty dg = new SimpleStringProperty(this, "dg");
     
-    private final StringProperty ref_dh = new SimpleStringProperty(this, "ref_dh");
-    private final StringProperty ref_dg = new SimpleStringProperty(this, "ref_dg");
+    private final StringProperty refdh = new SimpleStringProperty(this, "refdh");
+    private final StringProperty refdg = new SimpleStringProperty(this, "refdg");
 
     public DB_model(int _id, int _idpubchem,
             String _name, String _formula, String _inchi, String _smiles,
             String _mass, String _density, String _dh, String _dg,
-            String _ref_dh, String _ref_dg
+            String _refdh, String _refdg
             ) {
         
         this.setId(_id);
@@ -57,8 +57,8 @@ public class DB_model {
         this.setDh(_dh);
         this.setDg(_dg);
         
-        this.setRefDh(_ref_dh);
-        this.setRefDg(_ref_dg);
+        this.setRefDh(_refdh);
+        this.setRefDg(_refdg);
         
     }
     
@@ -208,7 +208,7 @@ public class DB_model {
     
     //------------------------------------
     public StringProperty refdhProperty() {
-        return ref_dh;
+        return refdh;
     }
 
     public final String getRefDh() {
@@ -221,7 +221,7 @@ public class DB_model {
     
     //------------------------------------
     public StringProperty refdgProperty() {
-        return ref_dg;
+        return refdg;
     }
 
     public final String getRefDg() {

@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.gui.database;
+package ch.unibas.charmmtools.gui.database.view;
 
 import ch.unibas.charmmtools.gui.database.dataModel.DB_model;
 import ch.unibas.fittingwizard.presentation.base.dialog.ModalDialog;
@@ -22,7 +22,7 @@ import javafx.stage.Window;
  *
  * @author hedin
  */
-public class DB_edit extends ModalDialog {
+public class DB_view extends ModalDialog {
 
     @FXML // fx:id="text_id"
     private TextField text_id; // Value injected by FXMLLoader
@@ -55,17 +55,17 @@ public class DB_edit extends ModalDialog {
     private TextField text_dg; // Value injected by FXMLLoader
     
     @FXML
-    private TextField text_ref_dh;
+    private TextField text_refdh;
 
     @FXML
-    private TextField text_ref_dg;
+    private TextField text_refdg;
 
     private final Window primary;
 
     private DB_model model = null;
 
-    public DB_edit(DB_model _mod) {
-        super("Editing a compound from DB...");
+    public DB_view(DB_model _mod) {
+        super("Viewing a compound from DB...");
 
         primary = MainWindow.getPrimaryStage().getScene().getWindow();
         primary.getScene().getRoot().setEffect(new BoxBlur());
@@ -73,7 +73,7 @@ public class DB_edit extends ModalDialog {
         this.model = _mod;
     }
 
-    public void edit() {
+    public void view() {
         
         /*missing terms*/
         text_id.setText(Integer.toString(model.getId()));
@@ -86,8 +86,8 @@ public class DB_edit extends ModalDialog {
         text_density.setText(model.getDensity());
         text_dh.setText(model.getDh());
         text_dg.setText(model.getDg());
-        text_ref_dh.setText(model.getRefDh());
-        text_ref_dg.setText(model.getRefDg());
+        text_refdh.setText(model.getRefDh());
+        text_refdg.setText(model.getRefDg());
         
         showAndWait();
         
@@ -97,29 +97,11 @@ public class DB_edit extends ModalDialog {
     }
 
     @FXML
-    protected void updateDB(ActionEvent event) {
-        logger.info("Attempting an update of the DB");
-        
-        model.setName(text_name.getText());
-        model.setFormula(text_formula.getText());
-        model.setInchi(text_inchi.getText());
-        model.setSmiles(text_smiles.getText());
-        model.setMass(text_mass.getText());
-        model.setDensity(text_density.getText());
-        model.setDh(text_dh.getText());
-        model.setDg(text_dg.getText());
-        model.setRefDh(text_ref_dh.getText());
-        model.setRefDg(text_ref_dg.getText());
-        
-        close();
-
-    }
-
-    @FXML
-    protected void cancel(ActionEvent event) {
-        logger.info("Canceling ; no update of DB decided...");
+    protected void done(ActionEvent event) {
+        logger.info("Visualisation of DB record done...");
         primary.getScene().getRoot().setEffect(null);
         close();
     }
+
 
 }
