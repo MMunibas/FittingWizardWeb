@@ -9,12 +9,16 @@
 package ch.unibas.charmmtools.gui.database.view;
 
 import ch.unibas.charmmtools.gui.database.dataModel.DB_model;
+import ch.unibas.fittingwizard.application.Visualization;
 import ch.unibas.fittingwizard.presentation.base.dialog.ModalDialog;
 import ch.unibas.fittingwizard.presentation.base.ui.MainWindow;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.BoxBlur;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 
 /**
@@ -59,18 +63,39 @@ public class DB_view extends ModalDialog {
 
     @FXML
     private TextField text_refdg;
+    
+    @FXML // fx:id="imageview_2d"
+    private ImageView imageview_2d; // Value injected by FXMLLoader
+        
+    @FXML // fx:id="imageview_2d"
+    private ImageView imageview_3d; // Value injected by FXMLLoader
 
-    private final Window primary;
+    private final Stage stage;
+    private final Window window;
 
     private DB_model model = null;
+    
+    private final String url2d;
+    private final String url3d;
 
+    private final Visualization vis;
+    
     public DB_view(DB_model _mod) {
         super("Viewing a compound from DB...");
 
-        primary = MainWindow.getPrimaryStage().getScene().getWindow();
-        primary.getScene().getRoot().setEffect(new BoxBlur());
+        stage = MainWindow.getPrimaryStage();
+        window = stage.getScene().getWindow();
+        window.getScene().getRoot().setEffect(new BoxBlur());
 
         this.model = _mod;
+        
+        url2d = "http://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/" + model.getIdpubchem() + "/PNG?record_type=2d&image_size=large";
+        url3d = "http://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/" + model.getIdpubchem() + "/PNG?record_type=3d&image_size=large";
+        
+        this.setResizable(false);
+        
+        vis = new Visualization(stage);
+
     }
 
     public void view() {
@@ -89,19 +114,30 @@ public class DB_view extends ModalDialog {
         text_refdh.setText(model.getRefDh());
         text_refdg.setText(model.getRefDg());
         
+        logger.info("Trying to load : " + url2d);
+        logger.info("Trying to load : " + url3d);
+        
+        imageview_2d.setImage(new Image(url2d, true));
+        imageview_3d.setImage(new Image(url3d, true));
+        
         showAndWait();
         
         /* ... */
         
-        primary.getScene().getRoot().setEffect(null);
+        window.getScene().getRoot().setEffect(null);
     }
 
     @FXML
     protected void done(ActionEvent event) {
         logger.info("Visualisation of DB record done...");
-        primary.getScene().getRoot().setEffect(null);
+        window.getScene().getRoot().setEffect(null);
         close();
     }
-
+    
+    @FXML
+    protected void showJMol(ActionEvent event)
+    {
+        vis.showSMILES(model.getSmiles());
+    }
 
 }

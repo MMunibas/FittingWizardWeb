@@ -8,9 +8,9 @@
 */
 
 /* for the border line */
-.root {
+/*.root {
     -fx-glass-color: rgba(95, 158, 160, 0.9);
-}
+}*/
 
 /* outer padding */
 .wizard {
@@ -21,21 +21,22 @@
 /* inner padding + border line */
 .wizardPage {
     -fx-padding:10;
-    /*-fx-background-color: honeydew;*/
-    -fx-border-color: derive(-fx-glass-color, -20%);
-    -fx-border-width: 5;
-    -fx-border-radius: 6;
+    -fx-background-color: white;
+/*    -fx-background-color: honeydew;*/
+    /*-fx-border-color: derive(-fx-glass-color, -20%);*/
+    /*-fx-border-width: 5;*/
+    /*-fx-border-radius: 6;*/
 }
 
-.buttonStyle {
+/*.buttonStyle {
     -fx-font-weight: bold;
     -fx-text-fill: #333333;
     -fx-margin: 30px 30px 30px 30px;
-}
+}*/
 
-.labelStyle {
+/*.labelStyle {
     -fx-font-weight: bold;
-}
+}*/
 
 /**
     Modal dialog styles
@@ -45,11 +46,13 @@
   -fx-spacing: 10;
   -fx-alignment: center;
   -fx-font-size: 20;
-  -fx-background-color: linear-gradient(to bottom, derive(-fx-glass-color, 20%), -fx-glass-color);
+  /*-fx-background-color: linear-gradient(to bottom, derive(-fx-glass-color, 20%), -fx-glass-color);*/
+  -fx-background-color: gray;
   -fx-background-insets: 12;
   -fx-background-radius: 6;
 
-  -fx-border-color: derive(-fx-glass-color, -20%);
+/*  -fx-border-color: derive(-fx-glass-color, -20%);*/
+    -fx-border-color: black;
   -fx-border-width: 5;
   -fx-border-insets: 10;
   -fx-border-radius: 6;

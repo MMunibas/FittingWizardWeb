@@ -38,9 +38,7 @@ public class BabelConverterAPI {
     
     public void convert(String inFile, String outFile){
         conv.OpenInAndOutFiles(inFile, outFile);
-        //conv.ReadFile(mol, inFile);
         conv.Convert();
-        //conv.WriteFile(mol, outFile);
     }
     
     public void convert(File inFile, File outFile){

@@ -10,13 +10,17 @@ package ch.unibas.fittingwizard.application;
 
 import ch.unibas.fittingwizard.application.molecule.AtomType;
 import ch.unibas.fittingwizard.application.xyz.XyzAtom;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
 import javafx.stage.Stage;
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.jmol.adapter.smarter.SmarterJmolAdapter;
@@ -31,6 +35,49 @@ public class Visualization {
 
     public Visualization(Stage primaryStage) {
         this.primaryStage = primaryStage;
+    }
+
+    /**
+     * Visualising with JMol a given SMILES string
+     * @param smiles 
+     */
+    public void showSMILES(String smiles) {
+
+        if (jmolWindow == null) {
+            logger.info("Creating Jmol window.");
+            jmolWindow = new JFrame("Visualization of " + smiles);
+            jmolWindow.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    logger.info("Jmol window closing.");
+                    jmolWindow = null;
+                    jmolViewer = null;
+                    currentOpenFile = null;
+                }
+            });
+            jmolWindow.setSize(600, 600);
+
+            Container contentPane = jmolWindow.getContentPane();
+            JmolPanel jmolPanel = new JmolPanel();
+
+            // main panel -- Jmol panel on top
+            JPanel panel = new JPanel();
+            panel.setLayout(new BorderLayout());
+            panel.add(jmolPanel);
+            contentPane.add(panel);
+            jmolViewer = jmolPanel.viewer;
+
+            alignWindowPositionToWizard();
+            jmolWindow.setVisible(true);
+        } else {
+            logger.debug("Bringing existing Jmol window to front.");
+        }
+
+        jmolViewer.scriptWait("load $" + smiles);
+
+        jmolWindow.toFront();
+
+
     }
 
     public void show(File xyzFile) {
@@ -73,14 +120,15 @@ public class Visualization {
 
         logger.info(String.format("Positioning jmol window at position x=%f y=%f", x, y));
 
-        jmolWindow.setLocation((int)x, (int)y);
+        jmolWindow.setLocation((int) x, (int) y);
     }
 
     private File currentOpenFile;
+
     public void openFile(File file) {
         if (file != null) {
-            boolean isDifferentFile = currentOpenFile == null ||
-                    !FilenameUtils.equalsNormalized(currentOpenFile.getAbsolutePath(), file.getAbsolutePath());
+            boolean isDifferentFile = currentOpenFile == null
+                    || !FilenameUtils.equalsNormalized(currentOpenFile.getAbsolutePath(), file.getAbsolutePath());
             if (jmolViewer != null && isDifferentFile) {
                 String strError = jmolViewer.openFile(file.getAbsolutePath());
                 if (strError == null) {
@@ -89,15 +137,15 @@ public class Visualization {
                     jmolViewer.setSelectionHalos(true);
                     //jmolViewer.evalString(strScript);
                     currentOpenFile = file;
-                }
-                else
+                } else {
                     logger.error("Error while loading XYZ file. " + strError);
+                }
             }
         }
     }
 
     public void selectAtom(XyzAtom atom) {
-        selectAtomsAtIndex(new int[] {atom.getIndex()});
+        selectAtomsAtIndex(new int[]{atom.getIndex()});
     }
 
     public void selectAtomTypes(AtomType atomType) {
@@ -120,7 +168,7 @@ public class Visualization {
             String atomIdxString = "";
             for (int i = 0; i < indices.length; i++) {
                 atomIdxString += "atomIndex=" + indices[i];
-                if (i < indices.length - 1){
+                if (i < indices.length - 1) {
                     atomIdxString += " OR ";
                 }
             }
