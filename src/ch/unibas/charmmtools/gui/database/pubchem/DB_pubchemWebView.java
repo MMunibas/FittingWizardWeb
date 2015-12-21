@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.gui.database.view;
+package ch.unibas.charmmtools.gui.database.pubchem;
 
 import ch.unibas.fittingwizard.presentation.base.dialog.ModalDialog;
 import javafx.scene.Scene;

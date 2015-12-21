@@ -42,10 +42,10 @@ public class DB_View_Edit_add extends DB_Window {
                 DB_model modelToAdd = new DB_model();
                 DB_add addWindow = new DB_add(modelToAdd);
                 addWindow.add();
-//                if(addWindow.addingOK())
-//                {
-//                    dbi.addRecord(modelToAdd);
-//                }
+                if(addWindow.addingOK())
+                {
+                    dbi.addCompound(modelToAdd);
+                }
             }
         });
         addButtonToButtonBar(add_to_db);

@@ -304,4 +304,31 @@ public abstract class DB_interface {
 //        OverlayDialog.informUser("Successfull update of DB", "Database compound '" + model.getName() + "' updated successfully" );
     }
     
+    
+    /**
+     * Adding a compound to the database
+     * Should first check if compound not already in the database for consistency
+     * 
+     * @param model 
+     */
+    public void addCompound(DB_model model)
+    {
+        
+        /*
+            TODO
+        */
+        
+        boolean alreadyInDB = checkInDB(model);
+        
+    }
+    
+    private boolean checkInDB(DB_model candidate)
+    {
+        boolean inDB = false;
+        
+        
+        
+        return inDB;
+    }
+    
 }
