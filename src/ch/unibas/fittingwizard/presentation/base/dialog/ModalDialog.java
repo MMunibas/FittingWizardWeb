@@ -30,7 +30,7 @@ public class ModalDialog extends Stage {
         createScene();
     }
 
-    private void createScene() {
+    protected void createScene() {
         logger.debug("Creating scene.");
         Parent fxmlContent = FxmlUtil.getFxmlContent(getClass(), this);
         setScene(new Scene(fxmlContent));

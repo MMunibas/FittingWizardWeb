@@ -9,6 +9,7 @@
 package ch.unibas.charmmtools.gui.database.edit;
 
 import ch.unibas.charmmtools.gui.database.dataModel.DB_model;
+import ch.unibas.charmmtools.gui.database.view.DB_pubchemWebView;
 import ch.unibas.fittingwizard.presentation.base.dialog.ModalDialog;
 import ch.unibas.fittingwizard.presentation.base.ui.MainWindow;
 import javafx.event.ActionEvent;
@@ -66,6 +67,8 @@ public class DB_edit extends ModalDialog {
     
     private boolean wasUpdated = false;
 
+    private final String url;
+    
     public DB_edit(DB_model _mod) {
         super("Editing a compound from DB...");
 
@@ -73,6 +76,10 @@ public class DB_edit extends ModalDialog {
         primary.getScene().getRoot().setEffect(new BoxBlur());
 
         this.model = _mod;
+        
+        this.url = "http://pubchem.ncbi.nlm.nih.gov/compound/" + model.getIdpubchem() ;
+        
+        this.setResizable(false);
     }
 
     public void edit() {
@@ -131,6 +138,13 @@ public class DB_edit extends ModalDialog {
      */
     public boolean wasUpdated() {
         return wasUpdated;
+    }
+    
+    @FXML
+    protected void showPubChem(ActionEvent event)
+    {  
+        DB_pubchemWebView pubchem_browser = new DB_pubchemWebView(url,this.getScene());
+        pubchem_browser.view(); 
     }
 
 }

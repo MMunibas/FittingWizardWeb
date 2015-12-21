@@ -58,11 +58,11 @@ public class DB_view extends ModalDialog {
     @FXML // fx:id="text_dg"
     private TextField text_dg; // Value injected by FXMLLoader
     
-    @FXML
-    private TextField text_refdh;
+    @FXML // fx:id="text_refdh"
+    private TextField text_refdh; // Value injected by FXMLLoader
 
-    @FXML
-    private TextField text_refdg;
+    @FXML // fx:id="text_refdg"
+    private TextField text_refdg; // Value injected by FXMLLoader
     
     @FXML // fx:id="imageview_2d"
     private ImageView imageview_2d; // Value injected by FXMLLoader
@@ -75,6 +75,7 @@ public class DB_view extends ModalDialog {
 
     private DB_model model = null;
     
+    private final String url;
     private final String url2d;
     private final String url3d;
 
@@ -83,18 +84,19 @@ public class DB_view extends ModalDialog {
     public DB_view(DB_model _mod) {
         super("Viewing a compound from DB...");
 
-        stage = MainWindow.getPrimaryStage();
-        window = stage.getScene().getWindow();
-        window.getScene().getRoot().setEffect(new BoxBlur());
+        this.stage = MainWindow.getPrimaryStage();
+        this.window = stage.getScene().getWindow();
+        this.window.getScene().getRoot().setEffect(new BoxBlur());
 
         this.model = _mod;
         
-        url2d = "http://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/" + model.getIdpubchem() + "/PNG?record_type=2d&image_size=large";
-        url3d = "http://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/" + model.getIdpubchem() + "/PNG?record_type=3d&image_size=large";
+        this.url = "http://pubchem.ncbi.nlm.nih.gov/compound/" + model.getIdpubchem() ;
+        this.url2d = "http://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/" + model.getIdpubchem() + "/PNG?record_type=2d&image_size=large";
+        this.url3d = "http://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/" + model.getIdpubchem() + "/PNG?record_type=3d&image_size=large";
         
         this.setResizable(false);
         
-        vis = new Visualization(stage);
+        this.vis = new Visualization(stage);
 
     }
 
@@ -139,5 +141,12 @@ public class DB_view extends ModalDialog {
     {
         vis.showSMILES(model.getSmiles());
     }
-
+       
+    @FXML
+    protected void showPubChem(ActionEvent event)
+    {  
+        DB_pubchemWebView pubchem_browser = new DB_pubchemWebView(url,this.getScene());
+        pubchem_browser.view(); 
+    }
+    
 }
