@@ -117,10 +117,6 @@ public class DB_add extends ModalDialog {
         
         if (field.getText().length() == 0) {
             
-            field.setStyle("-fx-border-color:red ;"
-                    + " -fx-border-width:2 ;"
-                    + " -fx-border-radius:3");
-            
             if (field == text_idpubchem) {
                 required_idpubchem = false;
             } else if (field == text_name) {
@@ -134,10 +130,6 @@ public class DB_add extends ModalDialog {
             }
                         
         } else {
-            
-            field.setStyle("-fx-border-color:green ;"
-                    + " -fx-border-width:2 ;"
-                    + " -fx-border-radius:3");
 
             if (field == text_idpubchem) {
                 required_idpubchem = true;
@@ -153,9 +145,28 @@ public class DB_add extends ModalDialog {
             
         }
         
+        setFieldStyle(field);
+        
         validateAllFieldsOK();
 
     }
+    
+    private void setFieldStyle(TextField field)
+    {
+        
+        if (field.getText().length() == 0) {
+                    field.setStyle("-fx-border-color:red ;"
+                    + " -fx-border-width:2 ;"
+                    + " -fx-border-radius:3");
+        } else {
+                        field.setStyle("-fx-border-color:green ;"
+                    + " -fx-border-width:2 ;"
+                    + " -fx-border-radius:3");
+        }
+        
+    }
+    
+    
     
     private void validateAllFieldsOK()
     {
@@ -186,34 +197,69 @@ public class DB_add extends ModalDialog {
         close();
     }
    
+    /**
+     * Query pubchem for more details concerning a compound
+     * 
+     * @param event 
+     */
     @FXML
     protected void pubchemQuery(ActionEvent event) {
         Button button = (Button) event.getSource();
         logger.info("Performing PubChem query for field " + button.getId());
         
-        PubChemQuery query = new PubChemQuery();
+        PubChemQuery query = new PubChemQuery(this.getScene());
         
         if(button==b_idpubchem)
         {
-            query.byPubChemId(text_idpubchem.getText());
+            model = query.byPubChemId(text_idpubchem.getText());
         }
         else if(button==b_name)
         {
-            query.byName(text_name.getText());
+            model = query.byName(text_name.getText());
         }
         else if(button==b_formula)
         {
-            query.byFormula(text_formula.getText());
+            model = query.byFormula(text_formula.getText());
         }
         else if(button==b_inchi)
         {
-            query.byInchi(text_inchi.getText());
+            model = query.byInchi(text_inchi.getText());
         }
         else if(button==b_smiles)
         {
-            query.bySmiles(text_smiles.getText());
+            model = query.bySmiles(text_smiles.getText());
         }
         
+        //attempt automatic filling of fields from pubchem
+        autoFill();
+    }
+    
+    private void autoFill()
+    {
+        //fill each of the text field with pubchem content
+        text_idpubchem.setText( Integer.toString(model.getIdpubchem()));
+        required_idpubchem = (text_idpubchem.getLength() != 0);
+        setFieldStyle(text_idpubchem);
+        
+        text_name.setText( model.getName() );
+        required_name = (text_name.getLength() != 0);
+        setFieldStyle(text_name);
+        
+        text_formula.setText( model.getFormula() );
+        required_formula = (text_formula.getLength() != 0);
+        setFieldStyle(text_formula);
+        
+        text_inchi.setText( model.getInchi() );
+        required_inchi = (text_inchi.getLength() != 0);
+        setFieldStyle(text_inchi);
+        
+        text_smiles.setText( model.getSmiles());
+        required_smiles = (text_smiles.getLength() != 0);
+        setFieldStyle(text_smiles);
+        
+        text_mass.setText( model.getMass() );
+        
+        validateAllFieldsOK();
     }
     
 }

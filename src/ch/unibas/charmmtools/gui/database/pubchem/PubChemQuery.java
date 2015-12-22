@@ -9,23 +9,27 @@
 package ch.unibas.charmmtools.gui.database.pubchem;
 
 import ch.unibas.charmmtools.gui.database.dataModel.DB_model;
+import ch.unibas.fittingwizard.presentation.base.dialog.ModalDialog;
+import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
 import java.io.IOException;
 import java.net.URL;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.effect.BoxBlur;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
@@ -33,9 +37,7 @@ import org.xml.sax.SAXException;
  *
  * @author hedin
  */
-public class PubChemQuery {
-
-    protected final Logger logger = Logger.getLogger(PubChemQuery.class);
+public class PubChemQuery extends ModalDialog {
 
     private final String base_url = "http://pubchem.ncbi.nlm.nih.gov/rest/pug/compound";
 
@@ -47,7 +49,23 @@ public class PubChemQuery {
             + "MolecularWeight"
             + "/XML";
 
-    private DB_model pbModel = new DB_model();
+    private DB_model pbModel = null;
+
+    private final Scene parent;
+
+    private DocumentBuilderFactory dbf = null;
+    private DocumentBuilder db = null;
+    private Document doc = null;
+
+    @FXML
+    private Label label_waiting;
+
+    public PubChemQuery(Scene _parent) {
+        super("Please wait while PubChem Query is executed");
+        parent = _parent;
+        pbModel = new DB_model();
+        this.setResizable(false);
+    }
 
     public DB_model byPubChemId(String pid) {
         String search = base_url + "/cid/" + pid + post_url;
@@ -81,11 +99,6 @@ public class PubChemQuery {
 
     private void CURL_like(String searchURL) {
 
-        DocumentBuilderFactory dbf;
-        DocumentBuilder db;
-        Document doc = null;
-        Element rootElement;
-
         try {
 
             dbf = DocumentBuilderFactory.newInstance();
@@ -97,75 +110,125 @@ public class PubChemQuery {
             Transformer xform = factory.newTransformer();
             xform.transform(new DOMSource(doc), new StreamResult(System.out));
 
-            // get root element, should be "PropertyTable"
+            // get root element, should be "PropertyTable" or "Waiting"
             Element root = doc.getDocumentElement();
             root.normalize();
-            logger.info("Root element: " + 
-                        root.getNodeName());
-            
-            Node properties = root.getFirstChild();
-            logger.info("First child element: " + 
-                        properties.getNodeName());
-            
-            Node child = properties.getFirstChild();
-            logger.info(child.getNodeName() + " : " + child.getNodeValue());
-            while(child.getNextSibling() != null)
-            {
-                logger.info(child.getNodeName() + " : " + child.getNodeValue());
-            }
-            
-            // expect only one group of "Properties"
-//            NodeList propList = doc.getElementsByTagName("Properties");
-//            Node property = propList.item(0);
-//            Node child = property.getFirstChild();
-//            logger.info(child.getNodeName() + " : " + child.getNodeValue());
-//            while(child.getNextSibling() != null)
-//            {
-//                logger.info(child.getNodeName() + " : " + child.getNodeValue());
-//            }
+            String FirstNodeName = root.getNodeName();
+            logger.info("Root element: " + FirstNodeName);
 
+            // first see if we have to wait or if results are available
+            boolean dataAvailable = rootNodeChoice(FirstNodeName);
 
-//            System.out.println ("Root element: " + 
-//                        doc.getDocumentElement().getNodeName());
-            
-//            rootElement = doc.getDocumentElement();
-//            String cid = rootElement.getAttribute("CID");
-//            String formula = rootElement.getAttribute("MolecularFormula");
-//            String mass = rootElement.getAttribute("MolecularWeight");
-//            String smiles = rootElement.getAttribute("CanonicalSMILES");
-//            String inchi = rootElement.getAttribute("InChI");
-//            String name = rootElement.getAttribute("IUPACName");
-//            pbModel = new DB_model()
-            // Get the document's root XML node
-//            NodeList root = doc.getChildNodes();
-//            Node comp = getNode("Properties", root);
-//            String name = "";
+            // then extract data
+            if(dataAvailable)
+                propsParsing();
 
         } catch (IOException | SAXException | ParserConfigurationException | TransformerException ex) {
             logger.error("Problem when parsing XML coming from PubChem : " + ex.getMessage());
+            OverlayDialog.showError("Error when querying PubChem", "There was an error when querying PubChem. Check details from Log console / Log file");
+            close();
         }
 
+    }// end curl_like query function
+
+    private boolean rootNodeChoice(String flag) {
+        boolean ok = false;
+
+        switch (flag) {
+            case "PropertyTable":
+                //do nothing because ready to parse
+                ok = true;
+                break;
+            case "Waiting":
+                // handle the waiting flag from pubchem
+                ok = waiting();
+        }
+
+        return ok;
     }
 
-//    protected Node getNode(String tagName, NodeList nodes) {
-//        for (int x = 0; x < nodes.getLength(); x++) {
-//            Node node = nodes.item(x);
-//            if (node.getNodeName().equalsIgnoreCase(tagName)) {
-//                return node;
-//            }
-//        }
-//
-//        return null;
-//    }
-    
-//    protected String getNodeValue(Node node) {
-//        NodeList childNodes = node.getChildNodes();
-//        for (int x = 0; x < childNodes.getLength(); x++) {
-//            Node data = childNodes.item(x);
-//            if (data.getNodeType() == Node.TEXT_NODE) {
-//                return data.getNodeValue();
-//            }
-//        }
-//        return "";
-//    }
+    /**
+     * If PubChem returns waiting with an associated ID, wait a few seconds
+     * because query still running on DB and then check again
+     */
+    private boolean waiting() {
+        boolean received_data = false;
+
+        parent.getRoot().setEffect(new BoxBlur());
+
+        label_waiting.setText("Waiting for PubChem : ID = " + 123456789);
+
+        /*
+         * Here the code logic checking if data received from PubChem
+         */
+        showAndWait();
+
+        parent.getRoot().setEffect(null);
+        close();
+
+        return received_data;
+    }
+
+    private void propsParsing() {
+        // expect only one group of "Properties"
+        NodeList propList = doc.getElementsByTagName("Properties");
+        Element property1 = (Element) propList.item(0);
+        logger.info("Prop Name : " + property1.getNodeName());
+        NodeList childs = property1.getChildNodes();
+
+        String cid = "", formula = "", mass = "", smiles = "", inchi = "", name = "";
+
+        for (int i = 0; i < childs.getLength(); i++) {
+
+            Node n = childs.item(i);
+
+            if (n.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            Element e = (Element) n;
+            String property = e.getNodeName();
+            String value = e.getChildNodes().item(0).getNodeValue();
+
+            switch (property) {
+                case "CID":
+                    cid = value;
+                    break;
+
+                case "MolecularFormula":
+                    formula = value;
+                    break;
+
+                case "MolecularWeight":
+                    mass = value;
+                    break;
+
+                case "CanonicalSMILES":
+                    smiles = value;
+                    break;
+
+                case "InChI":
+                    inchi = value;
+                    break;
+
+                case "IUPACName":
+                    name = value;
+                    break;
+
+                default:
+                    break;
+            }
+
+            pbModel = new DB_model(Integer.valueOf(cid), name, formula, inchi, smiles, mass);
+
+        }
+    } //end func
+
+    @FXML
+    protected void cancel(ActionEvent event) {
+        logger.info("Cancelled PubChem Query");
+        parent.getRoot().setEffect(null);
+        close();
+    }
+
 }

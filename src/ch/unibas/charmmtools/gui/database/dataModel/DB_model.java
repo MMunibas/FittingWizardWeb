@@ -62,7 +62,34 @@ public class DB_model {
         
     }
     
+    public DB_model(int _idpubchem,
+            String _name, String _formula, String _inchi, String _smiles,
+            String _mass)
+    {
+        this.setIdpubchem(_idpubchem);
+        this.setName(_name);
+        this.setFormula(_formula);
+        this.setInchi(_inchi);
+        this.setSmiles(_smiles);
+        this.setMass(_mass);
+    }
+    
     public DB_model() {
+        this.setId(0);
+        this.setIdpubchem(0);
+        
+        this.setName("");
+        this.setFormula("");
+        this.setInchi("");
+        this.setSmiles("");
+        
+        this.setMass("");
+        this.setDensity("");
+        this.setDh("");
+        this.setDg("");
+        
+        this.setRefDh("");
+        this.setRefDg("");
     }
         
     //------------------------------------
@@ -220,22 +247,5 @@ public class DB_model {
     public final void setRefDg(String _ref_dg) {
         refdgProperty().set(_ref_dg);
     }  
-
-//    @Override
-//    public String toString() {
-//        String ret="";
-//        
-//        ret += "name : " + name.get() + '\n';
-//        ret += "formula : " + formula.get() + '\n';
-//        ret += "smiles : " + smiles.get() + '\n';
-//        ret += "mass : " + mass.get() + '\n';
-//        ret += "density : " + density.get() + '\n';
-//        ret += "dh : " + dh.get() + '\n';
-//        ret += "dg : " + dg.get() + '\n';
-//        
-//        return ret;
-//    }
     
-    
-        
 }

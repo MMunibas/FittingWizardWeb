@@ -125,9 +125,10 @@ public class WizardApplication extends Application {
     }
 
     private static void setupConsoleLogger() {
+        
         BasicConfigurator.configure();
+        
         FileAppender app = null;
-
         File log = new File("fw-log.txt");
         
         try {
@@ -137,9 +138,7 @@ public class WizardApplication extends Application {
         }
         
         BasicConfigurator.configure(app);
-        
         log.deleteOnExit();
-        
         logger.setLevel(Level.WARN);
     }
 }

@@ -322,6 +322,11 @@ public abstract class DB_interface {
         
     }
     
+    /**
+     * Check if compound already in db before adding
+     * @param candidate
+     * @return 
+     */
     private boolean checkInDB(DB_model candidate)
     {
         boolean inDB = false;
