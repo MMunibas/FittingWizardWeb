@@ -28,13 +28,10 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </GridPane.margin>
       </ProgressBar>
-      <Label fx:id="label_waiting" text="Waiting for PubChem : ID = " GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+      <Label fx:id="label_waiting" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Waiting for PubChem : ID = " GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
          <GridPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </GridPane.margin>
-         <font>
-            <Font name="System Bold" size="13.0" />
-         </font>
       </Label>
    </children>
 </GridPane>

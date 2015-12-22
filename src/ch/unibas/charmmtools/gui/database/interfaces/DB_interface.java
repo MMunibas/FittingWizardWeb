@@ -55,8 +55,8 @@ public abstract class DB_interface {
         try {
             // then parse result
             while (rset.next()) {
-                int id = Integer.valueOf(rset.getString(colId));
-                int idpubchem = Integer.valueOf(rset.getString(colIdpubchem));
+                String id = rset.getString(colId);
+                String idpubchem = rset.getString(colIdpubchem);
                 String name = rset.getString(colName);
                 String formula = rset.getString(colFormula);
                 String inchi = rset.getString(colInchi);

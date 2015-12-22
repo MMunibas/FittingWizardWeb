@@ -22,8 +22,8 @@ import javafx.beans.property.StringProperty;
  */
 public class DB_model {
 
-    private final IntegerProperty id = new SimpleIntegerProperty(this, "id");
-    private final IntegerProperty idpubchem = new SimpleIntegerProperty(this, "idpubchem");
+    private final StringProperty id = new SimpleStringProperty(this, "id");
+    private final StringProperty idpubchem = new SimpleStringProperty(this, "idpubchem");
     
     private final StringProperty name = new SimpleStringProperty(this, "name");
     private final StringProperty formula = new SimpleStringProperty(this, "formula");
@@ -38,7 +38,7 @@ public class DB_model {
     private final StringProperty refdh = new SimpleStringProperty(this, "refdh");
     private final StringProperty refdg = new SimpleStringProperty(this, "refdg");
 
-    public DB_model(int _id, int _idpubchem,
+    public DB_model(String _id, String _idpubchem,
             String _name, String _formula, String _inchi, String _smiles,
             String _mass, String _density, String _dh, String _dg,
             String _refdh, String _refdg
@@ -62,7 +62,7 @@ public class DB_model {
         
     }
     
-    public DB_model(int _idpubchem,
+    public DB_model(String _idpubchem,
             String _name, String _formula, String _inchi, String _smiles,
             String _mass)
     {
@@ -75,8 +75,8 @@ public class DB_model {
     }
     
     public DB_model() {
-        this.setId(0);
-        this.setIdpubchem(0);
+        this.setId("");
+        this.setIdpubchem("");
         
         this.setName("");
         this.setFormula("");
@@ -93,28 +93,28 @@ public class DB_model {
     }
         
     //------------------------------------
-    public IntegerProperty idProperty() {
+    public StringProperty idProperty() {
         return id;
     }
 
-    public final int getId() {
+    public final String getId() {
         return idProperty().get();
     }
 
-    public final void setId(int _id) {
+    public final void setId(String _id) {
         idProperty().set(_id);
     }
     
     //------------------------------------
-    public IntegerProperty idpubchemProperty() {
+    public StringProperty idpubchemProperty() {
         return idpubchem;
     }
 
-    public final int getIdpubchem() {
+    public final String getIdpubchem() {
         return idpubchemProperty().get();
     }
 
-    public final void setIdpubchem(int _idpubchem) {
+    public final void setIdpubchem(String _idpubchem) {
         idpubchemProperty().set(_idpubchem);
     }
     

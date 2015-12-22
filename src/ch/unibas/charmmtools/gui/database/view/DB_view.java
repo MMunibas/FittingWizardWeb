@@ -104,8 +104,8 @@ public class DB_view extends ModalDialog {
     public void view() {
         
         /*missing terms*/
-        text_id.setText(Integer.toString(model.getId()));
-        text_idpubchem.setText(Integer.toString(model.getIdpubchem()));
+        text_id.setText(model.getId());
+        text_idpubchem.setText(model.getIdpubchem());
         text_name.setText(model.getName());
         text_formula.setText(model.getFormula());
         text_inchi.setText(model.getInchi());

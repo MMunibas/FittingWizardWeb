@@ -131,7 +131,7 @@ public class PubChemQuery extends ModalDialog {
 
     }// end curl_like query function
 
-    private boolean rootNodeChoice(String flag) {
+    private boolean rootNodeChoice(String flag) throws ParserConfigurationException, SAXException, IOException {
         boolean ok = false;
 
         switch (flag) {
@@ -151,18 +151,36 @@ public class PubChemQuery extends ModalDialog {
      * If PubChem returns waiting with an associated ID, wait a few seconds
      * because query still running on DB and then check again
      */
-    private boolean waiting() {
+    private boolean waiting() throws ParserConfigurationException, SAXException, IOException {
         boolean received_data = false;
 
         parent.getRoot().setEffect(new BoxBlur());
 
-        label_waiting.setText("Waiting for PubChem : ID = " + 123456789);
-
+        //get list id from xml
+        NodeList list = doc.getElementsByTagName("ListKey");
+        Element nodeListKey = (Element) list.item(0);
+        String wid = nodeListKey.getChildNodes().item(0).getNodeValue();
+        long listid = Long.valueOf(wid);
+        
+        label_waiting.setText("Waiting for PubChem : waitID = " + listid);
+        show();
+        
         /*
          * Here the code logic checking if data received from PubChem
          */
-        showAndWait();
-
+        dbf = null;
+        db = null;
+        doc = null;
+        
+        String query =  base_url + "/listkey/" + listid + post_url;
+        logger.info("Waiting query : " + query);
+        
+        dbf = DocumentBuilderFactory.newInstance();
+        db = dbf.newDocumentBuilder();
+        doc = db.parse(new URL(query).openStream());
+       
+        received_data=true;
+        
         parent.getRoot().setEffect(null);
         close();
 
@@ -219,7 +237,7 @@ public class PubChemQuery extends ModalDialog {
                     break;
             }
 
-            pbModel = new DB_model(Integer.valueOf(cid), name, formula, inchi, smiles, mass);
+            pbModel = new DB_model(cid, name, formula, inchi, smiles, mass);
 
         }
     } //end func

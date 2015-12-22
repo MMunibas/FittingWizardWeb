@@ -40,8 +40,6 @@ public class DB_pubchemWebView extends ModalDialog {
     public void view() {
         webEngine.load(url);
 
-        this.setAlwaysOnTop(true);
-
         this.showAndWait();
 
         parent.getRoot().setEffect(null);

@@ -27,6 +27,7 @@ public class ModalDialog extends Stage {
         logger = Logger.getLogger(getClass());
         setTitle(title);
         initModality(Modality.APPLICATION_MODAL);
+        this.setAlwaysOnTop(true);
         createScene();
     }
 

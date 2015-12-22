@@ -59,19 +59,19 @@ public class DB_add extends ModalDialog {
 
     @FXML
     private TextField text_refdg;
-    
+
     @FXML // fx:id="button_insert"
     private Button button_insert; // Value injected by FXMLLoader
-    
+
     @FXML
     private Button b_idpubchem;
-        
+
     @FXML
     private Button b_name;
 
     @FXML
     private Button b_formula;
-    
+
     @FXML
     private Button b_inchi;
 
@@ -97,8 +97,9 @@ public class DB_add extends ModalDialog {
         primary.getScene().getRoot().setEffect(new BoxBlur());
 
         this.model = _mod;
-        
+
         this.setResizable(false);
+        
     }
 
     public void add() {
@@ -112,11 +113,11 @@ public class DB_add extends ModalDialog {
 
     @FXML
     protected void checkNotEmptyTextField(KeyEvent event) {
-        
+
         TextField field = (TextField) event.getSource();
-        
+
         if (field.getText().length() == 0) {
-            
+
             if (field == text_idpubchem) {
                 required_idpubchem = false;
             } else if (field == text_name) {
@@ -128,59 +129,51 @@ public class DB_add extends ModalDialog {
             } else if (field == text_smiles) {
                 required_smiles = false;
             }
-                        
-        } else {
 
-            if (field == text_idpubchem) {
-                required_idpubchem = true;
-            } else if (field == text_name) {
-                required_name = true;
-            } else if (field == text_formula) {
-                required_formula = true;
-            } else if (field == text_inchi) {
-                required_inchi = true;
-            } else if (field == text_smiles) {
-                required_smiles = true;
-            }
-            
+        } else if (field == text_idpubchem) {
+            required_idpubchem = true;
+        } else if (field == text_name) {
+            required_name = true;
+        } else if (field == text_formula) {
+            required_formula = true;
+        } else if (field == text_inchi) {
+            required_inchi = true;
+        } else if (field == text_smiles) {
+            required_smiles = true;
         }
-        
+
         setFieldStyle(field);
-        
+
         validateAllFieldsOK();
 
     }
-    
-    private void setFieldStyle(TextField field)
-    {
-        
+
+    private void setFieldStyle(TextField field) {
+
         if (field.getText().length() == 0) {
-                    field.setStyle("-fx-border-color:red ;"
+            field.setStyle("-fx-border-color:red ;"
                     + " -fx-border-width:2 ;"
                     + " -fx-border-radius:3");
         } else {
-                        field.setStyle("-fx-border-color:green ;"
+            field.setStyle("-fx-border-color:green ;"
                     + " -fx-border-width:2 ;"
                     + " -fx-border-radius:3");
         }
-        
-    }
-    
-    
-    
-    private void validateAllFieldsOK()
-    {
-        if(required_idpubchem && required_name && required_formula && required_inchi && required_smiles)
-            button_insert.setDisable(false);
-        else
-            button_insert.setDisable(true);
+
     }
 
-    public boolean addingOK()
-    {
+    private void validateAllFieldsOK() {
+        if (required_idpubchem && required_name && required_formula && required_inchi && required_smiles) {
+            button_insert.setDisable(false);
+        } else {
+            button_insert.setDisable(true);
+        }
+    }
+
+    public boolean addingOK() {
         return readyToAdd;
     }
-    
+
     @FXML
     protected void insert(ActionEvent event) {
         logger.info("Attempting compound insert in DB...");
@@ -196,70 +189,60 @@ public class DB_add extends ModalDialog {
         readyToAdd = false;
         close();
     }
-   
+
     /**
      * Query pubchem for more details concerning a compound
-     * 
-     * @param event 
+     *
+     * @param event
      */
     @FXML
     protected void pubchemQuery(ActionEvent event) {
         Button button = (Button) event.getSource();
         logger.info("Performing PubChem query for field " + button.getId());
-        
+
         PubChemQuery query = new PubChemQuery(this.getScene());
-        
-        if(button==b_idpubchem)
-        {
+
+        if (button == b_idpubchem) {
             model = query.byPubChemId(text_idpubchem.getText());
-        }
-        else if(button==b_name)
-        {
+        } else if (button == b_name) {
             model = query.byName(text_name.getText());
-        }
-        else if(button==b_formula)
-        {
+        } else if (button == b_formula) {
             model = query.byFormula(text_formula.getText());
-        }
-        else if(button==b_inchi)
-        {
+        } else if (button == b_inchi) {
             model = query.byInchi(text_inchi.getText());
-        }
-        else if(button==b_smiles)
-        {
+        } else if (button == b_smiles) {
             model = query.bySmiles(text_smiles.getText());
         }
-        
+
         //attempt automatic filling of fields from pubchem
         autoFill();
     }
-    
-    private void autoFill()
-    {
+
+    private void autoFill() {
         //fill each of the text field with pubchem content
-        text_idpubchem.setText( Integer.toString(model.getIdpubchem()));
+        text_idpubchem.setText(model.getIdpubchem());
         required_idpubchem = (text_idpubchem.getLength() != 0);
         setFieldStyle(text_idpubchem);
-        
-        text_name.setText( model.getName() );
+
+        text_name.setText(model.getName());
         required_name = (text_name.getLength() != 0);
         setFieldStyle(text_name);
-        
-        text_formula.setText( model.getFormula() );
+
+        text_formula.setText(model.getFormula());
         required_formula = (text_formula.getLength() != 0);
         setFieldStyle(text_formula);
-        
-        text_inchi.setText( model.getInchi() );
+
+        text_inchi.setText(model.getInchi());
         required_inchi = (text_inchi.getLength() != 0);
         setFieldStyle(text_inchi);
-        
-        text_smiles.setText( model.getSmiles());
+
+        text_smiles.setText(model.getSmiles());
         required_smiles = (text_smiles.getLength() != 0);
         setFieldStyle(text_smiles);
-        
-        text_mass.setText( model.getMass() );
-        
+
+        text_mass.setText(model.getMass());
+
         validateAllFieldsOK();
     }
-    
+
 }
