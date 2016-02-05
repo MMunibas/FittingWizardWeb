@@ -10,11 +10,10 @@
    <center>
       <GridPane BorderPane.alignment="CENTER">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="237.0" minWidth="10.0" prefWidth="101.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="314.0" minWidth="10.0" prefWidth="184.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="815.0" minWidth="10.0" prefWidth="761.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="290.0" minWidth="10.0" prefWidth="156.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="262.0" minWidth="10.0" prefWidth="77.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="237.0" minWidth="10.0" prefWidth="22.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="314.0" minWidth="10.0" prefWidth="199.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="850.0" minWidth="10.0" prefWidth="850.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="290.0" minWidth="10.0" prefWidth="97.0" />
         </columnConstraints>
         <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -30,40 +29,50 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TextField fx:id="dens_field" editable="false" prefHeight="25.0" prefWidth="560.0" promptText="Please enter required values above ..." GridPane.columnIndex="2" GridPane.rowIndex="7">
+            <TextField fx:id="dens_field" prefHeight="25.0" prefWidth="560.0" promptText="Please enter required values above ..." GridPane.columnIndex="2" GridPane.rowIndex="7">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="dhvap_field" editable="false" promptText="Please enter required values above ..." GridPane.columnIndex="2" GridPane.rowIndex="8">
+            <TextField fx:id="dhvap_field" promptText="Please enter required values above ..." GridPane.columnIndex="2" GridPane.rowIndex="8">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <Label text="Density" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER">
+            <Label text="Density (g/cm^3)" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="7" GridPane.valignment="CENTER">
                <font>
                   <Font size="18.0" />
-               </font></Label>
-            <Label text="DH Vap" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="8" GridPane.valignment="CENTER">
+               </font>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding></Label>
+            <Label text="ΔH vap (kcal/mol)" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="8" GridPane.valignment="CENTER">
                <font>
                   <Font size="18.0" />
-               </font></Label>
-            <Label text="[g/cm^3]" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
-            <Label text="[kcal/mol]" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="8" />
+               </font>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding></Label>
             <Label text="Estimated thermodynamic quantities:" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="6">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font></Label>
             <Button fx:id="calculate_b" mnemonicParsing="false" onAction="#calculateValues" text="Calculate" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
-            <Label text="Molar mass (g/mol)" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+            <Label text="Molar mass (g/mol)" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                <font>
-                  <Font size="15.0" />
+                  <Font size="18.0" />
                </font>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
             </Label>
-            <Label text="Temperature in (K)" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+            <Label text="Temperature in (K)" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                <font>
-                  <Font size="15.0" />
+                  <Font size="18.0" />
                </font>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
             </Label>
             <TextField fx:id="temp_field" promptText="Please enter Temperature" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <GridPane.margin>
@@ -75,10 +84,13 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <Label text="Number of residues" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+            <Label text="Number of residues" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                <font>
-                  <Font size="15.0" />
+                  <Font size="18.0" />
                </font>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
             </Label>
             <Label layoutX="463.0" layoutY="474.0" text="Please update the following parsed values if required, then press calculate" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER">
                <font>
@@ -90,17 +102,19 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="dghydr_field" editable="false" promptText="Please enter required values above ..." GridPane.columnIndex="2" GridPane.rowIndex="9">
+            <TextField fx:id="dghydr_field" promptText="Please enter required values above ..." GridPane.columnIndex="2" GridPane.rowIndex="9">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <Label text="DG Hydr" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.valignment="CENTER">
+            <Label text="ΔG hyd (kcal/mol)" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="9" GridPane.valignment="CENTER">
                <font>
                   <Font size="18.0" />
                </font>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
             </Label>
-            <Label text="[kcal/mol]" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.valignment="CENTER" />
          </children>
       </GridPane>
    </center>

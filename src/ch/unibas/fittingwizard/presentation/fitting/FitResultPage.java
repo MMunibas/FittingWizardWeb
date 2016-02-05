@@ -31,8 +31,13 @@ import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -45,6 +50,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Callback;
@@ -77,18 +83,103 @@ public class FitResultPage extends WizardPageWithVisualization {
     private TableView<FitResultViewModel> atomsTable;
     @FXML
     private TableColumn<FitResultViewModel, String> atomTypeColumn;
+    
+    public class ljparams
+    {
+        private StringProperty attype;
+        private StringProperty epsilon;
+        private StringProperty sigma;
+        
+        public ljparams(String label, String epsi, String sig)
+        {
+            this.attype = new SimpleStringProperty(label);
+            this.epsilon = new SimpleStringProperty(epsi);
+            this.sigma = new SimpleStringProperty(sig);
+        }
+        
+        public StringProperty attypeProperty() {
+            return attype;
+        }
+
+        public String getAttype() {
+            return this.attype.get();
+        }
+
+        public void setAttype(String type) {
+            this.attype.set(type);
+        }
+        
+        public StringProperty epsilonProperty() {
+            return epsilon;
+        }
+        
+        public String getEpsilon() {
+            return this.epsilon.get();
+        }
+
+        public void setEpsilon(String _epsilon) {
+            this.epsilon.set(_epsilon);
+        }
+        
+        public StringProperty sigmaProperty() {
+            return sigma;
+        }
+        
+        public String getSigma() {
+            return this.sigma.get();
+        }
+
+        public void setSigma(String _sigma) {
+            this.sigma.set(_sigma);
+        }
+        
+    }
+    
+    @FXML
+    private TableView<ljparams> lj_table;
+    @FXML
+    private TableColumn<ljparams, String> lj_attype, lj_epsilon, lj_sigma;
+    private ObservableList<ljparams> lj_gridValues;
 
     public FitResultPage(MoleculeRepository moleculeRepository,
             FitRepository fitRepository,
             Visualization visualization,
             ExportFitWorkflow exportFitWorkflow,
             RunVmdDisplayWorkflow vmdDisplayWorkflow) {
-        super(visualization, "Fit result");
+        
+        super(visualization, "MTP and LJ Fit result");
+        
         this.moleculeRepository = moleculeRepository;
         this.fitRepository = fitRepository;
         this.exportFitWorkflow = exportFitWorkflow;
         this.vmdDisplayWorkflow = vmdDisplayWorkflow;
+        
         setupTable();
+        
+        lj_attype.setCellValueFactory(
+            new PropertyValueFactory<>("attype")
+        );
+        
+        lj_epsilon.setCellValueFactory(
+            new PropertyValueFactory<>("epsilon")
+        );
+                
+        lj_sigma.setCellValueFactory(
+            new PropertyValueFactory<>("sigma")
+        );
+        
+        lj_attype.setCellFactory(TextFieldTableCell.forTableColumn());
+        lj_epsilon.setCellFactory(TextFieldTableCell.forTableColumn());
+        lj_sigma.setCellFactory(TextFieldTableCell.forTableColumn());
+        
+        this.lj_gridValues = FXCollections.observableArrayList();
+        this.lj_gridValues.add(new ljparams("HCarCarCar", "-0.046", String.format("%.4f",2*1.1000/Math.pow(2.0,1.0/6.0)) ));
+        this.lj_gridValues.add(new ljparams("BrCarCarCar","-0.420", String.format("%.4f",2*2.0700/Math.pow(2.0,1.0/6.0)) ));
+        this.lj_gridValues.add(new ljparams("CarCarCarBr","-0.070", String.format("%.4f",2*1.9924/Math.pow(2.0,1.0/6.0)) ));
+        this.lj_gridValues.add(new ljparams("CarCarCarH", "-0.070", String.format("%.4f",2*1.9924/Math.pow(2.0,1.0/6.0)) ));
+
+        this.lj_table.getItems().setAll(lj_gridValues);
+        
     }
 
     private void setupTable() {
@@ -160,15 +251,15 @@ public class FitResultPage extends WizardPageWithVisualization {
         });
         addButtonToButtonBar(anotherFit);
 
-        gotoCharmmFit = ButtonFactory.createButtonBarButton("Go to CHARMM section", new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                logger.info("Now switching to the CHARMM Lennard-Jones fit section.");
-                goToCHARMM_Fit();
-            }
-        });
-        addButtonToButtonBar(gotoCharmmFit);
-        gotoCharmmFit.setDisable(true);
+//        gotoCharmmFit = ButtonFactory.createButtonBarButton("Go to CHARMM section", new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent actionEvent) {
+//                logger.info("Now switching to the CHARMM Lennard-Jones fit section.");
+//                goToCHARMM_Fit();
+//            }
+//        });
+//        addButtonToButtonBar(gotoCharmmFit);
+//        gotoCharmmFit.setDisable(true);
 
     }// end of fillButtonBar
 

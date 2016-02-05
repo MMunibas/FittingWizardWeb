@@ -10,7 +10,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="10000.0" maxWidth="10000.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="10000.0" maxWidth="10000.0" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
         <top>
             <GridPane alignment="CENTER" BorderPane.alignment="CENTER">
                 <columnConstraints>
@@ -190,7 +190,7 @@
               </rowConstraints>
                <children>
                           <Button fx:id="button_generate" disable="true" mnemonicParsing="false" onAction="#GenerateInputFile" text="Generate input file(s)" GridPane.halignment="CENTER" />
-                  <Button fx:id="button_default" disable="true" mnemonicParsing="false" onAction="#setDefault" text="Default values" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+                  <Button fx:id="button_default" disable="true" mnemonicParsing="false" onAction="#setDefault" text="Default values" visible="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
                   <Button fx:id="button_extraparams" mnemonicParsing="false" onAction="#setExtraParameters" text="Extra parameters ..." GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                </children>
             </GridPane>
@@ -206,6 +206,13 @@
             </GridPane>
         </top>
    <center>
-      <TabPane fx:id="tab_pane" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER" />
+      <TabPane fx:id="tab_pane" maxHeight="10000.0" maxWidth="10000.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="1200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+         <tabs>
+            <Tab text="Untitled Tab">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
+         </tabs></TabPane>
    </center>
     </BorderPane>
