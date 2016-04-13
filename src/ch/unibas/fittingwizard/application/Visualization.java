@@ -39,7 +39,8 @@ public class Visualization {
 
     /**
      * Visualising with JMol a given SMILES string
-     * @param smiles 
+     *
+     * @param smiles
      */
     public void showSMILES(String smiles) {
 
@@ -77,6 +78,48 @@ public class Visualization {
 
         jmolWindow.toFront();
 
+    }
+
+    /**
+     * Visualising with JMol a molecule using a PubChemId
+     *
+     * @param pubid
+     */
+    public void showPubChem(String pubid) {
+
+        if (jmolWindow == null) {
+            logger.info("Creating Jmol window.");
+            jmolWindow = new JFrame("Visualization of PubId " + pubid);
+            jmolWindow.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    logger.info("Jmol window closing.");
+                    jmolWindow = null;
+                    jmolViewer = null;
+                    currentOpenFile = null;
+                }
+            });
+            jmolWindow.setSize(600, 600);
+
+            Container contentPane = jmolWindow.getContentPane();
+            JmolPanel jmolPanel = new JmolPanel();
+
+            // main panel -- Jmol panel on top
+            JPanel panel = new JPanel();
+            panel.setLayout(new BorderLayout());
+            panel.add(jmolPanel);
+            contentPane.add(panel);
+            jmolViewer = jmolPanel.viewer;
+
+            alignWindowPositionToWizard();
+            jmolWindow.setVisible(true);
+        } else {
+            logger.debug("Bringing existing Jmol window to front.");
+        }
+
+        jmolViewer.scriptWait("load :" + pubid);
+
+        jmolWindow.toFront();
 
     }
 

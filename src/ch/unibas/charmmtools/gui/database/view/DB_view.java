@@ -138,9 +138,15 @@ public class DB_view extends ModalDialog {
     }
     
     @FXML
-    protected void showJMol(ActionEvent event)
+    protected void showJMolSMILES(ActionEvent event)
     {
         vis.showSMILES(model.getSmiles());
+    }
+    
+    @FXML
+    protected void showJMolPubChemId(ActionEvent event)
+    {
+        vis.showPubChem(model.getIdpubchem());
     }
        
     @FXML

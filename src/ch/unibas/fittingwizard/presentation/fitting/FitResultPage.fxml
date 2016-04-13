@@ -84,7 +84,7 @@
     </GridPane>
   </top>
    <bottom>
-      <TableView fx:id="lj_table" prefHeight="350.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <TableView fx:id="lj_table" disable="true" prefHeight="350.0" prefWidth="200.0" visible="false" BorderPane.alignment="CENTER">
         <columns>
             <TableColumn fx:id="lj_attype" editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="150.0" resizable="false" sortable="false" text="Atom type" />
             <TableColumn fx:id="lj_epsilon" editable="false" prefWidth="150.0" sortable="false" text="ε (kcal/mol)" />
