@@ -1,4 +1,5 @@
-data/*
+data/201*
+data/molecules
 doc/*
 lib/jython/cachedir/*
 nbproject/*
