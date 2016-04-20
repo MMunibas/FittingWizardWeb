@@ -1,1 +1,0 @@
-.[].Section[] | select(.TOCHeading=="Chemical and Physical Properties").Section[] | select(.TOCHeading=="Experimental Properties").Section[] | select(.TOCHeading=="Heat of Vaporization").Information[0].StringValue

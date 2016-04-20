@@ -1,10 +1,7 @@
---
--- Database: `fittingWizard`
---
+PRAGMA synchronous = OFF;
 
--- --------------------------------------------------------
+PRAGMA journal_mode = MEMORY;
 
--- Uncomment when importing in sqlite
 PRAGMA foreign_keys=ON;
 
 --
@@ -14,8 +11,9 @@ PRAGMA foreign_keys=ON;
 CREATE TABLE IF NOT EXISTS "compounds" (
   "id" INTEGER PRIMARY KEY NOT NULL,
   "idPubchem" INTEGER NOT NULL,
-  "name" TEXT,
-  "added" DATE NOT NULL
+  "name" TEXT NOT NULL,
+  "added" DATE NOT NULL,
+  "lastUpdate" DATE NOT NULL
 );
 
 -- --------------------------------------------------------
@@ -68,7 +66,8 @@ CREATE TABLE IF NOT EXISTS "prop" (
 
 CREATE TABLE IF NOT EXISTS "ref" (
   "id" INTEGER NOT NULL,
-  "ref" TEXT,
+  "ref_dg" TEXT,
+  "ref_dh" TEXT,
   FOREIGN KEY(id) REFERENCES compounds(id)
 );
 
@@ -80,9 +79,9 @@ CREATE TABLE IF NOT EXISTS "ref" (
 
 CREATE TABLE IF NOT EXISTS "structure" (
   "id" INTEGER NOT NULL,
-  "formula" TEXT,
+  "formula" TEXT  NOT NULL,
   "inchi" TEXT,
-  "smiles" TEXT,
+  "smiles" TEXT NOT NULL,
   FOREIGN KEY(id) REFERENCES compounds(id)
 );
 

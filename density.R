@@ -36,7 +36,7 @@ cor=round(cor,4)
 
 text(x=1.25,y=1.95,cex=1.5,
      substitute(
-       paste('RMSE (kcal/mol)=',rms,' ',R^2,'=',corel),
+       paste('RMSE ',(g/cm^3),'=',rms,' ',R^2,'=',corel),
        list(corel=cor,rms=rmse)
      )
 )
