@@ -31,10 +31,10 @@ plot(csv$delta_G.Exp,
      lwd=6
      )
 
-rmse=round(rmse,4)
-cor=round(cor,4)
+rmse=round(rmse,2)
+cor=round(cor,2)
 
-text(x=-7.0,y=-0.5,cex=1.5,
+text(x=-7.25,y=0,cex=1.75,
      substitute(
        paste('RMSE (kcal/mol)=',rms,' ',R^2,'=',corel),
        list(corel=cor,rms=rmse)
