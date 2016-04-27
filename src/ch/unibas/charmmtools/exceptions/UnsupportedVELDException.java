@@ -23,7 +23,7 @@ public class UnsupportedVELDException extends Exception {
      * Prints error message
      */
     public UnsupportedVELDException() {
-        System.err.println("CHARMM Velocity files (VELD) are not supported for the moment.");
+        super("CHARMM Velocity files (VELD) are not supported for the moment.");
     }
 
 }

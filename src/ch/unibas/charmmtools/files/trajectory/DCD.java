@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Florent Hedin, Markus Meuwly, and the University of Basel
+ * Copyright (c) 2016, Florent Hedin, Markus Meuwly, and the University of Basel
  * All rights reserved.
  *
  * The 3-clause BSD license is applied to this software.
@@ -12,71 +12,100 @@ package ch.unibas.charmmtools.files.trajectory;
 import static ch.unibas.charmmtools.errors.IO_Errors.checkFortranIOerror;
 import ch.unibas.charmmtools.exceptions.UnknownFileTypeException;
 import ch.unibas.charmmtools.exceptions.UnsupportedVELDException;
-import ch.unibas.charmmtools.utils.Endianness;
 import java.io.EOFException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
+
 
 /**
- *
+ * This class provides methods for reading a CHARMM DCD binary coordinates file
+ * 
  * @author hedin
  */
-public class DCD {
+public final class DCD {
+    
+    protected static final Logger logger = Logger.getLogger(DCD.class);
 
-    // attributes
-//    private DataInputStream data = null;           //object representing the dcd file
+    /** the type of file object used for reading the dcd*/
     private RandomAccessFile data = null;
-    private Endianness convert = null;             // for converting little endian binary files to big endian for java
+    
+    /** for converting little endian binary files to big endian for java */
+    private Endianness convert = null;
 
-    private boolean dcd_first_read = true;         // at first read of the coordinates if there are some frozen atoms the number of coordinates to read is different than for other frames
+    /**
+     * at first read of the coordinates if there are some frozen atoms the number of
+     * coordinates to read is different than for other frames
+     */
+    
+    private boolean dcd_first_read = true;
 
-    private char HDR[] = new char[5];       // is CORD if only coordinates or VELD if velocities included (not supported yet)
+    /** is CORD if only coordinates or VELD if velocities included (not supported yet) */
+    private char HDR[] = new char[5];
+    
+    /** an array of integers containing flags and data describing the binary file */
     private int ICNTRL[] = new int[20];
-    private int NTITLE;                     //how many "title lines" in dcd
-    private char TITLE[];                   //each "title line" is 80 char long.
+    
+    /** how many "title lines" in dcd */
+    private int NTITLE;       
+    
+    /** each "title line" is 80 char long */
+    private char TITLE[];                   
 
-    private double pbc[] = new double[6];  //a matrix of 6 real defining the periodic boundary conditions : only useful if QCRYS is not 0
+    /** a matrix of 6 real defining the periodic boundary conditions : only useful if QCRYS is not 0 */
+    private double pbc[] = new double[6];
 
     /*content of ICNTRL : non detailed ones are 0 */
-    private int NFILE;              //ICNTRL(1)  number of frames in this dcd
-    private int NPRIV;              //ICNTRL(2)  if restart, total number of frames before first print
-    private int NSAVC;              //ICNTRL(3)  frequency of writting dcd
-    private int NSTEP;              //ICNTRL(4)  number of steps ; note that NSTEP/NSAVC = NFILE
-    private int NDEGF;              //ICNTRL(8)  number of degrees of freedom
-    private int FROZAT;             //ICNTRL(9) is NATOM - NumberOfFreeAtoms : it is the number of frozen (i.e. not moving atoms)
-    private int DELTA4;             //ICNTRL(10) timestep in AKMA units but stored as a 32 bits integer !!!
-    private int QCRYS;              //ICNTRL(11) is 1 if CRYSTAL used.
-    private int CHARMV;             //ICNTRL(20) is charmm version
+    
+    /** ICNTRL(1)  number of frames in this dcd */
+    private int NFILE;
+    /** ICNTRL(2)  if restart, total number of frames before first print */
+    private int NPRIV;
+    /** ICNTRL(3)  frequency of writing dcd */
+    private int NSAVC;
+    /** ICNTRL(4)  number of steps ; note that NSTEP/NSAVC = NFILE */
+    private int NSTEP;
+    /** ICNTRL(8)  number of degrees of freedom */
+    private int NDEGF;
+    /** ICNTRL(9) is NATOM - NumberOfFreeAtoms : it is the number of frozen (i.e. not moving atoms) */
+    private int FROZAT;
+    /** ICNTRL(10) timestep in AKMA units but stored as a 32 bits integer !!! */
+    private int DELTA4;
+    /** ICNTRL(11) is 1 if CRYSTAL used */
+    private int QCRYS;
+    /** ICNTRL(20) is charmm version */
+    private int CHARMV;
 
-    private int NATOM;              // Number of atoms
+    /** Number of atoms */
+    private int NATOM;      
 
-    private int LNFREAT;            // Number of free (moving) atoms.
-    private int FREEAT[];           // Array storing indexes of moving atoms.
+    /** Number of free (moving) atoms */
+    private int LNFREAT;
+    /** Array storing indexes of moving atoms */
+    private int FREEAT[];   
 
-    //coordinates stored in simple precision (IMPORTANT)
-    private float X[];
-    private float Y[];
-    private float Z[];
+    /** coordinates stored in simple precision (IMPORTANT) */
+    private float X[],Y[],Z[];
 
-    // size in bytes of whole file, header secion, first frame and other frames
+    /** size in bytes of whole file, header section, first frame and other frames */
     long fSize, headerSize, firstFrameSize, framesSize;
 
-    // constructor
+
+    /**
+     * the constructor just requires the path to the dcd
+     * @param fileName path to a dcd file
+     */
     public DCD(String fileName) {
 
         try {
-//            data = new DataInputStream(new BufferedInputStream(new FileInputStream(new File(fileName))));
             data = new RandomAccessFile(fileName, "r");
             fSize = data.length();
         } catch (FileNotFoundException ex) {
 //            System.err.println(ex.getMessage());
-            Logger.getLogger(DCD.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("File not found: " + ex.getMessage());
         } catch (IOException ex) {
-//            System.err.println(ex.getMessage());
-            Logger.getLogger(DCD.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Error when reading dcd file: " + ex.getMessage());
         }
 
         convert = new Endianness();
@@ -90,14 +119,9 @@ public class DCD {
             data.seek(headerSize);
             dcd_first_read = true;
         } catch (IOException ex) {
-//            System.err.println(ex.getMessage());
-            Logger.getLogger(DCD.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedVELDException ex) {
-//            System.err.println(ex.getMessage());
-            Logger.getLogger(DCD.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnknownFileTypeException ex) {
-//            System.err.println(ex.getMessage());
-            Logger.getLogger(DCD.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Error when reading dcd file: " + ex.getMessage());
+        } catch (UnsupportedVELDException | UnknownFileTypeException ex) {
+            logger.error(ex.getMessage());
         }
 
         print_header();
@@ -184,23 +208,33 @@ public class DCD {
 
     }// end of read_header()
 
+    /**
+     * Prints header (various info at beginning of dcd file)
+     */
     private void print_header() {
-        System.out.println("HDR :\t" + String.copyValueOf(HDR));
-        System.out.println("Title :\t" + String.copyValueOf(TITLE));
-        System.out.println("Frames :\t" + NFILE);
-        System.out.println("Atoms :\t" + NATOM);
-        System.out.println("Free Atoms :\t" + LNFREAT);
-        System.out.println("Size of header section in Bytes : " + headerSize);
-        System.out.println("Size of first frame in Bytes : " + firstFrameSize);
-        System.out.println("Size of other frames in Bytes : " + framesSize);
+        logger.debug("HDR :\t" + String.copyValueOf(HDR));
+        logger.debug("Title :\t" + String.copyValueOf(TITLE));
+        logger.debug("Frames :\t" + NFILE);
+        logger.debug("Atoms :\t" + NATOM);
+        logger.debug("Free Atoms :\t" + LNFREAT);
+        logger.debug("Size of header section in Bytes : " + headerSize);
+        logger.debug("Size of first frame in Bytes : " + firstFrameSize);
+        logger.debug("Size of other frames in Bytes : " + framesSize);
     }
 
+    /**
+     * Allocating memory for storing coordinates
+     */
     private void allocate() {
         X = new float[NATOM];
         Y = new float[NATOM];
         Z = new float[NATOM];
     }
 
+    /**
+     * Read one record (frame) of the trajectory dcd
+     * @throws IOException Thrown if problem happens when reading file
+     */
     public void read_oneFrame() throws IOException {
         int fortcheck1, fortcheck2;
         int siz = (dcd_first_read) ? NATOM : LNFREAT;
@@ -285,6 +319,11 @@ public class DCD {
 
     } // read_oneFrame()
 
+    /**
+     * Moves file reading pointer to a given place in file , useful for skipping frames
+     * @param destination A byte position in the dcd where to jump
+     * @throws IOException Thrown if problem happens when reading file
+     */
     public void moveToFrame(int destination) throws IOException {
 
         if (destination <= 0 || destination > this.NFILE) {
@@ -311,6 +350,7 @@ public class DCD {
     } //end of moveToFrame
 
     /**
+     * Get number of frames
      * @return the NFILE
      */
     public int getNFILE() {
@@ -318,6 +358,7 @@ public class DCD {
     }
 
     /**
+     * check if dcd already had one frame read
      * @return the dcd_first_read
      */
     public boolean isDcd_first_read() {
@@ -325,6 +366,7 @@ public class DCD {
     }
 
     /**
+     * Get number title 'lines'
      * @return the NTITLE
      */
     public int getNTITLE() {
@@ -332,6 +374,7 @@ public class DCD {
     }
 
     /**
+     * Get number of frames already performed before thi dcd
      * @return the NPRIV
      */
     public int getNPRIV() {
@@ -339,6 +382,7 @@ public class DCD {
     }
 
     /**
+     * Get save frequency
      * @return the NSAVC
      */
     public int getNSAVC() {
@@ -346,6 +390,7 @@ public class DCD {
     }
 
     /**
+     * Get number of steps in simulation
      * @return the NSTEP
      */
     public int getNSTEP() {
@@ -353,6 +398,7 @@ public class DCD {
     }
 
     /**
+     * Get number of degrees of freedom
      * @return the NDEGF
      */
     public int getNDEGF() {
@@ -360,6 +406,7 @@ public class DCD {
     }
 
     /**
+     * Get number of frozen atoms
      * @return the FROZAT
      */
     public int getFROZAT() {
@@ -367,6 +414,10 @@ public class DCD {
     }
 
     /**
+     * Get time step
+     * 
+     * TODO: need to convert it to real
+     * 
      * @return the DELTA4
      */
     public int getDELTA4() {
@@ -374,6 +425,8 @@ public class DCD {
     }
 
     /**
+     * Get whether crystal was used in CHARMM
+     * 
      * @return the QCRYS
      */
     public int getQCRYS() {
@@ -381,6 +434,8 @@ public class DCD {
     }
 
     /**
+     * Get the CHARMM version
+     * 
      * @return the CHARMV
      */
     public int getCHARMV() {
@@ -388,6 +443,8 @@ public class DCD {
     }
 
     /**
+     * Get number of atoms
+     * 
      * @return the NATOM
      */
     public int getNATOM() {
@@ -395,6 +452,8 @@ public class DCD {
     }
 
     /**
+     * Get number of free atoms moving (not frozen)
+     * 
      * @return the LNFREAT
      */
     public int getLNFREAT() {
@@ -402,6 +461,8 @@ public class DCD {
     }
 
     /**
+     * Get X coordinates for a record as array
+     * 
      * @return the X
      */
     public float[] getX() {
@@ -409,6 +470,7 @@ public class DCD {
     }
 
     /**
+     * Get Y coordinates for a record as array
      * @return the Y
      */
     public float[] getY() {
@@ -416,6 +478,7 @@ public class DCD {
     }
 
     /**
+     * Get Z coordinates for a record as array
      * @return the Z
      */
     public float[] getZ() {

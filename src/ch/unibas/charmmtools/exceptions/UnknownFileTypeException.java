@@ -23,7 +23,7 @@ public class UnknownFileTypeException extends Exception {
      * Prints error message
      */
     public UnknownFileTypeException() {
-        System.err.println("This file is of an unknown type: is it really a DCD ?");
+        super("This file is of an unknown type: is it really a DCD ?");
     }
 
 }

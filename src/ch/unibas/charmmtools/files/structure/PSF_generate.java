@@ -30,27 +30,31 @@ import java.util.TimeZone;
  */
 public final class PSF_generate extends PSF implements coordinates_writer{
 
+    /**
+     * This header string will contain PSF keywords
+     */
     private String header = "PSF";
 
-    private String format00, format01, format01a, format01b;
-    private String format02, format02a, format02b, format03;
-    private String format04, format05, format06, format07, format08;
+    /**
+     * The following formatXX are used for storing system.format strings reproducing the fixed format of fortan files
+     * used for generating a charmm compatible PSF
+     */
+    private String format00, format01, format01a, format01b,
+            format02, format02a, format02b, format03,format04,
+            format05, format06, format07, format08;
     
     /**
-     *
+     * the writer object for storing strings before saving to a file
      */
     protected Writer writer = null;
     
     /**
-     *
-     * @param topolInfo
-     * @throws IOException
+     * Constructor for building a PSF file. Requires an already built topology file
+     * @param topolInfo a RTF topology object already constructed before
+     * @throws IOException Thrown if problem happens when writing file
      */
     public PSF_generate(RTF topolInfo) throws IOException {
 
-        /*
-            TODO : NEED TO IMPROVE THIS PART
-        */
         this.natom = topolInfo.getNatom();
         this.nbond = topolInfo.getNbonds();
         this.ntheta = topolInfo.getAngTypeList().size();//angles
@@ -63,8 +67,6 @@ public final class PSF_generate extends PSF implements coordinates_writer{
         this.diheList = topolInfo.getDiheTypeList();
         this.imprList = topolInfo.getImprTypeList();
 
-        //force extended output and disable other options
-//        this.isExtendedFormat = true;
         this.isExtendedFormat = false;
         this.isUsingCHEQ = false;
         this.isUsingCMAP = false;
@@ -77,14 +79,16 @@ public final class PSF_generate extends PSF implements coordinates_writer{
         this.fixResSegNames();
 
         //generate psf file
-//        writer = new BufferedWriter(new FileWriter(this.myname + ".psf"));
-//        this.generate();
-//        writer.close();
         writer = new CharArrayWriter();
         this.generate();
         
     }
 
+    /**
+     * If mass missing use facility provided by the RTF class to find one
+     * 
+     * @param topolInfo a RTF object containing topology information 
+     */
     private void fixMass(RTF topolInfo) {
         for (Atom at : atomList) {
             if (at.getMass() < 1.0) {
@@ -93,6 +97,9 @@ public final class PSF_generate extends PSF implements coordinates_writer{
         }
     }
     
+    /**
+     * Fix some missing residues names which were previously set to UNKnown
+     */
     private void fixResSegNames()
     {
         for (Atom at : atomList) {
@@ -106,6 +113,10 @@ public final class PSF_generate extends PSF implements coordinates_writer{
         }
     }
 
+    /**
+     * Generates a proper PSF by calling in order all methods
+     * @throws IOException Thrown if problem happens when writing file
+     */
     private void generate() throws IOException {
         this.setFormats();
         this.writeHeaderAndTitle();
@@ -116,6 +127,10 @@ public final class PSF_generate extends PSF implements coordinates_writer{
         this.writeImprSection();
     }
 
+    /**
+     * Defines the format depending on value of the extended format boolean
+     * Taken directly from CHARMMs fortran code and adapted
+     */
     private void setFormats() {
         if (isExtendedFormat) {
             format00 = "%10d%s";
@@ -125,8 +140,6 @@ public final class PSF_generate extends PSF implements coordinates_writer{
             format02 = "%10d %-8s %-8s %-8s %-8s %-6s %14.6G%14.6G%8d%14.6G%14.6G";
             format02a = "%10d %-8s %-8s %-8s %-8s %-6s %14.6G%14.6G%8d%14.6G%14.6G";
             format02b = "%10d %-8s %-8s %-8s %-8s %-6s %14.6G%14.6G%8d%14.6G%14.6G";
-//            format03 = "%10d%10d%10d%10d%10d%10d%10d%10d";
-//            format04 = "%10d%10d%10d%10d%10d%10d%10d%10d%10d";
             format03 = "%10d%10d";
             format04 = "%10d%10d%10d";
             format05 = "%10d%10d%s";
@@ -141,8 +154,6 @@ public final class PSF_generate extends PSF implements coordinates_writer{
             format01a = "%8d %-4s %-4s %-4s %-4s %4d %14.6G%14.6G%8d%14.6G%14.6G";
             format02 = "%8d %-4s %-4s %-4s %-4s %-4s %14.6G%14.6G%8d";
             format02a = "%8d %-4s %-4s %-4s %-4s %-4s %14.6G%14.6G%8d%14.6G%14.6G";
-//            format03 = "%8d%8d%8d%8d%8d%8d%8d%8d";
-//            format04 = "%8d%8d%8d%8d%8d%8d%8d%8d%8d";
             format03 = "%8d%8d";
             format04 = "%8d%8d%8d";
             format05 = "%8d%8d%s";
@@ -152,6 +163,10 @@ public final class PSF_generate extends PSF implements coordinates_writer{
         }
     }
 
+    /**
+     * Write top of the file containing title and info in header
+     * @throws IOException Thrown if problem happens when writing file
+     */
     private void writeHeaderAndTitle() throws IOException {
 
         DateFormat df = new SimpleDateFormat();
@@ -172,6 +187,10 @@ public final class PSF_generate extends PSF implements coordinates_writer{
 
     }
 
+    /**
+     * Writes section listing the atoms at beginning
+     * @throws IOException Thrown if problem happens when writing file
+     */
     private void writeAtomSection() throws IOException {
         writer.write(String.format(format00, this.natom, " !NATOM\n"));
         for (Atom at : this.atomList) {
@@ -183,17 +202,16 @@ public final class PSF_generate extends PSF implements coordinates_writer{
         writer.write("\n");
     }
 
+    /** 
+     * Writes section where bonds are defined
+     * Note that charmm writes maximum 4 bonds per line 
+     * 
+     * @throws IOException Thrown if problem happens when writing file
+     */
     private void writeBondSection() throws IOException {
         String line;
         writer.write(String.format(format00, this.nbond, " !NBOND: bonds\n"));
         for (int bnd = 0; bnd < nbond; bnd++) {
-//            writer.write(String.format(
-//                    format03,
-//                    bondList.get(bnd).getA1().getCHARMMAtomID(), bondList.get(bnd).getA2().getCHARMMAtomID(),
-//                    bondList.get(++bnd).getA1().getCHARMMAtomID(), bondList.get(bnd).getA2().getCHARMMAtomID(),
-//                    bondList.get(++bnd).getA1().getCHARMMAtomID(), bondList.get(bnd).getA2().getCHARMMAtomID(),
-//                    bondList.get(++bnd).getA1().getCHARMMAtomID(), bondList.get(bnd).getA2().getCHARMMAtomID()
-//            ));
             line = String.format(format03,bondList.get(bnd).getA1().getCHARMMAtomID(), bondList.get(bnd).getA2().getCHARMMAtomID());
             int loc = bnd+1;
             if(loc<nbond)
@@ -209,16 +227,16 @@ public final class PSF_generate extends PSF implements coordinates_writer{
         writer.write("\n");
     }
 
+    /**
+     * Writes section where angles are defined
+     * Note that charmm writes maximum 3 angles per line
+     * 
+     * @throws IOException Thrown if problem happens when writing file
+     */
     private void writeAngleSection() throws IOException {
         String line;
         writer.write(String.format(format00, this.ntheta, " !NTHETA: angles\n"));
         for (int ang = 0; ang < ntheta; ang++) {
-//            writer.write(String.format(
-//                    format04,
-//                    angleList.get(ang).getA1().getCHARMMAtomID(), angleList.get(ang).getA2().getCHARMMAtomID(), angleList.get(ang).getA3().getCHARMMAtomID(),
-//                    angleList.get(++ang).getA1().getCHARMMAtomID(), angleList.get(ang).getA2().getCHARMMAtomID(), angleList.get(ang).getA3().getCHARMMAtomID(),
-//                    angleList.get(++ang).getA1().getCHARMMAtomID(), angleList.get(ang).getA2().getCHARMMAtomID(), angleList.get(ang).getA3().getCHARMMAtomID()
-//            ));
             line = String.format(format04,angleList.get(ang).getA1().getCHARMMAtomID(), angleList.get(ang).getA2().getCHARMMAtomID(), angleList.get(ang).getA3().getCHARMMAtomID());
             int loc = ang+1;
             if(loc<ntheta)
@@ -231,17 +249,15 @@ public final class PSF_generate extends PSF implements coordinates_writer{
         writer.write("\n");
     }
 
+    /**
+     * Writes section where dihedrals are defined
+     * 
+     * @throws IOException Thrown if problem happens when writing file
+     */
     private void writeDiheSection() throws IOException {
         String line;
         writer.write(String.format(format00, this.nphi, " !NPHI: dihedrals\n"));
         for (int dihe = 0; dihe < nphi; dihe++) {
-//            writer.write(String.format(
-//                    format03,
-//                    diheList.get(dihe).getA1().getCHARMMAtomID(), diheList.get(dihe).getA2().getCHARMMAtomID(),
-//                    diheList.get(dihe).getA3().getCHARMMAtomID(), diheList.get(dihe).getA4().getCHARMMAtomID(),
-//                    diheList.get(++dihe).getA1().getCHARMMAtomID(), diheList.get(dihe).getA2().getCHARMMAtomID(),
-//                    diheList.get(dihe).getA3().getCHARMMAtomID(), diheList.get(dihe).getA4().getCHARMMAtomID()
-//            ));
             line =  String.format(format03,diheList.get(dihe).getA1().getCHARMMAtomID(), diheList.get(dihe).getA2().getCHARMMAtomID());
             line += String.format(format03,diheList.get(dihe).getA3().getCHARMMAtomID(), diheList.get(dihe).getA4().getCHARMMAtomID());
             int loc = dihe+1;
@@ -254,17 +270,15 @@ public final class PSF_generate extends PSF implements coordinates_writer{
         writer.write("\n");
     }
 
+    /**
+     * Writes section where impropers are defined
+     * 
+     * @throws IOException Thrown if problem happens when writing file
+     */
     private void writeImprSection() throws IOException {
         String line;
         writer.write(String.format(format00, this.nimphi, " !NIMPHI: impropers\n"));
         for (int impr = 0; impr < nimphi; impr++) {
-//            writer.write(String.format(
-//                    format03,
-//                    diheList.get(impr).getA1().getCHARMMAtomID(), diheList.get(impr).getA2().getCHARMMAtomID(),
-//                    diheList.get(impr).getA3().getCHARMMAtomID(), diheList.get(impr).getA4().getCHARMMAtomID(),
-//                    diheList.get(++impr).getA1().getCHARMMAtomID(), diheList.get(impr).getA2().getCHARMMAtomID(),
-//                    diheList.get(impr).getA3().getCHARMMAtomID(), diheList.get(impr).getA4().getCHARMMAtomID()
-//            ));
             line =  String.format(format03,imprList.get(impr).getA1().getCHARMMAtomID(), imprList.get(impr).getA2().getCHARMMAtomID());
             line += String.format(format03,imprList.get(impr).getA3().getCHARMMAtomID(), imprList.get(impr).getA4().getCHARMMAtomID());
             int loc = impr+1;
@@ -277,12 +291,22 @@ public final class PSF_generate extends PSF implements coordinates_writer{
         writer.write("\n");
     }
     
+    /**
+     * Returns content of the writer object as a string
+     * @return string corresponding to content of a psf file
+     */
     @Override
     public String getTextContent()
     {
         return writer.toString();
     }
 
+    /**
+     * Saves the psf file in a given directory
+     * 
+     * @param dir a directory where to save the psf file
+     * @throws IOException
+     */
     @Override
     public void writeFile(File dir) throws IOException{
         Writer writerf = new BufferedWriter(
@@ -294,6 +318,12 @@ public final class PSF_generate extends PSF implements coordinates_writer{
         writerf.close();
     }
     
+    /**
+     * Define content of the writer object using a string
+     * 
+     * @param content an input string containing some charmm psf content
+     * @throws IOException
+     */
     @Override
     public void setModifiedTextContent(String content) throws IOException{
         writer.close();

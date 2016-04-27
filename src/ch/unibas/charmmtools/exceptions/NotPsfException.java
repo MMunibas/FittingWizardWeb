@@ -26,8 +26,10 @@ public class NotPsfException extends Exception {
      * @param line  The file line were error occurred
      */
     public NotPsfException(String fname, String line) {
-        System.err.println("This file does not contains the PSF key word on first line : "
-                + fname);
-        System.err.println("Parsed line was : " + line);
+        
+        super("This file does not contains the PSF key word on first line : " +
+                fname + " ; Parsed line was : " + line
+        );
+
     }
 }

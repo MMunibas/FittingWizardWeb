@@ -59,8 +59,8 @@ public class PDB_generate extends PDB implements coordinates_writer{
     }
 
     /**
-     * 
-     * @throws IOException 
+     * Writes top of the PDB file containing title and various info
+     * @throws IOException Thrown if problem happens when writing file
      */
     private void writeTitle() throws IOException {
 
@@ -76,8 +76,8 @@ public class PDB_generate extends PDB implements coordinates_writer{
     }
 
     /**
-     * 
-     * @throws IOException 
+     * Writes the core of the pdb file containing coordinates and other data
+     * @throws IOException Thrown if problem happens when writing file
      */
     private void writePdbCore() throws IOException {
 
@@ -93,8 +93,9 @@ public class PDB_generate extends PDB implements coordinates_writer{
     }
 
     /**
-     * 
-     * @throws IOException 
+     * Writes end of the pdb ; for the moment only the end keyword but official 
+     * pdb may have much more here
+     * @throws IOException Thrown if problem happens when writing file
      */
     private void writePdbEnd() throws IOException {
         writer.write("END\n");
@@ -102,7 +103,7 @@ public class PDB_generate extends PDB implements coordinates_writer{
 
     /**
      * Returns content of the writer object as a string
-     * @return string corresponding to content of a cor file
+     * @return string corresponding to content of a pdb file
      */
     @Override
     public String getTextContent() {
@@ -110,10 +111,10 @@ public class PDB_generate extends PDB implements coordinates_writer{
     }
     
     /**
-     * Saves the cor file in a given directory
+     * Saves the pdb file in a given directory
      * 
-     * @param dir a directory where to save the cor file
-     * @throws IOException
+     * @param dir a directory where to save the pdb file
+     * @throws IOException Thrown if problem happens when writing file
      */
     @Override
     public void writeFile(File dir) throws IOException {
@@ -129,7 +130,7 @@ public class PDB_generate extends PDB implements coordinates_writer{
     /**
      * Define content of the writer object using a string
      * @param content an input string containing some charmm cor content
-     * @throws IOException
+     * @throws IOException Thrown if problem happens when writing file
      */
     @Override
     public void setModifiedTextContent(String content) throws IOException{

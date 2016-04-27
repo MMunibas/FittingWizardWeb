@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Florent Hedin, Markus Meuwly, and the University of Basel
+ * Copyright (c) 2016, Florent Hedin, Markus Meuwly, and the University of Basel
  * All rights reserved.
  *
  * The 3-clause BSD license is applied to this software.
@@ -29,11 +29,16 @@ import java.util.List;
 import java.util.TimeZone;
 
 /**
- *
+ * Class for generating a CHARMM topology file
  * @author hedin
  */
 public final class RTF_generate extends RTF implements coordinates_writer{
 
+    /**
+     * Constructor using an input xyz file
+     * @param xyz the input xyz coordinates file
+     * @throws IOException Thrown if problem happens when reading file
+     */
     public RTF_generate(XyzFile xyz) throws IOException {
 
         super();
@@ -55,6 +60,12 @@ public final class RTF_generate extends RTF implements coordinates_writer{
 
     }//ctor
 
+    /**
+     * Constructor using an input xyz file and a csv for finding missing data
+     * @param xyz the input xyz coordinates file
+     * @param csv the input csv data file
+     * @throws IOException Thrown if problem happens when reading file
+     */
     public RTF_generate(XyzFile xyz, String csv) throws IOException {
 
         super(csv);
@@ -76,6 +87,10 @@ public final class RTF_generate extends RTF implements coordinates_writer{
 
     }//ctor
 
+    /**
+     * Generates properly the RTF file 
+     * @throws IOException Thrown if problem happens when writing file
+     */
     private void generate() throws IOException {
         this.gen_bonds();
         this.gen_hybridisation();
@@ -88,6 +103,9 @@ public final class RTF_generate extends RTF implements coordinates_writer{
         this.write_topology_file();
     }
 
+    /**
+     * Generates bonds by analysing coordinates
+     */
     private void gen_bonds() {
         double dist;
 
@@ -129,7 +147,6 @@ public final class RTF_generate extends RTF implements coordinates_writer{
                     it.setHybridisation(O_hybridList.get(it.getNumberOfBonds()));
                     break;
                 default:
-                    /* TODO */
                     break;
             }//end of switch
         }//end of for
@@ -152,8 +169,8 @@ public final class RTF_generate extends RTF implements coordinates_writer{
     }// end of gen_hybridation
 
     /**
-     * depending on hybridisation of a given atom find the type used for forcefield, i.e. CT2, CT3, CA, ... it is called
-     * 3 times consecutively
+     * depending on hybridisation of a given atom find the type used for forcefield, i.e. CT2, CT3, CA, ...
+     * it is called 3 times consecutively
      */
     private void gen_type() {
 
@@ -469,6 +486,9 @@ public final class RTF_generate extends RTF implements coordinates_writer{
         }//loop on all atoms
     }//end find_impropers()
 
+    /**
+     * generates a list of IC
+     */
     private void find_IC() {
 
         //Calculates IC;
@@ -521,31 +541,28 @@ public final class RTF_generate extends RTF implements coordinates_writer{
         if (this.nimpr != 0) {
 
             for (int i = 0; i < this.nimpr; i++) {
-//                try {
                 IC_List.add(new InternalCoordinates(
                         imprTypeList.get(i).getA2(),
                         imprTypeList.get(i).getA3(),
                         imprTypeList.get(i).getA1(),
                         imprTypeList.get(i).getA4(),
                         true));
-//                } catch (IndexOutOfBoundsException e) {
-//                    System.err.println("index error at i = " + i + " : " + e.getMessage());
-//                }
-
             }//loop on all atoms
 
         }//end this.nimpr != 0
 
     }//end find_IC()
 
+    /**
+     * properly writes the topology file
+     * @throws IOException Thrown if problem happens when writing file
+     */
     private void write_topology_file() throws IOException {
 
         DateFormat df = new SimpleDateFormat();
         df.setTimeZone(TimeZone.getDefault());
         Date d = new Date(df.format(new Date()));
 
-        //BufferedWriter writer = new BufferedWriter(new FileWriter(this.fname + ".rtf"));
-//        writer.write("* ...\n");
         writer.write("* RTF file for " + this.fname + ".xyz\n");
         writer.write("* generated on " + d.toString() + "\n");
         writer.write("* by user " + System.getProperty("user.name") + " on machine "
@@ -591,15 +608,22 @@ public final class RTF_generate extends RTF implements coordinates_writer{
 
         writer.write("\nEND\n");
 
-//        writer.close();
-
     }//end write_topology_file()
 
+    /** Returns content of the writer object as a string
+     * @return string corresponding to content of a file
+     */
     @Override
     public String getTextContent() {
         return writer.toString();
     }
 
+    /**
+     * Saves the file in a given directory
+     * 
+     * @param dir a directory where to save the file
+     * @throws IOException Thrown if problem happens when writing file
+     */
     @Override
     public void writeFile(File dir) throws IOException{
         
@@ -612,6 +636,11 @@ public final class RTF_generate extends RTF implements coordinates_writer{
         writerf.close();
     }
 
+    /**
+     * Define content of the writer object using a string
+     * @param content an input string containing some charmm content
+     * @throws IOException Thrown if problem happens when writing file
+     */
     @Override
     public void setModifiedTextContent(String content) throws IOException{
         writer.close();

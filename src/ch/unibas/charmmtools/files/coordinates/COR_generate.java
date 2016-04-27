@@ -169,7 +169,7 @@ public class COR_generate extends COR implements coordinates_writer{
      * Saves the cor file in a given directory
      * 
      * @param dir a directory where to save the cor file
-     * @throws IOException
+     * @throws IOException Thrown if problem happens when writing file
      */
     @Override
     public void writeFile(File dir) throws IOException {
@@ -185,7 +185,7 @@ public class COR_generate extends COR implements coordinates_writer{
     /**
      * Define content of the writer object using a string
      * @param content an input string containing some charmm cor content
-     * @throws IOException
+     * @throws IOException Thrown if problem happens when writing file
      */
     @Override
     public void setModifiedTextContent(String content) throws IOException{

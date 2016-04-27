@@ -178,8 +178,6 @@ public abstract class DB_Window extends WizardPage {
 
     /**
      * Cleans the tableview before adding more stuff
-     *
-     * @TODO
      */
     protected void cleanTableView() {
         tabview_db.getItems().removeAll(obsList);
