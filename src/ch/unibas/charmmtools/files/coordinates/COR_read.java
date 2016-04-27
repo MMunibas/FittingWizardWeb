@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Florent Hedin, Markus Meuwly, and the University of Basel
+ * Copyright (c) 2016, Florent Hedin, Markus Meuwly, and the University of Basel
  * All rights reserved.
  *
  * The 3-clause BSD license is applied to this software.
@@ -14,14 +14,22 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
- *
+ * This class is used for reading a CHARMM core file
  * @author hedin
  */
 public class COR_read extends COR {
 
-    protected Scanner s = null;
+    /**
+     * Scanner object use for reading text file
+     */
+    private Scanner s = null;
         
+    /**
+     * Constructor for reading cor file
+     * @param filename the name of the input file to read
+     */
     public COR_read(String filename) {
+        
         try {
             // open the cor text file (buffered to have efficient IO even if large file)
             s = new Scanner(new FileInputStream(new File(filename)));
@@ -33,7 +41,10 @@ public class COR_read extends COR {
         s = null;
     }
 
-    protected void readFile() {
+    /**
+     * This method is the one reading the cor file
+     */
+    private void readFile() {
 
         // skip comment lines
         String inp = s.nextLine();
@@ -50,14 +61,6 @@ public class COR_read extends COR {
         // get natom from cor
         String[] tokens = inp.trim().split(delims);
 
-//        for (int i = 0; i < tokens.length; i++) {
-//            tokens[i] = tokens[i].trim();
-//        }
-//        for (int i = 0; i < tokens.length; i++) {
-//            System.out.println(i);
-//            System.out.println(tokens[i]);
-//        }
-//        System.exit(0);
         natom = Integer.parseInt(tokens[0]);
 
         allocate();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Florent Hedin, Markus Meuwly, and the University of Basel
+ * Copyright (c) 2016, Florent Hedin, Markus Meuwly, and the University of Basel
  * All rights reserved.
  *
  * The 3-clause BSD license is applied to this software.
@@ -12,7 +12,7 @@ package ch.unibas.charmmtools.files.coordinates;
 import org.apache.log4j.Logger;
 
 /**
- * This class defines a Charmm coordinates COR file
+ * This abstract class defines a CHARMM coordinates COR file
  *
  * @author hedin
  */
@@ -20,25 +20,66 @@ public abstract class COR {
 
     protected static final Logger logger = Logger.getLogger(COR.class);
     
+    /**
+     * The number of atoms for this coordinates file
+     */
     protected int natom;
 
+    /**
+     * the CHARMM atom id as integer
+     */
     protected int[] atomID = null;
+
+    /**
+     * the CHARMM residue id as integer
+     */
     protected int[] resID = null;
+
+    /**
+     * the CHARMM residue name
+     */
     protected String[] resName = null;
+
+    /**
+     * the CHARMM atom name (i.e. forcefield type)
+     */
     protected String[] atomName = null;
-    protected float[] x = null;
-    protected float[] y = null;
-    protected float[] z = null;
+
+    /**
+     * the x y z coordinates of the atom
+     */
+    protected float[] x,y,z = null;
+
+    /**
+     * the CHARMM segment name
+     */
     protected String[] segName = null;
+
+    /**
+     * the CHARMM segment id as integer
+     */
     protected int[] segID = null;
+
+    /**
+     * corresponds to the weight column of the cor file sometimes 
+     * used for storing (weird) things
+     */
     protected float[] weight = null;
 
+    /**
+     * used for parsing lines, defines where to split strings (one or more white spaces)
+     */
     protected final String delims = "\\s+";
 
+    /**
+     * Set to true if extended format cor file (higher precision for coordinates)
+     */
     protected boolean isExtendedFormat = false;
 
+    /**
+     * performs memory reservation/allocation for the arrays
+     */
     protected void allocate() {
-        //allocate memory
         atomID = new int[natom];
         resID = new int[natom];
         resName = new String[natom];
@@ -51,99 +92,97 @@ public abstract class COR {
         weight = new float[natom];
     }
 
-//    public void changeCoordinates(float[] rx, float[] ry, float[] rz) {
-//        if (rx.length == this.x.length) {
-//            System.arraycopy(rx, 0, this.x, 0, this.x.length);
-//        }
-//
-//        if (ry.length == this.y.length) {
-//            System.arraycopy(ry, 0, this.y, 0, this.y.length);
-//        }
-//
-//        if (rz.length == this.z.length) {
-//            System.arraycopy(rz, 0, this.z, 0, this.z.length);
-//        }
-//    }
-
     /**
-     * @return the natom
+     * Returns natom
+     * @return the number of atoms in cor file
      */
     public int getNatom() {
         return natom;
     }
 
     /**
-     * @return the atomID
+     * Returns the Atom ID array
+     * @return the atomID array of cor file
      */
     public int[] getAtomID() {
         return atomID;
     }
 
     /**
-     * @return the resID
+     * Returns the Residue ID array
+     * @return the resID array of cor file
      */
     public int[] getResID() {
         return resID;
     }
 
     /**
-     * @return the resName
+     * Returns the resName array
+     * @return the resName array of cor file
      */
     public String[] getResName() {
         return resName;
     }
 
     /**
-     * @return the atomName
+     * Returns the atomName array
+     * @return the atomName array of cor file
      */
     public String[] getAtomName() {
         return atomName;
     }
 
     /**
-     * @return the x
+     * Returns the x coordinates array
+     * @return the x coordinates array of cor file
      */
     public float[] getX() {
         return x;
     }
 
     /**
-     * @return the y
+     * Returns the y coordinates array
+     * @return the y coordinates array of cor file
      */
     public float[] getY() {
         return y;
     }
 
     /**
-     * @return the z
+     * Returns the z coordinates array
+     * @return the z coordinates array of cor file
      */
     public float[] getZ() {
         return z;
     }
 
     /**
-     * @return the segName
+     * Returns the segName array
+     * @return the segName array of cor file
      */
     public String[] getSegName() {
         return segName;
     }
 
     /**
-     * @return the segID
+     * Returns the segments ID array
+     * @return the segID array of cor file
      */
     public int[] getSegID() {
         return segID;
     }
 
     /**
-     * @return the weight
+     * Returns the weight array
+     * @return the weight array of cor file
      */
     public float[] getWeight() {
         return weight;
     }
 
     /**
-     * @return the isExtendedFormat
+     * In order to know if the currently read core file is extended or not
+     * @return the isExtendedFormat boolean value from cor file
      */
     public boolean isExtendedFormat() {
         return isExtendedFormat;

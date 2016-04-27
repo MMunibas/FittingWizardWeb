@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Florent Hedin, Markus Meuwly, and the University of Basel
+ * Copyright (c) 2016, Florent Hedin, Markus Meuwly, and the University of Basel
  * All rights reserved.
  *
  * The 3-clause BSD license is applied to this software.
@@ -23,65 +23,66 @@ import java.util.List;
 import java.util.TimeZone;
 
 /**
- *
+ * This class is used for writing a PDB coordinates file 
+ * compatible with CHARMM
  * @author hedin
  */
 public class PDB_generate extends PDB implements coordinates_writer{
 
-    protected Writer writer = null;
-    //private XyzFile xyzf;
+    /**
+     * writer object containing text content
+     */
+    private Writer writer = null;
+
+    /**
+     * A PSF file is required for writing properly a PDB file
+     */
     private PSF psff;
 
-    public PDB_generate(/*XyzFile _xyzf, */PSF _psff) {
+    /**
+     * Constructor using a psf as input
+     * 
+     * @param _psff a PSF object previously created
+     */
+    public PDB_generate(PSF _psff) {
 
-        //this.xyzf = _xyzf;
         this.psff = _psff;
         this.fname = this.psff.getMyname();
         try {
-
             writer = new CharArrayWriter();
             this.writeTitle();
             this.writePdbCore();
             this.writePdbEnd();
-
         } catch (IOException ex) {
-
             logger.error("Error while generating PDB file : " + ex);
-
         }
-
     }
 
+    /**
+     * 
+     * @throws IOException 
+     */
     private void writeTitle() throws IOException {
 
         DateFormat df = new SimpleDateFormat();
         df.setTimeZone(TimeZone.getDefault());
         Date d = new Date(df.format(new Date()));
-        
-//        String myname = psff.getMyname();
+
         writer.write("REMARK PDB file for " + fname + ".xyz\n");
         writer.write("REMARK generated on " + d.toString() + "\n");
         writer.write("REMARK by user " + System.getProperty("user.name") + " on machine "
                 + System.getProperty("os.name") + " " + System.getProperty("os.arch") + " "
                 + System.getProperty("os.version") + "\n");
-//        writer.write("\n");
-
     }
 
+    /**
+     * 
+     * @throws IOException 
+     */
     private void writePdbCore() throws IOException {
 
-        //int natom = xyzf.getAtomCount();
-        //int natom_psf = psff.getNatom();
-        //List<XyzAtom> atlist = xyzf.getAtoms();
         String line = "";
         List<Atom> atlist = psff.getAtomList();
-
-//        psff.
-        /**
-         * IF(OFFICIAL)THEN WRITE(IUNIT, & '(A6,I5,1X,A4,1X,A3,1X,A1,A5,3X,3F8.3,2F6.2,6X,A4)') & 'ATOM
-         * ',I,ATYPEI,REN,SID,ARID,X(I),Y(I),Z(I),1.0,WMAIN(I),SID ELSE WRITE(IUNIT, & '(A6,I5,1X,A4,1X,A4,1X,
-         * A5,3X,3F8.3,2F6.2,6X,A4)') & 'ATOM ',I,ATYPEI,REN,ARID,X(I),Y(I),Z(I),1.0,WMAIN(I) & ,SID ENDIF
-         */
         
         for (Atom a : atlist) {
             line = String.format(PDB.charmmFormat, "ATOM  ", a.getCHARMMAtomID(), a.getRtfType(),
@@ -89,18 +90,31 @@ public class PDB_generate extends PDB implements coordinates_writer{
                     1.0, 0.0, a.getSegName());
             writer.write(line+"\n");
         }
-
     }
 
+    /**
+     * 
+     * @throws IOException 
+     */
     private void writePdbEnd() throws IOException {
         writer.write("END\n");
     }
 
+    /**
+     * Returns content of the writer object as a string
+     * @return string corresponding to content of a cor file
+     */
     @Override
     public String getTextContent() {
         return writer.toString();
     }
     
+    /**
+     * Saves the cor file in a given directory
+     * 
+     * @param dir a directory where to save the cor file
+     * @throws IOException
+     */
     @Override
     public void writeFile(File dir) throws IOException {
         Writer writerf = new BufferedWriter(
@@ -112,6 +126,11 @@ public class PDB_generate extends PDB implements coordinates_writer{
         writerf.close();
     }
     
+    /**
+     * Define content of the writer object using a string
+     * @param content an input string containing some charmm cor content
+     * @throws IOException
+     */
     @Override
     public void setModifiedTextContent(String content) throws IOException{
         writer.close();

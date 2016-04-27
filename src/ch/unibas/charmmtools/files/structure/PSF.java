@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Florent Hedin, Markus Meuwly, and the University of Basel
+ * Copyright (c) 2016, Florent Hedin, Markus Meuwly, and the University of Basel
  * All rights reserved.
  *
  * The 3-clause BSD license is applied to this software.
@@ -26,63 +26,128 @@ public abstract class PSF {
 
     protected static final Logger logger = Logger.getLogger(PSF.class);
     
+    /**
+     * Name of the PSF file
+     */
     protected String myname;
 
+    /**
+     * For checking weather the PSF is using extended precision
+     */
     protected boolean isExtendedFormat = false;
+    
+    /**
+     * For checking weather the PSF provides CMAP terms
+     */
     protected boolean isUsingCMAP = false;
+    
+    /**
+     * For checking weather the PSF provides CHEQ terms
+     */
     protected boolean isUsingCHEQ = false;
+    
+    /**
+     * For checking weather the DRUDE is using extended precision
+     */
     protected boolean isUsingDRUDE = false;
 
+    /**
+     * Number of lines for titles
+     */
     protected int ntitle;
+    
+    /**
+     * Number of atoms in PSF
+     */
     protected int natom;
+    
+    /**
+     * Number of bonds in PSF
+     */
     protected int nbond;
+    
+    /**
+     * Number of angles in PSF
+     */
     protected int ntheta;
+    
+    /**
+     * Number of Dihedrals in PSF
+     */
     protected int nphi;
+    
+    /**
+     * Number of improper dihedrals in PSF
+     */
     protected int nimphi;
 
-    // the lists read from PSF
+    /**
+     * A list for storing all atoms
+     */
     protected List<Atom> atomList = null;
+    
+    /**
+     * A list for storing all bonds
+     */
     protected List<Bond> bondList = null;
+    
+    /**
+     * A list for storing all angles
+     */
     protected List<Angle> angleList = null;
+    
+    /**
+     * A list for storing all dihedrals
+     */
     protected List<Dihedral> diheList = null;
+    
+    /**
+     * A list for storing all impropers
+     */
     protected List<Improper> imprList = null;
     
     /**
-     * @return the myname
+     * For getting file name
+     * @return the file name
      */
     public String getMyname() {
         return myname;
     }
 
     /**
-     * @return the isExtendedFormat
+     * To check if extended format is used
+     * @return the isExtendedFormat boolean
      */
     public boolean isIsExtendedFormat() {
         return isExtendedFormat;
     }
 
     /**
-     * @return the isUsingCMAP
+     * To check if CMAP are present
+     * @return the isUsingCMAP boolean
      */
     public boolean isIsUsingCMAP() {
         return isUsingCMAP;
     }
 
     /**
-     * @return the isUsingCHEQ
+     * To check if CHEQ is present
+     * @return the isUsingCHEQ boolean
      */
     public boolean isIsUsingCHEQ() {
         return isUsingCHEQ;
     }
 
     /**
-     * @return the isUsingDRUDE
+     * To check if DRUDE is present
+     * @return the isUsingDRUDE boolean
      */
     public boolean isIsUsingDRUDE() {
         return isUsingDRUDE;
     }
 
     /**
+     * To get ntitle
      * @return the ntitle
      */
     public int getNtitle() {
@@ -90,6 +155,7 @@ public abstract class PSF {
     }
 
     /**
+     * To get the number of atoms
      * @return the natom
      */
     public int getNatom() {
@@ -97,6 +163,7 @@ public abstract class PSF {
     }
 
     /**
+     * To get the number of bonds
      * @return the nbond
      */
     public int getNbond() {
@@ -104,6 +171,7 @@ public abstract class PSF {
     }
 
     /**
+     * To get the number of angles
      * @return the ntheta
      */
     public int getNtheta() {
@@ -111,6 +179,7 @@ public abstract class PSF {
     }
 
     /**
+     * To get the number of dihedrals
      * @return the nphi
      */
     public int getNphi() {
@@ -118,6 +187,7 @@ public abstract class PSF {
     }
 
     /**
+     * To get the number of impropers
      * @return the nimphi
      */
     public int getNimphi() {
@@ -125,6 +195,7 @@ public abstract class PSF {
     }
 
     /**
+     * To get the all atoms list
      * @return the atomList
      */
     public List<Atom> getAtomList() {
@@ -132,6 +203,7 @@ public abstract class PSF {
     }
 
     /**
+     * To get the all bonds list
      * @return the bondList
      */
     public List<Bond> getBondList() {
@@ -139,6 +211,7 @@ public abstract class PSF {
     }
 
     /**
+     * To get the all angles list
      * @return the angleList
      */
     public List<Angle> getAngleList() {
@@ -146,6 +219,7 @@ public abstract class PSF {
     }
 
     /**
+     * To get the all dihedral list
      * @return the diheList
      */
     public List<Dihedral> getDiheList() {
@@ -153,38 +227,11 @@ public abstract class PSF {
     }
 
     /**
+     * To get the all impropers list
      * @return the imprList
      */
     public List<Improper> getImprList() {
         return imprList;
     }
-    
-    /**
-     * @param args the command line arguments
-     */
-//    public static void main(String[] args) {
-//
-//        try {
-//            // initialise logger
-//            BasicConfigurator.configure();
-//
-//            //path to xyz file and csv file
-//            String xyzName = args[0];
-//            String csvName = args[1];
-//
-//            //reads a coordinates file (xyz format only)
-//            XyzFile xyzf = XyzFileParser.parse(new File(xyzName));
-//
-//            //generates a topology file
-//            RTF rtff = new RTF_generate(xyzf, csvName);
-//            
-//            //then a PSF file re-using data from PSF 
-//            PSF psff = new PSF_generate(rtff);
-//            
-//        } catch (IOException ex) {
-//            Logger.getLogger(RTF_generate.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//
-//    }
 
 } // end of class PSF

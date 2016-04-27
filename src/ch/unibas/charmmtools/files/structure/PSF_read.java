@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Florent Hedin, Markus Meuwly, and the University of Basel
+ * Copyright (c) 2016, Florent Hedin, Markus Meuwly, and the University of Basel
  * All rights reserved.
  *
  * The 3-clause BSD license is applied to this software.
@@ -32,6 +32,10 @@ public final class PSF_read extends PSF {
     private Scanner s = null;
     private final String delims = "\\s+";
 
+    /**
+     *
+     * @param filename
+     */
     public PSF_read(String filename) {
         myname = filename;
 

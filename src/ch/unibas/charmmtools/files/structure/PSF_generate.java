@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Florent Hedin, Markus Meuwly, and the University of Basel
+ * Copyright (c) 2016, Florent Hedin, Markus Meuwly, and the University of Basel
  * All rights reserved.
  *
  * The 3-clause BSD license is applied to this software.
@@ -36,9 +36,16 @@ public final class PSF_generate extends PSF implements coordinates_writer{
     private String format02, format02a, format02b, format03;
     private String format04, format05, format06, format07, format08;
     
+    /**
+     *
+     */
     protected Writer writer = null;
     
-
+    /**
+     *
+     * @param topolInfo
+     * @throws IOException
+     */
     public PSF_generate(RTF topolInfo) throws IOException {
 
         /*

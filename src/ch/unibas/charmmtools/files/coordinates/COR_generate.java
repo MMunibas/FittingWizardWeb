@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Florent Hedin, Markus Meuwly, and the University of Basel
+ * Copyright (c) 2016, Florent Hedin, Markus Meuwly, and the University of Basel
  * All rights reserved.
  *
  * The 3-clause BSD license is applied to this software.
@@ -22,16 +22,36 @@ import java.util.Date;
 import java.util.TimeZone;
 
 /**
- *
+ * This class is used for writing a CHARMM cor file
+ * it extends the COR class and implements common writers methods from coordinates_writer
+ * 
  * @author hedin
  */
 public class COR_generate extends COR implements coordinates_writer{
 
-    protected Writer writer = null;
+    /**
+     * a file writer
+     */
+    private Writer writer = null;
+    
+    /**
+     * the name of the output file
+     */
     private String OutFileName = null;
+    
     private String format = "";
+    
+    /**
+     * A PSF object is REQUIRED for generating a proper cor file
+     * so the PSF should be created before
+     */
     private PSF psff = null;
     
+    /**
+     * Constructor using a psf as input
+     * 
+     * @param _psff a PSF object previously created
+     */
     public COR_generate(PSF _psff)
     {
         psff = _psff;
@@ -41,6 +61,9 @@ public class COR_generate extends COR implements coordinates_writer{
         this.generate();
     }
 
+    /**
+     * Useful for building a new cor by just copying fields from a PSF object
+     */
     private void copyData(){
 
         this.natom = psff.getNatom();
@@ -64,6 +87,9 @@ public class COR_generate extends COR implements coordinates_writer{
         //psff.
     }
     
+    /**
+     * This prints to the writer object the cor file
+     */
     private void generate() {
 
         String line;
@@ -95,11 +121,6 @@ public class COR_generate extends COR implements coordinates_writer{
                     + System.getProperty("os.name") + " " + System.getProperty("os.arch") + " "
                     + System.getProperty("os.version") + "\n");
             writer.write("*\n");
-            
-//            writer.write("* Generated with CHARMM_tools\n");
-//            writer.write("* User : " + System.getProperty("user.name") + "\n");
-//            writer.write("* Date : " + new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z").format(Calendar.getInstance().getTime()) + "\n");
-//            writer.write("*\n");
 
             // then the number of atoms and possibly the extended keyword
             if (this.isExtendedFormat) {
@@ -133,13 +154,23 @@ public class COR_generate extends COR implements coordinates_writer{
             logger.error("Error while generating a COR file : " + ex);
         }
 
-    }// end of dumpCOR
+    }// end of generate()
 
+    /**
+     * Returns content of the writer object as a string
+     * @return string corresponding to content of a cor file
+     */
     @Override
     public String getTextContent() {
         return writer.toString();
     }
     
+    /**
+     * Saves the cor file in a given directory
+     * 
+     * @param dir a directory where to save the cor file
+     * @throws IOException
+     */
     @Override
     public void writeFile(File dir) throws IOException {
         Writer writerf = new BufferedWriter(
@@ -151,6 +182,11 @@ public class COR_generate extends COR implements coordinates_writer{
         writerf.close();
     }
     
+    /**
+     * Define content of the writer object using a string
+     * @param content an input string containing some charmm cor content
+     * @throws IOException
+     */
     @Override
     public void setModifiedTextContent(String content) throws IOException{
         writer.close();
