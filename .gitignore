@@ -36,3 +36,6 @@ db/*.pdf
 *.ods
 scripts/nbproject/private/
 *.TXT
+fitting/fitting-*/build/
+.idea/
+fitting/.gradle/
