@@ -1,0 +1,5 @@
+rootProject.name = 'fitting'
+include 'fitting-web'
+include 'fitting-shared'
+include 'fitting-wizard'
+
