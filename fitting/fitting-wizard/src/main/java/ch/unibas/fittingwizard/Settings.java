@@ -37,7 +37,9 @@ public class Settings {
      * @return
      */
     public static Settings loadConfig() {
-        return loadConfig(new File(ConfigFileName));
+        File f = new File(ConfigFileName);
+        System.out.println("Loading config: " + f.getAbsolutePath());
+        return loadConfig(f);
     }
 
     public static Settings loadConfig(File configFile) {

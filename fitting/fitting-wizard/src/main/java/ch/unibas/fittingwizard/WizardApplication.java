@@ -113,7 +113,9 @@ public class WizardApplication extends Application {
     }
 
     private void loadStylesheets(Scene scene) {
-        scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+        URL u = getClass().getResource("application.css");
+
+        scene.getStylesheets().add(u.toExternalForm());
     }
 
     private Parent setupWizard(Stage primaryStage) {
