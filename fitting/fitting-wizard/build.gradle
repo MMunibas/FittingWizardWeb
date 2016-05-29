@@ -11,6 +11,8 @@ sourceSets {
 
 dependencies {
 
+    compile project(':fitting-shared')
+
     compile files('../../lib/openbabel.jar')
 
     compile group: 'commons-io', name: 'commons-io', version: '2.4'
