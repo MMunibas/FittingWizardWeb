@@ -5,10 +5,12 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.wicket.protocol.http.ContextParamWebApplicationFactory;
 import org.apache.wicket.protocol.http.WicketFilter;
+import org.apache.wicket.protocol.http.WicketServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 
 import javax.servlet.DispatcherType;
 import java.util.EnumSet;
@@ -27,13 +29,12 @@ public class Main {
         Server srv = new Server(8080);
 
         // https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=27848170
-        ServletContextHandler sch = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        FilterHolder fh2 = new FilterHolder(WicketFilter.class);
-        fh2.setInitParameter(ContextParamWebApplicationFactory.APP_CLASS_PARAM, App.class.getName());
-        fh2.setInitParameter(WicketFilter.FILTER_MAPPING_PARAM, "/*");
-        sch.addFilter(fh2, "/*", EnumSet.of(DispatcherType.REQUEST,DispatcherType.ERROR));
-        sch.addServlet(DefaultServlet.class, "/*");
+        ServletHolder sh = new ServletHolder(WicketServlet.class);
+        sh.setInitParameter(ContextParamWebApplicationFactory.APP_CLASS_PARAM, WebApp.class.getName());
+        sh.setInitParameter(WicketFilter.FILTER_MAPPING_PARAM, "/*");
 
+        ServletContextHandler sch = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        sch.addServlet(sh, "/*");
         srv.setHandler(sch);
 
         logger.info("Starting jetty server");
@@ -56,6 +57,6 @@ public class Main {
 //        }
 //        BasicConfigurator.configure(app);
 
-        logger.setLevel(Level.INFO);
+        logger.setLevel(Level.DEBUG);
     }
 }
