@@ -12,8 +12,9 @@ mainClassName = 'ch.unibas.fitting.web.Main'
 sourceSets {
     main {
         resources {
-            srcDirs = ["src/main/java"]
-            includes = ["**/*.html", "**/*.css", "**/*.png"]
+            srcDirs = ["src/main/java", "src/main/resources"]
+            includes = ["**/*"]
+            excludes = ["**/*.java"]
         }
     }
 }

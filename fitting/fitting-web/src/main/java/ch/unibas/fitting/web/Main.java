@@ -7,10 +7,15 @@ import org.apache.wicket.protocol.http.ContextParamWebApplicationFactory;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.http.WicketServlet;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.resource.Resource;
+import org.eclipse.jetty.webapp.WebAppContext;
 
 import javax.servlet.DispatcherType;
 import java.util.EnumSet;
@@ -35,7 +40,26 @@ public class Main {
 
         ServletContextHandler sch = new ServletContextHandler(ServletContextHandler.SESSIONS);
         sch.addServlet(sh, "/*");
-        srv.setHandler(sch);
+
+        ResourceHandler js_resource_handler = new ResourceHandler();
+        js_resource_handler.setResourceBase("build/resources/main/js/");
+        js_resource_handler.setDirectoriesListed(true);
+        ContextHandler context_handler = new ContextHandler("/js");
+        context_handler.setHandler(js_resource_handler);
+
+        ResourceHandler mol_resource_handler = new ResourceHandler();
+        mol_resource_handler.setResourceBase("build/resources/main/mol/");
+        mol_resource_handler.setDirectoriesListed(true);
+        ContextHandler mol_context_handler = new ContextHandler("/mol");
+        mol_context_handler.setHandler(mol_resource_handler);
+
+        HandlerList handlers = new HandlerList();
+        handlers.addHandler(context_handler);
+        handlers.addHandler(mol_context_handler);
+
+        handlers.addHandler(sch);
+
+        srv.setHandler(handlers);
 
         logger.info("Starting jetty server");
         srv.start();
