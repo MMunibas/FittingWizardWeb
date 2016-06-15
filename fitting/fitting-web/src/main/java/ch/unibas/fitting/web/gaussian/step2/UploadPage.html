@@ -1,0 +1,12 @@
+<wicket:extend xmlns:wicket="http://www.w3.org/1999/xhtml">
+    <h1>Upload XYZ file</h1>
+
+    <form wicket:id="form">
+        File field: <input wicket:id="file" type="file" class="btn btn-default" accept=".xyz"/> (<span wicket:id="max"></span> max)<br/><br/>
+        <!--<div wicket:id="progress"></div>-->
+        <input wicket:id="ajaxSubmit" type="button" value="Upload" class="btn btn-default"/>
+    </form>
+
+    <div wicket:id="feedback"></div>
+
+</wicket:extend>

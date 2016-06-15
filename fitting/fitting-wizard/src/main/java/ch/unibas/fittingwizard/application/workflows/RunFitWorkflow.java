@@ -8,14 +8,14 @@
  */
 package ch.unibas.fittingwizard.application.workflows;
 
-import ch.unibas.fittingwizard.application.fitting.FitRepository;
-import ch.unibas.fittingwizard.application.fitting.InitialQ00;
-import ch.unibas.fittingwizard.application.fitting.OutputAtomType;
+import ch.unibas.fitting.shared.fitting.FitRepository;
+import ch.unibas.fitting.shared.fitting.InitialQ00;
+import ch.unibas.fitting.shared.fitting.OutputAtomType;
 import ch.unibas.fittingwizard.application.scripts.fitmtp.FitMtpInput;
 import ch.unibas.fittingwizard.application.scripts.fitmtp.FitMtpOutput;
 import ch.unibas.fittingwizard.application.scripts.fitmtp.IFitMtpScript;
 import ch.unibas.fittingwizard.application.tools.FitOutputParser;
-import ch.unibas.fittingwizard.application.tools.charges.ChargesFileParser;
+import ch.unibas.fitting.shared.charges.ChargesFileParser;
 import ch.unibas.fittingwizard.application.workflows.base.Workflow;
 import ch.unibas.fittingwizard.application.workflows.base.WorkflowContext;
 import java.io.File;

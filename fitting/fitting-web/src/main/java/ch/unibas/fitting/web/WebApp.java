@@ -1,6 +1,8 @@
 package ch.unibas.fitting.web;
 
+import ch.unibas.fitting.web.application.IUserDirectory;
 import ch.unibas.fitting.web.application.SomeService;
+import ch.unibas.fitting.web.application.UserDirectory;
 import ch.unibas.fitting.web.web.SessionCounter;
 import ch.unibas.fitting.web.web.UserSession;
 import ch.unibas.fitting.web.welcome.NewSessionPage;
@@ -8,7 +10,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import de.agilecoders.wicket.core.Bootstrap;
 import org.apache.log4j.Logger;
-import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.Session;
@@ -41,6 +42,8 @@ public class WebApp extends WebApplication {
             @Override
             protected void configure() {
 
+                bind(IUserDirectory.class).to(UserDirectory.class);
+                bind(WebConfig.class);
                 bind(SomeService.class).in(Scopes.SINGLETON);
                 bind(SessionCounter.class).toInstance(counter);
 

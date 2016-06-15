@@ -8,7 +8,7 @@
  */
 package ch.unibas.fittingwizard.application.scripts.vmd;
 
-import ch.unibas.fittingwizard.application.molecule.MoleculeId;
+import ch.unibas.fitting.shared.molecules.MoleculeId;
 
 public class VmdDisplayInput {
     private final int fitRank;

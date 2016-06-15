@@ -8,11 +8,11 @@
  */
 package ch.unibas.fittingwizard.presentation.fitting;
 
-import ch.unibas.fittingwizard.application.fitting.Fit;
-import ch.unibas.fittingwizard.application.fitting.FitResult;
-import ch.unibas.fittingwizard.application.molecule.AtomTypeId;
-import ch.unibas.fittingwizard.application.molecule.MoleculeId;
-import ch.unibas.fittingwizard.application.tools.charges.ChargeTypes;
+import ch.unibas.fitting.shared.fitting.Fit;
+import ch.unibas.fitting.shared.fitting.FitResult;
+import ch.unibas.fitting.shared.molecules.AtomTypeId;
+import ch.unibas.fitting.shared.molecules.MoleculeId;
+import ch.unibas.fitting.shared.charges.ChargeTypes;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.paint.Color;

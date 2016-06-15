@@ -8,9 +8,9 @@
  */
 package ch.unibas.fittingwizard.presentation.fitting;
 
-import ch.unibas.fittingwizard.application.fitting.ChargeValue;
-import ch.unibas.fittingwizard.application.molecule.AtomTypeId;
-import ch.unibas.fittingwizard.application.tools.charges.ChargeTypes;
+import ch.unibas.fitting.shared.fitting.ChargeValue;
+import ch.unibas.fitting.shared.molecules.AtomTypeId;
+import ch.unibas.fitting.shared.charges.ChargeTypes;
 import ch.unibas.fittingwizard.presentation.base.dialog.ModalDialog;
 import ch.unibas.fittingwizard.presentation.base.ui.EditingCell;
 import java.util.*;

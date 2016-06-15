@@ -8,8 +8,8 @@
  */
 package ch.unibas.fittingwizard.application.workflows;
 
-import ch.unibas.fittingwizard.application.fitting.Fit;
-import ch.unibas.fittingwizard.application.molecule.MoleculeId;
+import ch.unibas.fitting.shared.fitting.Fit;
+import ch.unibas.fitting.shared.molecules.MoleculeId;
 import ch.unibas.fittingwizard.application.scripts.export.ExportScriptInput;
 import ch.unibas.fittingwizard.application.scripts.export.ExportScriptOutput;
 import ch.unibas.fittingwizard.application.scripts.export.IExportScript;

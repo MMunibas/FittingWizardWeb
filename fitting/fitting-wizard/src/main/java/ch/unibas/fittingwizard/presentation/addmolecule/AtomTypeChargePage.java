@@ -8,10 +8,13 @@
  */
 package ch.unibas.fittingwizard.presentation.addmolecule;
 
+import ch.unibas.fitting.shared.molecules.Atom;
+import ch.unibas.fitting.shared.molecules.AtomType;
+import ch.unibas.fitting.shared.molecules.Molecule;
+import ch.unibas.fitting.shared.molecules.MoleculeRepository;
 import ch.unibas.fittingwizard.application.Visualization;
-import ch.unibas.fittingwizard.application.molecule.*;
 import ch.unibas.fittingwizard.application.tools.LPunParser;
-import ch.unibas.fittingwizard.application.xyz.XyzAtom;
+import ch.unibas.fitting.shared.xyz.XyzAtom;
 import ch.unibas.fittingwizard.presentation.MoleculeListPage;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import ch.unibas.fittingwizard.presentation.base.WizardPageWithVisualization;

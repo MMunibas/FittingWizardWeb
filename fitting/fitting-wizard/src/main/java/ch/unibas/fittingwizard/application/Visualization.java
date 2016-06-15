@@ -8,8 +8,8 @@
  */
 package ch.unibas.fittingwizard.application;
 
-import ch.unibas.fittingwizard.application.molecule.AtomType;
-import ch.unibas.fittingwizard.application.xyz.XyzAtom;
+import ch.unibas.fitting.shared.molecules.AtomType;
+import ch.unibas.fitting.shared.xyz.XyzAtom;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;

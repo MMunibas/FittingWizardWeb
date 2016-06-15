@@ -8,13 +8,13 @@
  */
 package ch.unibas.fittingwizard.application.base;
 
-import ch.unibas.fittingwizard.application.fitting.ChargeValue;
-import ch.unibas.fittingwizard.application.fitting.Fit;
-import ch.unibas.fittingwizard.application.fitting.FitResult;
-import ch.unibas.fittingwizard.application.fitting.OutputAtomType;
-import ch.unibas.fittingwizard.application.molecule.*;
-import ch.unibas.fittingwizard.application.xyz.XyzAtom;
-import ch.unibas.fittingwizard.application.xyz.XyzFile;
+import ch.unibas.fitting.shared.fitting.ChargeValue;
+import ch.unibas.fitting.shared.fitting.Fit;
+import ch.unibas.fitting.shared.fitting.FitResult;
+import ch.unibas.fitting.shared.fitting.OutputAtomType;
+import ch.unibas.fitting.shared.molecules.*;
+import ch.unibas.fitting.shared.xyz.XyzAtom;
+import ch.unibas.fitting.shared.xyz.XyzFile;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -56,7 +56,6 @@ public class Main {
         HandlerList handlers = new HandlerList();
         handlers.addHandler(context_handler);
         handlers.addHandler(mol_context_handler);
-
         handlers.addHandler(sch);
 
         srv.setHandler(handlers);

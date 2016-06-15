@@ -1,5 +1,6 @@
 package ch.unibas.fitting.web.welcome;
 
+import ch.unibas.fitting.web.application.IUserDirectory;
 import ch.unibas.fitting.web.web.WizardPage;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
@@ -12,6 +13,7 @@ import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.StringValidator;
 
+import javax.inject.Inject;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,6 +21,9 @@ import java.util.regex.Pattern;
  * Created by martin on 04.06.2016.
  */
 public class NewSessionPage extends WizardPage {
+
+    @Inject
+    private IUserDirectory _userDir;
 
     private String username;
 
@@ -45,6 +50,7 @@ public class NewSessionPage extends WizardPage {
             @Override
             public void onSubmit() {
                 if (isValid()) {
+                    _userDir.createUserdir(username);
                     session().setUsername(username);
                     setResponsePage(WelcomePage.class);
                 } else {

@@ -9,13 +9,13 @@
 package ch.unibas.fittingwizard.presentation;
 
 import ch.unibas.fittingwizard.application.Visualization;
-import ch.unibas.fittingwizard.application.base.MoleculesDir;
-import ch.unibas.fittingwizard.application.fitting.FitRepository;
-import ch.unibas.fittingwizard.application.molecule.Molecule;
-import ch.unibas.fittingwizard.application.molecule.MoleculeId;
-import ch.unibas.fittingwizard.application.molecule.MoleculeRepository;
-import ch.unibas.fittingwizard.application.xyz.XyzFile;
-import ch.unibas.fittingwizard.application.xyz.XyzFileParser;
+import ch.unibas.fitting.shared.base.MoleculesDir;
+import ch.unibas.fitting.shared.fitting.FitRepository;
+import ch.unibas.fitting.shared.molecules.Molecule;
+import ch.unibas.fitting.shared.molecules.MoleculeId;
+import ch.unibas.fitting.shared.molecules.MoleculeRepository;
+import ch.unibas.fitting.shared.xyz.XyzFile;
+import ch.unibas.fitting.shared.xyz.XyzFileParser;
 import ch.unibas.fittingwizard.presentation.addmolecule.AtomChargesDto;
 import ch.unibas.fittingwizard.presentation.addmolecule.AtomTypeChargePage;
 import ch.unibas.fittingwizard.presentation.addmolecule.SelectCoordinateFilePage;

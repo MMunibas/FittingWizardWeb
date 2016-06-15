@@ -9,7 +9,7 @@
 package ch.unibas.fittingwizard.infrastructure;
 
 import ch.unibas.fittingwizard.Settings;
-import ch.unibas.fittingwizard.application.base.MoleculesDir;
+import ch.unibas.fitting.shared.base.MoleculesDir;
 import ch.unibas.fittingwizard.application.scripts.base.ScriptExecutionException;
 import ch.unibas.fittingwizard.application.scripts.multipolegauss.IMultipoleGaussScript;
 import ch.unibas.fittingwizard.application.scripts.multipolegauss.MultipoleGaussInput;

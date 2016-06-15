@@ -9,7 +9,7 @@
 package ch.unibas.fittingwizard.infrastructure;
 
 import ch.unibas.fittingwizard.Settings;
-import ch.unibas.fittingwizard.application.molecule.MoleculeId;
+import ch.unibas.fitting.shared.molecules.MoleculeId;
 import ch.unibas.fittingwizard.application.scripts.export.ExportScriptInput;
 import ch.unibas.fittingwizard.application.scripts.export.ExportScriptOutput;
 import ch.unibas.fittingwizard.application.scripts.export.IExportScript;

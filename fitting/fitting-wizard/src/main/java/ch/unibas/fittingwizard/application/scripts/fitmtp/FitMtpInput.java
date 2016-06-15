@@ -8,7 +8,7 @@
  */
 package ch.unibas.fittingwizard.application.scripts.fitmtp;
 
-import ch.unibas.fittingwizard.application.molecule.MoleculeId;
+import ch.unibas.fitting.shared.molecules.MoleculeId;
 import java.io.File;
 import java.util.List;
 

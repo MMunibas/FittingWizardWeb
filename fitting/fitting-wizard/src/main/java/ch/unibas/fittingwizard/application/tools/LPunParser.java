@@ -8,7 +8,7 @@
  */
 package ch.unibas.fittingwizard.application.tools;
 
-import ch.unibas.fittingwizard.application.molecule.AtomType;
+import ch.unibas.fitting.shared.molecules.AtomType;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;

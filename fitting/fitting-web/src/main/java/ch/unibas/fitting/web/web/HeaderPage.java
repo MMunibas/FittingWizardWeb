@@ -17,8 +17,8 @@ import org.apache.wicket.request.resource.CssResourceReference;
  */
 public abstract class HeaderPage extends WizardPage {
 
-    public HeaderPage() {
-
+    protected HeaderPage() {
+        super();
         Navbar navbar = new Navbar("navbar");
         add(navbar);
 

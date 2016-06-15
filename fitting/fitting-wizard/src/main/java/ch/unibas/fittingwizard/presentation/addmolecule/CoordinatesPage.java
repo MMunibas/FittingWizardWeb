@@ -9,10 +9,10 @@
 package ch.unibas.fittingwizard.presentation.addmolecule;
 
 import ch.unibas.fittingwizard.application.Visualization;
-import ch.unibas.fittingwizard.application.base.MoleculesDir;
-import ch.unibas.fittingwizard.application.xyz.XyzAtom;
-import ch.unibas.fittingwizard.application.xyz.XyzFile;
-import ch.unibas.fittingwizard.application.xyz.XyzFileParser;
+import ch.unibas.fitting.shared.base.MoleculesDir;
+import ch.unibas.fitting.shared.xyz.XyzAtom;
+import ch.unibas.fitting.shared.xyz.XyzFile;
+import ch.unibas.fitting.shared.xyz.XyzFileParser;
 import ch.unibas.fittingwizard.presentation.MoleculeListPage;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import ch.unibas.fittingwizard.presentation.base.WizardPageWithVisualization;

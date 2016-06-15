@@ -8,7 +8,7 @@
  */
 package ch.unibas.fittingwizard.application.scripts.export;
 
-import ch.unibas.fittingwizard.application.molecule.MoleculeId;
+import ch.unibas.fitting.shared.molecules.MoleculeId;
 
 /**
  * User: mhelmer

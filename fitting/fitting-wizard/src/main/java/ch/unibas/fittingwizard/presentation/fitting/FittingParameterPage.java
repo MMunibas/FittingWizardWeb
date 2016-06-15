@@ -8,11 +8,11 @@
  */
 package ch.unibas.fittingwizard.presentation.fitting;
 
-import ch.unibas.fittingwizard.application.fitting.ChargeValue;
-import ch.unibas.fittingwizard.application.fitting.FitRepository;
-import ch.unibas.fittingwizard.application.molecule.*;
+import ch.unibas.fitting.shared.fitting.ChargeValue;
+import ch.unibas.fitting.shared.fitting.FitRepository;
+import ch.unibas.fitting.shared.molecules.*;
 import ch.unibas.fittingwizard.application.scripts.fitmtp.FitMtpInput;
-import ch.unibas.fittingwizard.application.tools.charges.ChargesFileGenerator;
+import ch.unibas.fitting.shared.charges.ChargesFileGenerator;
 import ch.unibas.fittingwizard.presentation.MoleculeListPage;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import ch.unibas.fittingwizard.presentation.base.DefaultValues;
