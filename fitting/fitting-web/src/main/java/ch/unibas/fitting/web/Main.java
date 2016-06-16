@@ -31,6 +31,8 @@ public class Main {
         setupConsoleLogger();
         Logger.getLogger(Main.class).info("Starting fitting web");
 
+        WebConfig cfg = new WebConfig();
+
         Server srv = new Server(8080);
 
         // https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=27848170
@@ -40,6 +42,12 @@ public class Main {
 
         ServletContextHandler sch = new ServletContextHandler(ServletContextHandler.SESSIONS);
         sch.addServlet(sh, "/*");
+
+        ResourceHandler data_resource_handler = new ResourceHandler();
+        data_resource_handler.setResourceBase(cfg.getDataDir().getAbsolutePath());
+        data_resource_handler.setDirectoriesListed(true);
+        ContextHandler data_context_handler = new ContextHandler("/data");
+        data_context_handler.setHandler(data_resource_handler);
 
         ResourceHandler js_resource_handler = new ResourceHandler();
         js_resource_handler.setResourceBase("build/resources/main/js/");
@@ -54,6 +62,7 @@ public class Main {
         mol_context_handler.setHandler(mol_resource_handler);
 
         HandlerList handlers = new HandlerList();
+        handlers.addHandler(data_context_handler);
         handlers.addHandler(context_handler);
         handlers.addHandler(mol_context_handler);
         handlers.addHandler(sch);
