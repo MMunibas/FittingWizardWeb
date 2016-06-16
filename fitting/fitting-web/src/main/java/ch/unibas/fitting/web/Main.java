@@ -50,13 +50,13 @@ public class Main {
         data_context_handler.setHandler(data_resource_handler);
 
         ResourceHandler js_resource_handler = new ResourceHandler();
-        js_resource_handler.setResourceBase("build/resources/main/js/");
+        js_resource_handler.setResourceBase("fitting-web/build/resources/main/js/");
         js_resource_handler.setDirectoriesListed(true);
         ContextHandler context_handler = new ContextHandler("/js");
         context_handler.setHandler(js_resource_handler);
 
         ResourceHandler mol_resource_handler = new ResourceHandler();
-        mol_resource_handler.setResourceBase("build/resources/main/mol/");
+        mol_resource_handler.setResourceBase("fitting-web/build/resources/main/mol/");
         mol_resource_handler.setDirectoriesListed(true);
         ContextHandler mol_context_handler = new ContextHandler("/mol");
         mol_context_handler.setHandler(mol_resource_handler);

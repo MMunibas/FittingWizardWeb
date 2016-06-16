@@ -1,12 +1,14 @@
 package ch.unibas.fitting.web.gaussian.step3;
 
-import ch.unibas.fitting.shared.xyz.XyzAtom;
 import ch.unibas.fitting.shared.xyz.XyzFile;
 import ch.unibas.fitting.shared.xyz.XyzFileParser;
 import ch.unibas.fitting.web.gaussian.step4.ParameterPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
@@ -40,7 +42,8 @@ public class AtomsPage extends HeaderPage {
             {
                 AtomViewModel mol = item.getModelObject();
 
-                item.add(new Label("name", mol.getName()));
+                Label label = createClickableAtomLabel("name", mol.getName(), mol.getIndex());
+                item.add(label);
 
                 item.add(new Label("x", mol.getX()));
                 item.add(new Label("y", mol.getY()));
@@ -73,5 +76,25 @@ public class AtomsPage extends HeaderPage {
                 return _atoms;
             }
         };
+    }
+
+    private Label createClickableAtomLabel(final String id, String atom_name, int atom_index) {
+        Label label = new Label(id, atom_name);
+        label.add(new AttributeAppender("onmouseover", new Model("Jmol.script(jmolApplet0,\"select atomIndex=" + atom_index + "\")"), ";"));
+        label.add(new AttributeAppender("onmouseout", new Model("Jmol.script(jmolApplet0,\"select none\")"), ";"));
+        return label;
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+
+        response.render(JavaScriptHeaderItem.forUrl("/js/JSmol.min.js"));
+        String filename = convertFileToJavascriptStylePath(_file);
+        response.render(JavaScriptHeaderItem.forScript("var Info = {width: 400,height: 400,serverURL: \"http://chemapps.stolaf.edu/jmol/jsmol/php/jsmol.php\",use: \"HTML5\",j2sPath: \"/js/j2s\",script: \"background black;load " + filename + "; selectionhalos on;select none;\",console: \"jmolApplet0_infodiv\"}", "jsmol_info"));
+    }
+
+    private String convertFileToJavascriptStylePath(File file) {
+        return "/" + file.toString().replace("\\", "/");
     }
 }
