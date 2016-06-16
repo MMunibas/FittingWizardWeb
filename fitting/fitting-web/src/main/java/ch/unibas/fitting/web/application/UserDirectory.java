@@ -46,6 +46,8 @@ public class UserDirectory implements IUserDirectory {
         return new File(xyzDir, name);
     }
 
+
+
     private File subDir(String username, String name) {
         return new File(userDir(username), name);
     }
@@ -62,6 +64,21 @@ public class UserDirectory implements IUserDirectory {
 
     private File xyzDir(String username) {
         return subDir(username, "xyz_files");
+    }
+
+    private File ljfitInputFile(String username, String name) {
+        File ljfitInputDir = ljfitInputDir(username);
+        return new File(ljfitInputDir, name);
+    }
+
+    @Override
+    public File getLjfitInputFileName(String username, String name) {
+        ljfitInputDir(username).mkdirs();
+        return ljfitInputFile(username, name);
+    }
+
+    private File ljfitInputDir(String username) {
+        return subDir(username, "ljfit_files");
     }
 
     @Override

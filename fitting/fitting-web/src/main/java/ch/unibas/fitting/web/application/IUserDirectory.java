@@ -9,5 +9,7 @@ import java.util.function.Consumer;
 public interface IUserDirectory {
     File getXyzFileName(String username, String name);
 
+    File getLjfitInputFileName(String username, String name);
+
     void createUserdir(String username);
 }
