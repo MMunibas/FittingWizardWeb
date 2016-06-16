@@ -3,9 +3,25 @@
 
     <form wicket:id="form">
         <table cellspacing="0" class="table">
+            <colgroup>
+                <col class="col-md-4">
+                <col class="col-md-6">
+            </colgroup>
             <tr>
                 <td>Net charge of molecule</td>
                 <td><input wicket:id="netcharge" type="number" /></td>
+            </tr>
+            <tr>
+                <td>Quantum chemical details</td>
+                <td><input wicket:id="quantumdetails" type="text" /></td>
+            </tr>
+            <tr>
+                <td>Number of cores</td>
+                <td><input wicket:id="numberOfCores" type="number" /></td>
+            </tr>
+            <tr>
+                <td>State (multiplicity)</td>
+                <td><input wicket:id="multiplicity" type="number" /></td>
             </tr>
         </table>
 
