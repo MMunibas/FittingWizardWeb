@@ -17,7 +17,7 @@ import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_PureLiquid;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fitting.shared.scripts.base.ResourceUtils;
-import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
+import ch.unibas.fittingwizard.gaussian.base.ButtonFactory;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;

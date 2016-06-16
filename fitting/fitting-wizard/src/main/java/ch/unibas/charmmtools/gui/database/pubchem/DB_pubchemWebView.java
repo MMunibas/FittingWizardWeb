@@ -8,7 +8,7 @@
  */
 package ch.unibas.charmmtools.gui.database.pubchem;
 
-import ch.unibas.fittingwizard.presentation.base.dialog.ModalDialog;
+import ch.unibas.fittingwizard.gaussian.base.dialog.ModalDialog;
 import javafx.scene.Scene;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.web.WebEngine;

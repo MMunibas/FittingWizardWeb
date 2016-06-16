@@ -17,9 +17,9 @@ import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
 import ch.unibas.charmmtools.gui.step1.mdAssistant.CHARMM_GUI_InputAssistant;
 import ch.unibas.charmmtools.gui.step2.showOutput.CHARMM_GUI_ShowOutput;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
-import ch.unibas.fittingwizard.application.workflows.base.WorkflowContext;
-import ch.unibas.fittingwizard.presentation.base.progress.Context;
-import ch.unibas.fittingwizard.presentation.base.progress.ProgressPage;
+import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
+import ch.unibas.fittingwizard.gaussian.base.progress.Context;
+import ch.unibas.fittingwizard.gaussian.base.progress.ProgressPage;
 import java.util.ArrayList;
 import java.util.List;
 

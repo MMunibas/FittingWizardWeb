@@ -10,7 +10,7 @@ package ch.unibas.fittingwizard;
 
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
-import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
+import ch.unibas.fittingwizard.gaussian.base.dialog.OverlayDialog;
 import java.io.File;
 import org.apache.log4j.Logger;
 

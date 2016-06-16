@@ -10,8 +10,8 @@ package ch.unibas.charmmtools.gui.database.edit;
 
 import ch.unibas.charmmtools.gui.database.dataModel.DB_model;
 import ch.unibas.charmmtools.gui.database.pubchem.DB_pubchemWebView;
-import ch.unibas.fittingwizard.presentation.base.dialog.ModalDialog;
-import ch.unibas.fittingwizard.presentation.base.ui.MainWindow;
+import ch.unibas.fittingwizard.gaussian.base.dialog.ModalDialog;
+import ch.unibas.fittingwizard.gaussian.base.ui.MainWindow;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;

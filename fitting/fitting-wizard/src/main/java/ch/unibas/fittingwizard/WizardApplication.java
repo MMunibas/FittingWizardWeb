@@ -9,9 +9,9 @@
 package ch.unibas.fittingwizard;
 
 import ch.unibas.fitting.shared.config.Settings;
-import ch.unibas.fittingwizard.presentation.base.Wizard;
-import ch.unibas.fittingwizard.presentation.base.WizardPageFactory;
-import ch.unibas.fittingwizard.presentation.base.ui.MainWindow;
+import ch.unibas.fittingwizard.gaussian.base.Wizard;
+import ch.unibas.fittingwizard.gaussian.base.WizardPageFactory;
+import ch.unibas.fittingwizard.gaussian.base.ui.MainWindow;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;

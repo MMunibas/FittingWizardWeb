@@ -8,18 +8,14 @@
  */
 package ch.unibas.charmmtools.gui.step1.mdAssistant;
 
-import ch.unibas.fittingwizard.presentation.base.dialog.ModalDialog;
-import ch.unibas.fittingwizard.presentation.base.ui.MainWindow;
+import ch.unibas.fittingwizard.gaussian.base.dialog.ModalDialog;
+import ch.unibas.fittingwizard.gaussian.base.ui.MainWindow;
 import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.ChoiceBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.effect.BoxBlur;

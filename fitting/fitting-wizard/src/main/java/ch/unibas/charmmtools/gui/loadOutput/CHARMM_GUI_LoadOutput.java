@@ -13,7 +13,7 @@ import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output_GasPhase;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output_PureLiquid;
 import ch.unibas.charmmtools.gui.step3.showResults.CHARMM_GUI_ShowResults;
-import ch.unibas.fittingwizard.presentation.base.WizardPage;
+import ch.unibas.fittingwizard.gaussian.base.WizardPage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

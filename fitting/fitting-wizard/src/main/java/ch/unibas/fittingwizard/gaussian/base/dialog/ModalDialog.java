@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2015, Florent Hedin, Markus Meuwly, and the University of Basel
+ * All rights reserved.
+ *
+ * The 3-clause BSD license is applied to this software.
+ * see LICENSE.txt
+ *
+ */
+package ch.unibas.fittingwizard.gaussian.base.dialog;
+
+import ch.unibas.fittingwizard.gaussian.base.FxmlUtil;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import org.apache.log4j.Logger;
+
+/**
+ * User: mhelmer
+ * Date: 11.12.13
+ * Time: 10:31
+ */
+public class ModalDialog extends Stage {
+    protected final Logger logger;
+
+    public ModalDialog(String title) {
+        logger = Logger.getLogger(getClass());
+        setTitle(title);
+        initModality(Modality.APPLICATION_MODAL);
+//        this.setAlwaysOnTop(true);
+        createScene();
+    }
+
+    protected void createScene() {
+        logger.debug("Creating scene.");
+        Parent fxmlContent = FxmlUtil.getFxmlContent(getClass(), this);
+        setScene(new Scene(fxmlContent));
+    }
+}

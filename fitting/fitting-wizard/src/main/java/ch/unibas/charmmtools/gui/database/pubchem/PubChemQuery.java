@@ -9,8 +9,8 @@
 package ch.unibas.charmmtools.gui.database.pubchem;
 
 import ch.unibas.charmmtools.gui.database.dataModel.DB_model;
-import ch.unibas.fittingwizard.presentation.base.dialog.ModalDialog;
-import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
+import ch.unibas.fittingwizard.gaussian.base.dialog.ModalDialog;
+import ch.unibas.fittingwizard.gaussian.base.dialog.OverlayDialog;
 import java.io.IOException;
 import java.net.URL;
 import javafx.event.ActionEvent;

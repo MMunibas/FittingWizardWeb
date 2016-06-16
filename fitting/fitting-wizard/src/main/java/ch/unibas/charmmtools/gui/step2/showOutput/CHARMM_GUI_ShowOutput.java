@@ -15,7 +15,7 @@ import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
 import ch.unibas.charmmtools.gui.step1.mdAssistant.CHARMM_GUI_InputAssistant;
 import ch.unibas.charmmtools.gui.step3.showResults.CHARMM_GUI_ShowResults;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
-import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
+import ch.unibas.fittingwizard.gaussian.base.ButtonFactory;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.event.ActionEvent;

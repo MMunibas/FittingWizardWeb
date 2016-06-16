@@ -18,7 +18,7 @@ import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
 import ch.unibas.charmmtools.gui.MyTab;
 import ch.unibas.charmmtools.gui.RunningCHARMM_DenVap;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
-import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
+import ch.unibas.fittingwizard.gaussian.base.ButtonFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

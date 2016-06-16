@@ -9,7 +9,7 @@
 package ch.unibas.charmmtools.gui.database.interfaces;
 
 import ch.unibas.charmmtools.gui.database.dataModel.DB_model;
-import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
+import ch.unibas.fittingwizard.gaussian.base.dialog.OverlayDialog;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;

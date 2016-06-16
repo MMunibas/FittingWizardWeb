@@ -11,7 +11,7 @@ package ch.unibas.charmmtools.gui.database;
 import ch.unibas.charmmtools.gui.database.dataModel.DB_model;
 import ch.unibas.charmmtools.gui.step1.mdAssistant.CHARMM_GUI_InputAssistant;
 import ch.unibas.fitting.shared.config.Settings;
-import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
+import ch.unibas.fittingwizard.gaussian.base.ButtonFactory;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;

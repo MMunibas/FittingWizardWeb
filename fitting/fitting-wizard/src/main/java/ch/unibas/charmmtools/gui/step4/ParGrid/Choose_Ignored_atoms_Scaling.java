@@ -8,8 +8,8 @@
  */
 package ch.unibas.charmmtools.gui.step4.ParGrid;
 
-import ch.unibas.fittingwizard.presentation.base.dialog.ModalDialog;
-import ch.unibas.fittingwizard.presentation.base.ui.MainWindow;
+import ch.unibas.fittingwizard.gaussian.base.dialog.ModalDialog;
+import ch.unibas.fittingwizard.gaussian.base.ui.MainWindow;
 import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

@@ -13,8 +13,8 @@ import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.charmmtools.gui.step1.mdAssistant.CHARMM_GUI_InputAssistant;
 import ch.unibas.charmmtools.gui.step3.showResults.CHARMM_GUI_ShowResults;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
-import ch.unibas.fittingwizard.presentation.base.progress.Context;
-import ch.unibas.fittingwizard.presentation.base.progress.ProgressPage;
+import ch.unibas.fittingwizard.gaussian.base.progress.Context;
+import ch.unibas.fittingwizard.gaussian.base.progress.ProgressPage;
 import java.util.ArrayList;
 import java.util.List;
 
