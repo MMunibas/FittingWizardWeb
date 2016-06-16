@@ -14,7 +14,7 @@ import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_PureLiquid;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output_GasPhase;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output_PureLiquid;
-import ch.unibas.fittingwizard.Settings;
+import ch.unibas.fitting.shared.config.Settings;
 import java.io.File;
 
 

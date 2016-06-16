@@ -8,9 +8,9 @@
  */
 package ch.unibas.fittingwizard.mocks;
 
-import ch.unibas.fittingwizard.application.scripts.fitmtp.FitMtpInput;
-import ch.unibas.fittingwizard.application.scripts.fitmtp.FitMtpOutput;
-import ch.unibas.fittingwizard.application.scripts.fitmtp.IFitMtpScript;
+import ch.unibas.fitting.shared.scripts.fitmtp.FitMtpInput;
+import ch.unibas.fitting.shared.scripts.fitmtp.FitMtpOutput;
+import ch.unibas.fitting.shared.scripts.fitmtp.IFitMtpScript;
 import ch.unibas.fittingwizard.infrastructure.RealFitScript;
 import java.io.File;
 import java.io.IOException;

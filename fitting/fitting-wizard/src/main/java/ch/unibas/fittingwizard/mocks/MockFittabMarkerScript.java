@@ -8,9 +8,9 @@
  */
 package ch.unibas.fittingwizard.mocks;
 
-import ch.unibas.fittingwizard.application.scripts.fittab.FittabScriptInput;
-import ch.unibas.fittingwizard.application.scripts.fittab.FittabScriptOutput;
-import ch.unibas.fittingwizard.application.scripts.fittab.IFittabScript;
+import ch.unibas.fitting.shared.scripts.fittab.FittabScriptInput;
+import ch.unibas.fitting.shared.scripts.fittab.FittabScriptOutput;
+import ch.unibas.fitting.shared.scripts.fittab.IFittabScript;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;

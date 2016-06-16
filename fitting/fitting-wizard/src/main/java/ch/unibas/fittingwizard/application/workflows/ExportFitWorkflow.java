@@ -10,9 +10,9 @@ package ch.unibas.fittingwizard.application.workflows;
 
 import ch.unibas.fitting.shared.fitting.Fit;
 import ch.unibas.fitting.shared.molecules.MoleculeId;
-import ch.unibas.fittingwizard.application.scripts.export.ExportScriptInput;
-import ch.unibas.fittingwizard.application.scripts.export.ExportScriptOutput;
-import ch.unibas.fittingwizard.application.scripts.export.IExportScript;
+import ch.unibas.fitting.shared.scripts.export.ExportScriptInput;
+import ch.unibas.fitting.shared.scripts.export.ExportScriptOutput;
+import ch.unibas.fitting.shared.scripts.export.IExportScript;
 import ch.unibas.fittingwizard.application.workflows.base.Workflow;
 import ch.unibas.fittingwizard.application.workflows.base.WorkflowContext;
 import ch.unibas.fittingwizard.infrastructure.RealFitScript;

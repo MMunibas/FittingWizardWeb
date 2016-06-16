@@ -11,7 +11,7 @@ package ch.unibas.charmmtools.gui.database;
 import ch.unibas.charmmtools.gui.database.add.DB_add;
 import ch.unibas.charmmtools.gui.database.edit.DB_edit;
 import ch.unibas.charmmtools.gui.database.dataModel.DB_model;
-import ch.unibas.fittingwizard.Settings;
+import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;
 import javafx.event.ActionEvent;

@@ -1,6 +1,6 @@
 package ch.unibas.fitting.web.welcome;
 
-import ch.unibas.fitting.web.gaussian.step1.OverviewPage;
+import ch.unibas.fitting.web.gaussian.addmolecule.step1.OverviewPage;
 import ch.unibas.fitting.web.ljfit.step1.InputAssistant;
 
 import java.util.Arrays;

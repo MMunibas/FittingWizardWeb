@@ -8,9 +8,9 @@
  */
 package ch.unibas.fittingwizard.mocks;
 
-import ch.unibas.fittingwizard.application.scripts.babel.BabelInput;
-import ch.unibas.fittingwizard.application.scripts.babel.BabelOutput;
-import ch.unibas.fittingwizard.application.scripts.babel.IBabelScript;
+import ch.unibas.fitting.shared.scripts.babel.BabelInput;
+import ch.unibas.fitting.shared.scripts.babel.BabelOutput;
+import ch.unibas.fitting.shared.scripts.babel.IBabelScript;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;

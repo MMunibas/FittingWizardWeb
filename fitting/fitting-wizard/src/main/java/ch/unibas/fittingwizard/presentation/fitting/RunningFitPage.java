@@ -8,7 +8,7 @@
  */
 package ch.unibas.fittingwizard.presentation.fitting;
 
-import ch.unibas.fittingwizard.application.scripts.fitmtp.FitMtpInput;
+import ch.unibas.fitting.shared.scripts.fitmtp.FitMtpInput;
 import ch.unibas.fittingwizard.application.workflows.RunFitWorkflow;
 import ch.unibas.fittingwizard.application.workflows.base.WorkflowContext;
 import ch.unibas.fittingwizard.presentation.base.progress.Context;

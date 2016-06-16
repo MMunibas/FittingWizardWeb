@@ -8,12 +8,12 @@
  */
 package ch.unibas.fittingwizard.infrastructure;
 
-import ch.unibas.fittingwizard.Settings;
-import ch.unibas.fittingwizard.application.scripts.lra.ILRAScript;
-import ch.unibas.fittingwizard.application.scripts.lra.LRAScriptInput;
-import ch.unibas.fittingwizard.application.scripts.lra.LRAScriptOutput;
-import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
-import ch.unibas.fittingwizard.infrastructure.base.ScriptUtilities;
+import ch.unibas.fitting.shared.config.Settings;
+import ch.unibas.fitting.shared.scripts.lra.ILRAScript;
+import ch.unibas.fitting.shared.scripts.lra.LRAScriptInput;
+import ch.unibas.fitting.shared.scripts.lra.LRAScriptOutput;
+import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
+import ch.unibas.fitting.shared.scripts.base.ScriptUtilities;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;

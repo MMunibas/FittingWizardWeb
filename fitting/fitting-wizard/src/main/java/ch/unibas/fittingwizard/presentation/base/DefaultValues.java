@@ -8,7 +8,7 @@
  */
 package ch.unibas.fittingwizard.presentation.base;
 
-import ch.unibas.fittingwizard.Settings;
+import ch.unibas.fitting.shared.config.Settings;
 
 /**
  * User: mhelmer

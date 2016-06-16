@@ -8,9 +8,9 @@
  */
 package ch.unibas.fittingwizard.mocks;
 
-import ch.unibas.fittingwizard.application.scripts.export.ExportScriptInput;
-import ch.unibas.fittingwizard.application.scripts.export.ExportScriptOutput;
-import ch.unibas.fittingwizard.application.scripts.export.IExportScript;
+import ch.unibas.fitting.shared.scripts.export.ExportScriptInput;
+import ch.unibas.fitting.shared.scripts.export.ExportScriptOutput;
+import ch.unibas.fitting.shared.scripts.export.IExportScript;
 import ch.unibas.fittingwizard.infrastructure.RealFitScript;
 import java.io.File;
 import java.io.IOException;

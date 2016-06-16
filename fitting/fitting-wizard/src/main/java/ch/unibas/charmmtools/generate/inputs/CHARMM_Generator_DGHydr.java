@@ -9,7 +9,7 @@
 package ch.unibas.charmmtools.generate.inputs;
 
 import ch.unibas.charmmtools.generate.CHARMM_InOut;
-import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
+import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

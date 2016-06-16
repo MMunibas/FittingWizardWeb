@@ -8,14 +8,14 @@
  */
 package ch.unibas.fittingwizard.infrastructure;
 
-import ch.unibas.fittingwizard.Settings;
+import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.molecules.MoleculeId;
-import ch.unibas.fittingwizard.application.scripts.vmd.IVmdDisplayScript;
-import ch.unibas.fittingwizard.application.scripts.vmd.VmdDisplayInput;
-import ch.unibas.fittingwizard.infrastructure.base.FieldcompRunner;
-import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
-import ch.unibas.fittingwizard.infrastructure.base.ScriptUtilities;
-import ch.unibas.fittingwizard.infrastructure.base.VmdRunner;
+import ch.unibas.fitting.shared.scripts.vmd.IVmdDisplayScript;
+import ch.unibas.fitting.shared.scripts.vmd.VmdDisplayInput;
+import ch.unibas.fieldcomp.FieldcompRunner;
+import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
+import ch.unibas.fitting.shared.scripts.base.ScriptUtilities;
+import ch.unibas.fitting.shared.scripts.vmd.VmdRunner;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;

@@ -8,13 +8,13 @@
  */
 package ch.unibas.fittingwizard.infrastructure;
 
-import ch.unibas.fittingwizard.Settings;
+import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.molecules.MoleculeId;
-import ch.unibas.fittingwizard.application.scripts.export.ExportScriptInput;
-import ch.unibas.fittingwizard.application.scripts.export.ExportScriptOutput;
-import ch.unibas.fittingwizard.application.scripts.export.IExportScript;
-import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
-import ch.unibas.fittingwizard.infrastructure.base.ScriptUtilities;
+import ch.unibas.fitting.shared.scripts.export.ExportScriptInput;
+import ch.unibas.fitting.shared.scripts.export.ExportScriptOutput;
+import ch.unibas.fitting.shared.scripts.export.IExportScript;
+import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
+import ch.unibas.fitting.shared.scripts.base.ScriptUtilities;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;

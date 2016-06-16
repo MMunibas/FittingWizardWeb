@@ -13,6 +13,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
 import javax.mail.Session;
+
+import ch.unibas.fitting.shared.config.ConfigFile;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
@@ -28,8 +30,8 @@ public class Notifications {
 
     private final Properties props;
 
-    public Notifications(Properties props) {
-        this.props = props;
+    public Notifications(ConfigFile props) {
+        this.props = props.getProperties();
     }
 
     private String getSender() {

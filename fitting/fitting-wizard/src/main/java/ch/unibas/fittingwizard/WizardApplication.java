@@ -8,6 +8,7 @@
  */
 package ch.unibas.fittingwizard;
 
+import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fittingwizard.presentation.base.Wizard;
 import ch.unibas.fittingwizard.presentation.base.WizardPageFactory;
 import ch.unibas.fittingwizard.presentation.base.ui.MainWindow;

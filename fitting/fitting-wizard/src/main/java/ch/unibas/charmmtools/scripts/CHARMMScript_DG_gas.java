@@ -9,7 +9,7 @@
 package ch.unibas.charmmtools.scripts;
 
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
-import ch.unibas.fittingwizard.Settings;
+import ch.unibas.fitting.shared.config.Settings;
 import java.io.File;
 
 

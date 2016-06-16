@@ -8,7 +8,7 @@
  */
 package ch.unibas.fittingwizard.presentation.addmolecule;
 
-import ch.unibas.fittingwizard.application.scripts.multipolegauss.MultipoleGaussInput;
+import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussInput;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import ch.unibas.fittingwizard.presentation.base.DefaultValues;
 import ch.unibas.fittingwizard.presentation.base.WizardPage;

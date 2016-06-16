@@ -8,7 +8,7 @@
 // */
 //package ch.unibas.charmmtools.generate.inputs;
 //
-//import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
+//import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
 //import java.io.CharArrayWriter;
 //import java.io.File;
 //

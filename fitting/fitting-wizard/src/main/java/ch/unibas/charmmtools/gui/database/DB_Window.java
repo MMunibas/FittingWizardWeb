@@ -13,7 +13,7 @@ import ch.unibas.charmmtools.gui.database.interfaces.DB_interface;
 import ch.unibas.charmmtools.gui.database.interfaces.MYSQL_DB_interface;
 import ch.unibas.charmmtools.gui.database.interfaces.SQLITE_DB_interface;
 import ch.unibas.charmmtools.gui.database.view.DB_view;
-import ch.unibas.fittingwizard.Settings;
+import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fittingwizard.WhereToGo;
 import ch.unibas.fittingwizard.presentation.base.WizardPage;
 import ch.unibas.fittingwizard.presentation.base.dialog.OverlayDialog;

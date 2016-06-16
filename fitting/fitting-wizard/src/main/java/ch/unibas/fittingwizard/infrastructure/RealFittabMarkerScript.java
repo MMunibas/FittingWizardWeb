@@ -8,12 +8,12 @@
  */
 package ch.unibas.fittingwizard.infrastructure;
 
-import ch.unibas.fittingwizard.Settings;
-import ch.unibas.fittingwizard.application.scripts.base.ScriptExecutionException;
-import ch.unibas.fittingwizard.application.scripts.fittab.FittabScriptInput;
-import ch.unibas.fittingwizard.application.scripts.fittab.FittabScriptOutput;
-import ch.unibas.fittingwizard.application.scripts.fittab.IFittabScript;
-import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
+import ch.unibas.fitting.shared.config.Settings;
+import ch.unibas.fitting.shared.scripts.base.ScriptExecutionException;
+import ch.unibas.fitting.shared.scripts.fittab.FittabScriptInput;
+import ch.unibas.fitting.shared.scripts.fittab.FittabScriptOutput;
+import ch.unibas.fitting.shared.scripts.fittab.IFittabScript;
+import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;

@@ -1,6 +1,7 @@
 package ch.unibas.fitting.web.application;
 
-import ch.unibas.fitting.web.WebConfig;
+import ch.unibas.fitting.shared.config.Settings;
+import ch.unibas.fitting.web.WebSettings;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -20,7 +21,7 @@ public class UserDirectory implements IUserDirectory {
     private File _rootDir;
 
     @Inject
-    public UserDirectory(WebConfig config) {
+    public UserDirectory(WebSettings config) {
         _rootDir = config.getDataDir();
         LOGGER.info("Using root dir " + _rootDir.getPath());
     }

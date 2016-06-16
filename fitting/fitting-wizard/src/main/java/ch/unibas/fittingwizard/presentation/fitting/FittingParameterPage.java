@@ -11,7 +11,7 @@ package ch.unibas.fittingwizard.presentation.fitting;
 import ch.unibas.fitting.shared.fitting.ChargeValue;
 import ch.unibas.fitting.shared.fitting.FitRepository;
 import ch.unibas.fitting.shared.molecules.*;
-import ch.unibas.fittingwizard.application.scripts.fitmtp.FitMtpInput;
+import ch.unibas.fitting.shared.scripts.fitmtp.FitMtpInput;
 import ch.unibas.fitting.shared.charges.ChargesFileGenerator;
 import ch.unibas.fittingwizard.presentation.MoleculeListPage;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;

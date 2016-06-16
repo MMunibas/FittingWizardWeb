@@ -8,17 +8,17 @@
  */
 package ch.unibas.fittingwizard.application.workflows;
 
-import ch.unibas.fittingwizard.application.scripts.babel.BabelInput;
-import ch.unibas.fittingwizard.application.scripts.babel.BabelOutput;
-import ch.unibas.fittingwizard.application.scripts.babel.IBabelScript;
-import ch.unibas.fittingwizard.application.scripts.fittab.FittabScriptInput;
-import ch.unibas.fittingwizard.application.scripts.fittab.IFittabScript;
-import ch.unibas.fittingwizard.application.scripts.lra.ILRAScript;
-import ch.unibas.fittingwizard.application.scripts.lra.LRAScriptInput;
-import ch.unibas.fittingwizard.application.scripts.lra.LRAScriptOutput;
-import ch.unibas.fittingwizard.application.scripts.multipolegauss.IMultipoleGaussScript;
-import ch.unibas.fittingwizard.application.scripts.multipolegauss.MultipoleGaussInput;
-import ch.unibas.fittingwizard.application.scripts.multipolegauss.MultipoleGaussOutput;
+import ch.unibas.fitting.shared.scripts.babel.BabelInput;
+import ch.unibas.fitting.shared.scripts.babel.BabelOutput;
+import ch.unibas.fitting.shared.scripts.babel.IBabelScript;
+import ch.unibas.fitting.shared.scripts.fittab.FittabScriptInput;
+import ch.unibas.fitting.shared.scripts.fittab.IFittabScript;
+import ch.unibas.fitting.shared.scripts.lra.ILRAScript;
+import ch.unibas.fitting.shared.scripts.lra.LRAScriptInput;
+import ch.unibas.fitting.shared.scripts.lra.LRAScriptOutput;
+import ch.unibas.fitting.shared.scripts.multipolegauss.IMultipoleGaussScript;
+import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussInput;
+import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussOutput;
 import ch.unibas.fittingwizard.application.tools.GaussianLogModifier;
 import ch.unibas.fittingwizard.application.tools.Notifications;
 import ch.unibas.fittingwizard.application.workflows.base.Workflow;

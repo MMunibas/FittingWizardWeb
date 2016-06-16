@@ -8,8 +8,8 @@
  */
 package ch.unibas.charmmtools.scripts;
 
-import ch.unibas.fittingwizard.Settings;
-import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
+import ch.unibas.fitting.shared.config.Settings;
+import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

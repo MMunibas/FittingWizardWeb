@@ -9,7 +9,7 @@
 package ch.unibas.fittingwizard.presentation.fitting;
 
 import ch.unibas.charmmtools.gui.step1.mdAssistant.CHARMM_GUI_InputAssistant;
-import ch.unibas.fittingwizard.Settings;
+import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fittingwizard.application.Visualization;
 import ch.unibas.fitting.shared.fitting.Fit;
 import ch.unibas.fitting.shared.fitting.FitRepository;
@@ -17,13 +17,13 @@ import ch.unibas.fitting.shared.fitting.FitResult;
 import ch.unibas.fitting.shared.molecules.AtomType;
 import ch.unibas.fitting.shared.molecules.Molecule;
 import ch.unibas.fitting.shared.molecules.MoleculeRepository;
-import ch.unibas.fittingwizard.application.scripts.vmd.VmdDisplayInput;
+import ch.unibas.fitting.shared.scripts.vmd.VmdDisplayInput;
 import ch.unibas.fitting.shared.charges.ChargeTypes;
 import ch.unibas.fittingwizard.application.workflows.ExportFitInput;
 import ch.unibas.fittingwizard.application.workflows.ExportFitWorkflow;
 import ch.unibas.fittingwizard.application.workflows.RunVmdDisplayWorkflow;
 import ch.unibas.fittingwizard.application.workflows.base.WorkflowContext;
-import ch.unibas.fittingwizard.infrastructure.base.VmdRunner;
+import ch.unibas.fitting.shared.scripts.vmd.VmdRunner;
 import ch.unibas.fittingwizard.presentation.MoleculeListPage;
 import ch.unibas.fittingwizard.presentation.base.ButtonFactory;
 import ch.unibas.fittingwizard.presentation.base.WizardPageWithVisualization;

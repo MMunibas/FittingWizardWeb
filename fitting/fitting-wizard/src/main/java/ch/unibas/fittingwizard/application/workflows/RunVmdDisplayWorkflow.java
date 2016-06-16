@@ -8,8 +8,8 @@
  */
 package ch.unibas.fittingwizard.application.workflows;
 
-import ch.unibas.fittingwizard.application.scripts.vmd.IVmdDisplayScript;
-import ch.unibas.fittingwizard.application.scripts.vmd.VmdDisplayInput;
+import ch.unibas.fitting.shared.scripts.vmd.IVmdDisplayScript;
+import ch.unibas.fitting.shared.scripts.vmd.VmdDisplayInput;
 import ch.unibas.fittingwizard.application.workflows.base.Workflow;
 import ch.unibas.fittingwizard.application.workflows.base.WorkflowContext;
 import java.io.File;

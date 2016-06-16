@@ -8,9 +8,9 @@
  */
 package ch.unibas.fittingwizard.mocks;
 
-import ch.unibas.fittingwizard.application.scripts.lra.ILRAScript;
-import ch.unibas.fittingwizard.application.scripts.lra.LRAScriptInput;
-import ch.unibas.fittingwizard.application.scripts.lra.LRAScriptOutput;
+import ch.unibas.fitting.shared.scripts.lra.ILRAScript;
+import ch.unibas.fitting.shared.scripts.lra.LRAScriptInput;
+import ch.unibas.fitting.shared.scripts.lra.LRAScriptOutput;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;

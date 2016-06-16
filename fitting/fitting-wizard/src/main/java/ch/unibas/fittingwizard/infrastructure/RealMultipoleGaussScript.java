@@ -8,14 +8,14 @@
  */
 package ch.unibas.fittingwizard.infrastructure;
 
-import ch.unibas.fittingwizard.Settings;
+import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.base.MoleculesDir;
-import ch.unibas.fittingwizard.application.scripts.base.ScriptExecutionException;
-import ch.unibas.fittingwizard.application.scripts.multipolegauss.IMultipoleGaussScript;
-import ch.unibas.fittingwizard.application.scripts.multipolegauss.MultipoleGaussInput;
-import ch.unibas.fittingwizard.application.scripts.multipolegauss.MultipoleGaussOutput;
-import ch.unibas.fittingwizard.infrastructure.base.PythonScriptRunner;
-import ch.unibas.fittingwizard.infrastructure.base.ScriptUtilities;
+import ch.unibas.fitting.shared.scripts.base.ScriptExecutionException;
+import ch.unibas.fitting.shared.scripts.multipolegauss.IMultipoleGaussScript;
+import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussInput;
+import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussOutput;
+import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
+import ch.unibas.fitting.shared.scripts.base.ScriptUtilities;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

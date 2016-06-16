@@ -5,4 +5,5 @@ package ch.unibas.fitting.web;
  */
 public class Constants {
     public static final String WebVersion = "0.1.0";
+    public static final boolean IsDebuggingMode = true;
 }

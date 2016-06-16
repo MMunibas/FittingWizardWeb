@@ -1,5 +1,6 @@
 package ch.unibas.fitting.web;
 
+import ch.unibas.fitting.shared.config.Settings;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -31,7 +32,7 @@ public class Main {
         setupConsoleLogger();
         Logger.getLogger(Main.class).info("Starting fitting web");
 
-        WebConfig cfg = new WebConfig();
+        WebSettings settings = WebSettings.load();
 
         Server srv = new Server(8080);
 
@@ -44,27 +45,20 @@ public class Main {
         sch.addServlet(sh, "/*");
 
         ResourceHandler data_resource_handler = new ResourceHandler();
-        data_resource_handler.setResourceBase(cfg.getDataDir().getAbsolutePath());
+        data_resource_handler.setResourceBase(settings.getDataDir().getAbsolutePath());
         data_resource_handler.setDirectoriesListed(true);
         ContextHandler data_context_handler = new ContextHandler("/data");
         data_context_handler.setHandler(data_resource_handler);
 
         ResourceHandler js_resource_handler = new ResourceHandler();
-        js_resource_handler.setResourceBase("fitting-web/build/resources/main/js/");
+        js_resource_handler.setResourceBase(settings.getJavaScriptDir().getAbsolutePath());
         js_resource_handler.setDirectoriesListed(true);
-        ContextHandler context_handler = new ContextHandler("/js");
+        ContextHandler context_handler = new ContextHandler("/javascript");
         context_handler.setHandler(js_resource_handler);
-
-        ResourceHandler mol_resource_handler = new ResourceHandler();
-        mol_resource_handler.setResourceBase("fitting-web/build/resources/main/mol/");
-        mol_resource_handler.setDirectoriesListed(true);
-        ContextHandler mol_context_handler = new ContextHandler("/mol");
-        mol_context_handler.setHandler(mol_resource_handler);
 
         HandlerList handlers = new HandlerList();
         handlers.addHandler(data_context_handler);
         handlers.addHandler(context_handler);
-        handlers.addHandler(mol_context_handler);
         handlers.addHandler(sch);
 
         srv.setHandler(handlers);

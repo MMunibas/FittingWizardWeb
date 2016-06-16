@@ -8,9 +8,9 @@
  */
 package ch.unibas.fittingwizard.mocks;
 
-import ch.unibas.fittingwizard.application.scripts.multipolegauss.IMultipoleGaussScript;
-import ch.unibas.fittingwizard.application.scripts.multipolegauss.MultipoleGaussInput;
-import ch.unibas.fittingwizard.application.scripts.multipolegauss.MultipoleGaussOutput;
+import ch.unibas.fitting.shared.scripts.multipolegauss.IMultipoleGaussScript;
+import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussInput;
+import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussOutput;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;

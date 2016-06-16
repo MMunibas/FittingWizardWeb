@@ -22,7 +22,9 @@ public abstract class WizardPage extends WebPage {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        if (!session().hasUserName() && !this.getClass().equals(NewSessionPage.class)) {
+        if (    !session().isDebuggingMode() &&
+                !session().hasUserName() &&
+                !this.getClass().equals(NewSessionPage.class)) {
             Logger.debug("No user name defined. Redirecting to NewSessionPage");
             setResponsePage(NewSessionPage.class);
         }
