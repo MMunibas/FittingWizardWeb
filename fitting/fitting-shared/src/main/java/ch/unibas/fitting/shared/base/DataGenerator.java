@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.fittingwizard.application.base;
+package ch.unibas.fitting.shared.base;
 
 import ch.unibas.fitting.shared.fitting.ChargeValue;
 import ch.unibas.fitting.shared.fitting.Fit;
