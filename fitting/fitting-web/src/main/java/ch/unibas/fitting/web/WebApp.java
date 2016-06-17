@@ -1,9 +1,7 @@
 package ch.unibas.fitting.web;
 
 import ch.unibas.fitting.shared.config.Settings;
-import ch.unibas.fitting.web.application.IUserDirectory;
-import ch.unibas.fitting.web.application.SomeService;
-import ch.unibas.fitting.web.application.UserDirectory;
+import ch.unibas.fitting.web.application.*;
 import ch.unibas.fitting.web.gaussian.addmolecule.step4.ParameterPage;
 import ch.unibas.fitting.web.web.SessionCounter;
 import ch.unibas.fitting.web.web.UserSession;
@@ -46,11 +44,10 @@ public class WebApp extends WebApplication {
             @Override
             protected void configure() {
 
+                bind(IBackgroundTasks.class).to(BackgroundTaskService.class).in(Scopes.SINGLETON);
                 bind(IUserDirectory.class).to(UserDirectory.class);
                 bind(WebSettings.class).toInstance(WebSettings.load());
-                bind(SomeService.class).in(Scopes.SINGLETON);
                 bind(SessionCounter.class).toInstance(counter);
-
             }
         }));
     }

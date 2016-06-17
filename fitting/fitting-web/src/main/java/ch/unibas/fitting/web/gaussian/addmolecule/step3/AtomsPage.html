@@ -1,7 +1,11 @@
 <wicket:extend xmlns:wicket="http://www.w3.org/1999/xhtml">
     <h1>Coordinates file content</h1>
 
-    <p>File content: <span wicket:id="filename"></span></p>
+    <p>
+        <input wicket:id="next" type="submit" value="Go to parameter page" class="btn btn-default" />
+    </p>
+
+    <p>File content of <span wicket:id="filename"></span></p>
 
     <table cellspacing="0" class="table">
         <tr>
@@ -21,9 +25,5 @@
     <script type="text/javascript">
         jmolApplet0 = Jmol.getApplet("jmolApplet0", Info);
     </script>
-
-    <p>
-        <input wicket:id="next" type="submit" value="Next" class="btn btn-default" />
-    </p>
 
 </wicket:extend>

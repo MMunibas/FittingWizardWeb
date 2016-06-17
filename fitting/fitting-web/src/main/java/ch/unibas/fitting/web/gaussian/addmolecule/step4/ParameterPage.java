@@ -3,6 +3,8 @@ package ch.unibas.fitting.web.gaussian.addmolecule.step4;
 import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussInput;
 import ch.unibas.fitting.shared.xyz.XyzFile;
 import ch.unibas.fitting.shared.xyz.XyzFileParser;
+import ch.unibas.fitting.web.application.IBackgroundTasks;
+import ch.unibas.fitting.web.application.TaskHandle;
 import ch.unibas.fitting.web.gaussian.addmolecule.step5.ProgressPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -16,6 +18,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.validation.validator.RangeValidator;
 
+import javax.inject.Inject;
 import java.io.File;
 
 /**
@@ -29,6 +32,9 @@ public class ParameterPage extends HeaderPage {
     private IModel<Integer> _multiplicity = Model.of(1);
 
     private File _xyzFile;
+
+    @Inject
+    private IBackgroundTasks _tasks;
 
     public ParameterPage(PageParameters pp) {
 
@@ -77,7 +83,18 @@ public class ParameterPage extends HeaderPage {
                         _multiplicity.getObject()
                 );
 
-                setResponsePage(ProgressPage.class);
+                // TODO execute real gaussian script
+
+                TaskHandle th = _tasks.execute(getCurrentUsername(), () -> {
+                    Thread.sleep(5000);
+                    return "hello world!";
+                });
+
+                PageParameters pp = new PageParameters();
+                pp.add("task_id", th.getId());
+                pp.add("xyz_file", _xyzFile);
+
+                setResponsePage(ProgressPage.class, pp);
             }
 
             @Override

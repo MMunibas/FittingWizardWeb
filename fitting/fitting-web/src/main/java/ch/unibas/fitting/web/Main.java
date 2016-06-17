@@ -1,9 +1,6 @@
 package ch.unibas.fitting.web;
 
-import ch.unibas.fitting.shared.config.Settings;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.log4j.*;
 import org.apache.wicket.protocol.http.ContextParamWebApplicationFactory;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.http.WicketServlet;
@@ -11,15 +8,13 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.servlet.DefaultServlet;
-import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.util.resource.Resource;
-import org.eclipse.jetty.webapp.WebAppContext;
 
-import javax.servlet.DispatcherType;
-import java.util.EnumSet;
+import java.io.File;
+import java.io.IOException;
+
+import static org.apache.log4j.EnhancedPatternLayout.TTCC_CONVERSION_PATTERN;
 
 /**
  * Created by martin on 26.05.2016.
@@ -73,15 +68,14 @@ public class Main {
 
         BasicConfigurator.configure();
 
-//        FileAppender app = null;
-//        File log = new File("fw-log.txt");
-//
-//        try {
-//            app = new FileAppender(new PatternLayout(TTCC_CONVERSION_PATTERN), log.getAbsolutePath() ,false);
-//        } catch (IOException ex) {
-//
-//        }
-//        BasicConfigurator.configure(app);
+        FileAppender app = null;
+        File log = new File("logs/web.log");
+        log.mkdir();
+        try {
+            app = new FileAppender(new PatternLayout(TTCC_CONVERSION_PATTERN), log.getAbsolutePath() ,false);
+        } catch (IOException ex) {
+        }
+        BasicConfigurator.configure(app);
 
         logger.setLevel(Level.DEBUG);
     }

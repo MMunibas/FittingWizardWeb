@@ -101,5 +101,4 @@ public class RunGaussianWorkflow extends Workflow<MultipoleGaussInput,RunGaussia
             logger.warn("Could not send notification mail.", e);
         }
     }
-
 }

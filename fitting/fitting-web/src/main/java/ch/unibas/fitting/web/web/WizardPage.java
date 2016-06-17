@@ -19,6 +19,10 @@ public abstract class WizardPage extends WebPage {
         return UserSession.current();
     }
 
+    public String getCurrentUsername() {
+        return session().getUsername();
+    }
+
     @Override
     protected void onInitialize() {
         super.onInitialize();

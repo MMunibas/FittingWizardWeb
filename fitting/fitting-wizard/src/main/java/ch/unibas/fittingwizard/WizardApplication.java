@@ -132,7 +132,8 @@ public class WizardApplication extends Application {
         BasicConfigurator.configure();
         
         FileAppender app = null;
-        File log = new File("fw-log.txt");
+        File log = new File("logs/wizard.log");
+        log.mkdir();
         
         try {
             app = new FileAppender(new PatternLayout(TTCC_CONVERSION_PATTERN), log.getAbsolutePath() ,false);

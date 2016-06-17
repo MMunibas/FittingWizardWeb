@@ -1,6 +1,5 @@
 package ch.unibas.fitting.web.welcome;
 
-import ch.unibas.fitting.web.application.SomeService;
 import ch.unibas.fitting.web.web.HeaderPage;
 import com.google.inject.Inject;
 import org.apache.wicket.markup.html.form.Form;
@@ -13,9 +12,6 @@ import java.util.List;
 public class WelcomePage extends HeaderPage {
 
     private SelectionModel selected;
-
-    @Inject
-    private SomeService service;
 
     public WelcomePage() {
 

@@ -2,6 +2,11 @@
     <h1>Multiple Gaussian MEP Input</h1>
 
     <form wicket:id="form">
+
+        <p>
+            <input wicket:id="start" type="submit" value="Start calculation" class="btn btn-default" />
+        </p>
+
         <table cellspacing="0" class="table">
             <colgroup>
                 <col class="col-md-4">
@@ -24,11 +29,6 @@
                 <td><input wicket:id="multiplicity" type="number" /></td>
             </tr>
         </table>
-
-        <p>
-            <input wicket:id="start" type="submit" value="Start calculation" class="btn btn-default" />
-        </p>
-
     </form>
 
     <div wicket:id="feedback"></div>
