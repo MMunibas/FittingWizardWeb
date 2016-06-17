@@ -1,12 +1,12 @@
 package ch.unibas.fitting.web.gaussian.fit.step1;
 
-import ch.unibas.fitting.shared.fitting.ChargeValue;
-import ch.unibas.fitting.shared.fitting.FitRepository;
 import ch.unibas.fitting.shared.molecules.*;
 import ch.unibas.fitting.shared.scripts.fitmtp.FitMtpInput;
 import ch.unibas.fitting.web.web.HeaderPage;
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
@@ -62,6 +62,26 @@ public class ParameterPage extends HeaderPage {
 
     public ParameterPage() {
 
+        ModalWindow modalWindow = new ModalWindow("modalWindow");
+
+        modalWindow.setPageCreator(new ModalWindow.PageCreator() {
+            @Override
+            public Page createPage() {
+                return new EnterChargesPage(modalWindow);
+            }
+        });
+
+        modalWindow.setWindowClosedCallback(new ModalWindow.WindowClosedCallback() {
+
+            @Override
+            public void onClose(AjaxRequestTarget target) {
+                //custom code…
+                Logger.info("window closed");
+            }
+        });
+        
+        add(modalWindow);
+
         Form form = new Form("form");
         add(form);
 
@@ -84,6 +104,8 @@ public class ParameterPage extends HeaderPage {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 target.add(fp);
+
+                modalWindow.show(target);
 
                 //XyzFile f = XyzFileParser.parse(_xyzFile);
 
