@@ -8,6 +8,7 @@
  */
 package ch.unibas.fitting.shared.scripts;
 
+import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.scripts.fittab.FittabScriptInput;
 import ch.unibas.fitting.shared.scripts.fittab.FittabScriptOutput;
 import ch.unibas.fitting.shared.scripts.fittab.IFittabScript;
@@ -15,9 +16,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
+
+import javax.inject.Inject;
 
 /**
  * User: mhelmer
@@ -30,12 +35,11 @@ public class MockFittabMarkerScript implements IFittabScript {
 	private final List<String> filesToCopy = Arrays.asList(mtpfittabExtension);
 	
 	private final static Logger logger = Logger.getLogger(MockFittabMarkerScript.class);
-    private File moleculesDir;
     private final File moleculeTestdataDir;
 
-	public MockFittabMarkerScript(File moleculesDir, File moleculeTestdataDir) {
-    	this.moleculesDir = moleculesDir;
-        this.moleculeTestdataDir = moleculeTestdataDir;
+	@Inject
+	public MockFittabMarkerScript(Settings settings) {
+        this.moleculeTestdataDir = settings.getMoleculeTestdataDir();
 	}
 
 	@Override
@@ -44,7 +48,7 @@ public class MockFittabMarkerScript implements IFittabScript {
 		
 		String moleculeName = getMoleculeName(input.getCubeFile());
 
-		File specificMoleculeDir = new File(moleculesDir, moleculeName);
+		File specificMoleculeDir = input.getMoleculesDir().getDirectoryFor(moleculeName);
 		
 		File mtpfittabOutputFile = new File(specificMoleculeDir, moleculeName + mtpfittabExtension);
 

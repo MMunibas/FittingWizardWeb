@@ -8,6 +8,7 @@
  */
 package ch.unibas.fitting.shared.scripts;
 
+import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.scripts.lra.ILRAScript;
 import ch.unibas.fitting.shared.scripts.lra.LRAScriptInput;
 import ch.unibas.fitting.shared.scripts.lra.LRAScriptOutput;
@@ -28,12 +29,10 @@ public class MockLRAScript implements ILRAScript {
 	private final String lpunExtension = "_l.pun";
 
 	private final static Logger logger = Logger.getLogger(MockLRAScript.class);
-	private File moleculesDir;
-    private final File testMoleculesDir;
+	private final File testMoleculesDir;
 
-	public MockLRAScript(File moleculesDir, File testMoleculesDir) {
-		this.moleculesDir = moleculesDir;
-        this.testMoleculesDir = testMoleculesDir;
+	public MockLRAScript(Settings settings) {
+	    this.testMoleculesDir = settings.getMoleculeTestdataDir();
 	}
 
 	@Override
@@ -43,7 +42,7 @@ public class MockLRAScript implements ILRAScript {
 
 		String moleculeName = getMoleculeName(input.getSdfFile());
 
-		File specificMoleculeDir = new File(moleculesDir, moleculeName);
+		File specificMoleculeDir = input.getMoleculesDir().getDirectoryFor(moleculeName);
 		
 		File lpunOutputFile = new File(specificMoleculeDir, moleculeName + lpunExtension);
 

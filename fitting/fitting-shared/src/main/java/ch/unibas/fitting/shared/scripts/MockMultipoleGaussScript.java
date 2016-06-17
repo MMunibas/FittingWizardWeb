@@ -8,6 +8,7 @@
  */
 package ch.unibas.fitting.shared.scripts;
 
+import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.scripts.multipolegauss.IMultipoleGaussScript;
 import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussInput;
 import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussOutput;
@@ -17,6 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+
+import javax.inject.Inject;
 
 /**
  * User: mhelmer Date: 28.11.13 Time: 15:13
@@ -33,18 +36,17 @@ public class MockMultipoleGaussScript implements IMultipoleGaussScript {
 
 	private final static Logger logger = Logger.getLogger(MockLRAScript.class);
 
-	private File moleculesDir;
-    private final File moleculeTestdataDir;
+	private final File moleculeTestdataDir;
 
-	public MockMultipoleGaussScript(File moleculesDir, File moleculeTestdataDir) {
-		this.moleculesDir = moleculesDir;
-        this.moleculeTestdataDir = moleculeTestdataDir;
+    @Inject
+	public MockMultipoleGaussScript(Settings settings) {
+        this.moleculeTestdataDir = settings.getMoleculeTestdataDir();
 	}
 
 	@Override
 	public MultipoleGaussOutput execute(MultipoleGaussInput input) {
 
-		File specificMoleculeDir = new File(moleculesDir, input.getMoleculeName());
+		File specificMoleculeDir = input.getMoleculesDir().getDirectoryFor(input.getMoleculeName());
 		
 		File logOutfile  = new File(specificMoleculeDir,  input.getMoleculeName() + logExtension);
 		File punOutfile  = new File(specificMoleculeDir,  input.getMoleculeName() + punExtension);
@@ -65,7 +67,6 @@ public class MockMultipoleGaussScript implements IMultipoleGaussScript {
 			}
 		}
 
-		MultipoleGaussOutput output = new MultipoleGaussOutput(true, logOutfile, punOutfile, cubeOutfile, vdwOutfile);
-		return output;
+		return new MultipoleGaussOutput(true, logOutfile, punOutfile, cubeOutfile, vdwOutfile);
 	}
 }

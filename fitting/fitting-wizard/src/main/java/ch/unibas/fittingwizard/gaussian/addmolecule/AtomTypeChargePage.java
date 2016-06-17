@@ -8,6 +8,8 @@
  */
 package ch.unibas.fittingwizard.gaussian.addmolecule;
 
+import ch.unibas.fitting.shared.config.Settings;
+import ch.unibas.fitting.shared.directories.MoleculesDir;
 import ch.unibas.fitting.shared.molecules.Atom;
 import ch.unibas.fitting.shared.molecules.AtomType;
 import ch.unibas.fitting.shared.molecules.Molecule;
@@ -22,6 +24,7 @@ import ch.unibas.fittingwizard.gaussian.base.dialog.OverlayDialog;
 import ch.unibas.fittingwizard.gaussian.base.ui.EditingCell;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -39,6 +42,7 @@ import javafx.util.Callback;
  * Time: 14:48
  */
 public class AtomTypeChargePage extends WizardPageWithVisualization {
+    private MoleculesDir moleculesDir;
     private final LPunParser lPunParser;
     private final MoleculeRepository moleculeRepository;
     private final AtomChargesDto dto;
@@ -55,39 +59,30 @@ public class AtomTypeChargePage extends WizardPageWithVisualization {
     private Button prevButton;
 
     public AtomTypeChargePage(MoleculeRepository moleculeRepository,
+                              MoleculesDir moleculesDir,
                               LPunParser lPunParser,
                               Visualization visualization,
                               AtomChargesDto dto) {
         super(visualization, "Atom types and charges");
         this.moleculeRepository = moleculeRepository;
+        this.moleculesDir = moleculesDir;
         this.lPunParser = lPunParser;
         this.dto = dto;
         setupChargesTable();
     }
 
     private void setupChargesTable() {
-        chargesTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<AtomTypeViewModel>() {
-            @Override
-            public void changed(ObservableValue<? extends AtomTypeViewModel> observableValue, AtomTypeViewModel chargeOld, AtomTypeViewModel chargeNew) {
-                selectChargeInVisualization(chargeNew);
-            }
+        chargesTable.getSelectionModel().selectedItemProperty().addListener((observableValue, chargeOld, chargeNew) -> {
+            selectChargeInVisualization(chargeNew);
         });
-        atomTypeColumn.setCellValueFactory(new PropertyValueFactory<AtomTypeViewModel, String>("name"));
+        atomTypeColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        chargeColumn.setCellValueFactory(new PropertyValueFactory<AtomTypeViewModel, String>("userCharge"));
-        chargeColumn.setCellFactory(new Callback<TableColumn<AtomTypeViewModel, String>, TableCell<AtomTypeViewModel, String>>() {
-            @Override
-            public TableCell<AtomTypeViewModel, String> call(TableColumn<AtomTypeViewModel, String> atomChargeGroupViewModelStringTableColumn) {
-                return new EditingCell<>();
-            }
-        });
-        chargeColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<AtomTypeViewModel, String>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent<AtomTypeViewModel, String> event) {
-                logger.debug("onEditCommit event occured");
-                event.getRowValue().setUserCharge(event.getNewValue());
-                updateSaveButtonDisabled();
-            }
+        chargeColumn.setCellValueFactory(new PropertyValueFactory<>("userCharge"));
+        chargeColumn.setCellFactory(atomChargeGroupViewModelStringTableColumn -> new EditingCell<>());
+        chargeColumn.setOnEditCommit(event -> {
+            logger.debug("onEditCommit event occured");
+            event.getRowValue().setUserCharge(event.getNewValue());
+            updateSaveButtonDisabled();
         });
     }
 
@@ -110,52 +105,43 @@ public class AtomTypeChargePage extends WizardPageWithVisualization {
     }
 
     private void createPreviousButton() {
-        prevButton = ButtonFactory.createButtonBarButton("Go back to parameters", new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                logger.info("Going back to parameters.");
+        prevButton = ButtonFactory.createButtonBarButton("Go back to parameters", actionEvent -> {
+            logger.info("Going back to parameters.");
 
-                MultipoleGaussParameterDto inputDto = new MultipoleGaussParameterDto(dto.getParsedXyzFile());
-                navigateTo(MultipoleGaussParameterPage.class, inputDto);
-            }
+            MultipoleGaussParameterDto inputDto = new MultipoleGaussParameterDto(dto.getParsedXyzFile());
+            navigateTo(MultipoleGaussParameterPage.class, inputDto);
         });
         addButtonToButtonBar(prevButton);
     }
 
     private void createCancelButton() {
-        Button cancelButton = ButtonFactory.createButtonBarButton("Cancel", new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                logger.info("Cancel and go back to molecule list.");
-                navigateTo(MoleculeListPage.class);
-            }
+        Button cancelButton = ButtonFactory.createButtonBarButton("Cancel", actionEvent -> {
+            logger.info("Cancel and go back to molecule list.");
+            navigateTo(MoleculeListPage.class);
         });
         addButtonToButtonBar(cancelButton);
     }
 
     private void createSaveButton() {
-        saveButton = ButtonFactory.createButtonBarButton("Forward", new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                logger.info("Saving molecule and go back to molecule list.");
+        saveButton = ButtonFactory.createButtonBarButton("Forward", actionEvent -> {
+            logger.info("Saving molecule and go back to molecule list.");
 
-                Molecule molecule = dto.getMolecule();
-                if (molecule == null)
-                    molecule = createMolecule();
+            Molecule molecule = dto.getMolecule();
+            if (molecule == null)
+                molecule = createMolecule();
 
-                boolean saveIsOkay = true;
-                Molecule.UserChargesState state = molecule.getUserChargesState();
-                if (state == Molecule.UserChargesState.NoChargesDefined) {
-                    saveIsOkay = OverlayDialog.askYesOrNo("You did not enter any charges. Is it okay to proceed?");
-                } else if (state == Molecule.UserChargesState.Invalid) {
-                    OverlayDialog.showError("Invalid user charge state.", "The given combination of user charges is invalid.");
-                    saveIsOkay = false;
-                }
+            boolean saveIsOkay = true;
+            Molecule.UserChargesState state = molecule.getUserChargesState();
+            if (state == Molecule.UserChargesState.NoChargesDefined) {
+                saveIsOkay = OverlayDialog.askYesOrNo("You did not enter any charges. Is it okay to proceed?");
+            } else if (state == Molecule.UserChargesState.Invalid) {
+                OverlayDialog.showError("Invalid user charge state.", "The given combination of user charges is invalid.");
+                saveIsOkay = false;
+            }
 
-                if (saveIsOkay) {
-                    moleculeRepository.save(molecule);
-                    navigateTo(MoleculeListPage.class);
-                }
+            if (saveIsOkay) {
+                moleculeRepository.save(molecule);
+                navigateTo(MoleculeListPage.class);
             }
         });
         saveButton.setDisable(false);
@@ -165,7 +151,8 @@ public class AtomTypeChargePage extends WizardPageWithVisualization {
     @Override
     public void initializeData() {
         if (dto.getMolecule() == null)
-            charges = lPunParser.parse(dto.getParsedXyzFile().getMoleculeName());
+            charges = lPunParser.parse(moleculesDir,
+                    dto.getParsedXyzFile().getMoleculeName());
         else {
             charges = dto.getMolecule().getAtomTypes();
             prevButton.setVisible(false);
@@ -197,10 +184,11 @@ public class AtomTypeChargePage extends WizardPageWithVisualization {
     }
 
     private Molecule createMolecule() {
-        ArrayList<Atom> atoms = new ArrayList<>();
-        for (XyzAtom xyzAtom : dto.getParsedXyzFile().getAtoms()) {
-            atoms.add(new Atom(xyzAtom.getName(), xyzAtom.getX(), xyzAtom.getY(), xyzAtom.getZ()));
-        }
+        ArrayList<Atom> atoms = dto.getParsedXyzFile()
+                .getAtoms()
+                .stream()
+                .map(xyzAtom -> new Atom(xyzAtom.getName(), xyzAtom.getX(), xyzAtom.getY(), xyzAtom.getZ()))
+                .collect(Collectors.toCollection(ArrayList::new));
 
         return new Molecule(dto.getParsedXyzFile(), atoms, charges);
     }

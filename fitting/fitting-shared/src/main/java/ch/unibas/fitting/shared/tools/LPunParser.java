@@ -8,6 +8,7 @@
  */
 package ch.unibas.fitting.shared.tools;
 
+import ch.unibas.fitting.shared.directories.MoleculesDir;
 import ch.unibas.fitting.shared.molecules.AtomType;
 import java.io.File;
 import java.io.IOException;
@@ -24,14 +25,8 @@ import org.apache.commons.io.FileUtils;
  */
 public class LPunParser {
 
-    private final File directory;
-
-    public LPunParser(File directory) {
-        this.directory = directory;
-    }
-
-    public ArrayList<AtomType> parse(String moleculeName) {
-        File moleculeDir = new File(directory, moleculeName);
+    public ArrayList<AtomType> parse(MoleculesDir moleculesDir, String moleculeName) {
+        File moleculeDir = moleculesDir.getDirectoryFor(moleculeName);
         File lpunFile = new File(moleculeDir, moleculeName + "_l.pun");
         return parse(lpunFile);
     }

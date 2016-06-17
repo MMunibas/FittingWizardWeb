@@ -5,6 +5,7 @@ import ch.unibas.fitting.web.application.TaskHandle;
 import ch.unibas.fitting.web.gaussian.addmolecule.step4.ParameterPage;
 import ch.unibas.fitting.web.gaussian.addmolecule.step6.AtomTypesPage;
 import ch.unibas.fitting.web.web.HeaderPage;
+import ch.unibas.fitting.web.welcome.WelcomePage;
 import com.google.inject.Inject;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -15,6 +16,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.time.Duration;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeUtils;
 
 import java.util.UUID;
 
@@ -55,27 +58,30 @@ public class ProgressPage extends HeaderPage {
         });
 
         add(new AbstractAjaxTimerBehavior(Duration.seconds(2)) {
-
-            private int _count;
-
             @Override
             protected void onTimer(AjaxRequestTarget target) {
-                _count++;
-                _text.setObject("We are running since " + _count + " seconds");
-                target.add(label);
-
                 TaskHandle<String> th = _tasks.getHandle(_taskId);
-                if (th.isDone()) {
-                    stop(target);
 
-                    if (th.wasSuccessful()) {
-                        PageParameters pp = new PageParameters();
-                        pp.add("task_id", th.getId());
-                        setResponsePage(AtomTypesPage.class, pp);
+                if (th != null) {
+                    org.joda.time.Duration diff = org.joda.time.Duration.millis(DateTime.now().getMillis() - th.getStartTime().getMillis());
+
+                    if (th.isDone()) {
+                        stop(target);
+
+                        if (th.wasSuccessful()) {
+                            PageParameters pp = new PageParameters();
+                            pp.add("task_id", th.getId());
+                            setResponsePage(AtomTypesPage.class, pp);
+                        } else {
+                            Logger.debug("Task with id=" + _taskId + " failed.");
+                            setResponsePage(ParameterPage.class, pageParameter);
+                        }
                     } else {
-                        Logger.debug("Task with id=" + _taskId + " failed.");
-                        setResponsePage(ParameterPage.class, pageParameter);
+                        _text.setObject(th.getTitle() + " is running since " + diff.getStandardSeconds() + " seconds...");
+                        target.add(label);
                     }
+                } else {
+                    setResponsePage(WelcomePage.class);
                 }
             }
         });

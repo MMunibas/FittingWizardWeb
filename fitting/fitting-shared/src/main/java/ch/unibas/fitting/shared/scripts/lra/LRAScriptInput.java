@@ -8,18 +8,25 @@
  */
 package ch.unibas.fitting.shared.scripts.lra;
 
+import ch.unibas.fitting.shared.directories.MoleculesDir;
+
 import java.io.File;
 
 public class LRAScriptInput {
 
-    private final File inputFile;
+	private MoleculesDir moleculesDir;
+	private final File inputFile;
 
-	public LRAScriptInput(File getSdfFile) {
-        this.inputFile = getSdfFile;
+	public LRAScriptInput(MoleculesDir moleculesDir, File getSdfFile) {
+		this.moleculesDir = moleculesDir;
+		this.inputFile = getSdfFile;
     }
 	
 	public File getSdfFile() {
 		return inputFile;
 	}
-	
+
+	public MoleculesDir getMoleculesDir() {
+		return moleculesDir;
+	}
 }

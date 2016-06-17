@@ -24,21 +24,14 @@ public class RealBabelScript implements IBabelScript {
 	private final static Logger logger = Logger.getLogger(RealBabelScript.class);
 
 	private static final String sdfExtension = ".sdf";
-	private final BabelRunner runner;
-
-	private File moleculesDir;
-
-	public RealBabelScript(File moleculesDir) {
-		this.moleculesDir = moleculesDir;
-        runner = new BabelRunner();
-	}
+	private final BabelRunner runner = new BabelRunner();
 
 	@Override
 	public BabelOutput execute(BabelInput input) {
 		
 		String moleculeName = getMoleculeName(input.getGaussianLogFile());
 		
-		File specificMoleculeDir = new File(moleculesDir, moleculeName);
+		File specificMoleculeDir = input.getMoleculesDir().getDirectoryFor(moleculeName);
 		
 		setWorkingDir(specificMoleculeDir);
 		

@@ -1,6 +1,6 @@
 package ch.unibas.fitting.web.ljfit.step1;
 
-import ch.unibas.fitting.web.application.IUserDirectory;
+import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.web.ljfit.step2.ShowOutput;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.Component;

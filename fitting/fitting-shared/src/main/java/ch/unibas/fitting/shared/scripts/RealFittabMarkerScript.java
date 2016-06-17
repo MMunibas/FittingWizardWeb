@@ -20,20 +20,20 @@ import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
+import javax.inject.Inject;
+
 public class RealFittabMarkerScript implements IFittabScript {
 
-	private final static Logger logger = Logger.getLogger(RealLRAScript.class);
+	private final static Logger LOGGER = Logger.getLogger(RealLRAScript.class);
 
 	private static final String FitTabMarkerScriptNameKey = "scripts.prepare_fitting_table";
 	private static final String MtpFittabExtension = "_mtpfittab.txt";
-	
-	private File moleculesDir;
 
 	private final PythonScriptRunner runner;
     private File fitTabMarkerScriptFile;
 
-    public RealFittabMarkerScript(File moleculesDir, Settings settings) {
-		this.moleculesDir = moleculesDir;
+	@Inject
+    public RealFittabMarkerScript(Settings settings) {
         this.fitTabMarkerScriptFile = new File(settings.getScriptsDir(), settings.getValue(FitTabMarkerScriptNameKey));
         runner = new PythonScriptRunner();
 	}
@@ -42,7 +42,7 @@ public class RealFittabMarkerScript implements IFittabScript {
 	public FittabScriptOutput execute(FittabScriptInput input) {
 	
 		String moleculeName = getMoleculeName(input.getCubeFile());
-		File specificMoleculeDir = new File(moleculesDir, moleculeName);
+		File specificMoleculeDir = input.getMoleculesDir().getDirectoryFor(moleculeName);
 
         runner.setWorkingDir(specificMoleculeDir);
 

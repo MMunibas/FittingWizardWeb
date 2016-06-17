@@ -1,6 +1,6 @@
 package ch.unibas.fitting.web.gaussian.addmolecule.step2;
 
-import ch.unibas.fitting.web.application.IUserDirectory;
+import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.web.gaussian.addmolecule.step3.AtomsPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.Component;
@@ -12,6 +12,7 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Bytes;
 
 import javax.inject.Inject;
@@ -48,14 +49,17 @@ public class UploadPage extends HeaderPage {
                 {
                     Logger.debug("File-Name: " + upload.getClientFileName() + " File-Size: " +
                             Bytes.bytes(upload.getSize()).toString());
-                    File f =_userDir.getXyzFileName(session().getUsername(), upload.getClientFileName());
+                    File f =_userDir.getXyzFileFor(session().getUsername(), upload.getClientFileName());
                     try {
                         upload.writeTo(f);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
 
-                    setResponsePage(new AtomsPage(f));
+                    PageParameters pp = new PageParameters();
+                    pp.add("xyz_file", f);
+
+                    setResponsePage(AtomsPage.class, pp);
                 }
             }
         };

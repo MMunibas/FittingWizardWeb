@@ -8,18 +8,25 @@
  */
 package ch.unibas.fitting.shared.scripts.babel;
 
+import ch.unibas.fitting.shared.directories.MoleculesDir;
+
 import java.io.File;
 
 public class BabelInput {
 
-    private final File inputFile;
+	private MoleculesDir moleculesDir;
+	private final File inputFile;
 
-	public BabelInput(File gaussianLogFile) {
-        this.inputFile = gaussianLogFile;
+	public BabelInput(MoleculesDir moleculesDir, File gaussianLogFile) {
+		this.moleculesDir = moleculesDir;
+		this.inputFile = gaussianLogFile;
     }
 	
 	public File getGaussianLogFile() {
 		return inputFile;
 	}
-	
+
+	public MoleculesDir getMoleculesDir() {
+		return moleculesDir;
+	}
 }

@@ -27,7 +27,7 @@ import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fittingwizard.WhereToGo;
 import ch.unibas.fittingwizard.gaussian.Visualization;
-import ch.unibas.fitting.shared.base.MoleculesDir;
+import ch.unibas.fitting.shared.directories.MoleculesDir;
 import ch.unibas.fitting.shared.fitting.FitRepository;
 import ch.unibas.fitting.shared.molecules.MoleculeRepository;
 import ch.unibas.fitting.shared.scripts.babel.IBabelScript;
@@ -132,10 +132,10 @@ public class WizardPageFactory {
 
         this.defaultValues = new DefaultValues(settings);
         // TODO fill from settings.
-        notifications = new Notifications(settings.getProperties());
+        notifications = new Notifications(settings);
 //        notifications.sendTestMail();
 //        notifications.sendLogMail();
-        lPunParser = new LPunParser(settings.getMoleculeDir());
+        lPunParser = new LPunParser();
         initializeScripts();
         initializeWorkflows();
 
@@ -144,30 +144,31 @@ public class WizardPageFactory {
 
     private void initializeScripts() {
         File moleculeDestination = moleculesDir.getDirectory();
-        File moleculeTestdataDir = settings.getMoleculeTestdataDir();
         File outputDir = new File(sessionDir, RealFitScript.OutputDirName);
 
-        if (settings.getValue("mocks.enabled").equals("false")) {
-            babelScript = new RealBabelScript(moleculeDestination);
+        if (!settings.getMocksEnabled()) {
+            // used to add molecules
+            babelScript = new RealBabelScript();
             lraScript = new RealLRAScript(settings);
-            fittabMarkerScript = new RealFittabMarkerScript(moleculeDestination, settings);
+            fittabMarkerScript = new RealFittabMarkerScript(settings);
 
+            // used for fitting
             fitMtpScript = new RealFitScript(sessionDir, moleculeDestination, settings);
             exportScript = new RealExportScript(settings, outputDir, moleculeDestination);
             vmdScript = new RealVmdDisplayScript(settings, outputDir, moleculeDestination);
         } else {
-            babelScript = new MockBabelScript(moleculeDestination, moleculeTestdataDir);
-            lraScript = new MockLRAScript(moleculeDestination, moleculeTestdataDir);
-            fittabMarkerScript = new MockFittabMarkerScript(moleculeDestination, moleculeTestdataDir);
+            babelScript = new MockBabelScript(settings);
+            lraScript = new MockLRAScript(settings);
+            fittabMarkerScript = new MockFittabMarkerScript(settings);
 
             fitMtpScript = new MockFitMtpScript(sessionDir, settings.getTestdataDir());
             exportScript = new MockExportScript(sessionDir, settings.getTestdataDir());
         }
 
-        if (settings.getValue("mocks.use_gaussian_mock").equals("true")) {
-            gaussScript = new MockMultipoleGaussScript(moleculeDestination, moleculeTestdataDir);
+        if (settings.getUseGaussianMock()) {
+            gaussScript = new MockMultipoleGaussScript(settings);
         } else {
-            gaussScript = new RealMultipoleGaussScript(moleculesDir, settings);
+            gaussScript = new RealMultipoleGaussScript(settings);
         }
 
         charmmScript_Den_Vap = new CHARMMScript_Den_Vap(sessionDir, settings);
@@ -216,10 +217,14 @@ public class WizardPageFactory {
                 page = new CoordinatesPage(visualization, moleculesDir, dto);
             } else if (type == MultipoleGaussParameterPage.class) {
                 MultipoleGaussParameterDto dto = throwIfParameterIsNull(parameter);
-                page = new MultipoleGaussParameterPage(defaultValues, dto);
+                page = new MultipoleGaussParameterPage(defaultValues, moleculesDir, dto);
             } else if (type == AtomTypeChargePage.class) {
                 AtomChargesDto dto = throwIfParameterIsNull(parameter);
-                page = new AtomTypeChargePage(moleculeRepository, lPunParser, visualization, dto);
+                page = new AtomTypeChargePage(moleculeRepository,
+                        moleculesDir,
+                        lPunParser,
+                        visualization,
+                        dto);
             } else if (type == GaussCalculationPage.class) {
                 GaussCalculationDto dto = throwIfParameterIsNull(parameter);
                 page = new GaussCalculationPage(runGaussianWorkflow, dto);

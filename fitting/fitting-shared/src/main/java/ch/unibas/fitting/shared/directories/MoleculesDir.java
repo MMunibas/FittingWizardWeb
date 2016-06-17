@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.fitting.shared.base;
+package ch.unibas.fitting.shared.directories;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,5 +49,9 @@ public class MoleculesDir {
         } catch (IOException e) {
             throw new RuntimeException("Could not delete existing molecule directory " + molDir.getAbsolutePath());
         }
+    }
+
+    public File getDirectoryFor(String moleculeName) {
+        return new File(directory, moleculeName);
     }
 }

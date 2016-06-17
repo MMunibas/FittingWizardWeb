@@ -1,13 +1,16 @@
-package ch.unibas.fitting.web.application;
+package ch.unibas.fitting.shared.directories;
+
+import ch.unibas.fitting.shared.directories.MoleculesDir;
 
 import java.io.File;
-import java.util.function.Consumer;
 
 /**
  * Created by mhelmer-mobile on 15.06.2016.
  */
 public interface IUserDirectory {
-    File getXyzFileName(String username, String name);
+    File getXyzFileFor(String username, String name);
+
+    MoleculesDir getMoleculesDir(String username);
 
     File getLjfitInputFileName(String username, String name);
 

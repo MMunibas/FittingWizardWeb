@@ -14,6 +14,7 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
@@ -26,13 +27,16 @@ import java.util.stream.Collectors;
  */
 public class AtomsPage extends HeaderPage {
 
-    File _file;
+    private File _file;
+    private IModel<XyzFile> _xyzFile;
 
-    public AtomsPage(File xyzFile) {
+    public AtomsPage(PageParameters pp) {
 
-        _file = xyzFile;
+        String file = pp.get("xyz_file").toString();
+        if (file != null)
+            _file = new File(file);
 
-        add(new Label("filename", new Model<>(xyzFile.getName())));
+        add(new Label("filename", Model.of(_file != null ? _file.getName() : "no file defined")));
 
         add(new DataView<AtomViewModel>("atoms", loadAtoms())
         {

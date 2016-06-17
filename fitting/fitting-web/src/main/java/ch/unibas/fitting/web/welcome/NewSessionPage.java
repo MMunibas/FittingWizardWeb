@@ -1,17 +1,14 @@
 package ch.unibas.fitting.web.welcome;
 
-import ch.unibas.fitting.web.application.IUserDirectory;
+import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.web.web.WizardPage;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RequiredTextField;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
-import org.apache.wicket.validation.validator.StringValidator;
 
 import javax.inject.Inject;
 import java.util.regex.Matcher;

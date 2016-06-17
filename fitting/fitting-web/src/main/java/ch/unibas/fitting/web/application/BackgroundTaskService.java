@@ -21,9 +21,9 @@ public class BackgroundTaskService implements IBackgroundTasks {
     }
 
     @Override
-    public <T> TaskHandle<T> execute(String username, Callable<T> callable) {
+    public <T> TaskHandle<T> execute(String username, String title, Callable<T> callable) {
         Future<T> f = executor.submit(callable);
-        TaskHandle handle = new TaskHandle<T>(username, f);
+        TaskHandle handle = new TaskHandle<T>(username, title, f);
         usernames.put(handle.getUsername(), handle.getId());
         handles.put(handle.getId(), handle);
         return handle;

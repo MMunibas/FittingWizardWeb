@@ -8,6 +8,7 @@
  */
 package ch.unibas.fitting.shared.workflows;
 
+import ch.unibas.fitting.shared.directories.MoleculesDir;
 import ch.unibas.fitting.shared.scripts.babel.BabelInput;
 import ch.unibas.fitting.shared.scripts.babel.BabelOutput;
 import ch.unibas.fitting.shared.scripts.babel.IBabelScript;
@@ -25,6 +26,8 @@ import ch.unibas.fitting.shared.workflows.base.Workflow;
 import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
 import org.apache.log4j.Logger;
 
+import javax.inject.Inject;
+
 /**
  * User: mhelmer
  * Date: 16.12.13
@@ -41,6 +44,7 @@ public class RunGaussianWorkflow extends Workflow<MultipoleGaussInput,RunGaussia
     private final GaussianLogModifier gaussianLogModifier;
     private final Notifications notifications;
 
+    @Inject
     public RunGaussianWorkflow(IMultipoleGaussScript gaussScript,
                                IBabelScript babelScript,
                                ILRAScript lraScript,
@@ -59,6 +63,7 @@ public class RunGaussianWorkflow extends Workflow<MultipoleGaussInput,RunGaussia
         logger.info("Executing gaussian workflow.");
 
         MultipoleGaussOutput gaussOutput = executeGaussScript(status);
+        MoleculesDir moleculesDir = status.getParameter().getMoleculesDir();
 
         RunGaussianResult result;
         if (!gaussOutput.isLogFileValid()) {
@@ -68,13 +73,17 @@ public class RunGaussianWorkflow extends Workflow<MultipoleGaussInput,RunGaussia
             gaussianLogModifier.removeHeadersFromCluster(gaussOutput.getLogFile());
 
             status.setCurrentStatus("Converting log file to sdf file with babel...");
-            BabelOutput babelOutput = babelScript.execute(new BabelInput(gaussOutput.getLogFile()));
+            BabelOutput babelOutput = babelScript.execute(new BabelInput(moleculesDir, gaussOutput.getLogFile()));
 
             status.setCurrentStatus("Executing calc_LRA.py ...");
-            LRAScriptOutput lraScriptOutput = lraScript.execute(new LRAScriptInput(babelOutput.getSdfFile()));
+            LRAScriptOutput lraScriptOutput = lraScript.execute(new LRAScriptInput(moleculesDir, babelOutput.getSdfFile()));
 
             status.setCurrentStatus("Executing mtp_fittab_maker.py ...");
-            fittabMarkerScript.execute(new FittabScriptInput(gaussOutput.getCubeFile(), gaussOutput.getVdwFile(), lraScriptOutput.getLPunFile()));
+            fittabMarkerScript.execute(new FittabScriptInput(
+                    moleculesDir,
+                    gaussOutput.getCubeFile(),
+                    gaussOutput.getVdwFile(),
+                    lraScriptOutput.getLPunFile()));
             result = RunGaussianResult.Success;
         }
         return result;

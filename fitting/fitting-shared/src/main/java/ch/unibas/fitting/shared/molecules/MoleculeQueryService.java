@@ -12,6 +12,7 @@ import ch.unibas.fitting.shared.charges.ChargeTypes;
 import ch.unibas.fitting.shared.fitting.ChargeValue;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Performs queries on a given list of molecules.
@@ -32,10 +33,10 @@ public class MoleculeQueryService {
     }
 
     public List<MoleculeId> getMoleculeIds() {
-        ArrayList<MoleculeId> ids = new ArrayList<>();
-        for (Molecule molecule : molecules) {
-            ids.add(molecule.getId());
-        }
+        ArrayList<MoleculeId> ids = molecules
+                .stream()
+                .map(Molecule::getId)
+                .collect(Collectors.toCollection(ArrayList::new));
         return ids;
     }
 
@@ -44,12 +45,10 @@ public class MoleculeQueryService {
     }
 
     private List<Molecule> findMoleculeWith(Molecule.UserChargesState userChargesState) {
-        ArrayList<Molecule> moleculeWithMissingUserCharges = new ArrayList<>();
-        for (Molecule molecule : molecules) {
-            if (molecule.getUserChargesState().equals(userChargesState)) {
-                moleculeWithMissingUserCharges.add(molecule);
-            }
-        }
+        ArrayList<Molecule> moleculeWithMissingUserCharges = molecules
+                .stream()
+                .filter(molecule -> molecule.getUserChargesState().equals(userChargesState))
+                .collect(Collectors.toCollection(ArrayList::new));
         return moleculeWithMissingUserCharges;
     }
 
@@ -57,9 +56,10 @@ public class MoleculeQueryService {
         LinkedHashSet<ChargeValue> userCharges = new LinkedHashSet<>();
 
         for (Molecule molecule : findMoleculeWith(Molecule.UserChargesState.AllChargesDefined)) {
-            for (AtomType atomType : molecule.getAtomTypes()) {
-                userCharges.add(new ChargeValue(atomType.getId(), ChargeTypes.charge, atomType.getUserQ00()));
-            }
+            userCharges.addAll(molecule.getAtomTypes()
+                    .stream()
+                    .map(atomType -> new ChargeValue(atomType.getId(), ChargeTypes.charge, atomType.getUserQ00()))
+                    .collect(Collectors.toList()));
         }
 
         return userCharges;

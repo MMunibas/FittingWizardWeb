@@ -16,6 +16,8 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.CssResourceReference;
 
+import java.io.Serializable;
+
 /**
  * Created by martin on 04.06.2016.
  */
@@ -30,10 +32,17 @@ public abstract class HeaderPage extends WizardPage {
 
         navbar.setPosition(Navbar.Position.STATIC_TOP);
 
-        navbar.addComponents(new ImmutableNavbarComponent(new NavbarButton<WelcomePage>(WelcomePage.class, Model.of("Home")), Navbar.ComponentPosition.LEFT));
-        navbar.addComponents(new ImmutableNavbarComponent(new NavbarButton<AdminPage>(AdminPage.class, Model.of("Sessions")), Navbar.ComponentPosition.LEFT));
+        navbar.addComponents(new ImmutableNavbarComponent(
+                new NavbarButton<WelcomePage>(WelcomePage.class, Model.of("Home")), Navbar.ComponentPosition.LEFT));
+        navbar.addComponents(new ImmutableNavbarComponent(
+                new NavbarButton<AdminPage>(AdminPage.class, Model.of("Sessions")), Navbar.ComponentPosition.LEFT));
 
-        Label lbl = new Label(Navbar.componentId(), new Model<>(session().getUsername() + " ["+ session().getId() + "]")) {
+        Label lbl = new Label(Navbar.componentId(), new Model() {
+            @Override
+            public Serializable getObject() {
+                return session().getUsername() + " ["+ session().getId() + "]";
+            }
+        }) {
             @Override
             protected void onComponentTag(ComponentTag tag) {
                 super.onComponentTag(tag);

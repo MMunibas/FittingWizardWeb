@@ -9,7 +9,7 @@
 package ch.unibas.fitting.shared.scripts;
 
 import ch.unibas.fitting.shared.config.Settings;
-import ch.unibas.fitting.shared.base.MoleculesDir;
+import ch.unibas.fitting.shared.directories.MoleculesDir;
 import ch.unibas.fitting.shared.scripts.base.ScriptExecutionException;
 import ch.unibas.fitting.shared.scripts.multipolegauss.IMultipoleGaussScript;
 import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussInput;
@@ -20,6 +20,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.log4j.Logger;
+
+import javax.inject.Inject;
 
 public class RealMultipoleGaussScript implements IMultipoleGaussScript {
 
@@ -35,19 +37,19 @@ public class RealMultipoleGaussScript implements IMultipoleGaussScript {
     private final String MultipoleGaussScriptFileNameKey = "scripts.multipole_gauss";
 	
 	private final PythonScriptRunner runner;
-    private final MoleculesDir moleculesDir;
 
     private File multipoleGaussScriptFile;
 
-    public RealMultipoleGaussScript(MoleculesDir moleculesDir, Settings settings) {
-    	this.moleculesDir = moleculesDir;
+    @Inject
+    public RealMultipoleGaussScript(Settings settings) {
     	runner = new PythonScriptRunner();
         multipoleGaussScriptFile = new File(settings.getScriptsDir(), settings.getValue(MultipoleGaussScriptFileNameKey));
 	}
 
 	@Override
     public MultipoleGaussOutput execute(MultipoleGaussInput input) {
-		runner.setWorkingDir(moleculesDir.getDirectory());
+        MoleculesDir molDir = input.getMoleculesDir();
+		runner.setWorkingDir(molDir.getDirectory());
 
 		List<String> args = new ArrayList<>();
 		File xyzFile = new File(input.getMoleculeName() + xyzExtension);
@@ -66,8 +68,8 @@ public class RealMultipoleGaussScript implements IMultipoleGaussScript {
         args.add("-n");
         args.add(String.valueOf(input.getnCores()));
 
-        moleculesDir.deleteMolecule(input.getMoleculeName());
-        File specificMoleculeDir = new File(moleculesDir.getDirectory(), input.getMoleculeName());
+        molDir.deleteMolecule(input.getMoleculeName());
+        File specificMoleculeDir = molDir.getDirectoryFor(input.getMoleculeName());
 
         File logOutfile  = new File(specificMoleculeDir,  input.getMoleculeName() + logExtension);
 		File fchkOutfile = new File(specificMoleculeDir,  input.getMoleculeName() + fchkExtension);

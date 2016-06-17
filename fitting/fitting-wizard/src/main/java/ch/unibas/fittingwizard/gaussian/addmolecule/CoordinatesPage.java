@@ -9,7 +9,7 @@
 package ch.unibas.fittingwizard.gaussian.addmolecule;
 
 import ch.unibas.fittingwizard.gaussian.Visualization;
-import ch.unibas.fitting.shared.base.MoleculesDir;
+import ch.unibas.fitting.shared.directories.MoleculesDir;
 import ch.unibas.fitting.shared.xyz.XyzAtom;
 import ch.unibas.fitting.shared.xyz.XyzFile;
 import ch.unibas.fitting.shared.xyz.XyzFileParser;

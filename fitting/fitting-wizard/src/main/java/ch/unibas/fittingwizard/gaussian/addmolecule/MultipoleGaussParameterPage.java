@@ -8,6 +8,7 @@
  */
 package ch.unibas.fittingwizard.gaussian.addmolecule;
 
+import ch.unibas.fitting.shared.directories.MoleculesDir;
 import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussInput;
 import ch.unibas.fittingwizard.gaussian.base.ButtonFactory;
 import ch.unibas.fittingwizard.gaussian.base.DefaultValues;
@@ -25,6 +26,7 @@ import javafx.scene.control.TextField;
  * Time: 18:14
  */
 public class MultipoleGaussParameterPage extends WizardPage {
+    private MoleculesDir moleculesDir;
     private final MultipoleGaussParameterDto dto;
 
     private Button nextButton;
@@ -39,8 +41,10 @@ public class MultipoleGaussParameterPage extends WizardPage {
     private TextField txtState;
 
     public MultipoleGaussParameterPage(DefaultValues defaultValues,
+                                       MoleculesDir moleculesDir,
                                        MultipoleGaussParameterDto dto) {
         super("Multipole Gaussian MEP Input");
+        this.moleculesDir = moleculesDir;
         this.dto = dto;
 
         initializeDefaults(defaultValues);
@@ -82,7 +86,12 @@ public class MultipoleGaussParameterPage extends WizardPage {
             String details = txtQuantumChemicalDetails.getText();
             int cores = Integer.parseInt(txtNumberOfCores.getText());
             int state = Integer.parseInt(txtState.getText());
-            return new MultipoleGaussInput(dto.getXyzFile().getMoleculeName(), charges, details, cores, state);
+            return new MultipoleGaussInput(moleculesDir,
+                    dto.getXyzFile().getMoleculeName(),
+                    charges,
+                    details,
+                    cores,
+                    state);
         } catch (Exception e) {
             OverlayDialog.showError("Invalid parameters", "The provided parameters are invalid.");
             throw e;

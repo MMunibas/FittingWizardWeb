@@ -1,6 +1,10 @@
 package ch.unibas.fitting.web.gaussian.addmolecule.step4;
 
+import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussInput;
+import ch.unibas.fitting.shared.workflows.RunGaussianResult;
+import ch.unibas.fitting.shared.workflows.RunGaussianWorkflow;
+import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
 import ch.unibas.fitting.shared.xyz.XyzFile;
 import ch.unibas.fitting.shared.xyz.XyzFileParser;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
@@ -34,7 +38,11 @@ public class ParameterPage extends HeaderPage {
     private File _xyzFile;
 
     @Inject
+    private IUserDirectory _userDir;
+    @Inject
     private IBackgroundTasks _tasks;
+    @Inject
+    private RunGaussianWorkflow _workflow;
 
     public ParameterPage(PageParameters pp) {
 
@@ -75,7 +83,8 @@ public class ParameterPage extends HeaderPage {
 
                 XyzFile f = XyzFileParser.parse(_xyzFile);
 
-                MultipoleGaussInput input = new MultipoleGaussInput(
+                final MultipoleGaussInput input = new MultipoleGaussInput(
+                        _userDir.getMoleculesDir(getCurrentUsername()),
                         f.getMoleculeName(),
                         _netCharge.getObject(),
                         _quantum.getObject(),
@@ -83,11 +92,10 @@ public class ParameterPage extends HeaderPage {
                         _multiplicity.getObject()
                 );
 
-                // TODO execute real gaussian script
-
-                TaskHandle th = _tasks.execute(getCurrentUsername(), () -> {
-                    Thread.sleep(5000);
-                    return "hello world!";
+                TaskHandle th = _tasks.execute(getCurrentUsername(), "Multiple Gaussian MEP", () -> {
+                    Thread.sleep(3000);
+                    RunGaussianResult result = _workflow.execute(WorkflowContext.withInput(input));
+                    return result;
                 });
 
                 PageParameters pp = new PageParameters();

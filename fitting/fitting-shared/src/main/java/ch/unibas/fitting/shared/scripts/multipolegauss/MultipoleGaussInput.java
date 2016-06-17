@@ -8,19 +8,28 @@
  */
 package ch.unibas.fitting.shared.scripts.multipolegauss;
 
+import ch.unibas.fitting.shared.directories.MoleculesDir;
+
 /**
  * User: mhelmer
  * Date: 28.11.13
  * Time: 14:29
  */
 public class MultipoleGaussInput {
+    private MoleculesDir moleculesDir;
     private final String moleculeName;
     private final int netCharge;
     private final String quantChemDetails;
     private final int nCores;
     private final int state;
 
-    public MultipoleGaussInput(String moleculeName, int netCharge, String quantChemDetails, int nCores, int state) {
+    public MultipoleGaussInput(MoleculesDir moleculesDir,
+                               String moleculeName,
+                               int netCharge,
+                               String quantChemDetails,
+                               int nCores,
+                               int state) {
+        this.moleculesDir = moleculesDir;
         this.moleculeName = moleculeName;
         this.netCharge = netCharge;
         this.quantChemDetails = quantChemDetails;
@@ -45,5 +54,9 @@ public class MultipoleGaussInput {
 
     public int getState() {
         return state;
+    }
+
+    public MoleculesDir getMoleculesDir() {
+        return moleculesDir;
     }
 }

@@ -32,10 +32,16 @@ public class Main {
         Server srv = new Server(8080);
 
         // https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=27848170
-        ServletHolder sh = new ServletHolder(WicketServlet.class);
-        sh.setInitParameter(ContextParamWebApplicationFactory.APP_CLASS_PARAM, WebApp.class.getName());
+        ServletHolder sh = new ServletHolder();
         sh.setInitParameter(WicketFilter.FILTER_MAPPING_PARAM, "/*");
 
+        WicketServlet servlet = new WicketServlet() {
+            @Override
+            protected WicketFilter newWicketFilter() {
+                return new WicketFilter(new WebApp(settings));
+            }
+        };
+        sh.setServlet(servlet);
         ServletContextHandler sch = new ServletContextHandler(ServletContextHandler.SESSIONS);
         sch.addServlet(sh, "/*");
 

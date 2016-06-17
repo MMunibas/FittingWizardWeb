@@ -20,6 +20,8 @@ import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
+import javax.inject.Inject;
+
 
 public class RealLRAScript  implements ILRAScript {
 
@@ -32,6 +34,7 @@ public class RealLRAScript  implements ILRAScript {
 	private final PythonScriptRunner runner;
     private File lraScriptFile;
 
+	@Inject
     public RealLRAScript(Settings settings) {
         runner = new PythonScriptRunner();
         lraScriptFile = new File(settings.getScriptsDir(), settings.getValue(LRAScriptNameKey));

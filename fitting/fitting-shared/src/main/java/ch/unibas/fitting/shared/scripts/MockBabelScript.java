@@ -8,6 +8,7 @@
  */
 package ch.unibas.fitting.shared.scripts;
 
+import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.scripts.babel.BabelInput;
 import ch.unibas.fitting.shared.scripts.babel.BabelOutput;
 import ch.unibas.fitting.shared.scripts.babel.IBabelScript;
@@ -18,6 +19,8 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
+
+import javax.inject.Inject;
 
 /**
  * User: mhelmer
@@ -32,13 +35,12 @@ public class MockBabelScript implements IBabelScript {
 	private final List<String> filesToCopy = Arrays.asList(".sdf");
 
 	private final static Logger logger = Logger.getLogger(MockBabelScript.class);
-	
-	private File moleculeDestination;
+
     private final File moleculesTestData;
 
-    public MockBabelScript(File moleculeDestination, File moleculesTestData) {
-		this.moleculeDestination = moleculeDestination;
-        this.moleculesTestData = moleculesTestData;
+	@Inject
+    public MockBabelScript(Settings settings) {
+        this.moleculesTestData = settings.getMoleculeTestdataDir();
     }
 
 	@Override
@@ -46,7 +48,7 @@ public class MockBabelScript implements IBabelScript {
 		
 		String moleculeName = getMoleculeName(input.getGaussianLogFile());
 
-		File outputDir = new File(moleculeDestination, moleculeName);
+		File outputDir = input.getMoleculesDir().getDirectoryFor(moleculeName);
 		
 		File outputFile = new File(outputDir, moleculeName + sdfExtension);
 

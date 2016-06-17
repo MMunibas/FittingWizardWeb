@@ -8,16 +8,23 @@
  */
 package ch.unibas.fitting.shared.scripts.fittab;
 
+import ch.unibas.fitting.shared.directories.MoleculesDir;
+
 import java.io.File;
 
 public class FittabScriptInput {
 
-    private final File cubeFile;
+	private MoleculesDir moleculesDir;
+	private final File cubeFile;
 	private final File vdwFile;
 	private final File lpunFile;
 
-	public FittabScriptInput(File cubeFile, File vdwFile, File lpunFile) {
-        this.cubeFile = cubeFile;
+	public FittabScriptInput(MoleculesDir moleculesDir,
+							 File cubeFile,
+							 File vdwFile,
+							 File lpunFile) {
+		this.moleculesDir = moleculesDir;
+		this.cubeFile = cubeFile;
         this.vdwFile = vdwFile;
         this.lpunFile = lpunFile;
     }
@@ -33,5 +40,8 @@ public class FittabScriptInput {
 	public File getLpunFile() {
 		return lpunFile;
 	}
-	
+
+	public MoleculesDir getMoleculesDir() {
+		return moleculesDir;
+	}
 }

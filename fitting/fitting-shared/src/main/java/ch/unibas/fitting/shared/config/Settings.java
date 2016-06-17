@@ -93,4 +93,12 @@ public class Settings {
     protected File getFile(String key) {
         return new File(getValue(key));
     }
+
+    public boolean getUseGaussianMock() {
+        return getValue("mocks.use_gaussian_mock").equals("true");
+    }
+
+    public boolean getMocksEnabled() {
+        return getValue("mocks.enabled").equals("true");
+    }
 }

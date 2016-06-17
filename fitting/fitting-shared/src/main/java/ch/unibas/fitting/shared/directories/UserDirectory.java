@@ -1,7 +1,6 @@
-package ch.unibas.fitting.web.application;
+package ch.unibas.fitting.shared.directories;
 
 import ch.unibas.fitting.shared.config.Settings;
-import ch.unibas.fitting.web.WebSettings;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -21,7 +20,7 @@ public class UserDirectory implements IUserDirectory {
     private File _rootDir;
 
     @Inject
-    public UserDirectory(WebSettings config) {
+    public UserDirectory(Settings config) {
         _rootDir = config.getDataDir();
         LOGGER.info("Using root dir " + _rootDir.getPath());
     }
@@ -49,7 +48,7 @@ public class UserDirectory implements IUserDirectory {
 
 
 
-    private File subDir(String username, String name) {
+    private File userSubDir(String username, String name) {
         return new File(userDir(username), name);
     }
 
@@ -58,13 +57,18 @@ public class UserDirectory implements IUserDirectory {
     }
 
     @Override
-    public File getXyzFileName(String username, String name) {
+    public File getXyzFileFor(String username, String name) {
         xyzDir(username).mkdirs();
         return xyzFile(username, name);
     }
 
+    @Override
+    public MoleculesDir getMoleculesDir(String username) {
+        return new MoleculesDir(userSubDir(username, "molecules"));
+    }
+
     private File xyzDir(String username) {
-        return subDir(username, "xyz_files");
+        return userSubDir(username, "xyz_files");
     }
 
     private File ljfitInputFile(String username, String name) {
@@ -79,7 +83,7 @@ public class UserDirectory implements IUserDirectory {
     }
 
     private File ljfitInputDir(String username) {
-        return subDir(username, "ljfit_files");
+        return userSubDir(username, "ljfit_files");
     }
 
     @Override

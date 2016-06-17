@@ -1,8 +1,20 @@
 package ch.unibas.fitting.web;
 
+import ch.unibas.fitting.shared.config.ConfigFile;
 import ch.unibas.fitting.shared.config.Settings;
+import ch.unibas.fitting.shared.directories.IUserDirectory;
+import ch.unibas.fitting.shared.directories.UserDirectory;
+import ch.unibas.fitting.shared.scripts.*;
+import ch.unibas.fitting.shared.scripts.babel.IBabelScript;
+import ch.unibas.fitting.shared.scripts.babel.RealBabelScript;
+import ch.unibas.fitting.shared.scripts.fittab.IFittabScript;
+import ch.unibas.fitting.shared.scripts.lra.ILRAScript;
+import ch.unibas.fitting.shared.scripts.multipolegauss.IMultipoleGaussScript;
+import ch.unibas.fitting.shared.tools.GaussianLogModifier;
+import ch.unibas.fitting.shared.tools.LPunParser;
+import ch.unibas.fitting.shared.tools.Notifications;
+import ch.unibas.fitting.shared.workflows.RunGaussianWorkflow;
 import ch.unibas.fitting.web.application.*;
-import ch.unibas.fitting.web.gaussian.addmolecule.step4.ParameterPage;
 import ch.unibas.fitting.web.web.SessionCounter;
 import ch.unibas.fitting.web.web.UserSession;
 import ch.unibas.fitting.web.welcome.WelcomePage;
@@ -27,7 +39,12 @@ public class WebApp extends WebApplication {
 
     private static final Logger LOGGER = Logger.getLogger(WebApp.class);
 
-    private SessionCounter counter = new SessionCounter();
+    private final SessionCounter counter = new SessionCounter();
+    private WebSettings settings;
+
+    public WebApp(WebSettings settings) {
+        this.settings = settings;
+    }
 
     @Override
     public Class<? extends Page> getHomePage() {
@@ -44,10 +61,37 @@ public class WebApp extends WebApplication {
             @Override
             protected void configure() {
 
+                // web app dependencies
                 bind(IBackgroundTasks.class).to(BackgroundTaskService.class).in(Scopes.SINGLETON);
                 bind(IUserDirectory.class).to(UserDirectory.class);
-                bind(WebSettings.class).toInstance(WebSettings.load());
+
+                bind(WebSettings.class).toInstance(settings);
+                bind(Settings.class).to(WebSettings.class);
+
                 bind(SessionCounter.class).toInstance(counter);
+
+                // gaussian dependencies
+                bind(RunGaussianWorkflow.class).in(Scopes.SINGLETON);
+
+                if (settings.getUseGaussianMock()) {
+                    bind(IMultipoleGaussScript.class).to(MockMultipoleGaussScript.class).in(Scopes.SINGLETON);
+                } else {
+                    bind(IMultipoleGaussScript.class).to(RealMultipoleGaussScript.class).in(Scopes.SINGLETON);
+                }
+
+                if (settings.getMocksEnabled()) {
+                    bind(IBabelScript.class).to(MockBabelScript.class).in(Scopes.SINGLETON);
+                    bind(ILRAScript.class).to(MockLRAScript.class).in(Scopes.SINGLETON);
+                    bind(IFittabScript.class).to(MockFittabMarkerScript.class).in(Scopes.SINGLETON);
+                } else {
+                    bind(IBabelScript.class).to(RealBabelScript.class).in(Scopes.SINGLETON);
+                    bind(ILRAScript.class).to(RealLRAScript.class).in(Scopes.SINGLETON);
+                    bind(IFittabScript.class).to(RealFittabMarkerScript.class).in(Scopes.SINGLETON);
+                }
+
+                bind(LPunParser.class).in(Scopes.SINGLETON);
+                bind(GaussianLogModifier.class).in(Scopes.SINGLETON);
+                bind(Notifications.class).in(Scopes.SINGLETON);
             }
         }));
     }

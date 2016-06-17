@@ -8,7 +8,7 @@
  */
 package ch.unibas.fittingwizard.gaussian;
 
-import ch.unibas.fitting.shared.base.MoleculesDir;
+import ch.unibas.fitting.shared.directories.MoleculesDir;
 import ch.unibas.fitting.shared.fitting.FitRepository;
 import ch.unibas.fitting.shared.molecules.Molecule;
 import ch.unibas.fitting.shared.molecules.MoleculeId;
