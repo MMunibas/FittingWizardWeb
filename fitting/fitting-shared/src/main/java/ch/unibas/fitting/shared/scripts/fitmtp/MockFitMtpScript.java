@@ -6,11 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.fitting.shared.scripts;
-
-import ch.unibas.fitting.shared.scripts.fitmtp.FitMtpInput;
-import ch.unibas.fitting.shared.scripts.fitmtp.FitMtpOutput;
-import ch.unibas.fitting.shared.scripts.fitmtp.IFitMtpScript;
+package ch.unibas.fitting.shared.scripts.fitmtp;
 
 import java.io.File;
 import java.io.IOException;

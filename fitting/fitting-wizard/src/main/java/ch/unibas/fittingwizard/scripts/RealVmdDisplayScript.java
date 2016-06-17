@@ -10,9 +10,9 @@ package ch.unibas.fittingwizard.scripts;
 
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.molecules.MoleculeId;
-import ch.unibas.fitting.shared.scripts.RealFitScript;
-import ch.unibas.fitting.shared.scripts.RealLRAScript;
-import ch.unibas.fitting.shared.scripts.RealMultipoleGaussScript;
+import ch.unibas.fitting.shared.scripts.fitmtp.RealFitScript;
+import ch.unibas.fitting.shared.scripts.lra.RealLRAScript;
+import ch.unibas.fitting.shared.scripts.multipolegauss.RealMultipoleGaussScript;
 import ch.unibas.fitting.shared.scripts.vmd.IVmdDisplayScript;
 import ch.unibas.fitting.shared.scripts.vmd.VmdDisplayInput;
 import ch.unibas.fieldcomp.FieldcompRunner;

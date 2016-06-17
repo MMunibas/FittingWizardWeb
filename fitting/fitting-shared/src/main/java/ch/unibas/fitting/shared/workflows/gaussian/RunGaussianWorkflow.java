@@ -6,9 +6,12 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.fitting.shared.workflows;
+package ch.unibas.fitting.shared.workflows.gaussian;
 
 import ch.unibas.fitting.shared.directories.MoleculesDir;
+import ch.unibas.fitting.shared.molecules.Atom;
+import ch.unibas.fitting.shared.molecules.AtomType;
+import ch.unibas.fitting.shared.molecules.Molecule;
 import ch.unibas.fitting.shared.scripts.babel.BabelInput;
 import ch.unibas.fitting.shared.scripts.babel.BabelOutput;
 import ch.unibas.fitting.shared.scripts.babel.IBabelScript;
@@ -21,40 +24,47 @@ import ch.unibas.fitting.shared.scripts.multipolegauss.IMultipoleGaussScript;
 import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussInput;
 import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussOutput;
 import ch.unibas.fitting.shared.tools.GaussianLogModifier;
+import ch.unibas.fitting.shared.tools.LPunParser;
 import ch.unibas.fitting.shared.tools.Notifications;
 import ch.unibas.fitting.shared.workflows.base.Workflow;
 import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * User: mhelmer
  * Date: 16.12.13
  * Time: 09:28
  */
-public class RunGaussianWorkflow extends Workflow<MultipoleGaussInput,RunGaussianResult> {
+public class RunGaussianWorkflow implements Workflow<MultipoleGaussInput,RunGaussianResult>, GaussianWorkflow {
 
     private static final Logger logger = Logger.getLogger(RunGaussianWorkflow.class);
 
-    private final IMultipoleGaussScript gaussScript;
-    private final IBabelScript babelScript;
-    private final ILRAScript lraScript;
-    private final IFittabScript fittabMarkerScript;
-    private final GaussianLogModifier gaussianLogModifier;
-    private final Notifications notifications;
+    private IMultipoleGaussScript gaussScript;
+    private IBabelScript babelScript;
+    private ILRAScript lraScript;
+    private IFittabScript fittabMarkerScript;
+    private LPunParser lPunParser;
+    private GaussianLogModifier gaussianLogModifier;
+    private Notifications notifications;
 
     @Inject
     public RunGaussianWorkflow(IMultipoleGaussScript gaussScript,
                                IBabelScript babelScript,
                                ILRAScript lraScript,
                                IFittabScript fittabMarkerScript,
+                               LPunParser lPunParser,
                                GaussianLogModifier gaussianLogModifier,
                                Notifications notifications) {
         this.gaussScript = gaussScript;
         this.babelScript = babelScript;
         this.lraScript = lraScript;
         this.fittabMarkerScript = fittabMarkerScript;
+        this.lPunParser = lPunParser;
         this.gaussianLogModifier = gaussianLogModifier;
         this.notifications = notifications;
     }
@@ -62,13 +72,12 @@ public class RunGaussianWorkflow extends Workflow<MultipoleGaussInput,RunGaussia
     public RunGaussianResult execute(WorkflowContext<MultipoleGaussInput> status) {
         logger.info("Executing gaussian workflow.");
 
+        MultipoleGaussInput input = status.getParameter();
         MultipoleGaussOutput gaussOutput = executeGaussScript(status);
-        MoleculesDir moleculesDir = status.getParameter().getMoleculesDir();
+        MoleculesDir moleculesDir = input.getMoleculesDir();
 
         RunGaussianResult result;
-        if (!gaussOutput.isLogFileValid()) {
-            result = RunGaussianResult.createInvalid(gaussOutput.getLogFile());
-        } else {
+        if (gaussOutput.isLogFileValid()) {
             status.setCurrentStatus("Removing header and footer of cluster submission from gaussian log file.");
             gaussianLogModifier.removeHeadersFromCluster(gaussOutput.getLogFile());
 
@@ -84,7 +93,20 @@ public class RunGaussianWorkflow extends Workflow<MultipoleGaussInput,RunGaussia
                     gaussOutput.getCubeFile(),
                     gaussOutput.getVdwFile(),
                     lraScriptOutput.getLPunFile()));
-            result = RunGaussianResult.Success;
+
+            ArrayList<AtomType> atomTypes = lPunParser.parse(moleculesDir, input.getXyzFile().getMoleculeName());
+
+            List<Atom> atoms = input.getXyzFile()
+                    .getAtoms()
+                    .stream()
+                    .map(xyzAtom -> new Atom(xyzAtom.getName(), xyzAtom.getX(), xyzAtom.getY(), xyzAtom.getZ()))
+                    .collect(Collectors.toList());
+
+            Molecule molecule = new Molecule(input.getXyzFile(), atoms, atomTypes);
+
+            result = new RunGaussianResult(molecule, gaussOutput.getLogFile());
+        } else {
+            result = new RunGaussianResult(gaussOutput.getLogFile());
         }
         return result;
     }

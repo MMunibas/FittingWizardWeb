@@ -10,7 +10,7 @@ package ch.unibas.fitting.shared.workflows;
 
 import ch.unibas.fitting.shared.fitting.Fit;
 import ch.unibas.fitting.shared.molecules.MoleculeId;
-import ch.unibas.fitting.shared.scripts.RealFitScript;
+import ch.unibas.fitting.shared.scripts.fitmtp.RealFitScript;
 import ch.unibas.fitting.shared.scripts.export.ExportScriptInput;
 import ch.unibas.fitting.shared.scripts.export.ExportScriptOutput;
 import ch.unibas.fitting.shared.scripts.export.IExportScript;
@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
 /**
  * User: mhelmer Date: 13.12.13 Time: 15:39
  */
-public class ExportFitWorkflow extends Workflow<ExportFitInput, Void> {
+public class ExportFitWorkflow implements Workflow<ExportFitInput, Void> {
 
     private static final Logger logger = Logger.getLogger(ExportFitWorkflow.class);
 

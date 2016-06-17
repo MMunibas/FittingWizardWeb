@@ -64,7 +64,9 @@ public class UserDirectory implements IUserDirectory {
 
     @Override
     public MoleculesDir getMoleculesDir(String username) {
-        return new MoleculesDir(userSubDir(username, "molecules"));
+        File mol = userSubDir(username, "molecules");
+        mol.mkdirs();
+        return new MoleculesDir(mol);
     }
 
     private File xyzDir(String username) {

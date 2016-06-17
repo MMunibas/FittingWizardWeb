@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
  * Date: 11.12.13
  * Time: 09:28
  */
-public class RunFitWorkflow extends Workflow<FitMtpInput,Void> {
+public class RunFitWorkflow implements Workflow<FitMtpInput,Void> {
 
     private static final Logger logger = Logger.getLogger(RunFitWorkflow.class);
 

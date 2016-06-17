@@ -14,10 +14,8 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.time.Duration;
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeUtils;
 
 import java.util.UUID;
 
@@ -73,7 +71,8 @@ public class ProgressPage extends HeaderPage {
                             pp.add("task_id", th.getId());
                             setResponsePage(AtomTypesPage.class, pp);
                         } else {
-                            Logger.debug("Task with id=" + _taskId + " failed.");
+                            Throwable ex = th.getException();
+                            Logger.debug("Task with id=" + _taskId + " failed.", ex);
                             setResponsePage(ParameterPage.class, pageParameter);
                         }
                     } else {

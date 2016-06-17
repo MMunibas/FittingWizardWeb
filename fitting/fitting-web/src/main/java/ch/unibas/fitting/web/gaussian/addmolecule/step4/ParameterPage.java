@@ -2,8 +2,9 @@ package ch.unibas.fitting.web.gaussian.addmolecule.step4;
 
 import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussInput;
-import ch.unibas.fitting.shared.workflows.RunGaussianResult;
-import ch.unibas.fitting.shared.workflows.RunGaussianWorkflow;
+import ch.unibas.fitting.shared.workflows.gaussian.GaussianWorkflow;
+import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianResult;
+import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianWorkflow;
 import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
 import ch.unibas.fitting.shared.xyz.XyzFile;
 import ch.unibas.fitting.shared.xyz.XyzFileParser;
@@ -35,20 +36,22 @@ public class ParameterPage extends HeaderPage {
     private IModel<Integer> _nCores = Model.of(1);
     private IModel<Integer> _multiplicity = Model.of(1);
 
-    private File _xyzFile;
+    private final File _xyzFile;
 
     @Inject
     private IUserDirectory _userDir;
     @Inject
     private IBackgroundTasks _tasks;
     @Inject
-    private RunGaussianWorkflow _workflow;
+    private GaussianWorkflow _workflow;
 
     public ParameterPage(PageParameters pp) {
 
         String xyzFile = pp.get("xyz_file").toString();
         if (xyzFile != null)
             _xyzFile = new File(xyzFile);
+        else
+            _xyzFile = null;
 
         Form form = new Form("form");
         add(form);
@@ -81,18 +84,20 @@ public class ParameterPage extends HeaderPage {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 target.add(fp);
 
-                XyzFile f = XyzFileParser.parse(_xyzFile);
+                String username = getCurrentUsername();
+
+                XyzFile xyzFile = XyzFileParser.parse(_xyzFile);
 
                 final MultipoleGaussInput input = new MultipoleGaussInput(
-                        _userDir.getMoleculesDir(getCurrentUsername()),
-                        f.getMoleculeName(),
+                        _userDir.getMoleculesDir(username),
+                        xyzFile,
                         _netCharge.getObject(),
                         _quantum.getObject(),
                         _nCores.getObject(),
                         _multiplicity.getObject()
                 );
 
-                TaskHandle th = _tasks.execute(getCurrentUsername(), "Multiple Gaussian MEP", () -> {
+                TaskHandle th = _tasks.execute(username, "Multiple Gaussian MEP", () -> {
                     Thread.sleep(3000);
                     RunGaussianResult result = _workflow.execute(WorkflowContext.withInput(input));
                     return result;

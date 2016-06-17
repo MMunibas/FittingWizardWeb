@@ -1,19 +1,25 @@
 package ch.unibas.fitting.web;
 
-import ch.unibas.fitting.shared.config.ConfigFile;
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.shared.directories.UserDirectory;
-import ch.unibas.fitting.shared.scripts.*;
 import ch.unibas.fitting.shared.scripts.babel.IBabelScript;
+import ch.unibas.fitting.shared.scripts.babel.MockBabelScript;
 import ch.unibas.fitting.shared.scripts.babel.RealBabelScript;
 import ch.unibas.fitting.shared.scripts.fittab.IFittabScript;
+import ch.unibas.fitting.shared.scripts.fittab.MockFittabMarkerScript;
+import ch.unibas.fitting.shared.scripts.fittab.RealFittabMarkerScript;
 import ch.unibas.fitting.shared.scripts.lra.ILRAScript;
+import ch.unibas.fitting.shared.scripts.lra.MockLRAScript;
+import ch.unibas.fitting.shared.scripts.lra.RealLRAScript;
 import ch.unibas.fitting.shared.scripts.multipolegauss.IMultipoleGaussScript;
+import ch.unibas.fitting.shared.scripts.multipolegauss.MockMultipoleGaussScript;
+import ch.unibas.fitting.shared.scripts.multipolegauss.RealMultipoleGaussScript;
 import ch.unibas.fitting.shared.tools.GaussianLogModifier;
 import ch.unibas.fitting.shared.tools.LPunParser;
 import ch.unibas.fitting.shared.tools.Notifications;
-import ch.unibas.fitting.shared.workflows.RunGaussianWorkflow;
+import ch.unibas.fitting.shared.workflows.gaussian.GaussianWorkflow;
+import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianWorkflow;
 import ch.unibas.fitting.web.application.*;
 import ch.unibas.fitting.web.web.SessionCounter;
 import ch.unibas.fitting.web.web.UserSession;
@@ -71,7 +77,7 @@ public class WebApp extends WebApplication {
                 bind(SessionCounter.class).toInstance(counter);
 
                 // gaussian dependencies
-                bind(RunGaussianWorkflow.class).in(Scopes.SINGLETON);
+                bind(GaussianWorkflow.class).to(RunGaussianWorkflow.class).asEagerSingleton();
 
                 if (settings.getUseGaussianMock()) {
                     bind(IMultipoleGaussScript.class).to(MockMultipoleGaussScript.class).in(Scopes.SINGLETON);

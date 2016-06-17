@@ -6,12 +6,10 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.fitting.shared.scripts;
+package ch.unibas.fitting.shared.scripts.babel;
 
 import ch.unibas.fitting.shared.config.Settings;
-import ch.unibas.fitting.shared.scripts.babel.BabelInput;
-import ch.unibas.fitting.shared.scripts.babel.BabelOutput;
-import ch.unibas.fitting.shared.scripts.babel.IBabelScript;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;

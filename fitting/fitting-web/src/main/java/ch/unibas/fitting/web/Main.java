@@ -75,8 +75,9 @@ public class Main {
         BasicConfigurator.configure();
 
         FileAppender app = null;
-        File log = new File("logs/web.log");
+        File log = new File("logs");
         log.mkdir();
+        log = new File(log, "web.log");
         try {
             app = new FileAppender(new PatternLayout(TTCC_CONVERSION_PATTERN), log.getAbsolutePath() ,false);
         } catch (IOException ex) {

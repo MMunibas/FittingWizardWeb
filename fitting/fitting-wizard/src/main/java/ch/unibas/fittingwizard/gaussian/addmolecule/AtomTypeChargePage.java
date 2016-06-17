@@ -55,7 +55,7 @@ public class AtomTypeChargePage extends WizardPageWithVisualization {
     private TableColumn<AtomTypeViewModel, String> chargeColumn;
 
     private Button saveButton;
-    private ArrayList<AtomType> charges;
+    private List<AtomType> charges;
     private Button prevButton;
 
     public AtomTypeChargePage(MoleculeRepository moleculeRepository,
@@ -184,11 +184,11 @@ public class AtomTypeChargePage extends WizardPageWithVisualization {
     }
 
     private Molecule createMolecule() {
-        ArrayList<Atom> atoms = dto.getParsedXyzFile()
+        List<Atom> atoms = dto.getParsedXyzFile()
                 .getAtoms()
                 .stream()
                 .map(xyzAtom -> new Atom(xyzAtom.getName(), xyzAtom.getX(), xyzAtom.getY(), xyzAtom.getZ()))
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toList());
 
         return new Molecule(dto.getParsedXyzFile(), atoms, charges);
     }

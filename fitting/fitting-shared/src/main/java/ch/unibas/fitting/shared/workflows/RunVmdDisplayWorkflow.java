@@ -15,7 +15,7 @@ import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
 import java.io.File;
 import org.apache.log4j.Logger;
 
-public class RunVmdDisplayWorkflow extends Workflow<VmdDisplayInput,Void> {
+public class RunVmdDisplayWorkflow implements Workflow<VmdDisplayInput,Void> {
 
     private static final Logger logger = Logger.getLogger(RunVmdDisplayWorkflow.class);
 

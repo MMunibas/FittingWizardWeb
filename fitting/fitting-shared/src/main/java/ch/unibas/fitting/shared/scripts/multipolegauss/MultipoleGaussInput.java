@@ -9,6 +9,7 @@
 package ch.unibas.fitting.shared.scripts.multipolegauss;
 
 import ch.unibas.fitting.shared.directories.MoleculesDir;
+import ch.unibas.fitting.shared.xyz.XyzFile;
 
 /**
  * User: mhelmer
@@ -17,29 +18,30 @@ import ch.unibas.fitting.shared.directories.MoleculesDir;
  */
 public class MultipoleGaussInput {
     private MoleculesDir moleculesDir;
-    private final String moleculeName;
+    private XyzFile xyzFile;
     private final int netCharge;
     private final String quantChemDetails;
     private final int nCores;
     private final int state;
 
     public MultipoleGaussInput(MoleculesDir moleculesDir,
-                               String moleculeName,
+                               XyzFile xyzFile,
                                int netCharge,
                                String quantChemDetails,
                                int nCores,
                                int state) {
         this.moleculesDir = moleculesDir;
-        this.moleculeName = moleculeName;
+        this.xyzFile = xyzFile;
         this.netCharge = netCharge;
         this.quantChemDetails = quantChemDetails;
         this.nCores = nCores;
         this.state = state;
     }
 
-    public String getMoleculeName() {
-        return moleculeName;
+    public XyzFile getXyzFile() {
+        return xyzFile;
     }
+
     public int getNetCharge() {
         return netCharge;
     }
@@ -58,5 +60,9 @@ public class MultipoleGaussInput {
 
     public MoleculesDir getMoleculesDir() {
         return moleculesDir;
+    }
+
+    public String getMoleculeName() {
+        return xyzFile.getMoleculeName();
     }
 }

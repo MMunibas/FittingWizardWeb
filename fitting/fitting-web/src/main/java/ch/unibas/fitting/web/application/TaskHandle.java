@@ -67,4 +67,15 @@ public class TaskHandle<T> {
     public String getTitle() {
         return title;
     }
+
+    public Throwable getException() {
+        try {
+            future.get();
+        } catch (ExecutionException e) {
+            return e.getCause();
+        } catch (InterruptedException e) {
+            return e;
+        }
+        return null;
+    }
 }

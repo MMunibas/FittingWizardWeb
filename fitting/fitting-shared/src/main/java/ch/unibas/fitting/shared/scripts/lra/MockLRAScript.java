@@ -6,12 +6,10 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.fitting.shared.scripts;
+package ch.unibas.fitting.shared.scripts.lra;
 
 import ch.unibas.fitting.shared.config.Settings;
-import ch.unibas.fitting.shared.scripts.lra.ILRAScript;
-import ch.unibas.fitting.shared.scripts.lra.LRAScriptInput;
-import ch.unibas.fitting.shared.scripts.lra.LRAScriptOutput;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -19,6 +17,8 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
+
+import javax.inject.Inject;
 
 /**
  * User: mhelmer Date: 05.12.13 Time: 17:25
@@ -31,6 +31,7 @@ public class MockLRAScript implements ILRAScript {
 	private final static Logger logger = Logger.getLogger(MockLRAScript.class);
 	private final File testMoleculesDir;
 
+	@Inject
 	public MockLRAScript(Settings settings) {
 	    this.testMoleculesDir = settings.getMoleculeTestdataDir();
 	}

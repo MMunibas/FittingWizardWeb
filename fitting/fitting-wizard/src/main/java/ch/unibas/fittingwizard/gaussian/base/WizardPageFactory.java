@@ -45,21 +45,21 @@ import ch.unibas.fitting.shared.tools.Notifications;
 import ch.unibas.fitting.shared.charges.ChargesFileParser;
 import ch.unibas.fitting.shared.workflows.ExportFitWorkflow;
 import ch.unibas.fitting.shared.workflows.RunFitWorkflow;
-import ch.unibas.fitting.shared.workflows.RunGaussianWorkflow;
+import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianWorkflow;
 import ch.unibas.fitting.shared.workflows.RunVmdDisplayWorkflow;
 import ch.unibas.fitting.shared.scripts.babel.RealBabelScript;
-import ch.unibas.fitting.shared.scripts.RealExportScript;
-import ch.unibas.fitting.shared.scripts.RealFitScript;
-import ch.unibas.fitting.shared.scripts.RealFittabMarkerScript;
-import ch.unibas.fitting.shared.scripts.RealLRAScript;
-import ch.unibas.fitting.shared.scripts.RealMultipoleGaussScript;
+import ch.unibas.fitting.shared.scripts.export.RealExportScript;
+import ch.unibas.fitting.shared.scripts.fitmtp.RealFitScript;
+import ch.unibas.fitting.shared.scripts.fittab.RealFittabMarkerScript;
+import ch.unibas.fitting.shared.scripts.lra.RealLRAScript;
+import ch.unibas.fitting.shared.scripts.multipolegauss.RealMultipoleGaussScript;
 import ch.unibas.fittingwizard.scripts.RealVmdDisplayScript;
-import ch.unibas.fitting.shared.scripts.MockBabelScript;
-import ch.unibas.fitting.shared.scripts.MockExportScript;
-import ch.unibas.fitting.shared.scripts.MockFitMtpScript;
-import ch.unibas.fitting.shared.scripts.MockFittabMarkerScript;
-import ch.unibas.fitting.shared.scripts.MockLRAScript;
-import ch.unibas.fitting.shared.scripts.MockMultipoleGaussScript;
+import ch.unibas.fitting.shared.scripts.babel.MockBabelScript;
+import ch.unibas.fitting.shared.scripts.export.MockExportScript;
+import ch.unibas.fitting.shared.scripts.fitmtp.MockFitMtpScript;
+import ch.unibas.fitting.shared.scripts.fittab.MockFittabMarkerScript;
+import ch.unibas.fitting.shared.scripts.lra.MockLRAScript;
+import ch.unibas.fitting.shared.scripts.multipolegauss.MockMultipoleGaussScript;
 import ch.unibas.fittingwizard.gaussian.MoleculeListPage;
 import ch.unibas.fittingwizard.gaussian.addmolecule.AtomChargesDto;
 import ch.unibas.fittingwizard.gaussian.addmolecule.AtomTypeChargePage;
@@ -189,6 +189,7 @@ public class WizardPageFactory {
                 babelScript,
                 lraScript,
                 fittabMarkerScript,
+                lPunParser,
                 new GaussianLogModifier(),
                 notifications);
 

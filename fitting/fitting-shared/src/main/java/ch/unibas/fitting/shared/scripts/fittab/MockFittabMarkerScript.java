@@ -6,17 +6,14 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.fitting.shared.scripts;
+package ch.unibas.fitting.shared.scripts.fittab;
 
 import ch.unibas.fitting.shared.config.Settings;
-import ch.unibas.fitting.shared.scripts.fittab.FittabScriptInput;
-import ch.unibas.fitting.shared.scripts.fittab.FittabScriptOutput;
-import ch.unibas.fitting.shared.scripts.fittab.IFittabScript;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -47,11 +44,8 @@ public class MockFittabMarkerScript implements IFittabScript {
         // example: /esp-fit.pc-mtp/src/mtp_fittab_maker.py -cube co2.cube -vdw co2.vdw -pun co2_l.pun
 		
 		String moleculeName = getMoleculeName(input.getCubeFile());
-
 		File specificMoleculeDir = input.getMoleculesDir().getDirectoryFor(moleculeName);
-		
 		File mtpfittabOutputFile = new File(specificMoleculeDir, moleculeName + mtpfittabExtension);
-
 		File precomputedDataDir = new File(moleculeTestdataDir, moleculeName);
 
 		for (String fileExtension : filesToCopy) {

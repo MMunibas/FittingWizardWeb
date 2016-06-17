@@ -13,6 +13,6 @@ package ch.unibas.fitting.shared.workflows.base;
  * Date: 11.12.13
  * Time: 09:29
  */
-public abstract class Workflow<TIn, TOut> {
-    public abstract TOut execute(WorkflowContext<TIn> status);
+public interface Workflow<TIn, TOut> {
+    TOut execute(WorkflowContext<TIn> status);
 }

@@ -6,13 +6,12 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.fitting.shared.scripts;
+package ch.unibas.fitting.shared.scripts.export;
 
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.molecules.MoleculeId;
-import ch.unibas.fitting.shared.scripts.export.ExportScriptInput;
-import ch.unibas.fitting.shared.scripts.export.ExportScriptOutput;
-import ch.unibas.fitting.shared.scripts.export.IExportScript;
+import ch.unibas.fitting.shared.scripts.fitmtp.RealFitScript;
+import ch.unibas.fitting.shared.scripts.lra.RealLRAScript;
 import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
 import ch.unibas.fitting.shared.scripts.base.ScriptUtilities;
 import java.io.File;

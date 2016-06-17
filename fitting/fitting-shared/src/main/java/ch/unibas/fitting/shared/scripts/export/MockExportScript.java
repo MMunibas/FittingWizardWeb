@@ -6,11 +6,9 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.fitting.shared.scripts;
+package ch.unibas.fitting.shared.scripts.export;
 
-import ch.unibas.fitting.shared.scripts.export.ExportScriptInput;
-import ch.unibas.fitting.shared.scripts.export.ExportScriptOutput;
-import ch.unibas.fitting.shared.scripts.export.IExportScript;
+import ch.unibas.fitting.shared.scripts.fitmtp.RealFitScript;
 
 import java.io.File;
 import java.io.IOException;

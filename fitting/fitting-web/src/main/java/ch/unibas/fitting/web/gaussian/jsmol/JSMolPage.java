@@ -48,7 +48,7 @@ public class JSMolPage extends WebPage {
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
 
-        response.render(JavaScriptHeaderItem.forUrl("/javascript/jsmol/JSmol.min.js"));
+        response.render(JavaScriptHeaderItem.forUrl("/javascript/jsmol/j2s/JSmol.min.js"));
         response.render(JavaScriptHeaderItem.forScript("var Info = {width: 400,height: 400,serverURL: \"http://chemapps.stolaf.edu/jmol/jsmol/php/jsmol.php\",use: \"HTML5\",j2sPath: \"/js/j2s\",console: \"jmolApplet0_infodiv\"}", "jsmol_info"));
     }
 }

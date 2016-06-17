@@ -6,9 +6,10 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.fitting.shared.scripts;
+package ch.unibas.fitting.shared.scripts.multipolegauss;
 
 import ch.unibas.fitting.shared.config.Settings;
+import ch.unibas.fitting.shared.scripts.lra.MockLRAScript;
 import ch.unibas.fitting.shared.scripts.multipolegauss.IMultipoleGaussScript;
 import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussInput;
 import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussOutput;

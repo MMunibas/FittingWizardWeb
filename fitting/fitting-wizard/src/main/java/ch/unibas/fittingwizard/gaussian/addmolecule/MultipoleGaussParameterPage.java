@@ -87,7 +87,7 @@ public class MultipoleGaussParameterPage extends WizardPage {
             int cores = Integer.parseInt(txtNumberOfCores.getText());
             int state = Integer.parseInt(txtState.getText());
             return new MultipoleGaussInput(moleculesDir,
-                    dto.getXyzFile().getMoleculeName(),
+                    dto.getXyzFile(),
                     charges,
                     details,
                     cores,

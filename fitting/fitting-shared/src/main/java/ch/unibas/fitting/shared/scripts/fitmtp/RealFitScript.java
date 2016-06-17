@@ -6,14 +6,11 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.fitting.shared.scripts;
+package ch.unibas.fitting.shared.scripts.fitmtp;
 
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.molecules.MoleculeId;
 import ch.unibas.fitting.shared.scripts.base.ScriptExecutionException;
-import ch.unibas.fitting.shared.scripts.fitmtp.FitMtpInput;
-import ch.unibas.fitting.shared.scripts.fitmtp.FitMtpOutput;
-import ch.unibas.fitting.shared.scripts.fitmtp.IFitMtpScript;
 import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
 import ch.unibas.fitting.shared.scripts.base.ResourceUtils;
 import ch.unibas.fitting.shared.scripts.base.ScriptUtilities;

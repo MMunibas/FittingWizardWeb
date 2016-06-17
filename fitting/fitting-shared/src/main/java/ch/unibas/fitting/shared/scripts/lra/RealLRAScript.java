@@ -6,12 +6,9 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.fitting.shared.scripts;
+package ch.unibas.fitting.shared.scripts.lra;
 
 import ch.unibas.fitting.shared.config.Settings;
-import ch.unibas.fitting.shared.scripts.lra.ILRAScript;
-import ch.unibas.fitting.shared.scripts.lra.LRAScriptInput;
-import ch.unibas.fitting.shared.scripts.lra.LRAScriptOutput;
 import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
 import ch.unibas.fitting.shared.scripts.base.ScriptUtilities;
 import java.io.File;

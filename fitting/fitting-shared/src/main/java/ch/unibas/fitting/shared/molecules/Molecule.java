@@ -11,6 +11,7 @@ package ch.unibas.fitting.shared.molecules;
 import ch.unibas.fitting.shared.xyz.XyzFile;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 /**
  * User: mhelmer
@@ -20,10 +21,10 @@ import java.util.LinkedHashSet;
 public class Molecule {
     private final XyzFile xyzFile;
     private final MoleculeId id;
-    private final ArrayList<Atom> atoms;
-    private final ArrayList<AtomType> atomTypes;
+    private final List<Atom> atoms;
+    private final List<AtomType> atomTypes;
 
-    public Molecule(XyzFile xyzFile, ArrayList<Atom> atoms, ArrayList<AtomType> atomTypes) {
+    public Molecule(XyzFile xyzFile, List<Atom> atoms, List<AtomType> atomTypes) {
         this.xyzFile = xyzFile;
         this.id = new MoleculeId(xyzFile.getMoleculeName());
         this.atoms = atoms;
@@ -47,7 +48,7 @@ public class Molecule {
             throw new IllegalArgumentException("Atom count does not match atom charge count.");
     }
 
-    public static UserChargesState checkChargesState(ArrayList<AtomType> charges) {
+    public static UserChargesState checkChargesState(List<AtomType> charges) {
         UserChargesState state = UserChargesState.Invalid;
 
         int userChargesDefinedCount = 0;
@@ -97,11 +98,11 @@ public class Molecule {
         return xyzFile;
     }
 
-    public ArrayList<Atom> getAtoms() {
+    public List<Atom> getAtoms() {
         return atoms;
     }
 
-    public ArrayList<AtomType> getAtomTypes() {
+    public List<AtomType> getAtomTypes() {
         return atomTypes;
     }
 

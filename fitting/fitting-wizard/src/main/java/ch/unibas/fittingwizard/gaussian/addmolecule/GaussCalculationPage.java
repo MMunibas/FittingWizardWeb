@@ -9,8 +9,8 @@
 package ch.unibas.fittingwizard.gaussian.addmolecule;
 
 import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussInput;
-import ch.unibas.fitting.shared.workflows.RunGaussianResult;
-import ch.unibas.fitting.shared.workflows.RunGaussianWorkflow;
+import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianResult;
+import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianWorkflow;
 import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
 import ch.unibas.fittingwizard.gaussian.base.dialog.OverlayDialog;
 import ch.unibas.fittingwizard.gaussian.base.progress.Context;
@@ -48,11 +48,10 @@ public class GaussCalculationPage extends ProgressPage {
             }
         });
 
-        if (result.isInvalid()) {
+        if (!result.wasSuccessful()) {
             showErrorDialog(result.getLogFile());
         }
-
-        return result.equals(RunGaussianResult.Success);
+        return result.wasSuccessful();
     }
 
     @Override

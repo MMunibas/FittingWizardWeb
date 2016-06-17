@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
  *
  * @author hedin
  */
-public class RunCHARMMWorkflow extends Workflow<CHARMM_Input, CHARMM_Output> {
+public class RunCHARMMWorkflow implements Workflow<CHARMM_Input, CHARMM_Output> {
     
     private static final Logger logger = Logger.getLogger(RunCHARMMWorkflow.class);
     

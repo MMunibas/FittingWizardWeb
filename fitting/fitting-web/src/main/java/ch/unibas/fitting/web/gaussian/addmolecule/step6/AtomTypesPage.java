@@ -1,5 +1,9 @@
 package ch.unibas.fitting.web.gaussian.addmolecule.step6;
 
+import ch.unibas.fitting.shared.tools.LPunParser;
+import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianResult;
+import ch.unibas.fitting.web.application.IBackgroundTasks;
+import ch.unibas.fitting.web.application.TaskHandle;
 import ch.unibas.fitting.web.gaussian.addmolecule.step1.OverviewPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -15,9 +19,10 @@ import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-import java.util.ArrayList;
+import javax.inject.Inject;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Created by mhelmer-mobile on 15.06.2016.
@@ -25,6 +30,11 @@ import java.util.UUID;
 public class AtomTypesPage extends HeaderPage {
 
     private final UUID _taskId;
+
+    @Inject
+    private LPunParser _parser;
+    @Inject
+    private IBackgroundTasks _tasks;
 
     public AtomTypesPage(PageParameters pp) {
 
@@ -80,8 +90,15 @@ public class AtomTypesPage extends HeaderPage {
             protected List getData() {
 
                 if (atomTypes == null) {
-                    atomTypes = new ArrayList<>();
-                    atomTypes.add(new ChargesViewModel("test", new int[]{0,1,2,3}));
+                    TaskHandle<RunGaussianResult> result = _tasks.getHandle(_taskId);
+                    if (result.wasSuccessful()) {
+                        atomTypes = result.getResult()
+                                .getMolecule()
+                                .getAtomTypes()
+                                .stream()
+                                .map(atomType -> new ChargesViewModel(atomType.getId().getName(), atomType.getIndices()))
+                                .collect(Collectors.toList());
+                    }
                 }
 
                 return atomTypes;

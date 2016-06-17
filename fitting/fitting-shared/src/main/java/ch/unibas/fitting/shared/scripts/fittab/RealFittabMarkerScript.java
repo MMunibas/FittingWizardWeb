@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.fitting.shared.scripts;
+package ch.unibas.fitting.shared.scripts.fittab;
 
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.scripts.base.ScriptExecutionException;
@@ -17,6 +17,8 @@ import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+
+import ch.unibas.fitting.shared.scripts.lra.RealLRAScript;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
