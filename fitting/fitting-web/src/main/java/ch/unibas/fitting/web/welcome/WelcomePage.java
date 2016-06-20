@@ -24,8 +24,10 @@ public class WelcomePage extends HeaderPage {
         Form<?> form = new Form<Void>("form") {
             @Override
             protected void onSubmit() {
-                Logger.info("Navigating to " + selected.getType().getName());
-                setResponsePage(selected.getType());
+                if (selected != null) {
+                    Logger.info("Navigating to " + selected.getType().getName());
+                    setResponsePage(selected.getType());
+                }
             }
         };
 

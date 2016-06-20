@@ -30,6 +30,7 @@ import ch.unibas.fitting.shared.workflows.gaussian.MoleculeCreator;
 import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianWorkflow;
 import ch.unibas.fitting.web.application.BackgroundTaskService;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
+import ch.unibas.fitting.web.gaussian.FitUserRepo;
 import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
 import ch.unibas.fitting.web.gaussian.RemoveMolecule;
 import ch.unibas.fitting.web.gaussian.fit.RunFit;

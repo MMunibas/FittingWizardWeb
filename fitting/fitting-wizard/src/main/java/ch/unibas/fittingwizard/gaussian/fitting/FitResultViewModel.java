@@ -13,6 +13,7 @@ import ch.unibas.fitting.shared.fitting.FitResult;
 import ch.unibas.fitting.shared.molecules.AtomTypeId;
 import ch.unibas.fitting.shared.molecules.MoleculeId;
 import ch.unibas.fitting.shared.charges.ChargeTypes;
+import ch.unibas.fitting.shared.presentation.gaussian.ColorCoder;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.paint.Color;

@@ -12,6 +12,7 @@ import ch.unibas.charmmtools.gui.step1.mdAssistant.CHARMM_GUI_InputAssistant;
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.directories.FitOutputDir;
 import ch.unibas.fitting.shared.directories.MoleculesDir;
+import ch.unibas.fitting.shared.presentation.gaussian.ColorCoder;
 import ch.unibas.fittingwizard.gaussian.Visualization;
 import ch.unibas.fitting.shared.fitting.Fit;
 import ch.unibas.fitting.shared.fitting.FitRepository;

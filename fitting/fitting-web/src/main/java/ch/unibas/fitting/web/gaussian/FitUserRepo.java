@@ -2,10 +2,12 @@ package ch.unibas.fitting.web.gaussian;
 
 import ch.unibas.fitting.shared.fitting.Fit;
 import ch.unibas.fitting.shared.fitting.FitRepository;
+import ch.unibas.fitting.shared.fitting.InitialQ00;
+import ch.unibas.fitting.shared.fitting.OutputAtomType;
 import ch.unibas.fitting.shared.molecules.MoleculeRepository;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
+import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -13,9 +15,12 @@ import java.util.Optional;
 /**
  * Created by mhelmer-mobile on 19.06.2016.
  */
+@Singleton
 public class FitUserRepo {
     private final HashMap<String, FitRepository> repos = new HashMap<>();
     private MoleculeUserRepo moleculeRepo;
+
+    public FitUserRepo() {}
 
     @Inject
     public FitUserRepo(MoleculeUserRepo moleculeRepo) {
@@ -49,5 +54,9 @@ public class FitUserRepo {
             repos.put(username, new FitRepository(repo));
         }
         return repos.get(username);
+    }
+
+    public Fit createFit(String username, double rmse, int rank, List<OutputAtomType> atomTypes, InitialQ00 initialQs) {
+        return getRepoFor(username).createAndSaveFit(rmse, rank, atomTypes, initialQs);
     }
 }

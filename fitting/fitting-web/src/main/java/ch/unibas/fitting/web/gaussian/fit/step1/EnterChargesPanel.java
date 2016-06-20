@@ -41,7 +41,7 @@ public class EnterChargesPanel extends Panel {
 
                 item.add(new Label("type", mol.getName()));
 
-                NumberTextField chargeField = new NumberTextField("charge", new PropertyModel<String>(mol, "charge"));
+                NumberTextField chargeField = new NumberTextField("charge", new PropertyModel<String>(mol, "userCharge"));
                 chargeField.setStep(NumberTextField.ANY);
                 chargeField.setRequired(true);
                 item.add(chargeField);
@@ -62,11 +62,13 @@ public class EnterChargesPanel extends Panel {
             }
         });
 
-        form.add(new AjaxLink("cancel") {
+        AjaxButton btn = new AjaxButton("cancel") {
             @Override
-            public void onClick(AjaxRequestTarget target) {
+            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 window.close(target);
             }
-        });
+        };
+        btn.setDefaultFormProcessing(false);
+        form.add(btn);
     }
 }

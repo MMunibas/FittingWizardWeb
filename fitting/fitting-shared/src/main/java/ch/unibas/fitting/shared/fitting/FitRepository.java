@@ -37,9 +37,11 @@ public class FitRepository extends MemoryRepository<Fit> {
         return loadAll().size();
     }
 
-    public void createFit(int fitId, double rmse, int rank, List<OutputAtomType> outputAtomTypes, InitialQ00 initialValues) {
+    public Fit createAndSaveFit(double rmse, int rank, List<OutputAtomType> outputAtomTypes, InitialQ00 initialValues) {
+        int fitId = getNextFitId();
         Fit fit = new Fit(fitId, rmse, rank, createFitResults(outputAtomTypes, initialValues));
         save(fit);
+        return fit;
     }
 
     private ArrayList<FitResult> createFitResults(List<OutputAtomType> outputAtomTypes, InitialQ00 initialValues) {

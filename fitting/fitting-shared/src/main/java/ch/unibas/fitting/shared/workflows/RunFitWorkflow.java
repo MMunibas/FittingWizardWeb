@@ -64,7 +64,7 @@ public class RunFitWorkflow implements Workflow<FitMtpInput,Void> {
         InitialQ00 initialQs = new ChargesFileParser().parseInitalCharges(intialQsFile);
         // todo verify initial charges vs generated output
 
-        fitRepository.createFit(fitMtpInput.getFitId(), rmse, fitMtpInput.getRank(), outputAtomTypes, initialQs);
+        fitRepository.createAndSaveFit(rmse, fitMtpInput.getRank(), outputAtomTypes, initialQs);
         return null;
     }
 }

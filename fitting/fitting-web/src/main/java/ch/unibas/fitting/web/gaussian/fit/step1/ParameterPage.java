@@ -3,12 +3,15 @@ package ch.unibas.fitting.web.gaussian.fit.step1;
 import ch.unibas.fitting.shared.charges.ChargeTypes;
 import ch.unibas.fitting.shared.fitting.ChargeValue;
 import ch.unibas.fitting.shared.molecules.*;
+import ch.unibas.fitting.web.gaussian.FitUserRepo;
 import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
 import ch.unibas.fitting.web.gaussian.addmolecule.step5.ProgressPage;
 import ch.unibas.fitting.web.gaussian.addmolecule.step6.ChargesViewModel;
 import ch.unibas.fitting.web.gaussian.fit.RunFit;
+import ch.unibas.fitting.web.gaussian.fit.step2.FittingResultsPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.basic.Label;
@@ -62,14 +65,16 @@ public class ParameterPage extends HeaderPage {
     private IModel<Double> convergence = Model.of(0.1);
     private IModel<Boolean> ignoreHydrogens = Model.of(false);
 
-    private List<ChargesViewModel> _atomsTypes;
-
     @Inject
     private MoleculeUserRepo userRepo;
+    @Inject
+    private FitUserRepo fitUserRepo;
     @Inject
     private RunFit runFit;
 
     private EnterChargesPanel chargesPage;
+    private List<ChargesViewModel> _atomsTypes;
+    private List<FitViewModel> _fits;
 
     private LinkedHashSet<AtomType> getAllAtomTypeIds(List<Molecule> molecules) {
         LinkedHashSet<AtomType> allIds = new LinkedHashSet<>();
@@ -83,6 +88,7 @@ public class ParameterPage extends HeaderPage {
 
         ModalWindow chargesDialog = new ModalWindow("modalWindow");
 
+        _fits = loadFits();
         _atomsTypes = loadAtomTypes();
 
         chargesPage = new EnterChargesPanel(chargesDialog.getContentId(), chargesDialog, _atomsTypes);
@@ -136,23 +142,52 @@ public class ParameterPage extends HeaderPage {
             }
         });
 
-        form.add(new ListView<FitViewModel>("fits", loadFits()) {
+        form.add(new AjaxLink("showResults") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                setResponsePage(FittingResultsPage.class);
+            }
+
+            @Override
+            public boolean isVisible() {
+                return _fits.size() > 0;
+            }
+        });
+
+        add(new ListView<FitViewModel>("fits", _fits) {
 
             @Override
             protected void populateItem(ListItem<FitViewModel> item) {
                 FitViewModel vm = item.getModelObject();
 
                 item.add(new Label("index", Model.of(vm.getIndex())));
+                item.add(new Label("created", Model.of(vm.getCreated())));
+                item.add(new Label("rmse", Model.of(vm.getRmse())));
+                item.add(new Label("rank", Model.of(vm.getRank())));
+
+                item.add(new AjaxLink("remove") {
+
+                    @Override
+                    public void onClick(AjaxRequestTarget target) {
+                        fitUserRepo.remove(getCurrentUsername(), vm.getIndex());
+                        setResponsePage(ParameterPage.class);
+                    }
+                });
             }
         });
     }
 
     private List<FitViewModel> loadFits() {
-        return null;
+        return fitUserRepo.loadAll(getCurrentUsername())
+                .stream()
+                .map(fit -> new FitViewModel(fit))
+                .collect(Collectors.toList());
     }
 
     private void startFit() {
         Logger.debug("Starting fit");
+
+        // TODO dont, if canceled
 
         LinkedHashSet<ChargeValue> charges = _atomsTypes.stream()
                 .map(a -> new ChargeValue(new AtomTypeId(a.getName()), ChargeTypes.charge, a.getUserCharge()))

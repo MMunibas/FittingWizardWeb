@@ -1,75 +1,166 @@
 package ch.unibas.fitting.web.gaussian.fit.step2;
 
-import ch.unibas.fitting.shared.molecules.AtomTypeId;
+import ch.unibas.fitting.shared.fitting.Fit;
+import ch.unibas.fitting.shared.presentation.gaussian.ColorCoder;
+import ch.unibas.fitting.web.gaussian.FitUserRepo;
+import ch.unibas.fitting.web.gaussian.fit.step1.FitViewModel;
+import ch.unibas.fitting.web.gaussian.fit.step1.ParameterPage;
 import ch.unibas.fitting.web.web.HeaderPage;
+import com.google.inject.Inject;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by mhelmer-mobile on 17.06.2016.
  */
 public class FittingResultsPage extends HeaderPage {
 
+    @Inject
+    private ColorCoder colorCoder;
+    @Inject
+    private FitUserRepo fitUserRepo;
+
+    private Integer fitId;
+    private IModel<FitViewModel> selectedFit;
+    private List<FitViewModel> _fits;
+
     private List<FitResultViewModel> _fitResults;
 
-    public FittingResultsPage() {
-        _fitResults = lodFitResults();
+    private IModel<Double> rmse;
+
+    private List<String> _molecules;
+    private IModel<String> selectedMolecule;
+
+    public FittingResultsPage(PageParameters pp) {
+
+        String value = pp.get("fit_id").toString();
+        if  (value != null)
+            fitId = Integer.parseInt(value);
+        else
+            fitId = 0;
+
+        rmse = Model.of();
+        add(new Label("rmse", rmse));
+        List<Fit> fits = fitUserRepo.loadAll(getCurrentUsername());
+
+        initalizedFits(fits, fitId);
+        _fitResults = lodFitResults(fits, fitId);
+
+        Form form = new Form("selections");
+        add(form);
+
+        form.add(new DropDownChoice<FitViewModel>("fitNumbers",
+                selectedFit,
+                _fits,
+                new ChoiceRenderer<>("index", "index")) {
+            @Override
+            protected boolean wantOnSelectionChangedNotifications() {
+                return true;
+            }
+
+            @Override
+            protected void onSelectionChanged(FitViewModel newSelection) {
+                List<Fit> fits = fitUserRepo.loadAll(getCurrentUsername());
+                _fitResults = lodFitResults(fits, newSelection.getIndex());
+            }
+        });
+
+//        form.add(new DropDownChoice<FitViewModel>("molecules",
+//                selectedMolecule,
+//                _molecules) {
+//            @Override
+//            protected boolean wantOnSelectionChangedNotifications() {
+//                return true;
+//            }
+//
+//            @Override
+//            protected void onSelectionChanged(FitViewModel newSelection) {
+//                super.onSelectionChanged(newSelection);
+//            }
+//        });
+
+        add(new AjaxLink("back") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                setResponsePage(ParameterPage.class);
+            }
+        });
 
         add(new ListView<FitResultViewModel>("fitResults", _fitResults) {
             @Override
             protected void populateItem(ListItem<FitResultViewModel> item) {
                 FitResultViewModel mol = item.getModelObject();
 
-                item.add(new Label("type", mol.getAtomTypeName()));
+                item.add(new Label("type", mol.getName()));
 
-                item.add(createColoredLabel("Q00", mol.getQ00()));
-                item.add(createColoredLabel("Q10", mol.getQ10()));
-                item.add(createColoredLabel("Q1C", mol.getQ1C()));
-                item.add(createColoredLabel("Q1S", mol.getQ1S()));
-                item.add(createColoredLabel("Q20", mol.getQ20()));
-                item.add(createColoredLabel("Q21C", mol.getQ21C()));
-                item.add(createColoredLabel("Q21S", mol.getQ21S()));
-                item.add(createColoredLabel("Q22C", mol.getQ22C()));
-                item.add(createColoredLabel("Q22S", mol.getQ22S()));
+                item.add(createColoredLabel("Q00", mol));
+                item.add(createColoredLabel("Q10", mol));
+                item.add(createColoredLabel("Q1C", mol));
+                item.add(createColoredLabel("Q1S", mol));
+                item.add(createColoredLabel("Q20", mol));
+                item.add(createColoredLabel("Q21C", mol));
+                item.add(createColoredLabel("Q21S", mol));
+                item.add(createColoredLabel("Q22C", mol));
+                item.add(createColoredLabel("Q22S", mol));
             }
         });
     }
 
-    private Label createColoredLabel(String id, Double value) {
-        Label label = new Label(id, value);
-        if (value == null) {
+    private void initalizedFits(List<Fit> fits, int fitId) {
+        _fits = fits.stream()
+                .map(fit -> new FitViewModel(fit))
+                .collect(Collectors.toList());
+        Optional<FitViewModel> selected = _fits.stream().filter(fitViewModel -> fitViewModel.getIndex() == fitId)
+                .findFirst();
+        if (selected.isPresent())
+            selectedFit = Model.of(selected.get());
+    }
+
+    private Label createColoredLabel(String chargeType, FitResultViewModel fitResult) {
+        FitResultViewModel.FitValue fitValue = fitResult.getFitValueFor(chargeType);
+        Label label = new Label(chargeType);
+        if (fitValue == null) {
             label.add(new AttributeModifier("style", "background-color:white;"));
-        } else if(value > 0) {
-            label.add(new AttributeModifier("style", "background-color:green;"));
         } else {
-            label.add(new AttributeModifier("style", "background-color:red;"));
+            label.setDefaultModel(Model.of(fitValue.getValue()));
+            label.add(new AttributeModifier("style", "background-color:" + fitValue.getColor() + ";"));
         }
         return label;
     }
 
-    private List<FitResultViewModel> lodFitResults() {
+    private List<FitResultViewModel> lodFitResults(List<Fit> fits, int selection) {
 
-        // TODO: get the real data
+        Optional<Fit> first = fits.stream()
+                .filter(fit -> fit.getId() == selection)
+                .findFirst();
 
-        List results = new ArrayList();
-        FitResultViewModel results1 = new FitResultViewModel(new AtomTypeId("O1C2O1"));
-        results1.setQ00(-0.1916);
-        results1.setQ10(-0.2327);
-        results1.setQ20(-0.8251);
-        results.add(results1);
-
-        FitResultViewModel results2 = new FitResultViewModel(new AtomTypeId("C2O1O1"));
-        results2.setQ00(0.1916);
-        results2.setQ10(-0.0001);
-        results2.setQ20(-0.751);
-        results.add(results2);
-
-        return results;
+        List<FitResultViewModel> list;
+        if  (first.isPresent()) {
+            Fit fit  = first.get();
+            rmse.setObject(fit.getRmse());
+            list = first.get().getFitResults()
+                    .stream()
+                    .map(fr -> new FitResultViewModel(colorCoder, fit, fr))
+                    .collect(Collectors.toList());
+        } else {
+            list = new ArrayList<>();
+        }
+        return list;
     }
-
 }

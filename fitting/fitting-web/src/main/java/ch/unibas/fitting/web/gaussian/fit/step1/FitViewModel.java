@@ -3,10 +3,12 @@ package ch.unibas.fitting.web.gaussian.fit.step1;
 import ch.unibas.fitting.shared.fitting.Fit;
 import org.joda.time.DateTime;
 
+import java.io.Serializable;
+
 /**
  * Created by mhelmer on 20.06.2016.
  */
-public class FitViewModel {
+public class FitViewModel implements Serializable {
 
     private int index;
     private DateTime created;
@@ -24,8 +26,8 @@ public class FitViewModel {
         return index;
     }
 
-    public DateTime getCreated() {
-        return created;
+    public String getCreated() {
+        return created.toString("dd.MM.YYYY HH:mm:ss");
     }
 
     public double getRmse() {

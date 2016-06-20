@@ -2,8 +2,17 @@
     <h1>MTP and LJ Fit results</h1>
 
     <p>
-        <input wicket:id="start" type="submit" value="Start fitting" class="btn btn-default" />
+        <input wicket:id="back" type="submit" value="Back to fitting" class="btn btn-default" />
     </p>
+
+    <form wicket:id="selections">
+        <p>
+            Fit: <select wicket:id="fitNumbers"></select>
+        </p>
+        <!--<p>-->
+            <!--Molecules: <select wicket:id="molecules"></select>-->
+        <!--</p>-->
+    </form>
 
     <table cellspacing="0" class="table">
         <tr>
@@ -32,5 +41,8 @@
         </tr>
     </table>
 
+    <p>
+        Root Mean Square Error (RMSE): <span wicket:id="rmse"></span> kcal/mol
+    </p>
 
 </wicket:extend>

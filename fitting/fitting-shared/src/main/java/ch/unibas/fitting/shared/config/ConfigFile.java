@@ -51,7 +51,7 @@ public class ConfigFile {
 
     public String value(String key) {
         if (!containsKey(key))
-            throw new NoSuchElementException("no value for key " + key);
+            throw new NoSuchElementException("no value for key '" + key + "'");
         return props.getProperty(key);
     }
 

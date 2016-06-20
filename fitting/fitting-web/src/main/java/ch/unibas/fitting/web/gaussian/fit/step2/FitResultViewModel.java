@@ -1,103 +1,83 @@
 package ch.unibas.fitting.web.gaussian.fit.step2;
 
+import ch.unibas.fitting.shared.charges.ChargeTypes;
+import ch.unibas.fitting.shared.fitting.ChargeValue;
+import ch.unibas.fitting.shared.fitting.Fit;
+import ch.unibas.fitting.shared.fitting.FitResult;
 import ch.unibas.fitting.shared.molecules.AtomTypeId;
+import ch.unibas.fitting.shared.presentation.gaussian.ColorCoder;
+import javafx.scene.paint.Color;
+
+import java.util.HashMap;
 
 /**
  * Created by tschmidt on 17.06.2016.
  */
 public class FitResultViewModel {
-    private final AtomTypeId atomTypeId;
-    private Double Q00 = null;
-    private Double Q10 = null;
-    private Double Q1C = null;
-    private Double Q1S = null;
-    private Double Q20 = null;
-    private Double Q21C = null;
-    private Double Q21S = null;
-    private Double Q22C = null;
-    private Double Q22S = null;
+    private final String name;
 
-    public FitResultViewModel(AtomTypeId atomTypeId) {
-        this.atomTypeId = atomTypeId;
+    private HashMap<String, FitValue> values = new HashMap<>();
+
+    public FitResultViewModel(ColorCoder colorCoder, Fit fit, FitResult fr) {
+        name = fr.getAtomTypeName();
+        fr.getChargeValues().forEach(chargeValue -> {
+            values.put(chargeValue.getType(), new FitValue(colorCoder, fit, fr, chargeValue));
+        });
     }
 
-    public String getAtomTypeName() {
-        return atomTypeId.getName();
+    public FitValue getFitValueFor(String chargeType) {
+        return values.get(chargeType);
     }
 
-    public AtomTypeId getAtomTypeId() {
-        return atomTypeId;
+    public String getName() {
+        return name;
     }
 
-    public Double getQ00() {
-        return Q00;
-    }
+    public class FitValue {
+        private double value;
+        private String color;
+        public FitValue(ColorCoder colorCoder, Fit fit, FitResult result, ChargeValue value) {
+            this.value = value.getValue();
+            Color col = getColor(colorCoder, value.getType(), fit, result);
+            color = toRGBCode(col);
+        }
 
-    public void setQ00(Double q00) {
-        Q00 = q00;
-    }
+        public String getColor() {
+            return color;
+        }
 
-    public Double getQ10() {
-        return Q10;
-    }
+        public String getValue() {
+            return getFormattedValue(value);
+        }
 
-    public void setQ10(Double q10) {
-        Q10 = q10;
-    }
+        private String getFormattedValue(Double value) {
+            String formatted = value == null ? "" : String.format("%7.4f", value);
+            return formatted;
+        }
 
-    public Double getQ1C() {
-        return Q1C;
-    }
+        private Color getColor(ColorCoder coder, String chargeType, Fit fit, FitResult fitResult) {
+            Color color = null;
+            Double value = null;
+            if (chargeType.equalsIgnoreCase(ChargeTypes.charge)) {
+                value = fitResult.getAbsDeviationOfQ();
+            } else {
+                value = fitResult.getChargeValue(chargeType);
+            }
+            if (value != null) {
+                double min = fit.getAbsoluteMinValue(chargeType);
+                double max = fit.getAbsoluteMaxValue(chargeType);
+                color = coder.getColor(min, max, Math.abs(value));
+            }
 
-    public void setQ1C(Double q1C) {
-        Q1C = q1C;
-    }
+            return color;
+        }
 
-    public Double getQ1S() {
-        return Q1S;
-    }
-
-    public void setQ1S(Double q1S) {
-        Q1S = q1S;
-    }
-
-    public Double getQ20() {
-        return Q20;
-    }
-
-    public void setQ20(Double q20) {
-        Q20 = q20;
-    }
-
-    public Double getQ21C() {
-        return Q21C;
-    }
-
-    public void setQ21C(Double q21C) {
-        Q21C = q21C;
-    }
-
-    public Double getQ21S() {
-        return Q21S;
-    }
-
-    public void setQ21S(Double q21S) {
-        Q21S = q21S;
-    }
-
-    public Double getQ22C() {
-        return Q22C;
-    }
-
-    public void setQ22C(Double q22C) {
-        Q22C = q22C;
-    }
-
-    public Double getQ22S() {
-        return Q22S;
-    }
-
-    public void setQ22S(Double q22S) {
-        Q22S = q22S;
+        public String toRGBCode( Color color )
+        {
+            return String.format( "#%02X%02X%02X",
+                    (int)( color.getRed() * 255 ),
+                    (int)( color.getGreen() * 255 ),
+                    (int)( color.getBlue() * 255 ) );
+        }
     }
 }

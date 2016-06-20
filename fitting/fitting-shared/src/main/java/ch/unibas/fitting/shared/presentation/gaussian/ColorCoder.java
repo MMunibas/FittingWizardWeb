@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.fittingwizard.gaussian.fitting;
+package ch.unibas.fitting.shared.presentation.gaussian;
 
 import javafx.scene.paint.Color;
 

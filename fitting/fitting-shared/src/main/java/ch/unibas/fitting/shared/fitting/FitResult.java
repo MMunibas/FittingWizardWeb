@@ -102,4 +102,8 @@ public class FitResult {
         }
         return result != null ? result.getValue() : null;
     }
+
+    public List<ChargeValue> getChargeValues() {
+        return chargeValues;
+    }
 }

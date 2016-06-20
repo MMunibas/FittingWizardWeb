@@ -4,6 +4,7 @@
     <form wicket:id="form">
         <p>
             <input wicket:id="start" type="submit" value="Start a fit" class="btn btn-default" />
+            <input wicket:id="showResults" type="submit" value="Show results" class="btn btn-default" />
         </p>
 
         <table cellspacing="0" class="table">
@@ -34,12 +35,16 @@
             <th>Created</th>
             <th>RMSE</th>
             <th>Rank</th>
+            <th>Options</th>
         </thead>
         <tr wicket:id="fits">
             <td wicket:id="index" />
             <td wicket:id="created" />
             <td wicket:id="rmse" />
             <td wicket:id="rank" />
+            <td>
+                <input wicket:id="remove" type="button" value="Remove" class="btn btn-default" />
+            </td>
         </tr>
     </table>
 
