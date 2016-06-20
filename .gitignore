@@ -16,7 +16,6 @@ certs/
 *.csv
 *.png
 figures/
-*.txt
 *.Rproj
 forKrystel/
 *.inp
@@ -34,7 +33,6 @@ scripts/charmm-ti/nb-configuration.xml
 db/*.pdf
 *.ods
 scripts/nbproject/private/
-*.TXT
 
 .gradle/
 .idea/
