@@ -126,15 +126,15 @@ public class MoleculeQueryService {
         boolean isReferenceInitialized = false;
         Double referenceValue = null;
         for (Molecule molecule : moleculesWithType) {
-            AtomType atomType = molecule.findAtomTypeById(atomTypeId);
-            if (atomType == null) {
+            Optional<AtomType> atomType = molecule.findAtomTypeById(atomTypeId);
+            if (!atomType.isPresent()) {
                 throw new RuntimeException("Atom type does not exist in molecule. Passed molecules are not filtered correctly.");
             }
             if (!isReferenceInitialized) {
-                referenceValue = atomType.getUserQ00();
+                referenceValue = atomType.get().getUserQ00();
                 isReferenceInitialized = true;
             } else {
-                if (!Objects.equals(referenceValue, atomType.getUserQ00())) {
+                if (!Objects.equals(referenceValue, atomType.get().getUserQ00())) {
                     chargesAreDifferent = true;
                     break;
                 }

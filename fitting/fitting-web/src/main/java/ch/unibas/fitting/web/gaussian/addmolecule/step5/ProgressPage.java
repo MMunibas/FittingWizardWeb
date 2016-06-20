@@ -5,6 +5,7 @@ import ch.unibas.fitting.web.application.TaskHandle;
 import ch.unibas.fitting.web.gaussian.addmolecule.step4.ParameterPage;
 import ch.unibas.fitting.web.gaussian.addmolecule.step6.AtomTypesPage;
 import ch.unibas.fitting.web.web.HeaderPage;
+import ch.unibas.fitting.web.web.WizardPage;
 import ch.unibas.fitting.web.welcome.WelcomePage;
 import com.google.inject.Inject;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
@@ -58,7 +59,7 @@ public class ProgressPage extends HeaderPage {
         add(new AbstractAjaxTimerBehavior(Duration.seconds(2)) {
             @Override
             protected void onTimer(AjaxRequestTarget target) {
-                TaskHandle<String> th = _tasks.getHandle(_taskId);
+                TaskHandle th = _tasks.getHandle(_taskId);
 
                 if (th != null) {
                     org.joda.time.Duration diff = org.joda.time.Duration.millis(DateTime.now().getMillis() - th.getStartTime().getMillis());
@@ -68,8 +69,8 @@ public class ProgressPage extends HeaderPage {
 
                         if (th.wasSuccessful()) {
                             PageParameters pp = new PageParameters();
-                            pp.add("task_id", th.getId());
-                            setResponsePage(AtomTypesPage.class, pp);
+                            Class page = (Class) th.getNextPageCallback().apply(th.getResult(), pp);
+                            setResponsePage(page, pp);
                         } else {
                             Throwable ex = th.getException();
                             Logger.debug("Task with id=" + _taskId + " failed.", ex);

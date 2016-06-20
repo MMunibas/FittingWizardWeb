@@ -80,10 +80,10 @@ public class FitRepository extends MemoryRepository<Fit> {
         Double referenceValue = 0.0;
         for (int i = 0; i < molecules.size(); i++) {
             Molecule molecule = molecules.get(i);
-            AtomType atomTypesInMolecule = molecule.findAtomTypeById(atomTypeId);
+            Optional<AtomType> atomTypesInMolecule = molecule.findAtomTypeById(atomTypeId);
             boolean moleculeIsCandidate = atomTypesInMolecule != null;
             if (moleculeIsCandidate) {
-                Double userCharge = atomTypesInMolecule.getUserQ00();
+                Double userCharge = atomTypesInMolecule.get().getUserQ00();
                 if (!isReferenceValueInitialized) {
                     referenceValue = userCharge;
                     isReferenceValueInitialized = true;

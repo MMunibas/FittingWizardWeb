@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.Properties;
 
 /**
@@ -13,10 +14,10 @@ import java.util.Properties;
 public class ConfigFile {
     private static final Logger logger = Logger.getLogger(ConfigFile.class);
 
-    private Properties _props;
+    private Properties props;
 
     public ConfigFile(Properties props) {
-        _props = props;
+        this.props = props;
     }
 
     public static ConfigFile loadConfig(String configFile) {
@@ -45,14 +46,24 @@ public class ConfigFile {
     }
 
     public String valueOrDefault(String key, String defVal) {
-        return _props.getProperty(key, defVal);
+        return props.getProperty(key, defVal);
+    }
+
+    public String value(String key) {
+        if (!containsKey(key))
+            throw new NoSuchElementException("no value for key " + key);
+        return props.getProperty(key);
     }
 
     public boolean containsKey(String key) {
-        return _props.containsKey(key);
+        return props.containsKey(key);
     }
 
     public Properties getProperties() {
-        return _props;
+        return props;
+    }
+
+    public int getInteger(String key) {
+        return Integer.parseInt(value(key));
     }
 }

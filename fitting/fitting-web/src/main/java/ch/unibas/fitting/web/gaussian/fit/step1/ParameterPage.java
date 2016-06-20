@@ -1,21 +1,32 @@
 package ch.unibas.fitting.web.gaussian.fit.step1;
 
+import ch.unibas.fitting.shared.charges.ChargeTypes;
+import ch.unibas.fitting.shared.fitting.ChargeValue;
 import ch.unibas.fitting.shared.molecules.*;
 import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
+import ch.unibas.fitting.web.gaussian.addmolecule.step5.ProgressPage;
+import ch.unibas.fitting.web.gaussian.addmolecule.step6.ChargesViewModel;
+import ch.unibas.fitting.web.gaussian.fit.RunFit;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Created by mhelmer-mobile on 17.06.2016.
@@ -47,40 +58,44 @@ public class ParameterPage extends HeaderPage {
         ranks.add(new Rank("Point charges, dipoles and quadrupoles", 2));
     }
 
-    private Rank _rank = ranks.get(0);;
-    private IModel<Double> _convergence = Model.of(0.1);
-    private IModel<Boolean> _ignoreHydrogens = Model.of(false);
+    private Rank rank = ranks.get(0);;
+    private IModel<Double> convergence = Model.of(0.1);
+    private IModel<Boolean> ignoreHydrogens = Model.of(false);
+
+    private List<ChargesViewModel> _atomsTypes;
 
     @Inject
-    private MoleculeUserRepo repo;
+    private MoleculeUserRepo userRepo;
     @Inject
     private RunFit runFit;
 
-    private LinkedHashSet<AtomTypeId> getAllAtomTypeIds(List<Molecule> molecules) {
-        LinkedHashSet<AtomTypeId> allIds = new LinkedHashSet<>();
+    private EnterChargesPanel chargesPage;
+
+    private LinkedHashSet<AtomType> getAllAtomTypeIds(List<Molecule> molecules) {
+        LinkedHashSet<AtomType> allIds = new LinkedHashSet<>();
         for (Molecule molecule : molecules) {
-            allIds.addAll(molecule.getAllAtomTypeIds());
+            allIds.addAll(molecule.getAtomTypes());
         }
         return allIds;
     }
 
     public ParameterPage() {
 
-        ModalWindow modalWindow = new ModalWindow("modalWindow");
+        ModalWindow chargesDialog = new ModalWindow("modalWindow");
 
-        modalWindow.setPageCreator((ModalWindow.PageCreator) () -> new EnterChargesPage(modalWindow, repo));
+        _atomsTypes = loadAtomTypes();
 
-        modalWindow.setWindowClosedCallback((ModalWindow.WindowClosedCallback) target -> {
-            //custom code…
-            EnterChargesPage page = (EnterChargesPage)target.getPage();
-
-
-
-
+        chargesPage = new EnterChargesPanel(chargesDialog.getContentId(), chargesDialog, _atomsTypes);
+        chargesDialog.setContent(chargesPage);
+        chargesDialog.setCloseButtonCallback(target -> {
             Logger.info("window closed");
+            return true;
         });
-        
-        add(modalWindow);
+        chargesDialog.setWindowClosedCallback(target -> {
+            if (allChargesFilled())
+                startFit();
+        });
+        add(chargesDialog);
 
         Form form = new Form("form");
         add(form);
@@ -90,14 +105,14 @@ public class ParameterPage extends HeaderPage {
         fp.setOutputMarkupPlaceholderTag(true);
         add(fp);
 
-        NumberTextField ntf = new NumberTextField<>("convergence", _convergence);
+        NumberTextField ntf = new NumberTextField<>("convergence", convergence);
         ntf.setStep(NumberTextField.ANY);
         ntf.setRequired(true);
         form.add(ntf);
 
-        form.add(new DropDownChoice("rank", new PropertyModel(this, "_rank"), ranks));
+        form.add(new DropDownChoice("rank", new PropertyModel(this, "rank"), ranks));
 
-        CheckBox hydro = new CheckBox("ignoreHydrogens", _ignoreHydrogens);
+        CheckBox hydro = new CheckBox("ignoreHydrogens", ignoreHydrogens);
         form.add(hydro);
 
         form.add(new AjaxButton("start") {
@@ -105,45 +120,13 @@ public class ParameterPage extends HeaderPage {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 target.add(fp);
 
-                modalWindow.show(target);
-                Logger.debug("showing modal window");
-
-                //XyzFile f = XyzFileParser.parse(_xyzFile);
-//                FitMtpInput input = new FitMtpInput(
-//                        0,
-//                        _convergence.getObject(),
-//                        _rank.getRank(),
-//                        _ignoreHydrogens.getObject(),
-//                        new File(""),
-//                        new ArrayList()
-//                );
-
-//                FitMtpInput input = new FitMtpInput(
-//                        _fitRepository.getNextFitId(),
-//                        _convergence.getObject(),
-//                        _rank.getRank(),
-//                        _ignoreHydrogens.getObject(),
-//                        initalCharges,
-//                        queryService.getMoleculeIds()
-//                );
-
+                Logger.debug("Showing user charges dialog");
                 Logger.debug("FitMtpInput Parameters: " +
-                        "convergence: " + _convergence.getObject() + ", " +
-                        "rank: " + _rank.getRank() + ", " +
-                        "ignoreHydrogens: " + _ignoreHydrogens.getObject());
+                        "convergence: " + convergence.getObject() + ", " +
+                        "rank: " + rank.getRank() + ", " +
+                        "ignoreHydrogens: " + ignoreHydrogens.getObject());
 
-                // TODO execute real script
-
-//                TaskHandle th = _tasks.execute(getCurrentUsername(), () -> {
-//                    Thread.sleep(5000);
-//                    return "hello world!";
-//                });
-//
-//                PageParameters pp = new PageParameters();
-//                pp.add("task_id", th.getId());
-//                pp.add("xyz_file", _xyzFile);
-
-//                setResponsePage(ProgressPage.class, pp);
+                chargesDialog.show(target);
             }
 
             @Override
@@ -152,5 +135,48 @@ public class ParameterPage extends HeaderPage {
                 target.add(fp);
             }
         });
+
+        form.add(new ListView<FitViewModel>("fits", loadFits()) {
+
+            @Override
+            protected void populateItem(ListItem<FitViewModel> item) {
+                FitViewModel vm = item.getModelObject();
+
+                item.add(new Label("index", Model.of(vm.getIndex())));
+            }
+        });
+    }
+
+    private List<FitViewModel> loadFits() {
+        return null;
+    }
+
+    private void startFit() {
+        Logger.debug("Starting fit");
+
+        LinkedHashSet<ChargeValue> charges = _atomsTypes.stream()
+                .map(a -> new ChargeValue(new AtomTypeId(a.getName()), ChargeTypes.charge, a.getUserCharge()))
+                .collect(Collectors.toCollection(() -> new LinkedHashSet<>()));
+
+        UUID uuid = runFit.runFit(getCurrentUsername(),
+                convergence.getObject(),
+                rank.getRank(),
+                ignoreHydrogens.getObject(),
+                charges);
+        PageParameters pp = new PageParameters();
+        pp.add("task_id", uuid);
+        setResponsePage(ProgressPage.class, pp);
+    }
+
+    private List<ChargesViewModel> loadAtomTypes() {
+        List<Molecule> molecules = userRepo.loadAll(getCurrentUsername());
+        return getAllAtomTypeIds(molecules)
+                .stream()
+                .map(atomType -> new ChargesViewModel(atomType.getId().getName(), atomType.getIndices(), atomType.getUserQ00()))
+                .collect(Collectors.toList());
+    }
+
+    public boolean allChargesFilled() {
+        return _atomsTypes.stream().allMatch(a -> a.isChargeDefined());
     }
 }

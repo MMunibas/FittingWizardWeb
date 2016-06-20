@@ -10,6 +10,7 @@ package ch.unibas.fitting.shared.fitting;
 
 import ch.unibas.fitting.shared.charges.ChargeTypes;
 import ch.unibas.fitting.shared.molecules.MoleculeId;
+import org.joda.time.DateTime;
 
 import java.util.*;
 
@@ -23,12 +24,14 @@ public class Fit {
     private double rmse;
     private ArrayList<FitResult> fitResults;
     private int rank;
+    private DateTime created;
 
-    public Fit(int id, double rmse,  int rank, ArrayList<FitResult> fitResults) {
+    public Fit(int id, double rmse, int rank, ArrayList<FitResult> fitResults) {
         this.id = id;
         this.rmse = rmse;
         this.fitResults = fitResults;
         this.rank = rank;
+        this.created = DateTime.now();
     }
 
     public int getId() {
@@ -140,5 +143,9 @@ public class Fit {
             }
         }
         return maxValue;
+    }
+
+    public DateTime getCreated() {
+        return created;
     }
 }

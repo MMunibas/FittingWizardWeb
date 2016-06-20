@@ -1,7 +1,9 @@
 package ch.unibas.fitting.web;
 
+import ch.unibas.fitting.shared.config.Settings;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.apache.log4j.*;
-import org.apache.wicket.protocol.http.ContextParamWebApplicationFactory;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.http.WicketServlet;
 import org.eclipse.jetty.server.Server;
@@ -21,15 +23,17 @@ import static org.apache.log4j.EnhancedPatternLayout.TTCC_CONVERSION_PATTERN;
  */
 public class Main {
 
-    private static final Logger logger = Logger.getLogger(Main.class);
+    private static final Logger LOGGER = Logger.getLogger(Main.class);
 
     public static void main(String[] args) throws Exception {
         setupConsoleLogger();
         Logger.getLogger(Main.class).info("Starting fitting web");
 
         WebSettings settings = WebSettings.load();
+        Injector injector = Guice.createInjector(new WebModule(settings));
 
-        Server srv = new Server(8080);
+        WebApp webApp = injector.getInstance(WebApp.class);
+        Server srv = new Server(settings.getServerPort());
 
         // https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=27848170
         ServletHolder sh = new ServletHolder();
@@ -38,7 +42,7 @@ public class Main {
         WicketServlet servlet = new WicketServlet() {
             @Override
             protected WicketFilter newWicketFilter() {
-                return new WicketFilter(new WebApp(settings));
+                return new WicketFilter(webApp);
             }
         };
         sh.setServlet(servlet);
@@ -64,9 +68,11 @@ public class Main {
 
         srv.setHandler(handlers);
 
-        logger.info("Starting jetty server");
+        injector.getInstance(DataLoader.class).loadExistingData();
+
+        LOGGER.info("Starting jetty server");
         srv.start();
-        logger.info("Server started");
+        LOGGER.info("Server started");
         srv.join();
     }
 
@@ -85,6 +91,6 @@ public class Main {
         }
         BasicConfigurator.configure(app);
 
-        logger.setLevel(Level.DEBUG);
+        LOGGER.setLevel(Level.DEBUG);
     }
 }

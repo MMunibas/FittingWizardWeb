@@ -9,8 +9,6 @@
 package ch.unibas.fitting.shared.workflows.gaussian;
 
 import ch.unibas.fitting.shared.directories.MoleculesDir;
-import ch.unibas.fitting.shared.molecules.Atom;
-import ch.unibas.fitting.shared.molecules.AtomType;
 import ch.unibas.fitting.shared.molecules.Molecule;
 import ch.unibas.fitting.shared.scripts.babel.BabelInput;
 import ch.unibas.fitting.shared.scripts.babel.BabelOutput;
@@ -24,16 +22,12 @@ import ch.unibas.fitting.shared.scripts.multipolegauss.IMultipoleGaussScript;
 import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussInput;
 import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussOutput;
 import ch.unibas.fitting.shared.tools.GaussianLogModifier;
-import ch.unibas.fitting.shared.tools.LPunParser;
 import ch.unibas.fitting.shared.tools.Notifications;
 import ch.unibas.fitting.shared.workflows.base.Workflow;
 import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * User: mhelmer
@@ -48,25 +42,25 @@ public class RunGaussianWorkflow implements Workflow<MultipoleGaussInput,RunGaus
     private IBabelScript babelScript;
     private ILRAScript lraScript;
     private IFittabScript fittabMarkerScript;
-    private LPunParser lPunParser;
     private GaussianLogModifier gaussianLogModifier;
     private Notifications notifications;
+    private MoleculeCreator moleculeCreator;
 
     @Inject
     public RunGaussianWorkflow(IMultipoleGaussScript gaussScript,
                                IBabelScript babelScript,
                                ILRAScript lraScript,
                                IFittabScript fittabMarkerScript,
-                               LPunParser lPunParser,
                                GaussianLogModifier gaussianLogModifier,
-                               Notifications notifications) {
+                               Notifications notifications,
+                               MoleculeCreator moleculeCreator) {
         this.gaussScript = gaussScript;
         this.babelScript = babelScript;
         this.lraScript = lraScript;
         this.fittabMarkerScript = fittabMarkerScript;
-        this.lPunParser = lPunParser;
         this.gaussianLogModifier = gaussianLogModifier;
         this.notifications = notifications;
+        this.moleculeCreator = moleculeCreator;
     }
 
     public RunGaussianResult execute(WorkflowContext<MultipoleGaussInput> status) {
@@ -94,15 +88,7 @@ public class RunGaussianWorkflow implements Workflow<MultipoleGaussInput,RunGaus
                     gaussOutput.getVdwFile(),
                     lraScriptOutput.getLPunFile()));
 
-            ArrayList<AtomType> atomTypes = lPunParser.parse(moleculesDir, input.getXyzFile().getMoleculeName());
-
-            List<Atom> atoms = input.getXyzFile()
-                    .getAtoms()
-                    .stream()
-                    .map(xyzAtom -> new Atom(xyzAtom.getName(), xyzAtom.getX(), xyzAtom.getY(), xyzAtom.getZ()))
-                    .collect(Collectors.toList());
-
-            Molecule molecule = new Molecule(input.getXyzFile(), atoms, atomTypes);
+            Molecule molecule = moleculeCreator.createMolecule(moleculesDir, input.getXyzDirectory(), input.getMoleculeName());
 
             result = new RunGaussianResult(molecule, gaussOutput.getLogFile());
         } else {

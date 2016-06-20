@@ -1,16 +1,11 @@
 package ch.unibas.fitting.web.gaussian.fit.step2;
 
 import ch.unibas.fitting.shared.molecules.AtomTypeId;
-import ch.unibas.fitting.web.gaussian.fit.step1.AtomTypesViewModel;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +36,6 @@ public class FittingResultsPage extends HeaderPage {
                 item.add(createColoredLabel("Q21S", mol.getQ21S()));
                 item.add(createColoredLabel("Q22C", mol.getQ22C()));
                 item.add(createColoredLabel("Q22S", mol.getQ22S()));
-
             }
         });
     }

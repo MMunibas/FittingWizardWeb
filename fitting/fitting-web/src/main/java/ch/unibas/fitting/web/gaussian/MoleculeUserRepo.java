@@ -7,6 +7,7 @@ import ch.unibas.fitting.shared.molecules.MoleculeRepository;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by mhelmer-mobile on 17.06.2016.
@@ -19,7 +20,7 @@ public class MoleculeUserRepo {
         getRepoFor(username).save(molecule);
     }
 
-    public List<Molecule> loadAllI(String username) {
+    public List<Molecule> loadAll(String username) {
         if (!repos.containsKey(username))
             return new ArrayList<>();
         return repos.get(username).loadAll();
@@ -37,5 +38,11 @@ public class MoleculeUserRepo {
         if (!repos.containsKey(username))
             repos.put(username, new MoleculeRepository());
         return repos.get(username);
+    }
+
+    public Optional<Molecule> load(String username, String moleculeName) {
+        return loadAll(username).stream()
+                .filter(molecule -> molecule.getId().getName().equals(moleculeName))
+                .findFirst();
     }
 }

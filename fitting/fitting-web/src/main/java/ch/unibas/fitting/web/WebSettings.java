@@ -23,4 +23,9 @@ public class WebSettings extends Settings {
     public File getJavaScriptDir() {
         return getFile("javascript.path");
     }
+
+    public int getServerPort() {
+        return getProperties().getInteger("server.port");
+    }
+
 }

@@ -10,12 +10,15 @@
         <tr>
             <th>Name</th>
             <th>Added</th>
-            <th>Remove?</th>
+            <th>Options</th>
         </tr>
         <tr wicket:id="molecules">
             <td><span wicket:id="name"></span></td>
             <td><span wicket:id="added"></span> </td>
-            <td><input wicket:id="remove" type="button" value="Remove" class="btn btn-default" /></td>
+            <td>
+                <input wicket:id="edit" type="button" value="Edit" class="btn btn-default" />
+                <input wicket:id="remove" type="button" value="Remove" class="btn btn-default" />
+            </td>
         </tr>
     </table>
 

@@ -6,6 +6,10 @@ import org.apache.log4j.Logger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by mhelmer-mobile on 15.06.2016.
@@ -57,6 +61,13 @@ public class UserDirectory implements IUserDirectory {
     public File getLjfitInputFileName(String username, String name) {
         ljfitInputDir(username).mkdirs();
         return ljfitInputFile(username, name);
+    }
+
+    @Override
+    public List<String> listAllUserDirs() {
+        return Arrays.stream(dataDir.listFiles(File::isDirectory))
+                .map(file -> file.getName())
+                .collect(Collectors.toList());
     }
 
     private File ljfitInputDir(String username) {

@@ -35,8 +35,6 @@ public class ParameterPage extends HeaderPage {
     private final String moleculeName;
 
     @Inject
-    private IUserDirectory _userDir;
-    @Inject
     private IBackgroundTasks _tasks;
     @Inject
     private RunGaussian runGaussian;
@@ -76,26 +74,15 @@ public class ParameterPage extends HeaderPage {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 target.add(fp);
 
-                String username = getCurrentUsername();
-
-                File xyz = _userDir.getXyzDir(username).getXyzFileFor(moleculeName);
-                XyzFile xyzFile = XyzFileParser.parse(xyz);
-
-                final MultipoleGaussInput input = new MultipoleGaussInput(
-                        _userDir.getMoleculesDir(username),
-                        xyzFile,
+                UUID id = runGaussian.runGaussian(getCurrentUsername(),
+                        moleculeName,
                         _netCharge.getObject(),
                         _quantum.getObject(),
                         _nCores.getObject(),
-                        _multiplicity.getObject()
-                );
-
-                UUID id = runGaussian.runGaussian(username, input);
+                        _multiplicity.getObject());
 
                 PageParameters pp = new PageParameters();
                 pp.add("task_id", id);
-                pp.add("molecule_name", moleculeName);
-
                 setResponsePage(ProgressPage.class, pp);
             }
 

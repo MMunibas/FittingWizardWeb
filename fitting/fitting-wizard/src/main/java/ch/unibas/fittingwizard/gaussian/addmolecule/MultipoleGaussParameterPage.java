@@ -9,6 +9,7 @@
 package ch.unibas.fittingwizard.gaussian.addmolecule;
 
 import ch.unibas.fitting.shared.directories.MoleculesDir;
+import ch.unibas.fitting.shared.directories.XyzDirectory;
 import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussInput;
 import ch.unibas.fittingwizard.gaussian.base.ButtonFactory;
 import ch.unibas.fittingwizard.gaussian.base.DefaultValues;
@@ -27,6 +28,7 @@ import javafx.scene.control.TextField;
  */
 public class MultipoleGaussParameterPage extends WizardPage {
     private MoleculesDir moleculesDir;
+    private XyzDirectory xyzDirectory;
     private final MultipoleGaussParameterDto dto;
 
     private Button nextButton;
@@ -42,9 +44,11 @@ public class MultipoleGaussParameterPage extends WizardPage {
 
     public MultipoleGaussParameterPage(DefaultValues defaultValues,
                                        MoleculesDir moleculesDir,
+                                       XyzDirectory xyzDirectory,
                                        MultipoleGaussParameterDto dto) {
         super("Multipole Gaussian MEP Input");
         this.moleculesDir = moleculesDir;
+        this.xyzDirectory = xyzDirectory;
         this.dto = dto;
 
         initializeDefaults(defaultValues);
@@ -87,7 +91,8 @@ public class MultipoleGaussParameterPage extends WizardPage {
             int cores = Integer.parseInt(txtNumberOfCores.getText());
             int state = Integer.parseInt(txtState.getText());
             return new MultipoleGaussInput(moleculesDir,
-                    dto.getXyzFile(),
+                    xyzDirectory,
+                    dto.getXyzFile().getMoleculeName(),
                     charges,
                     details,
                     cores,

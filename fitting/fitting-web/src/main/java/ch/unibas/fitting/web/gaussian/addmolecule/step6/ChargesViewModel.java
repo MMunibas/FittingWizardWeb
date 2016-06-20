@@ -13,10 +13,10 @@ public class ChargesViewModel implements Serializable {
     private int[] indices;
     private Double userCharge;
 
-    public ChargesViewModel(String name, int[] indices) {
-
+    public ChargesViewModel(String name, int[] indices, Double userCharge) {
         this.name = name;
         this.indices = indices;
+        this.userCharge = userCharge;
     }
 
     public String getName() {
@@ -33,5 +33,9 @@ public class ChargesViewModel implements Serializable {
 
     public void setUserCharge(Double userCharge) {
         this.userCharge = userCharge;
+    }
+
+    public boolean isChargeDefined() {
+        return userCharge != null;
     }
 }

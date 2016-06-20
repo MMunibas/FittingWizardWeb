@@ -13,6 +13,7 @@ import org.joda.time.DateTime;
 
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * User: mhelmer
@@ -68,9 +69,10 @@ public class Molecule {
         return state;
     }
 
-    public void setUserCharge(AtomTypeId atomTypeId, Double newCharge) {
-        AtomType type = findAtomTypeById(atomTypeId);
-        type.setUserQ0(newCharge);
+    public void setUserCharge(String name, Double newCharge) {
+        Optional<AtomType> type = findAtomTypeByName(name);
+        if (type.isPresent())
+            type.get().setUserQ0(newCharge);
     }
 
     public String getDescription() {
@@ -81,12 +83,16 @@ public class Molecule {
         return findAtomTypeById(atomTypeId) != null;
     }
 
-    public AtomType findAtomTypeById(AtomTypeId id) {
+    public Optional<AtomType> findAtomTypeByName(String name) {
+        return findAtomTypeById(new AtomTypeId(name));
+    }
+
+    public Optional<AtomType> findAtomTypeById(AtomTypeId id) {
         for (AtomType atomType : atomTypes) {
             if (atomType.getId().equals(id))
-                return atomType;
+                return Optional.of(atomType);
         }
-        return null;
+        return Optional.empty();
     }
 
     public UserChargesState getUserChargesState() {

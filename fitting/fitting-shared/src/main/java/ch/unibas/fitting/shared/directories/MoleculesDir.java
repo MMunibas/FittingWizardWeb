@@ -10,6 +10,10 @@ package ch.unibas.fitting.shared.directories;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
@@ -20,7 +24,6 @@ import org.apache.commons.io.FilenameUtils;
  * Time: 16:20
  */
 public class MoleculesDir extends FittingDirectory {
-
 
     public MoleculesDir(File directory) {
         super(directory);
@@ -41,6 +44,13 @@ public class MoleculesDir extends FittingDirectory {
         } catch (IOException e) {
             throw new RuntimeException("Could not delete existing molecule directory " + molDir.getAbsolutePath());
         }
+    }
+
+    public List<String> listAllMolecules() {
+        return Arrays.asList(getDirectory().listFiles(File::isDirectory))
+                .stream()
+                .map(file -> file.getName())
+                .collect(Collectors.toList());
     }
 
     public File getDirectoryFor(String moleculeName) {

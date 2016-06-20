@@ -33,6 +33,7 @@ import ch.unibas.fittingwizard.gaussian.base.dialog.OverlayDialog;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -427,8 +428,9 @@ public class FitResultPage extends WizardPageWithVisualization {
     private void setSelectedAtomType(FitResultViewModel type) {
         logger.info("Selected atom type changed to " + (type != null ? type.getAtomTypeName() : "nothing"));
         if (type != null && selectedMolecule != null) {
-            AtomType atomType = selectedMolecule.findAtomTypeById(type.getAtomTypeId());
-            visualization.selectAtomTypes(atomType);
+            Optional<AtomType> atomType = selectedMolecule.findAtomTypeById(type.getAtomTypeId());
+            if (atomType.isPresent())
+                visualization.selectAtomTypes(atomType.get());
         }
     }
 

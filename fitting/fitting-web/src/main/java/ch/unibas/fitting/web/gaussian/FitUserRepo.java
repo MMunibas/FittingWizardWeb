@@ -13,35 +13,41 @@ import java.util.Optional;
 /**
  * Created by mhelmer-mobile on 19.06.2016.
  */
-public class FitRepo {
+public class FitUserRepo {
     private final HashMap<String, FitRepository> repos = new HashMap<>();
     private MoleculeUserRepo moleculeRepo;
 
     @Inject
-    public FitRepo(MoleculeUserRepo moleculeRepo) {
+    public FitUserRepo(MoleculeUserRepo moleculeRepo) {
         this.moleculeRepo = moleculeRepo;
     }
 
     public void save(String username, Fit fit) {
-        if (!repos.containsKey(username)) {
-            MoleculeRepository repo = moleculeRepo.getRepoFor(username);
-            repos.put(username, new FitRepository(repo));
-        }
-        repos.get(username).save(fit);
+        getRepoFor(username).save(fit);
     }
 
     public List<Fit> loadAll(String username) {
-        if (!repos.containsKey(username))
-            return new ArrayList<>();
-        return repos.get(username).loadAll();
+        return getRepoFor(username).loadAll();
     }
 
     public void remove(String username, int fitId) {
-        FitRepository rep = repos.get(username);
+        FitRepository rep = getRepoFor(username);
         if (rep == null)
             return;
         Optional<Fit> fit = rep.findById(fitId);
         if (fit.isPresent())
             rep.remove(fit.get());
+    }
+
+    public int getNextFitId(String username) {
+        return getRepoFor(username).getNextFitId();
+    }
+
+    public FitRepository getRepoFor(String username) {
+        if (!repos.containsKey(username)) {
+            MoleculeRepository repo = moleculeRepo.getRepoFor(username);
+            repos.put(username, new FitRepository(repo));
+        }
+        return repos.get(username);
     }
 }

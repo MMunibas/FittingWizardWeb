@@ -3,6 +3,7 @@ package ch.unibas.fitting.web.gaussian.addmolecule.step1;
 import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
 import ch.unibas.fitting.web.gaussian.RemoveMolecule;
 import ch.unibas.fitting.web.gaussian.addmolecule.step2.UploadPage;
+import ch.unibas.fitting.web.gaussian.addmolecule.step6.AtomTypesPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -13,6 +14,7 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -24,7 +26,7 @@ import java.util.stream.Collectors;
 public class OverviewPage extends HeaderPage {
 
     @Inject
-    private MoleculeUserRepo repo;
+    private MoleculeUserRepo moleculeUserRepo;
 
     @Inject
     private RemoveMolecule removeMolecule;
@@ -46,6 +48,23 @@ public class OverviewPage extends HeaderPage {
                 EntryViewModel mol = item.getModelObject();
                 item.add(new Label("name", mol.getName()));
                 item.add(new Label("added", mol.getAdded()));
+
+                item.add(new AjaxLink("edit") {
+
+                    @Override
+                    public IModel<?> getBody() {
+                        return Model.of("Edit");
+                    }
+
+                    @Override
+                    public void onClick(AjaxRequestTarget target) {
+
+                        PageParameters pp = new PageParameters();
+                        pp.add("molecule_name", mol.getName());
+                        setResponsePage(AtomTypesPage.class, pp);
+                    }
+                });
+
                 item.add(new AjaxLink("remove") {
 
                     @Override
@@ -83,10 +102,10 @@ public class OverviewPage extends HeaderPage {
         return new ListDataProvider<EntryViewModel>() {
             @Override
             protected List getData() {
-                List<EntryViewModel> moles = repo.loadAllI(getCurrentUsername())
+                List<EntryViewModel> moles = moleculeUserRepo.loadAll(getCurrentUsername())
                         .stream()
                         .map(molecule -> new EntryViewModel(molecule.getId().getName(), molecule.getCreated()))
-                        .collect(Collectors.toList());;
+                        .collect(Collectors.toList());
                 return moles;
             }
         };

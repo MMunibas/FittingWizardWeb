@@ -26,6 +26,8 @@ import ch.unibas.charmmtools.scripts.ICHARMMScript;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.directories.FitOutputDir;
+import ch.unibas.fitting.shared.directories.XyzDirectory;
+import ch.unibas.fitting.shared.workflows.gaussian.MoleculeCreator;
 import ch.unibas.fittingwizard.WhereToGo;
 import ch.unibas.fittingwizard.gaussian.Visualization;
 import ch.unibas.fitting.shared.directories.MoleculesDir;
@@ -97,7 +99,7 @@ public class WizardPageFactory {
     private DefaultValues defaultValues;
     private FitOutputDir fitOutputDir;
     private MoleculesDir moleculesDir;
-
+    private XyzDirectory xyzDirectory;
     private LPunParser lPunParser;
     private EditAtomTypeChargesDialog editAtomTypeChargesDialog;
 
@@ -125,7 +127,7 @@ public class WizardPageFactory {
         this.fitOutputDir = initializeCurrentSessionDirectory(settings.getDataDir());
 
         this.moleculesDir = new MoleculesDir(settings.getMoleculeDir());
-
+        this.xyzDirectory = new XyzDirectory(settings.getMoleculeDir());
         this.visualization = new Visualization(primaryStage);
 
         // TODO use repo to persist data into state dir
@@ -191,9 +193,9 @@ public class WizardPageFactory {
                 babelScript,
                 lraScript,
                 fittabMarkerScript,
-                lPunParser,
                 new GaussianLogModifier(),
-                notifications);
+                notifications,
+                new MoleculeCreator(lPunParser));
 
         vmdDisplayWorkflow = new RunVmdDisplayWorkflow(vmdScript, fitOutputDir.getFitMtpOutputDir());
 
@@ -220,7 +222,10 @@ public class WizardPageFactory {
                 page = new CoordinatesPage(visualization, moleculesDir, dto);
             } else if (type == MultipoleGaussParameterPage.class) {
                 MultipoleGaussParameterDto dto = throwIfParameterIsNull(parameter);
-                page = new MultipoleGaussParameterPage(defaultValues, moleculesDir, dto);
+                page = new MultipoleGaussParameterPage(defaultValues,
+                        moleculesDir,
+                        xyzDirectory,
+                        dto);
             } else if (type == AtomTypeChargePage.class) {
                 AtomChargesDto dto = throwIfParameterIsNull(parameter);
                 page = new AtomTypeChargePage(moleculeRepository,
