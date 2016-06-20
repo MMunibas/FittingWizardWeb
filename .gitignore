@@ -13,7 +13,6 @@
 *.xlsx
 benzonitrile/
 certs/
-co2/
 *.csv
 *.png
 figures/
@@ -42,3 +41,4 @@ scripts/nbproject/private/
 */fitting-*/build/
 fitting/build
 fitting/logs
+fitting/data/
