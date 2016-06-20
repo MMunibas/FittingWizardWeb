@@ -10,6 +10,8 @@ package ch.unibas.fittingwizard.gaussian.fitting;
 
 import ch.unibas.charmmtools.gui.step1.mdAssistant.CHARMM_GUI_InputAssistant;
 import ch.unibas.fitting.shared.config.Settings;
+import ch.unibas.fitting.shared.directories.FitOutputDir;
+import ch.unibas.fitting.shared.directories.MoleculesDir;
 import ch.unibas.fittingwizard.gaussian.Visualization;
 import ch.unibas.fitting.shared.fitting.Fit;
 import ch.unibas.fitting.shared.fitting.FitRepository;
@@ -62,6 +64,8 @@ import org.apache.commons.io.FilenameUtils;
 public class FitResultPage extends WizardPageWithVisualization {
 
     private final ColorCoder colorCoder = new ColorCoder();
+    private FitOutputDir fitOutputDir;
+    private MoleculesDir moleculesDir;
     private final MoleculeRepository moleculeRepository;
     private final FitRepository fitRepository;
     private final ExportFitWorkflow exportFitWorkflow;
@@ -141,14 +145,18 @@ public class FitResultPage extends WizardPageWithVisualization {
     private TableColumn<ljparams, String> lj_attype, lj_epsilon, lj_sigma;
     private ObservableList<ljparams> lj_gridValues;
 
-    public FitResultPage(MoleculeRepository moleculeRepository,
+    public FitResultPage(FitOutputDir fitOutputDir,
+                         MoleculesDir moleculesDir,
+            MoleculeRepository moleculeRepository,
             FitRepository fitRepository,
             Visualization visualization,
             ExportFitWorkflow exportFitWorkflow,
             RunVmdDisplayWorkflow vmdDisplayWorkflow) {
         
         super(visualization, "MTP and LJ Fit result");
-        
+        this.fitOutputDir = fitOutputDir;
+        this.moleculesDir = moleculesDir;
+
         this.moleculeRepository = moleculeRepository;
         this.fitRepository = fitRepository;
         this.exportFitWorkflow = exportFitWorkflow;
@@ -283,7 +291,8 @@ public class FitResultPage extends WizardPageWithVisualization {
         if (destination != null) {
 
             Fit fit = cbFitResults.getSelectionModel().getSelectedItem().getFit();
-            flist_for_charmm = exportFitWorkflow.execute(WorkflowContext.withInput(new ExportFitInput(fit, destination)), true);
+            flist_for_charmm = exportFitWorkflow.execute(WorkflowContext.withInput(
+                    new ExportFitInput(fitOutputDir, moleculesDir, fit, destination)), true);
 
             this.gotoCharmmFit.setDisable(false);
 
@@ -301,7 +310,7 @@ public class FitResultPage extends WizardPageWithVisualization {
         dirChooser.setTitle("Fit export destination");
         // wrapping is necessary, since directory chooser can not handle some paths.
         // maybe the problem are not normalized paths...
-        File defaultExportDir = new File(FilenameUtils.normalize(exportFitWorkflow.getDefaultExportDir().getAbsolutePath()));
+        File defaultExportDir = new File(FilenameUtils.normalize(fitOutputDir.getDefaultExportDir().getAbsolutePath()));
         defaultExportDir.mkdir();
         logger.debug("defaultExportDir=" + FilenameUtils.normalize(defaultExportDir.getAbsolutePath()));
         dirChooser.setInitialDirectory(defaultExportDir);

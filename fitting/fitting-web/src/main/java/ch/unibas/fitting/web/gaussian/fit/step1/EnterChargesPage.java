@@ -1,14 +1,13 @@
 package ch.unibas.fitting.web.gaussian.fit.step1;
 
 import ch.unibas.fitting.shared.molecules.AtomTypeId;
-import ch.unibas.fitting.web.gaussian.fit.step2.FittingResultsPage;
-import ch.unibas.fitting.web.web.HeaderPage;
+import ch.unibas.fitting.shared.molecules.Molecule;
+import ch.unibas.fitting.shared.molecules.MoleculeQueryService;
+import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
 import ch.unibas.fitting.web.web.WizardPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.NumberTextField;
@@ -23,11 +22,14 @@ import java.util.List;
 /**
  * Created by mhelmer-mobile on 17.06.2016.
  */
-public class EnterChargesPage extends HeaderPage {
+public class EnterChargesPage extends WizardPage {
 
     private List<AtomTypesViewModel> _atomsTypes;
 
-    public EnterChargesPage(ModalWindow window) {
+    private final MoleculeUserRepo repo;
+
+    public EnterChargesPage(ModalWindow window, MoleculeUserRepo repo) {
+        this.repo = repo;
         Form form = new Form("form");
         add(form);
 
@@ -74,6 +76,10 @@ public class EnterChargesPage extends HeaderPage {
     private List<AtomTypesViewModel> loadAtomTypes() {
 
         // TODO: get the real data
+
+        List<Molecule> molecules = repo.loadAllI(getCurrentUsername());
+
+        MoleculeQueryService qs = new MoleculeQueryService(molecules);
 
         List _atoms = new ArrayList();
         _atoms.add(new AtomTypesViewModel(new AtomTypeId("O1C2O1")));

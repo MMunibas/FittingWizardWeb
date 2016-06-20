@@ -8,9 +8,9 @@
  */
 package ch.unibas.fitting.shared.workflows;
 
+import ch.unibas.fitting.shared.directories.FitOutputDir;
 import ch.unibas.fitting.shared.fitting.Fit;
 import ch.unibas.fitting.shared.molecules.MoleculeId;
-import ch.unibas.fitting.shared.scripts.fitmtp.RealFitScript;
 import ch.unibas.fitting.shared.scripts.export.ExportScriptInput;
 import ch.unibas.fitting.shared.scripts.export.ExportScriptOutput;
 import ch.unibas.fitting.shared.scripts.export.IExportScript;
@@ -33,11 +33,9 @@ public class ExportFitWorkflow implements Workflow<ExportFitInput, Void> {
     private static final Logger logger = Logger.getLogger(ExportFitWorkflow.class);
 
     private final IExportScript exportScript;
-    private final File sessionDir;
 
-    public ExportFitWorkflow(IExportScript exportScript, File sessionDir) {
+    public ExportFitWorkflow(IExportScript exportScript) {
         this.exportScript = exportScript;
-        this.sessionDir = sessionDir;
     }
 
     /**
@@ -50,15 +48,20 @@ public class ExportFitWorkflow implements Workflow<ExportFitInput, Void> {
         logger.info("Executing export workflow.");
         Fit fit = input.getParameter().getFit();
         File destination = input.getParameter().getDestination();
+        FitOutputDir fitOutputDir = input.getParameter().getFitOutputDir();
 
         if (destination == null) {
-            destination = getDefaultExportDir();
+            destination = fitOutputDir.getDefaultExportDir();
             logger.info("No destination passed. Using default destination: "
                     + FilenameUtils.normalize(destination.getAbsolutePath()));
         }
         List<File> exportedFiles = new ArrayList<>();
         for (MoleculeId moleculeId : fit.getAllMoleculeIds()) {
-            ExportScriptOutput output = exportScript.execute(new ExportScriptInput(fit.getId(), moleculeId));
+            ExportScriptOutput output = exportScript.execute(new ExportScriptInput(
+                    input.getParameter().getFitOutputDir(),
+                    input.getParameter().getMoleculesDir(),
+                    fit.getId(),
+                    moleculeId));
             exportedFiles.add(output.getExportFile());
         }
         copyToDestinationIfNecessary(exportedFiles, destination);
@@ -69,15 +72,19 @@ public class ExportFitWorkflow implements Workflow<ExportFitInput, Void> {
         logger.info("Executing export workflow with return of List<File> for CHARMM");
         Fit fit = input.getParameter().getFit();
         File destination = input.getParameter().getDestination();
-
+        FitOutputDir fitOutputDir = input.getParameter().getFitOutputDir();
         if (destination == null) {
-            destination = getDefaultExportDir();
+            destination = fitOutputDir.getDefaultExportDir();
             logger.info("No destination passed. Using default destination: "
                     + FilenameUtils.normalize(destination.getAbsolutePath()));
         }
         List<File> exportedFiles = new ArrayList<>();
         for (MoleculeId moleculeId : fit.getAllMoleculeIds()) {
-            ExportScriptOutput output = exportScript.execute(new ExportScriptInput(fit.getId(), moleculeId));
+            ExportScriptOutput output = exportScript.execute(new ExportScriptInput(
+                    fitOutputDir,
+                    input.getParameter().getMoleculesDir(),
+                    fit.getId(),
+                    moleculeId));
             exportedFiles.add(output.getExportFile());
         }
         copyToDestinationIfNecessary(exportedFiles, destination);
@@ -103,9 +110,5 @@ public class ExportFitWorkflow implements Workflow<ExportFitInput, Void> {
                 logger.info("Skipping copying to destination, since export file is already in destination.");
             }
         }
-    }
-
-    public File getDefaultExportDir() {
-        return new File(new File(sessionDir, RealFitScript.OutputDirName), "export");
     }
 }

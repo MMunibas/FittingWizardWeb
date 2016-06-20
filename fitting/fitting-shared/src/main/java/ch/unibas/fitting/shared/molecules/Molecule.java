@@ -9,7 +9,8 @@
 package ch.unibas.fitting.shared.molecules;
 
 import ch.unibas.fitting.shared.xyz.XyzFile;
-import java.util.ArrayList;
+import org.joda.time.DateTime;
+
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -23,12 +24,14 @@ public class Molecule {
     private final MoleculeId id;
     private final List<Atom> atoms;
     private final List<AtomType> atomTypes;
+    private final DateTime created;
 
     public Molecule(XyzFile xyzFile, List<Atom> atoms, List<AtomType> atomTypes) {
         this.xyzFile = xyzFile;
         this.id = new MoleculeId(xyzFile.getMoleculeName());
         this.atoms = atoms;
         this.atomTypes = atomTypes;
+        this.created = DateTime.now();
         verifyUserChargeState();
         verifyIndices();
     }
@@ -137,6 +140,10 @@ public class Molecule {
             all.add(atomType.getId());
         }
         return all;
+    }
+
+    public DateTime getCreated() {
+        return created;
     }
 
     public enum UserChargesState {

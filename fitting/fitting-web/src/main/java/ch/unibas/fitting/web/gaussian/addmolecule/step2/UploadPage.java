@@ -3,6 +3,7 @@ package ch.unibas.fitting.web.gaussian.addmolecule.step2;
 import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.web.gaussian.addmolecule.step3.AtomsPage;
 import ch.unibas.fitting.web.web.HeaderPage;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -49,7 +50,8 @@ public class UploadPage extends HeaderPage {
                 {
                     Logger.debug("File-Name: " + upload.getClientFileName() + " File-Size: " +
                             Bytes.bytes(upload.getSize()).toString());
-                    File f =_userDir.getXyzFileFor(session().getUsername(), upload.getClientFileName());
+                    File f =_userDir.getXyzDir(session().getUsername())
+                            .getXyzFileFor(upload.getClientFileName());
                     try {
                         upload.writeTo(f);
                     } catch (Exception e) {
@@ -57,7 +59,8 @@ public class UploadPage extends HeaderPage {
                     }
 
                     PageParameters pp = new PageParameters();
-                    pp.add("xyz_file", f);
+                    String moleculeName = FilenameUtils.removeExtension(f.getName());
+                    pp.add("molecule_name", moleculeName);
 
                     setResponsePage(AtomsPage.class, pp);
                 }

@@ -55,7 +55,7 @@ public class Settings {
     }
 
     public File getTestdataDir() {
-        return new File(getDataDir(), "testdata");
+        return getFile("testdata.path");
     }
 
     public File getMoleculeDir() {
@@ -100,5 +100,9 @@ public class Settings {
 
     public boolean getMocksEnabled() {
         return getValue("mocks.enabled").equals("true");
+    }
+
+    public File getTestdataFitOutput() {
+        return new File(getTestdataDir(), "output");
     }
 }

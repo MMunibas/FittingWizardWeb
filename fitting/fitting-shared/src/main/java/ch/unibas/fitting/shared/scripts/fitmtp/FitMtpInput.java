@@ -8,6 +8,8 @@
  */
 package ch.unibas.fitting.shared.scripts.fitmtp;
 
+import ch.unibas.fitting.shared.directories.FitOutputDir;
+import ch.unibas.fitting.shared.directories.MoleculesDir;
 import ch.unibas.fitting.shared.molecules.MoleculeId;
 import java.io.File;
 import java.util.List;
@@ -18,6 +20,8 @@ import java.util.List;
  * Time: 11:54
  */
 public class FitMtpInput {
+    private MoleculesDir moleculesDir;
+    private FitOutputDir fitOutputDir;
     private final int fitId;
     private final double convergence;
     private final int rank;
@@ -25,18 +29,30 @@ public class FitMtpInput {
     private final File initalCharges;
     private final List<MoleculeId> moleculesForFit;
 
-    public FitMtpInput(int fitId,
+    public FitMtpInput(MoleculesDir moleculesDir,
+                       FitOutputDir fitOutputDir,
+                       int fitId,
                        double convergence,
                        int rank,
                        boolean ignoreHydrogen,
                        File initalChargesFile,
                        List<MoleculeId> moleculesForFit) {
+        this.moleculesDir = moleculesDir;
+        this.fitOutputDir = fitOutputDir;
         this.fitId = fitId;
         this.convergence = convergence;
         this.rank = rank;
         this.ignoreHydrongen = ignoreHydrogen;
         this.initalCharges = initalChargesFile;
         this.moleculesForFit = moleculesForFit;
+    }
+
+    public MoleculesDir getMoleculesDir() {
+        return moleculesDir;
+    }
+
+    public FitOutputDir getFitOutputDir() {
+        return fitOutputDir;
     }
 
     public int getFitId() {

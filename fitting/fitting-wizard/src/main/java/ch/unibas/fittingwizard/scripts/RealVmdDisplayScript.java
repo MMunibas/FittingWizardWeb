@@ -10,7 +10,7 @@ package ch.unibas.fittingwizard.scripts;
 
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.molecules.MoleculeId;
-import ch.unibas.fitting.shared.scripts.fitmtp.RealFitScript;
+import ch.unibas.fitting.shared.scripts.fitmtp.RealFitMtpScript;
 import ch.unibas.fitting.shared.scripts.lra.RealLRAScript;
 import ch.unibas.fitting.shared.scripts.multipolegauss.RealMultipoleGaussScript;
 import ch.unibas.fitting.shared.scripts.vmd.IVmdDisplayScript;
@@ -65,7 +65,7 @@ public class RealVmdDisplayScript implements IVmdDisplayScript {
     	pyRunner.setWorkingDir(outputDir);
 
         // -txt parameter
-        String fitResultFileName = RealFitScript.getResultFileNameForFit(input.getFitId());
+        String fitResultFileName = RealFitMtpScript.getResultFileNameForFit(input.getFitId());
         File fitResultFile = new File(outputDir, fitResultFileName);
 
         // -pun co2_l.pun
@@ -142,7 +142,7 @@ public class RealVmdDisplayScript implements IVmdDisplayScript {
     
     private File getPunOutputFile(int fitId, MoleculeId moleculeId) {
         // for example: fit_1_co2.pun
-        String name = String.format("%s%s_%s.pun", RealFitScript.FitNamePrefix, String.valueOf(fitId), moleculeId.getName());
+        String name = String.format("%s%s_%s.pun", RealFitMtpScript.FitNamePrefix, String.valueOf(fitId), moleculeId.getName());
         File exportOutput = new File(outputDir, name);
         return exportOutput;
     }

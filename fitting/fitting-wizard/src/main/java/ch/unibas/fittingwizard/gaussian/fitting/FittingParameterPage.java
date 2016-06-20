@@ -8,6 +8,8 @@
  */
 package ch.unibas.fittingwizard.gaussian.fitting;
 
+import ch.unibas.fitting.shared.directories.FitOutputDir;
+import ch.unibas.fitting.shared.directories.MoleculesDir;
 import ch.unibas.fitting.shared.fitting.ChargeValue;
 import ch.unibas.fitting.shared.fitting.FitRepository;
 import ch.unibas.fitting.shared.molecules.*;
@@ -20,8 +22,7 @@ import ch.unibas.fittingwizard.gaussian.base.WizardPage;
 import ch.unibas.fittingwizard.gaussian.base.dialog.OverlayDialog;
 import java.io.File;
 import java.util.*;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -36,10 +37,12 @@ import org.apache.commons.lang.NotImplementedException;
  */
 public class FittingParameterPage extends WizardPage {
 
-    private final File sessionDir;
+
     private final EditAtomTypeChargesDialog editAtomTypeChargesDialog;
     private final FitRepository fitRepository;
     private final MoleculeRepository moleculeRepository;
+    private MoleculesDir moleculesDir;
+    private FitOutputDir fitOutputDir;
 
     @FXML
     private CheckBox chkIgnoreHydrogen;
@@ -51,13 +54,15 @@ public class FittingParameterPage extends WizardPage {
     public FittingParameterPage(FitRepository fitRepository,
                                 MoleculeRepository moleculeRepository,
                                 DefaultValues defaultValues,
-                                File sessionDir,
+                                MoleculesDir moleculesDir,
+                                FitOutputDir fitOutputDir,
                                 EditAtomTypeChargesDialog editAtomTypeChargesDialog,
                                 FitMtpInput fitMtpInput) {
         super("Fitting parameters");
         this.fitRepository = fitRepository;
         this.moleculeRepository = moleculeRepository;
-        this.sessionDir = sessionDir;
+        this.moleculesDir = moleculesDir;
+        this.fitOutputDir = fitOutputDir;
         this.editAtomTypeChargesDialog = editAtomTypeChargesDialog;
 
         setupComboBox();
@@ -97,25 +102,19 @@ public class FittingParameterPage extends WizardPage {
 
     @Override
     protected void fillButtonBar() {
-        Button backButton = ButtonFactory.createButtonBarButton("Go back to molecule list", new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                logger.info("Going back to molecule list.");
-                navigateTo(MoleculeListPage.class);
-            }
+        Button backButton = ButtonFactory.createButtonBarButton("Go back to molecule list", actionEvent -> {
+            logger.info("Going back to molecule list.");
+            navigateTo(MoleculeListPage.class);
         });
         addButtonToButtonBar(backButton);
 
-        Button startButton = ButtonFactory.createButtonBarButton("Start fitting", new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                logger.info("Starting fit.");
+        Button startButton = ButtonFactory.createButtonBarButton("Start fitting", actionEvent -> {
+            logger.info("Starting fit.");
 
-                MoleculeQueryService queryService = moleculeRepository.getQueryServiceForAllMolecules();
-                File initalCharges = getInitalCharges(queryService);
-                if (initalCharges != null) {
-                    navigateTo(RunningFitPage.class, createFittingParameter(initalCharges, queryService.getMoleculeIds()));
-                }
+            MoleculeQueryService queryService = moleculeRepository.getQueryServiceForAllMolecules();
+            File initalCharges = getInitalCharges(queryService);
+            if (initalCharges != null) {
+                navigateTo(RunningFitPage.class, createFittingParameter(initalCharges, queryService.getMoleculeIds()));
             }
         });
         addButtonToButtonBar(startButton);
@@ -165,8 +164,10 @@ public class FittingParameterPage extends WizardPage {
     }
 
     private File generateInitialChargesFileFromUserCharges(LinkedHashSet<ChargeValue> chargeValues) {
-        File chargesFile = new File(sessionDir, "output");
-        File generatedFile = new ChargesFileGenerator().generate(chargesFile, "generated_charges.txt", chargeValues);
+
+        File generatedFile = new ChargesFileGenerator().generate(fitOutputDir.getFitMtpOutputDir(),
+                "generated_charges.txt",
+                chargeValues);
         return generatedFile;
     }
 
@@ -191,7 +192,14 @@ public class FittingParameterPage extends WizardPage {
             boolean ignoreHydrongen = chkIgnoreHydrogen.isSelected();
             int id = fitRepository.getNextFitId();
 
-            return new FitMtpInput(id, convergence, rank, ignoreHydrongen, initalChargesFile, moleculesForFit);
+            return new FitMtpInput(moleculesDir,
+                    fitOutputDir,
+                    id,
+                    convergence,
+                    rank,
+                    ignoreHydrongen,
+                    initalChargesFile,
+                    moleculesForFit);
         } catch (Exception e) {
             OverlayDialog.showError("Invalid parameters", "The provided parameters are invalid.");
             throw e;

@@ -26,8 +26,8 @@ public class SelectionModel {
 
     public static List<SelectionModel> createDefaultSelections() {
         return Arrays.asList(
-                new SelectionModel("MTP Fit using Gaussian", OverviewPage.class),
-                new SelectionModel("LJ Fit using CHARMM", InputAssistant.class)
+                new SelectionModel("MTP Fit using Gaussian", OverviewPage.class)
+                //new SelectionModel("LJ Fit using CHARMM", InputAssistant.class)
         );
     }
 }

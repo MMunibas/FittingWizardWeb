@@ -2,14 +2,9 @@ package ch.unibas.fitting.web.gaussian.addmolecule.step4;
 
 import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussInput;
-import ch.unibas.fitting.shared.workflows.gaussian.GaussianWorkflow;
-import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianResult;
-import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianWorkflow;
-import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
 import ch.unibas.fitting.shared.xyz.XyzFile;
 import ch.unibas.fitting.shared.xyz.XyzFileParser;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
-import ch.unibas.fitting.web.application.TaskHandle;
 import ch.unibas.fitting.web.gaussian.addmolecule.step5.ProgressPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -25,6 +20,7 @@ import org.apache.wicket.validation.validator.RangeValidator;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.util.UUID;
 
 /**
  * Created by martin on 05.06.2016.
@@ -36,22 +32,18 @@ public class ParameterPage extends HeaderPage {
     private IModel<Integer> _nCores = Model.of(1);
     private IModel<Integer> _multiplicity = Model.of(1);
 
-    private final File _xyzFile;
+    private final String moleculeName;
 
     @Inject
     private IUserDirectory _userDir;
     @Inject
     private IBackgroundTasks _tasks;
     @Inject
-    private GaussianWorkflow _workflow;
+    private RunGaussian runGaussian;
 
     public ParameterPage(PageParameters pp) {
 
-        String xyzFile = pp.get("xyz_file").toString();
-        if (xyzFile != null)
-            _xyzFile = new File(xyzFile);
-        else
-            _xyzFile = null;
+        this.moleculeName = pp.get("molecule_name").toString();
 
         Form form = new Form("form");
         add(form);
@@ -86,7 +78,8 @@ public class ParameterPage extends HeaderPage {
 
                 String username = getCurrentUsername();
 
-                XyzFile xyzFile = XyzFileParser.parse(_xyzFile);
+                File xyz = _userDir.getXyzDir(username).getXyzFileFor(moleculeName);
+                XyzFile xyzFile = XyzFileParser.parse(xyz);
 
                 final MultipoleGaussInput input = new MultipoleGaussInput(
                         _userDir.getMoleculesDir(username),
@@ -97,15 +90,11 @@ public class ParameterPage extends HeaderPage {
                         _multiplicity.getObject()
                 );
 
-                TaskHandle th = _tasks.execute(username, "Multiple Gaussian MEP", () -> {
-                    Thread.sleep(3000);
-                    RunGaussianResult result = _workflow.execute(WorkflowContext.withInput(input));
-                    return result;
-                });
+                UUID id = runGaussian.runGaussian(username, input);
 
                 PageParameters pp = new PageParameters();
-                pp.add("task_id", th.getId());
-                pp.add("xyz_file", _xyzFile);
+                pp.add("task_id", id);
+                pp.add("molecule_name", moleculeName);
 
                 setResponsePage(ProgressPage.class, pp);
             }

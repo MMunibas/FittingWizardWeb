@@ -1,6 +1,6 @@
 package ch.unibas.fitting.web.application;
 
-import ch.unibas.fitting.web.application.base.UserRepository;
+import ch.unibas.fitting.web.application.base.JsonUserRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,7 +8,7 @@ import org.junit.Test;
 /**
  * Created by mhelmer-mobile on 15.06.2016.
  */
-public class UserRepositoryTest {
+public class JsonUserRepositoryTest {
 
     private DataRepo _repo;
 
@@ -30,7 +30,7 @@ public class UserRepositoryTest {
         Assert.assertEquals(s.getValue(), loaded.getValue());
     }
 
-    public static class DataRepo extends UserRepository<DataStructure> {}
+    public static class DataRepo extends JsonUserRepository<DataStructure> {}
 
     public static class DataStructure {
         private int value;

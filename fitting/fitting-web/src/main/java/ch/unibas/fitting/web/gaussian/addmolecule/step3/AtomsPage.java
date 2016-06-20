@@ -1,5 +1,6 @@
 package ch.unibas.fitting.web.gaussian.addmolecule.step3;
 
+import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.shared.xyz.XyzFile;
 import ch.unibas.fitting.shared.xyz.XyzFileParser;
 import ch.unibas.fitting.web.gaussian.addmolecule.step4.ParameterPage;
@@ -18,6 +19,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,16 +29,17 @@ import java.util.stream.Collectors;
  */
 public class AtomsPage extends HeaderPage {
 
-    private File _file;
+    private String moleculeName;
     private IModel<XyzFile> _xyzFile;
+
+    @Inject
+    private IUserDirectory userDirectory;
 
     public AtomsPage(PageParameters pp) {
 
-        String file = pp.get("xyz_file").toString();
-        if (file != null)
-            _file = new File(file);
+        this.moleculeName = pp.get("molecule_name").toString();
 
-        add(new Label("filename", Model.of(_file != null ? _file.getName() : "no file defined")));
+        add(new Label("filename", Model.of(moleculeName != null ? moleculeName + ".xyz" : "no file defined")));
 
         add(new DataView<AtomViewModel>("atoms", loadAtoms())
         {
@@ -61,7 +64,7 @@ public class AtomsPage extends HeaderPage {
             public void onClick(AjaxRequestTarget target) {
 
                 PageParameters pp = new PageParameters();
-                pp.add("xyz_file", _file);
+                pp.add("molecule_name", moleculeName);
 
                 setResponsePage(ParameterPage.class, pp);
             }
@@ -75,9 +78,10 @@ public class AtomsPage extends HeaderPage {
 
             @Override
             protected List getData() {
-                if (_atoms == null) {
-                    XyzFile f = XyzFileParser.parse(_file);
-                    _atoms = f.getAtoms()
+                if (_atoms == null && moleculeName != null) {
+                    File f = userDirectory.getXyzDir(getCurrentUsername()).getXyzFileFor(moleculeName);
+                    XyzFile xyz = XyzFileParser.parse(f);
+                    _atoms = xyz.getAtoms()
                             .stream()
                             .map(a -> new AtomViewModel(a.getName(), a.getIndex(), a.getX(), a.getY(), a.getZ()))
                             .collect(Collectors.toList());
@@ -99,11 +103,15 @@ public class AtomsPage extends HeaderPage {
         super.renderHead(response);
 
         response.render(JavaScriptHeaderItem.forUrl("/javascript/jsmol/JSmol.min.js"));
-        String filename = convertFileToJavascriptStylePath(_file);
+        String filename = getXyzUrl(moleculeName);
         response.render(JavaScriptHeaderItem.forScript("var Info = {width: 400,height: 400,serverURL: \"http://chemapps.stolaf.edu/jmol/jsmol/php/jsmol.php\",use: \"HTML5\",j2sPath: \"/javascript/jsmol/j2s\",script: \"background black;load " + filename + "; selectionhalos on;select none;\",console: \"jmolApplet0_infodiv\"}", "jsmol_info"));
     }
 
-    private String convertFileToJavascriptStylePath(File file) {
-        return "/" + file.toString().replace("\\", "/");
+    private String getXyzUrl(String moleculeName) {
+        return "/data/" +
+                getCurrentUsername() +
+                "/xyz_files/" +
+                moleculeName +
+                ".xyz";
     }
 }

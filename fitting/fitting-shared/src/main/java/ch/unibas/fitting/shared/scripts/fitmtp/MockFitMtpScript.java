@@ -10,9 +10,13 @@ package ch.unibas.fitting.shared.scripts.fitmtp;
 
 import java.io.File;
 import java.io.IOException;
+
+import ch.unibas.fitting.shared.config.Settings;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
+
+import javax.inject.Inject;
 
 /**
  * User: mhelmer
@@ -22,29 +26,26 @@ import org.apache.log4j.Logger;
 public class MockFitMtpScript implements IFitMtpScript {
     private final static Logger logger = Logger.getLogger(MockFitMtpScript.class);
 
-    private final File sessionDir;
-    private final File testdataDir;
+    private final File testOuptputDir;
 
-	public MockFitMtpScript(File sessionDir, File testdataDir) {
-    	this.sessionDir = sessionDir;
-        this.testdataDir = testdataDir;
+    @Inject
+	public MockFitMtpScript(Settings settings) {
+        this.testOuptputDir = settings.getTestdataFitOutput();
 	}
 
 	@Override
     public FitMtpOutput execute(FitMtpInput input) {
-        File outputDir = new File(sessionDir, RealFitScript.OutputDirName);
-        outputDir.mkdir();
+        File outputDir = input.getFitOutputDir().getFitMtpOutputDir();
 
-        File testdataOutput = new File(testdataDir, RealFitScript.OutputDirName);
-        File outputMockData = new File(testdataOutput, RealFitScript.ConsoleOutputFileName);
-        File resultMockData = new File(testdataOutput, RealFitScript.FitResultFileName);
+        File outputMockData = new File(testOuptputDir, RealFitMtpScript.ConsoleOutputFileName);
+        File resultMockData = new File(testOuptputDir, RealFitMtpScript.FitResultFileName);
 
-        File outputFile = new File(outputDir, RealFitScript.getOutputFileNameForFit(input.getFitId()));
-        File resultsFile = new File(outputDir, RealFitScript.getResultFileNameForFit(input.getFitId()));
+        File outputFile = new File(outputDir, RealFitMtpScript.getOutputFileNameForFit(input.getFitId()));
+        File resultsFile = new File(outputDir, RealFitMtpScript.getResultFileNameForFit(input.getFitId()));
 
         try {
             logger.info(String.format("Copying mock data from %s to %s.",
-                            FilenameUtils.normalize(testdataOutput.getAbsolutePath()),
+                            FilenameUtils.normalize(testOuptputDir.getAbsolutePath()),
                             FilenameUtils.normalize(outputDir.getAbsolutePath())));
             FileUtils.copyFile(resultMockData, resultsFile);
             FileUtils.copyFile(outputMockData, outputFile);

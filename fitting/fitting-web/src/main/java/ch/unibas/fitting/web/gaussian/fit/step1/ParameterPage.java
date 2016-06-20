@@ -1,9 +1,8 @@
 package ch.unibas.fitting.web.gaussian.fit.step1;
 
 import ch.unibas.fitting.shared.molecules.*;
-import ch.unibas.fitting.shared.scripts.fitmtp.FitMtpInput;
+import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
 import ch.unibas.fitting.web.web.HeaderPage;
-import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
@@ -13,7 +12,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
-import java.io.File;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -52,6 +51,11 @@ public class ParameterPage extends HeaderPage {
     private IModel<Double> _convergence = Model.of(0.1);
     private IModel<Boolean> _ignoreHydrogens = Model.of(false);
 
+    @Inject
+    private MoleculeUserRepo repo;
+    @Inject
+    private RunFit runFit;
+
     private LinkedHashSet<AtomTypeId> getAllAtomTypeIds(List<Molecule> molecules) {
         LinkedHashSet<AtomTypeId> allIds = new LinkedHashSet<>();
         for (Molecule molecule : molecules) {
@@ -64,20 +68,16 @@ public class ParameterPage extends HeaderPage {
 
         ModalWindow modalWindow = new ModalWindow("modalWindow");
 
-        modalWindow.setPageCreator(new ModalWindow.PageCreator() {
-            @Override
-            public Page createPage() {
-                return new EnterChargesPage(modalWindow);
-            }
-        });
+        modalWindow.setPageCreator((ModalWindow.PageCreator) () -> new EnterChargesPage(modalWindow, repo));
 
-        modalWindow.setWindowClosedCallback(new ModalWindow.WindowClosedCallback() {
+        modalWindow.setWindowClosedCallback((ModalWindow.WindowClosedCallback) target -> {
+            //custom code…
+            EnterChargesPage page = (EnterChargesPage)target.getPage();
 
-            @Override
-            public void onClose(AjaxRequestTarget target) {
-                //custom code…
-                Logger.info("window closed");
-            }
+
+
+
+            Logger.info("window closed");
         });
         
         add(modalWindow);
@@ -106,17 +106,17 @@ public class ParameterPage extends HeaderPage {
                 target.add(fp);
 
                 modalWindow.show(target);
+                Logger.debug("showing modal window");
 
                 //XyzFile f = XyzFileParser.parse(_xyzFile);
-
-                FitMtpInput input = new FitMtpInput(
-                        0,
-                        _convergence.getObject(),
-                        _rank.getRank(),
-                        _ignoreHydrogens.getObject(),
-                        new File(""),
-                        new ArrayList()
-                );
+//                FitMtpInput input = new FitMtpInput(
+//                        0,
+//                        _convergence.getObject(),
+//                        _rank.getRank(),
+//                        _ignoreHydrogens.getObject(),
+//                        new File(""),
+//                        new ArrayList()
+//                );
 
 //                FitMtpInput input = new FitMtpInput(
 //                        _fitRepository.getNextFitId(),

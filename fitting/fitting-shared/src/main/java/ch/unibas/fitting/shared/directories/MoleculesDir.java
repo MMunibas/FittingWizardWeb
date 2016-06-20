@@ -19,23 +19,15 @@ import org.apache.commons.io.FilenameUtils;
  * Date: 16.12.13
  * Time: 16:20
  */
-public class MoleculesDir {
-    private final File directory;
+public class MoleculesDir extends FittingDirectory {
+
 
     public MoleculesDir(File directory) {
-        directory.mkdir();
-        if (!directory.isDirectory()) {
-            throw new IllegalArgumentException("Given directory does not exist " + directory.getAbsolutePath());
-        }
-        this.directory = new File(FilenameUtils.normalize(directory.getAbsolutePath()));
-    }
-
-    public File getDirectory() {
-        return directory;
+        super(directory);
     }
 
     public boolean contains(File selectedDir) {
-        return FilenameUtils.equalsNormalized(directory.getAbsolutePath(), selectedDir.getParent());
+        return FilenameUtils.equalsNormalized(getDirectory().getAbsolutePath(), selectedDir.getParent());
     }
 
     /**
@@ -43,7 +35,7 @@ public class MoleculesDir {
      * @param name
      */
     public void deleteMolecule(String name) {
-        File molDir = new File(directory, name);
+        File molDir = new File(getDirectory(), name);
         try {
             FileUtils.deleteDirectory(molDir);
         } catch (IOException e) {
@@ -52,6 +44,6 @@ public class MoleculesDir {
     }
 
     public File getDirectoryFor(String moleculeName) {
-        return new File(directory, moleculeName);
+        return new File(getDirectory(), moleculeName);
     }
 }

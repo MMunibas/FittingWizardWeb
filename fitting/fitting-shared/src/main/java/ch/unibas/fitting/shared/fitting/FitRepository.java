@@ -13,6 +13,8 @@ import ch.unibas.fitting.shared.molecules.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * User: mhelmer
@@ -67,10 +69,9 @@ public class FitRepository extends MemoryRepository<Fit> {
     }
 
     private List<MoleculeId> getMoleculeIds(List<Molecule> molecules) {
-        ArrayList<MoleculeId> ids = new ArrayList<>();
-        for (Molecule molecule : molecules) {
-            ids.add(molecule.getId());
-        }
+        ArrayList<MoleculeId> ids = molecules.stream()
+                .map(Molecule::getId)
+                .collect(Collectors.toCollection(ArrayList::new));
         return ids;
     }
 
@@ -95,5 +96,11 @@ public class FitRepository extends MemoryRepository<Fit> {
         }
 
         return referenceValue;
+    }
+
+    public Optional<Fit> findById(int fitId) {
+        return loadAll().stream()
+                .filter(fit -> fit.getId() == fitId)
+                .findFirst();
     }
 }

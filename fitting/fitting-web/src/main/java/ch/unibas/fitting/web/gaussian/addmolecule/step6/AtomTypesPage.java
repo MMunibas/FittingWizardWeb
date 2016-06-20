@@ -1,9 +1,11 @@
 package ch.unibas.fitting.web.gaussian.addmolecule.step6;
 
+import ch.unibas.fitting.shared.molecules.Molecule;
 import ch.unibas.fitting.shared.tools.LPunParser;
 import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianResult;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.application.TaskHandle;
+import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
 import ch.unibas.fitting.web.gaussian.addmolecule.step1.OverviewPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -32,9 +34,11 @@ public class AtomTypesPage extends HeaderPage {
     private final UUID _taskId;
 
     @Inject
-    private LPunParser _parser;
+    private LPunParser parser;
     @Inject
-    private IBackgroundTasks _tasks;
+    private IBackgroundTasks tasks;
+    @Inject
+    private MoleculeUserRepo repo;
 
     public AtomTypesPage(PageParameters pp) {
 
@@ -55,6 +59,11 @@ public class AtomTypesPage extends HeaderPage {
         form.add(new AjaxButton("next") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+                RunGaussianResult result = getResult();
+                if (result != null) {
+                    Molecule mol = result.getMolecule();
+                    repo.save(getCurrentUsername(), mol);
+                }
                 setResponsePage(OverviewPage.class);
             }
 
@@ -90,10 +99,10 @@ public class AtomTypesPage extends HeaderPage {
             protected List getData() {
 
                 if (atomTypes == null) {
-                    TaskHandle<RunGaussianResult> result = _tasks.getHandle(_taskId);
-                    if (result.wasSuccessful()) {
-                        atomTypes = result.getResult()
-                                .getMolecule()
+                    RunGaussianResult result = getResult();
+                    if (result != null) {
+                        atomTypes =
+                                result.getMolecule()
                                 .getAtomTypes()
                                 .stream()
                                 .map(atomType -> new ChargesViewModel(atomType.getId().getName(), atomType.getIndices()))
@@ -104,5 +113,13 @@ public class AtomTypesPage extends HeaderPage {
                 return atomTypes;
             }
         };
+    }
+
+    private RunGaussianResult getResult() {
+        TaskHandle<RunGaussianResult> result = tasks.getHandle(_taskId);
+        if (result.wasSuccessful()) {
+            return result.getResult();
+        }
+        return null;
     }
 }

@@ -25,6 +25,7 @@ import ch.unibas.charmmtools.scripts.CHARMMScript_Den_Vap;
 import ch.unibas.charmmtools.scripts.ICHARMMScript;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fitting.shared.config.Settings;
+import ch.unibas.fitting.shared.directories.FitOutputDir;
 import ch.unibas.fittingwizard.WhereToGo;
 import ch.unibas.fittingwizard.gaussian.Visualization;
 import ch.unibas.fitting.shared.directories.MoleculesDir;
@@ -49,7 +50,7 @@ import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianWorkflow;
 import ch.unibas.fitting.shared.workflows.RunVmdDisplayWorkflow;
 import ch.unibas.fitting.shared.scripts.babel.RealBabelScript;
 import ch.unibas.fitting.shared.scripts.export.RealExportScript;
-import ch.unibas.fitting.shared.scripts.fitmtp.RealFitScript;
+import ch.unibas.fitting.shared.scripts.fitmtp.RealFitMtpScript;
 import ch.unibas.fitting.shared.scripts.fittab.RealFittabMarkerScript;
 import ch.unibas.fitting.shared.scripts.lra.RealLRAScript;
 import ch.unibas.fitting.shared.scripts.multipolegauss.RealMultipoleGaussScript;
@@ -94,7 +95,7 @@ public class WizardPageFactory {
     private MoleculeRepository moleculeRepository;
     private FitRepository fitRepository;
     private DefaultValues defaultValues;
-    private File sessionDir;
+    private FitOutputDir fitOutputDir;
     private MoleculesDir moleculesDir;
 
     private LPunParser lPunParser;
@@ -121,7 +122,8 @@ public class WizardPageFactory {
 
     private void initializeDependencies(Stage primaryStage) {
         this.settings = Settings.loadConfig();
-        this.sessionDir = initializeCurrentSessionDirectory(settings.getDataDir());
+        this.fitOutputDir = initializeCurrentSessionDirectory(settings.getDataDir());
+
         this.moleculesDir = new MoleculesDir(settings.getMoleculeDir());
 
         this.visualization = new Visualization(primaryStage);
@@ -143,8 +145,6 @@ public class WizardPageFactory {
     }
 
     private void initializeScripts() {
-        File moleculeDestination = moleculesDir.getDirectory();
-        File outputDir = new File(sessionDir, RealFitScript.OutputDirName);
 
         if (!settings.getMocksEnabled()) {
             // used to add molecules
@@ -153,16 +153,18 @@ public class WizardPageFactory {
             fittabMarkerScript = new RealFittabMarkerScript(settings);
 
             // used for fitting
-            fitMtpScript = new RealFitScript(sessionDir, moleculeDestination, settings);
-            exportScript = new RealExportScript(settings, outputDir, moleculeDestination);
-            vmdScript = new RealVmdDisplayScript(settings, outputDir, moleculeDestination);
+            fitMtpScript = new RealFitMtpScript(settings);
+            exportScript = new RealExportScript(settings);
+            vmdScript = new RealVmdDisplayScript(settings,
+                    fitOutputDir.getFitMtpOutputDir(),
+                    moleculesDir.getDirectory());
         } else {
             babelScript = new MockBabelScript(settings);
             lraScript = new MockLRAScript(settings);
             fittabMarkerScript = new MockFittabMarkerScript(settings);
 
-            fitMtpScript = new MockFitMtpScript(sessionDir, settings.getTestdataDir());
-            exportScript = new MockExportScript(sessionDir, settings.getTestdataDir());
+            fitMtpScript = new MockFitMtpScript(settings);
+            exportScript = new MockExportScript(settings);
         }
 
         if (settings.getUseGaussianMock()) {
@@ -171,10 +173,10 @@ public class WizardPageFactory {
             gaussScript = new RealMultipoleGaussScript(settings);
         }
 
-        charmmScript_Den_Vap = new CHARMMScript_Den_Vap(sessionDir, settings);
-        charmmScript_DG_gas = new CHARMMScript_DG_gas(sessionDir, settings);
-        charmmScript_DG_solvent = new CHARMMScript_DG_solvent(sessionDir, settings);
-        charmmScript_default = new CHARMMScript_Den_Vap(sessionDir, settings);
+        charmmScript_Den_Vap = new CHARMMScript_Den_Vap(fitOutputDir.getCharmmOutputDir(), settings);
+        charmmScript_DG_gas = new CHARMMScript_DG_gas(fitOutputDir.getCharmmOutputDir(), settings);
+        charmmScript_DG_solvent = new CHARMMScript_DG_solvent(fitOutputDir.getCharmmOutputDir(), settings);
+        charmmScript_default = new CHARMMScript_Den_Vap(fitOutputDir.getCharmmOutputDir(), settings);
     }
 
     private void initializeWorkflows() {
@@ -183,7 +185,7 @@ public class WizardPageFactory {
                 new ChargesFileParser(),
                 new FitOutputParser());
 
-        exportFitWorkflow = new ExportFitWorkflow(exportScript, sessionDir);
+        exportFitWorkflow = new ExportFitWorkflow(exportScript);
 
         runGaussianWorkflow = new RunGaussianWorkflow(gaussScript,
                 babelScript,
@@ -193,7 +195,7 @@ public class WizardPageFactory {
                 new GaussianLogModifier(),
                 notifications);
 
-        vmdDisplayWorkflow = new RunVmdDisplayWorkflow(vmdScript, sessionDir);
+        vmdDisplayWorkflow = new RunVmdDisplayWorkflow(vmdScript, fitOutputDir.getFitMtpOutputDir());
 
         charmmWorkflow_Den_Vap = new RunCHARMMWorkflow(charmmScript_Den_Vap);
         charmmWorkflow_DG = new RunCHARMMWorkflow(charmmScript_DG_gas, charmmScript_DG_solvent);
@@ -236,14 +238,17 @@ public class WizardPageFactory {
                 page = new FittingParameterPage(fitRepository,
                         moleculeRepository,
                         defaultValues,
-                        sessionDir,
+                        moleculesDir,
+                        fitOutputDir,
                         editAtomTypeChargesDialog,
                         dto);
             } else if (type == RunningFitPage.class) {
                 FitMtpInput dto = throwIfParameterIsNull(parameter);
                 page = new RunningFitPage(runFitWorkflow, dto);
             } else if (type == FitResultPage.class) {
-                page = new FitResultPage(moleculeRepository,
+                page = new FitResultPage(fitOutputDir,
+                        moleculesDir,
+                        moleculeRepository,
                         fitRepository,
                         visualization,
                         exportFitWorkflow,
@@ -298,7 +303,7 @@ public class WizardPageFactory {
         return casted;
     }
 
-    private File initializeCurrentSessionDirectory(File dataDir) {
+    private FitOutputDir initializeCurrentSessionDirectory(File dataDir) {
         String sessionName = getSessionName();
         File sessionDir = new File(dataDir, sessionName);
         logger.info("Creating session directory " + sessionDir.getAbsolutePath());
@@ -309,7 +314,7 @@ public class WizardPageFactory {
             throw new RuntimeException("Could not create session directory.");
         }
 
-        return sessionDir;
+        return new FitOutputDir(sessionDir);
     }
 
     private String getSessionName() {

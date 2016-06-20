@@ -12,17 +12,17 @@ import java.util.stream.Collectors;
 /**
  * Created by mhelmer-mobile on 15.06.2016.
  */
-public abstract class UserRepository<T> {
+public abstract class JsonUserRepository<T> {
     protected final Logger logger;
 
     private Class<T> _clazz;
     private final Gson _gson;
     private final HashMap<String, List<String>>_data = new HashMap<>();
 
-    protected UserRepository() {
+    protected JsonUserRepository() {
         logger = Logger.getLogger(getClass());
         _gson = creatGson();
-        _clazz = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        _clazz = (Class<T>) this.getClass();
     }
 
     public void save(String username, T obj) {

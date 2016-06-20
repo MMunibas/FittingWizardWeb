@@ -74,12 +74,13 @@ public class Main {
 
         BasicConfigurator.configure();
 
-        FileAppender app = null;
+        RollingFileAppender app = null;
         File log = new File("logs");
         log.mkdir();
         log = new File(log, "web.log");
         try {
-            app = new FileAppender(new PatternLayout(TTCC_CONVERSION_PATTERN), log.getAbsolutePath() ,false);
+            app = new RollingFileAppender(new PatternLayout(TTCC_CONVERSION_PATTERN), log.getAbsolutePath(), true);
+            app.setMaxBackupIndex(20);
         } catch (IOException ex) {
         }
         BasicConfigurator.configure(app);

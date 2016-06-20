@@ -6,6 +6,12 @@ import ch.unibas.fitting.shared.directories.UserDirectory;
 import ch.unibas.fitting.shared.scripts.babel.IBabelScript;
 import ch.unibas.fitting.shared.scripts.babel.MockBabelScript;
 import ch.unibas.fitting.shared.scripts.babel.RealBabelScript;
+import ch.unibas.fitting.shared.scripts.export.IExportScript;
+import ch.unibas.fitting.shared.scripts.export.MockExportScript;
+import ch.unibas.fitting.shared.scripts.export.RealExportScript;
+import ch.unibas.fitting.shared.scripts.fitmtp.IFitMtpScript;
+import ch.unibas.fitting.shared.scripts.fitmtp.MockFitMtpScript;
+import ch.unibas.fitting.shared.scripts.fitmtp.RealFitMtpScript;
 import ch.unibas.fitting.shared.scripts.fittab.IFittabScript;
 import ch.unibas.fitting.shared.scripts.fittab.MockFittabMarkerScript;
 import ch.unibas.fitting.shared.scripts.fittab.RealFittabMarkerScript;
@@ -21,6 +27,9 @@ import ch.unibas.fitting.shared.tools.Notifications;
 import ch.unibas.fitting.shared.workflows.gaussian.GaussianWorkflow;
 import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianWorkflow;
 import ch.unibas.fitting.web.application.*;
+import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
+import ch.unibas.fitting.web.gaussian.RemoveMolecule;
+import ch.unibas.fitting.web.gaussian.fit.step1.RunFit;
 import ch.unibas.fitting.web.web.SessionCounter;
 import ch.unibas.fitting.web.web.UserSession;
 import ch.unibas.fitting.web.welcome.WelcomePage;
@@ -76,6 +85,7 @@ public class WebApp extends WebApplication {
 
                 bind(SessionCounter.class).toInstance(counter);
 
+                bind(MoleculeUserRepo.class).in(Scopes.SINGLETON);
                 // gaussian dependencies
                 bind(GaussianWorkflow.class).to(RunGaussianWorkflow.class).asEagerSingleton();
 
@@ -98,6 +108,18 @@ public class WebApp extends WebApplication {
                 bind(LPunParser.class).in(Scopes.SINGLETON);
                 bind(GaussianLogModifier.class).in(Scopes.SINGLETON);
                 bind(Notifications.class).in(Scopes.SINGLETON);
+
+                bind(RemoveMolecule.class).in(Scopes.SINGLETON);
+                // fitting dependencies
+                bind(RunFit.class).in(Scopes.SINGLETON);
+
+                if (settings.getMocksEnabled()) {
+                    bind(IFitMtpScript.class).to(MockFitMtpScript.class).in(Scopes.SINGLETON);
+                    bind(IExportScript.class).to(MockExportScript.class).in(Scopes.SINGLETON);
+                } else {
+                    bind(IFitMtpScript.class).to(RealFitMtpScript.class).in(Scopes.SINGLETON);
+                    bind(IExportScript.class).to(RealExportScript.class).in(Scopes.SINGLETON);
+                }
             }
         }));
     }

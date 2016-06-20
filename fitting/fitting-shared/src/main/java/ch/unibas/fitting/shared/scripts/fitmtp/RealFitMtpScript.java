@@ -9,6 +9,7 @@
 package ch.unibas.fitting.shared.scripts.fitmtp;
 
 import ch.unibas.fitting.shared.config.Settings;
+import ch.unibas.fitting.shared.directories.MoleculesDir;
 import ch.unibas.fitting.shared.molecules.MoleculeId;
 import ch.unibas.fitting.shared.scripts.base.ScriptExecutionException;
 import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
@@ -17,45 +18,42 @@ import ch.unibas.fitting.shared.scripts.base.ScriptUtilities;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.log4j.Logger;
 
+import javax.inject.Inject;
+
 /**
  * User: mhelmer Date: 06.12.13 Time: 13:13
  */
-public class RealFitScript implements IFitMtpScript {
+public class RealFitMtpScript implements IFitMtpScript {
 
-    private final static Logger logger = Logger.getLogger(RealFitScript.class);
+    private final static Logger logger = Logger.getLogger(RealFitMtpScript.class);
 
     public static final String MtpFitScriptNameKey = "scripts.fitting";
 
     public static final String FitNamePrefix = "fit_";
-    public static final String OutputDirName = "output";
     public static final String ConsoleOutputFileName = "output.txt";
     public static final String FitResultFileName = "fit_results.txt";
     public static final String MtpfittabExtension = "_mtpfittab.txt";
 
-    private File sessionDir;
-    private final File moleculesDir;
-
     private final PythonScriptRunner runner;
     private File mtpFitScriptFile;
 
-    public RealFitScript(File sessionDir, File moleculesDir, Settings settings) {
-        this.sessionDir = sessionDir;
-        this.moleculesDir = moleculesDir;
+    @Inject
+    public RealFitMtpScript(Settings settings) {
         runner = new PythonScriptRunner();
         mtpFitScriptFile = new File(settings.getScriptsDir(), settings.getValue(MtpFitScriptNameKey));
     }
 
     @Override
     public FitMtpOutput execute(FitMtpInput input) {
-        File outputDir = new File(sessionDir, OutputDirName);
-        outputDir.mkdir();
-
+        File outputDir = input.getFitOutputDir().getFitMtpOutputDir();
         runner.setWorkingDir(outputDir);
 
         List<String> args = new ArrayList<>();
@@ -78,7 +76,7 @@ public class RealFitScript implements IFitMtpScript {
         }
 
         // this must be at the end
-        List<File> fitTabResults = getAllFitTabFiles(input.getMoleculesForFit());
+        List<File> fitTabResults = getAllFitTabFiles(input.getMoleculesDir(), input.getMoleculesForFit());
         for (File fitTabResult : fitTabResults) {
             String relativePath = ResourceUtils.getRelativePath(fitTabResult, outputDir);
             args.add(relativePath);
@@ -110,18 +108,15 @@ public class RealFitScript implements IFitMtpScript {
         return FitNamePrefix + fitId + "_" + baseName;
     }
 
-    private List<File> getAllFitTabFiles(List<MoleculeId> moleculesForFit) {
-        List<File> allFitTabFiles = getAllFitTabFiles(moleculesDir);
+    private List<File> getAllFitTabFiles(MoleculesDir moleculesDir, List<MoleculeId> moleculesForFit) {
+        List<File> allFitTabFiles = getAllFitTabFiles(moleculesDir.getDirectory());
         List<File> molecules = new ArrayList<>();
-
         for (File file : allFitTabFiles) {
-            for (MoleculeId moleculeId : moleculesForFit) {
-                if (file.getName().contains(moleculeId.getName())) {
-                    molecules.add(file);
-                }
-            }
+            molecules = moleculesForFit.stream()
+                    .filter(moleculeId -> file.getName().contains(moleculeId.getName()))
+                    .map(moleculeId -> file)
+                    .collect(Collectors.toList());
         }
-
         return molecules;
     }
 

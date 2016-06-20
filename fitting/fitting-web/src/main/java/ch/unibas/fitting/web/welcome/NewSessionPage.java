@@ -19,9 +19,6 @@ import java.util.regex.Pattern;
  */
 public class NewSessionPage extends WizardPage {
 
-    @Inject
-    private IUserDirectory _userDir;
-
     private String username;
 
     public NewSessionPage() {
@@ -47,7 +44,6 @@ public class NewSessionPage extends WizardPage {
             @Override
             public void onSubmit() {
                 if (isValid()) {
-                    _userDir.createUserdir(username);
                     session().setUsername(username);
                     setResponsePage(WelcomePage.class);
                 } else {

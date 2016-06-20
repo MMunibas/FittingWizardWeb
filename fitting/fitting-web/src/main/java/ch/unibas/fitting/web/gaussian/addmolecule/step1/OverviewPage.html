@@ -3,16 +3,19 @@
 
     <p>
         <input wicket:id="upload" type="button" value="Upload XYZ file" class="btn btn-default" />
+        <input wicket:id="startFit" type="button" value="Start fitting" class="btn btn-default" />
     </p>
 
     <table cellspacing="0" class="table">
         <tr>
             <th>Name</th>
             <th>Added</th>
+            <th>Remove?</th>
         </tr>
         <tr wicket:id="molecules">
             <td><span wicket:id="name"></span></td>
             <td><span wicket:id="added"></span> </td>
+            <td><input wicket:id="remove" type="button" value="Remove" class="btn btn-default" /></td>
         </tr>
     </table>
 
