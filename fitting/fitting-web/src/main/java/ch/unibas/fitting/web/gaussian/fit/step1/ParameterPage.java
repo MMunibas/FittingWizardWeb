@@ -7,7 +7,6 @@ import ch.unibas.fitting.web.gaussian.FitUserRepo;
 import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
 import ch.unibas.fitting.web.gaussian.addmolecule.step5.ProgressPage;
 import ch.unibas.fitting.web.gaussian.addmolecule.step6.ChargesViewModel;
-import ch.unibas.fitting.web.gaussian.fit.RunFit;
 import ch.unibas.fitting.web.gaussian.fit.step2.FittingResultsPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;

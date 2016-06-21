@@ -26,10 +26,10 @@ public class Main {
     private static final Logger LOGGER = Logger.getLogger(Main.class);
 
     public static void main(String[] args) throws Exception {
-        setupConsoleLogger();
+        WebSettings settings = WebSettings.load();
+        setupConsoleLogger(settings);
         Logger.getLogger(Main.class).info("Starting fitting web");
 
-        WebSettings settings = WebSettings.load();
         Injector injector = Guice.createInjector(new WebModule(settings));
 
         WebApp webApp = injector.getInstance(WebApp.class);
@@ -76,14 +76,13 @@ public class Main {
         srv.join();
     }
 
-    private static void setupConsoleLogger() {
+    private static void setupConsoleLogger(Settings settings) {
 
         BasicConfigurator.configure();
 
         RollingFileAppender app = null;
-        File log = new File("logs");
-        log.mkdir();
-        log = new File(log, "web.log");
+        settings.getLogDir().mkdir();
+        File log = new File(settings.getLogDir(), "web.log");
         try {
             app = new RollingFileAppender(new PatternLayout(TTCC_CONVERSION_PATTERN), log.getAbsolutePath(), true);
             app.setMaxBackupIndex(20);

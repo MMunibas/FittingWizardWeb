@@ -56,6 +56,10 @@ public class Settings {
         return getFile("data.path");
     }
 
+    public File getLogDir() {
+        return getFile("logs.path");
+    }
+
     public File getScriptsDir() {
         return new File(getValue(ScriptPathKey));
     }
@@ -81,7 +85,7 @@ public class Settings {
     }
 
     protected File getFile(String key) {
-        return new File(getValue(key));
+        return new File(props.value(key));
     }
 
     public boolean getUseGaussianMock() {

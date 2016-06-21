@@ -10,12 +10,15 @@ package ch.unibas.fitting.shared.scripts.multipolegauss;
 
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.directories.MoleculesDir;
+import ch.unibas.fitting.shared.directories.XyzDirectory;
 import ch.unibas.fitting.shared.scripts.base.ScriptExecutionException;
 import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
 import ch.unibas.fitting.shared.scripts.base.ScriptUtilities;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
@@ -46,12 +49,14 @@ public class RealMultipoleGaussScript implements IMultipoleGaussScript {
 	@Override
     public MultipoleGaussOutput execute(MultipoleGaussInput input) {
         MoleculesDir molDir = input.getMoleculesDir();
+        XyzDirectory xyzDir = input.getXyzDirectory();
+
 		runner.setWorkingDir(molDir.getDirectory());
 
 		List<String> args = new ArrayList<>();
-		File xyzFile = new File(input.getMoleculeName() + xyzExtension);
+		File xyzFile = xyzDir.getXyzFileFor(input.getMoleculeName());
         args.add("-xyz");
-        args.add(xyzFile.getName());
+        args.add(FilenameUtils.normalize(xyzFile.getAbsolutePath()));
 
         args.add("-charge");
         args.add(String.valueOf(input.getNetCharge()));
