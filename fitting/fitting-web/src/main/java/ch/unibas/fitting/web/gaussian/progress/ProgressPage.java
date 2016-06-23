@@ -1,4 +1,4 @@
-package ch.unibas.fitting.web.gaussian.step5;
+package ch.unibas.fitting.web.gaussian.progress;
 
 import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.application.TaskHandle;
@@ -41,10 +41,10 @@ public class ProgressPage extends HeaderPage {
 
         _text = Model.of("Just started ...");
 
-        final Label label = new Label("progress", _text);
-        label.setOutputMarkupId(true);
-        label.setOutputMarkupPlaceholderTag(true);
-        add(label);
+        final Label lblProgress = new Label("progress", _text);
+        lblProgress.setOutputMarkupId(true);
+        lblProgress.setOutputMarkupPlaceholderTag(true);
+        add(lblProgress);
 
         add(new AjaxLink("cancel") {
             @Override
@@ -76,7 +76,7 @@ public class ProgressPage extends HeaderPage {
                         }
                     } else {
                         _text.setObject(th.getTitle() + " is running since " + diff.getStandardSeconds() + " seconds...");
-                        target.add(label);
+                        target.add(lblProgress);
                     }
                 } else {
                     setResponsePage(WelcomePage.class);

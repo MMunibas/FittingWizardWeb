@@ -142,4 +142,8 @@ public class MoleculeQueryService {
         }
         return chargesAreDifferent;
     }
+
+    public List<Molecule> getMolecules() {
+        return molecules.stream().collect(Collectors.toList());
+    }
 }

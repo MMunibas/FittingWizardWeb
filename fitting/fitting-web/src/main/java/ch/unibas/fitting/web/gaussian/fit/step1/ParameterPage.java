@@ -5,7 +5,7 @@ import ch.unibas.fitting.shared.fitting.ChargeValue;
 import ch.unibas.fitting.shared.molecules.*;
 import ch.unibas.fitting.web.gaussian.FitUserRepo;
 import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
-import ch.unibas.fitting.web.gaussian.step5.ProgressPage;
+import ch.unibas.fitting.web.gaussian.progress.ProgressPage;
 import ch.unibas.fitting.web.gaussian.addmolecule.step6.ChargesViewModel;
 import ch.unibas.fitting.web.gaussian.fit.step2.FittingResultsPage;
 import ch.unibas.fitting.web.web.HeaderPage;

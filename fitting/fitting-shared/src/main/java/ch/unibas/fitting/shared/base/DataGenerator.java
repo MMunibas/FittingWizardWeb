@@ -48,7 +48,7 @@ public class DataGenerator {
     }
 
     public static Molecule createCO2Molecule() {
-        return new Molecule(createXyzFile(), createCo2Atoms(), createAtomCharges());
+        return new Molecule(createXyzFile(), new File(""), new File(""), createCo2Atoms(), createAtomCharges());
     }
 
     public static ArrayList<Molecule> createMolecules() {

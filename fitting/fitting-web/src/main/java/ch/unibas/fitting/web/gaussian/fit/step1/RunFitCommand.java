@@ -8,6 +8,7 @@ import ch.unibas.fitting.shared.fitting.ChargeValue;
 import ch.unibas.fitting.shared.fitting.Fit;
 import ch.unibas.fitting.shared.fitting.InitialQ00;
 import ch.unibas.fitting.shared.fitting.OutputAtomType;
+import ch.unibas.fitting.shared.molecules.Molecule;
 import ch.unibas.fitting.shared.scripts.fitmtp.FitMtpInput;
 import ch.unibas.fitting.shared.scripts.fitmtp.FitMtpOutput;
 import ch.unibas.fitting.shared.scripts.fitmtp.IFitMtpScript;
@@ -16,6 +17,7 @@ import ch.unibas.fitting.web.application.IAmACommand;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.application.TaskHandle;
 import ch.unibas.fitting.web.gaussian.FitUserRepo;
+import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
 import ch.unibas.fitting.web.gaussian.fit.step2.FittingResultsPage;
 
 import javax.inject.Inject;
@@ -39,6 +41,8 @@ public class RunFitCommand implements IAmACommand {
     @Inject
     private FitUserRepo fitRepo;
     @Inject
+    private MoleculeUserRepo userRepo;
+    @Inject
     private ChargesFileParser chargesFileParser;
     @Inject
     private FitOutputParser fitOutputParser;
@@ -55,6 +59,8 @@ public class RunFitCommand implements IAmACommand {
                 "generated_charges.txt",
                 chargeValues);
 
+        List<Molecule> molesForFit = userRepo.loadAll(username);
+
         FitMtpInput input = new FitMtpInput(
                 userDirectory.getMoleculesDir(username),
                 fitOutputDir,
@@ -63,8 +69,7 @@ public class RunFitCommand implements IAmACommand {
                 rank,
                 ignoreHydrogens,
                 chargesFile,
-                null // get molecules for fit
-        );
+                molesForFit);
 
         TaskHandle output = tasks.execute(username,
                 "MTP Fit",

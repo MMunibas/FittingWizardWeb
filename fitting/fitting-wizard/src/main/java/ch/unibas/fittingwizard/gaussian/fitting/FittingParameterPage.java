@@ -114,7 +114,7 @@ public class FittingParameterPage extends WizardPage {
             MoleculeQueryService queryService = moleculeRepository.getQueryServiceForAllMolecules();
             File initalCharges = getInitalCharges(queryService);
             if (initalCharges != null) {
-                navigateTo(RunningFitPage.class, createFittingParameter(initalCharges, queryService.getMoleculeIds()));
+                navigateTo(RunningFitPage.class, createFittingParameter(initalCharges, queryService.getMolecules()));
             }
         });
         addButtonToButtonBar(startButton);
@@ -185,7 +185,7 @@ public class FittingParameterPage extends WizardPage {
     public void initializeData() {
     }
 
-    private FitMtpInput createFittingParameter(File initalChargesFile, List<MoleculeId> moleculesForFit) {
+    private FitMtpInput createFittingParameter(File initalChargesFile, List<Molecule> moleculesForFit) {
         try {
             double convergence = Double.parseDouble(txtConvergence.getText());
             int rank = cmbRank.getSelectionModel().getSelectedItem().getRankValue();

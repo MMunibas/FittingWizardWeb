@@ -100,6 +100,7 @@ public class WizardPageFactory {
     private FitOutputDir fitOutputDir;
     private MoleculesDir moleculesDir;
     private XyzDirectory xyzDirectory;
+    private MoleculeCreator moleculeCreator;
     private LPunParser lPunParser;
     private EditAtomTypeChargesDialog editAtomTypeChargesDialog;
 
@@ -140,6 +141,7 @@ public class WizardPageFactory {
 //        notifications.sendTestMail();
 //        notifications.sendLogMail();
         lPunParser = new LPunParser();
+        moleculeCreator = new MoleculeCreator(lPunParser);
         initializeScripts();
         initializeWorkflows();
 
@@ -195,7 +197,7 @@ public class WizardPageFactory {
                 fittabMarkerScript,
                 new GaussianLogModifier(),
                 notifications,
-                new MoleculeCreator(lPunParser));
+                moleculeCreator);
 
         vmdDisplayWorkflow = new RunVmdDisplayWorkflow(vmdScript, fitOutputDir.getFitMtpOutputDir());
 
@@ -230,6 +232,8 @@ public class WizardPageFactory {
                 AtomChargesDto dto = throwIfParameterIsNull(parameter);
                 page = new AtomTypeChargePage(moleculeRepository,
                         moleculesDir,
+                        xyzDirectory,
+                        moleculeCreator,
                         lPunParser,
                         visualization,
                         dto);

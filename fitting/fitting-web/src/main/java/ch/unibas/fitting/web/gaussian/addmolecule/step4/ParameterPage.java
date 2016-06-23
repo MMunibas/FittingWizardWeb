@@ -1,7 +1,7 @@
 package ch.unibas.fitting.web.gaussian.addmolecule.step4;
 
 import ch.unibas.fitting.web.application.IBackgroundTasks;
-import ch.unibas.fitting.web.gaussian.step5.ProgressPage;
+import ch.unibas.fitting.web.gaussian.progress.ProgressPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;

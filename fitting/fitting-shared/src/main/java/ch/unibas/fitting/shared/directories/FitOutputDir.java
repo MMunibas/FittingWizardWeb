@@ -12,14 +12,14 @@ public class FitOutputDir extends FittingDirectory {
     }
 
     public File getFitMtpOutputDir() {
-        return new File(getDirectory(), "output");
+        return createAndGet(getDirectory(), "output");
     }
 
     public File getCharmmOutputDir() {
-        return new File(getDirectory(), "charmm");
+        return createAndGet(getDirectory(), "charmm");
     }
 
     public File getDefaultExportDir() {
-        return new File(getDirectory(), "export");
+        return createAndGet(getDirectory(), "export");
     }
 }

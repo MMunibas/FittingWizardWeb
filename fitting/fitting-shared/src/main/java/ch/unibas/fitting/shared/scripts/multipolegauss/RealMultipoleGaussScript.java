@@ -25,7 +25,6 @@ import javax.inject.Inject;
 
 public class RealMultipoleGaussScript implements IMultipoleGaussScript {
 
-	public static final String xyzExtension = ".xyz";
 	public static final String logExtension = ".log";
 	public static final String fchkExtension = ".fchk";
 	public static final String punExtension = ".pun";
@@ -35,14 +34,11 @@ public class RealMultipoleGaussScript implements IMultipoleGaussScript {
 	private final static Logger logger = Logger.getLogger(RealMultipoleGaussScript.class);
 
     private final String MultipoleGaussScriptFileNameKey = "scripts.multipole_gauss";
-	
-	private final PythonScriptRunner runner;
 
-    private File multipoleGaussScriptFile;
+    private final File multipoleGaussScriptFile;
 
     @Inject
     public RealMultipoleGaussScript(Settings settings) {
-    	runner = new PythonScriptRunner();
         multipoleGaussScriptFile = new File(settings.getScriptsDir(), settings.getValue(MultipoleGaussScriptFileNameKey));
 	}
 
@@ -50,7 +46,7 @@ public class RealMultipoleGaussScript implements IMultipoleGaussScript {
     public MultipoleGaussOutput execute(MultipoleGaussInput input) {
         MoleculesDir molDir = input.getMoleculesDir();
         XyzDirectory xyzDir = input.getXyzDirectory();
-
+        PythonScriptRunner runner = new PythonScriptRunner();
 		runner.setWorkingDir(molDir.getDirectory());
 
 		List<String> args = new ArrayList<>();
@@ -71,13 +67,6 @@ public class RealMultipoleGaussScript implements IMultipoleGaussScript {
         args.add(String.valueOf(input.getnCores()));
 
         molDir.deleteMolecule(input.getMoleculeName());
-        File specificMoleculeDir = molDir.getDirectoryFor(input.getMoleculeName());
-
-        File logOutfile  = new File(specificMoleculeDir,  input.getMoleculeName() + logExtension);
-		File fchkOutfile = new File(specificMoleculeDir,  input.getMoleculeName() + fchkExtension);
-		File punOutfile  = new File(specificMoleculeDir,  input.getMoleculeName() + punExtension);
-		File cubeOutfile = new File(specificMoleculeDir,  input.getMoleculeName() + cubeExtension);
-		File vdwOutfile  = new File(specificMoleculeDir,  input.getMoleculeName() + vdwExtension);
 
         logger.info("Running python: " + multipoleGaussScriptFile + " " + args.toString());
         int retval = runner.exec(multipoleGaussScriptFile, args);
@@ -86,6 +75,13 @@ public class RealMultipoleGaussScript implements IMultipoleGaussScript {
             logger.error("MultipoleGaussian script exited with non-zero return value: " + retval);
             throw new ScriptExecutionException("MultipoleGaussian script exited with non-zero return value: " + retval);
         }
+
+        File specificMoleculeDir = molDir.getMoleculeDir(input.getMoleculeName());
+        File logOutfile  = new File(specificMoleculeDir,  input.getMoleculeName() + logExtension);
+        File fchkOutfile = new File(specificMoleculeDir,  input.getMoleculeName() + fchkExtension);
+        File punOutfile  = new File(specificMoleculeDir,  input.getMoleculeName() + punExtension);
+        File cubeOutfile = new File(specificMoleculeDir,  input.getMoleculeName() + cubeExtension);
+        File vdwOutfile  = new File(specificMoleculeDir,  input.getMoleculeName() + vdwExtension);
 
         ScriptUtilities.verifyFileExistence(logOutfile);
         ScriptUtilities.verifyFileExistence(fchkOutfile);

@@ -34,7 +34,15 @@ public class FitRepository extends MemoryRepository<Fit> {
     }
 
     public int getNextFitId() {
-        return loadAll().size();
+
+        Optional<Integer> max = loadAll()
+                .stream()
+                .map(Fit::getId)
+                .max(Integer::compareTo);
+        if (max.isPresent())
+            return max.get() +1;
+        else
+            return 0;
     }
 
     public Fit createAndSaveFit(double rmse, int rank, List<OutputAtomType> outputAtomTypes, InitialQ00 initialValues) {

@@ -10,8 +10,8 @@ package ch.unibas.fitting.shared.scripts.fitmtp;
 
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.directories.MoleculesDir;
+import ch.unibas.fitting.shared.molecules.Molecule;
 import ch.unibas.fitting.shared.molecules.MoleculeId;
-import ch.unibas.fitting.shared.scripts.base.ScriptExecutionException;
 import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
 import ch.unibas.fitting.shared.scripts.base.ResourceUtils;
 import ch.unibas.fitting.shared.scripts.base.ScriptUtilities;
@@ -20,10 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.filefilter.IOFileFilter;
-import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
@@ -33,27 +29,26 @@ import javax.inject.Inject;
  */
 public class RealFitMtpScript implements IFitMtpScript {
 
-    private final static Logger logger = Logger.getLogger(RealFitMtpScript.class);
+    private final static Logger LOGGER = Logger.getLogger(RealFitMtpScript.class);
 
     public static final String MtpFitScriptNameKey = "scripts.fitting";
 
     public static final String FitNamePrefix = "fit_";
     public static final String ConsoleOutputFileName = "output.txt";
     public static final String FitResultFileName = "fit_results.txt";
-    public static final String MtpfittabExtension = "_mtpfittab.txt";
 
-    private final PythonScriptRunner runner;
     private File mtpFitScriptFile;
 
     @Inject
     public RealFitMtpScript(Settings settings) {
-        runner = new PythonScriptRunner();
         mtpFitScriptFile = new File(settings.getScriptsDir(), settings.getValue(MtpFitScriptNameKey));
     }
 
     @Override
     public FitMtpOutput execute(FitMtpInput input) {
         File outputDir = input.getFitOutputDir().getFitMtpOutputDir();
+        LOGGER.debug("Executing in " + outputDir);
+        PythonScriptRunner runner = new PythonScriptRunner();
         runner.setWorkingDir(outputDir);
 
         List<String> args = new ArrayList<>();
@@ -76,9 +71,8 @@ public class RealFitMtpScript implements IFitMtpScript {
         }
 
         // this must be at the end
-        List<File> fitTabResults = getAllFitTabFiles(input.getMoleculesDir(), input.getMoleculesForFit());
-        for (File fitTabResult : fitTabResults) {
-            String relativePath = ResourceUtils.getRelativePath(fitTabResult, outputDir);
+        for (Molecule mol : input.getMoleculesForFit()) {
+            String relativePath = ResourceUtils.getRelativePath(mol.getMtpFitTabFile(), outputDir);
             args.add(relativePath);
         }
 
@@ -92,8 +86,7 @@ public class RealFitMtpScript implements IFitMtpScript {
         ScriptUtilities.verifyFileExistence(outputFile);
         ScriptUtilities.verifyFileExistence(resultsFile);
 
-        FitMtpOutput output = new FitMtpOutput(outputFile, resultsFile);
-        return output;
+        return new FitMtpOutput(outputFile, resultsFile);
     }
 
     public static String getResultFileNameForFit(int fitId) {
@@ -106,41 +99,5 @@ public class RealFitMtpScript implements IFitMtpScript {
 
     public static String getFileNameWithFitId(int fitId, String baseName) {
         return FitNamePrefix + fitId + "_" + baseName;
-    }
-
-    private List<File> getAllFitTabFiles(MoleculesDir moleculesDir, List<MoleculeId> moleculesForFit) {
-        List<File> allFitTabFiles = getAllFitTabFiles(moleculesDir.getDirectory());
-        List<File> molecules = new ArrayList<>();
-        for (File file : allFitTabFiles) {
-            molecules = moleculesForFit.stream()
-                    .filter(moleculeId -> file.getName().contains(moleculeId.getName()))
-                    .map(moleculeId -> file)
-                    .collect(Collectors.toList());
-        }
-        return molecules;
-    }
-
-    public static List<File> getAllFitTabFiles(File rootDir) {
-        logger.info("getAllFitTabFiles");
-        List<File> files = new ArrayList<>(FileUtils.listFiles(rootDir, new IOFileFilter() {
-            @Override
-            public boolean accept(File file) {
-                return file.getName().endsWith(MtpfittabExtension);
-            }
-
-            @Override
-            public boolean accept(File dir, String name) {
-                return false;
-            }
-        }, TrueFileFilter.TRUE));
-
-        if (files.size() == 0) {
-            throw new ScriptExecutionException("Could not find any fit tab results file in "
-                    + FilenameUtils.normalize(rootDir.getAbsolutePath()));
-        }
-        for (File file : files) {
-            logger.info("Found fit tab file: " + FilenameUtils.normalize(file.getAbsolutePath()));
-        }
-        return files;
     }
 }

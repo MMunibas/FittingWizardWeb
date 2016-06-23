@@ -10,9 +10,6 @@ package ch.unibas.fitting.shared.scripts.fittab;
 
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.scripts.base.ScriptExecutionException;
-import ch.unibas.fitting.shared.scripts.fittab.FittabScriptInput;
-import ch.unibas.fitting.shared.scripts.fittab.FittabScriptOutput;
-import ch.unibas.fitting.shared.scripts.fittab.IFittabScript;
 import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
 import java.io.File;
 import java.util.Arrays;
@@ -44,7 +41,7 @@ public class RealFittabMarkerScript implements IFittabScript {
 	public FittabScriptOutput execute(FittabScriptInput input) {
 	
 		String moleculeName = getMoleculeName(input.getCubeFile());
-		File specificMoleculeDir = input.getMoleculesDir().getDirectoryFor(moleculeName);
+		File specificMoleculeDir = input.getMoleculesDir().getMoleculeDir(moleculeName);
 
         runner.setWorkingDir(specificMoleculeDir);
 

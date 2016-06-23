@@ -9,15 +9,13 @@
 package ch.unibas.fitting.shared.scripts.multipolegauss;
 
 import ch.unibas.fitting.shared.config.Settings;
+import ch.unibas.fitting.shared.scripts.base.MockScriptBase;
 import ch.unibas.fitting.shared.scripts.lra.MockLRAScript;
-import ch.unibas.fitting.shared.scripts.multipolegauss.IMultipoleGaussScript;
-import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussInput;
-import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussOutput;
+
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import org.apache.commons.io.FileUtils;
+
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
@@ -25,7 +23,7 @@ import javax.inject.Inject;
 /**
  * User: mhelmer Date: 28.11.13 Time: 15:13
  */
-public class MockMultipoleGaussScript implements IMultipoleGaussScript {
+public class MockMultipoleGaussScript extends MockScriptBase implements IMultipoleGaussScript {
 
 	private final String logExtension = ".log";
 	private final String punExtension = ".pun";
@@ -37,35 +35,28 @@ public class MockMultipoleGaussScript implements IMultipoleGaussScript {
 
 	private final static Logger logger = Logger.getLogger(MockLRAScript.class);
 
-	private final File moleculeTestdataDir;
-
     @Inject
 	public MockMultipoleGaussScript(Settings settings) {
-        this.moleculeTestdataDir = settings.getMoleculeTestdataDir();
+        super(settings.getMoleculeTestdataDir());
 	}
 
 	@Override
 	public MultipoleGaussOutput execute(MultipoleGaussInput input) {
 
-		File specificMoleculeDir = input.getMoleculesDir().getDirectoryFor(input.getMoleculeName());
-		
-		File logOutfile  = new File(specificMoleculeDir,  input.getMoleculeName() + logExtension);
-		File punOutfile  = new File(specificMoleculeDir,  input.getMoleculeName() + punExtension);
-		File cubeOutfile = new File(specificMoleculeDir,  input.getMoleculeName() + cubeExtension);
-		File vdwOutfile  = new File(specificMoleculeDir,  input.getMoleculeName() + vdwExtension);
+		File moleculeDestinationDir = input.getMoleculesDir().getMoleculeDir(input.getMoleculeName());
 
-		File precomputedDataDir = new File(moleculeTestdataDir, input.getMoleculeName());
+		File logOutfile  = new File(moleculeDestinationDir,  input.getMoleculeName() + logExtension);
+		File punOutfile  = new File(moleculeDestinationDir,  input.getMoleculeName() + punExtension);
+		File cubeOutfile = new File(moleculeDestinationDir,  input.getMoleculeName() + cubeExtension);
+		File vdwOutfile  = new File(moleculeDestinationDir,  input.getMoleculeName() + vdwExtension);
+
+		File moleculeTestdataDir = new File(getTestFileBase(), input.getMoleculeName());
 		
 		for (String fileExtension: filesToCopy) {
 			
-			File precomputedFile = new File(precomputedDataDir, input.getMoleculeName() + fileExtension);
-			
-			try {
-				FileUtils.copyFile(precomputedFile, new File(specificMoleculeDir,  input.getMoleculeName() + fileExtension));
-			} catch (IOException e) {
-				logger.error(e.getStackTrace());
-				throw new RuntimeException("Could not copy precomputed file " + precomputedFile);
-			}
+			File testdataFile = new File(moleculeTestdataDir, input.getMoleculeName() + fileExtension);
+			File destinationFile = new File(moleculeDestinationDir,  input.getMoleculeName() + fileExtension);
+			copyTestFile(testdataFile, destinationFile);
 		}
 
 		return new MultipoleGaussOutput(true, logOutfile, punOutfile, cubeOutfile, vdwOutfile);

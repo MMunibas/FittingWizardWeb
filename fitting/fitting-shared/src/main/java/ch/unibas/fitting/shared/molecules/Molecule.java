@@ -11,6 +11,7 @@ package ch.unibas.fitting.shared.molecules;
 import ch.unibas.fitting.shared.xyz.XyzFile;
 import org.joda.time.DateTime;
 
+import java.io.File;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -23,13 +24,21 @@ import java.util.Optional;
 public class Molecule {
     private final XyzFile xyzFile;
     private final MoleculeId id;
+    private final File lpunFile;
     private final List<Atom> atoms;
     private final List<AtomType> atomTypes;
     private final DateTime created;
+    private File mtpFitTabFile;
 
-    public Molecule(XyzFile xyzFile, List<Atom> atoms, List<AtomType> atomTypes) {
+    public Molecule(XyzFile xyzFile,
+                    File lpunFile,
+                    File mtpFitTabFile,
+                    List<Atom> atoms,
+                    List<AtomType> atomTypes) {
         this.xyzFile = xyzFile;
         this.id = new MoleculeId(xyzFile.getMoleculeName());
+        this.lpunFile = lpunFile;
+        this.mtpFitTabFile = mtpFitTabFile;
         this.atoms = atoms;
         this.atomTypes = atomTypes;
         this.created = DateTime.now();
@@ -107,6 +116,10 @@ public class Molecule {
         return xyzFile;
     }
 
+    public File getLpunFile() {
+        return lpunFile;
+    }
+
     public List<Atom> getAtoms() {
         return atoms;
     }
@@ -150,6 +163,10 @@ public class Molecule {
 
     public DateTime getCreated() {
         return created;
+    }
+
+    public File getMtpFitTabFile() {
+        return mtpFitTabFile;
     }
 
     public enum UserChargesState {

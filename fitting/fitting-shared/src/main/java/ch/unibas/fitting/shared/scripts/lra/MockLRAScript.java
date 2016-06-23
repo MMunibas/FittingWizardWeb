@@ -43,7 +43,7 @@ public class MockLRAScript implements ILRAScript {
 
 		String moleculeName = getMoleculeName(input.getSdfFile());
 
-		File specificMoleculeDir = input.getMoleculesDir().getDirectoryFor(moleculeName);
+		File specificMoleculeDir = input.getMoleculesDir().getMoleculeDir(moleculeName);
 		
 		File lpunOutputFile = new File(specificMoleculeDir, moleculeName + lpunExtension);
 

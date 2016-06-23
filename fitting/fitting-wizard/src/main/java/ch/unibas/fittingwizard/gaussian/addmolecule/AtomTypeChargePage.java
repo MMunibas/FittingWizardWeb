@@ -10,10 +10,12 @@ package ch.unibas.fittingwizard.gaussian.addmolecule;
 
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.directories.MoleculesDir;
+import ch.unibas.fitting.shared.directories.XyzDirectory;
 import ch.unibas.fitting.shared.molecules.Atom;
 import ch.unibas.fitting.shared.molecules.AtomType;
 import ch.unibas.fitting.shared.molecules.Molecule;
 import ch.unibas.fitting.shared.molecules.MoleculeRepository;
+import ch.unibas.fitting.shared.workflows.gaussian.MoleculeCreator;
 import ch.unibas.fittingwizard.gaussian.Visualization;
 import ch.unibas.fitting.shared.tools.LPunParser;
 import ch.unibas.fitting.shared.xyz.XyzAtom;
@@ -22,6 +24,8 @@ import ch.unibas.fittingwizard.gaussian.base.ButtonFactory;
 import ch.unibas.fittingwizard.gaussian.base.WizardPageWithVisualization;
 import ch.unibas.fittingwizard.gaussian.base.dialog.OverlayDialog;
 import ch.unibas.fittingwizard.gaussian.base.ui.EditingCell;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,6 +47,8 @@ import javafx.util.Callback;
  */
 public class AtomTypeChargePage extends WizardPageWithVisualization {
     private MoleculesDir moleculesDir;
+    private final XyzDirectory xyzDirectory;
+    private final MoleculeCreator moleculeCreator;
     private final LPunParser lPunParser;
     private final MoleculeRepository moleculeRepository;
     private final AtomChargesDto dto;
@@ -60,12 +66,16 @@ public class AtomTypeChargePage extends WizardPageWithVisualization {
 
     public AtomTypeChargePage(MoleculeRepository moleculeRepository,
                               MoleculesDir moleculesDir,
+                              XyzDirectory xyzDirectory,
+                              MoleculeCreator moleculeCreator,
                               LPunParser lPunParser,
                               Visualization visualization,
                               AtomChargesDto dto) {
         super(visualization, "Atom types and charges");
         this.moleculeRepository = moleculeRepository;
         this.moleculesDir = moleculesDir;
+        this.xyzDirectory = xyzDirectory;
+        this.moleculeCreator = moleculeCreator;
         this.lPunParser = lPunParser;
         this.dto = dto;
         setupChargesTable();
@@ -150,10 +160,11 @@ public class AtomTypeChargePage extends WizardPageWithVisualization {
 
     @Override
     public void initializeData() {
-        if (dto.getMolecule() == null)
-            charges = lPunParser.parse(moleculesDir,
-                    dto.getParsedXyzFile().getMoleculeName());
-        else {
+        if (dto.getMolecule() == null) {
+            String molName = dto.getParsedXyzFile().getMoleculeName();
+            File lpun = moleculesDir.findLPunFileFor(molName);
+            charges = lPunParser.parse(lpun);
+        } else {
             charges = dto.getMolecule().getAtomTypes();
             prevButton.setVisible(false);
         }
@@ -184,13 +195,6 @@ public class AtomTypeChargePage extends WizardPageWithVisualization {
     }
 
     private Molecule createMolecule() {
-        List<Atom> atoms = dto.getParsedXyzFile()
-                .getAtoms()
-                .stream()
-                .map(xyzAtom -> new Atom(xyzAtom.getName(), xyzAtom.getX(), xyzAtom.getY(), xyzAtom.getZ()))
-                .collect(Collectors.toList());
-
-        return new Molecule(dto.getParsedXyzFile(), atoms, charges);
+        return moleculeCreator.createMolecule(moleculesDir, xyzDirectory, dto.getParsedXyzFile().getMoleculeName());
     }
-
 }

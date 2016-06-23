@@ -52,15 +52,17 @@ public class FittingResultsPage extends HeaderPage {
         String value = pp.get("fit_id").toString();
         if  (value != null)
             fitId = Integer.parseInt(value);
-        else
-            fitId = 0;
 
         rmse = Model.of();
         add(new Label("rmse", rmse));
         List<Fit> fits = fitUserRepo.loadAll(getCurrentUsername());
 
-        initalizedFits(fits, fitId);
-        _fitResults = lodFitResults(fits, fitId);
+        if (fits.size() > 0) {
+            if (fitId == null)
+                fitId = fits.get(0).getId();
+            initalizedFits(fits, fitId);
+            _fitResults = lodFitResults(fits, fitId);
+        }
 
         Form form = new Form("selections");
         add(form);

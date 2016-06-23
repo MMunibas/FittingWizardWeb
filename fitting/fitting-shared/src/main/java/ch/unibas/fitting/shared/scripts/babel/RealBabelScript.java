@@ -31,7 +31,7 @@ public class RealBabelScript implements IBabelScript {
 		
 		String moleculeName = getMoleculeName(input.getGaussianLogFile());
 		
-		File specificMoleculeDir = input.getMoleculesDir().getDirectoryFor(moleculeName);
+		File specificMoleculeDir = input.getMoleculesDir().getMoleculeDir(moleculeName);
 		
 		setWorkingDir(specificMoleculeDir);
 		

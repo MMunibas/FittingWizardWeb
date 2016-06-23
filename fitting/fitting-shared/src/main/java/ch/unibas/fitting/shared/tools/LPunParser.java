@@ -25,13 +25,10 @@ import org.apache.commons.io.FileUtils;
  */
 public class LPunParser {
 
-    public ArrayList<AtomType> parse(MoleculesDir moleculesDir, String moleculeName) {
-        File moleculeDir = moleculesDir.getDirectoryFor(moleculeName);
-        File lpunFile = new File(moleculeDir, moleculeName + "_l.pun");
-        return parse(lpunFile);
-    }
-
     public ArrayList<AtomType> parse(File lpunFile) {
+        if (!lpunFile.isFile())
+            throw new RuntimeException("Could not finde file: " + lpunFile);
+
         List<String> lines;
         try {
             lines = FileUtils.readLines(lpunFile);

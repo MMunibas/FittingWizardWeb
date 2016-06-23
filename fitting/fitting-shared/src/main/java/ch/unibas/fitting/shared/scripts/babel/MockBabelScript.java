@@ -46,7 +46,7 @@ public class MockBabelScript implements IBabelScript {
 		
 		String moleculeName = getMoleculeName(input.getGaussianLogFile());
 
-		File outputDir = input.getMoleculesDir().getDirectoryFor(moleculeName);
+		File outputDir = input.getMoleculesDir().getMoleculeDir(moleculeName);
 		
 		File outputFile = new File(outputDir, moleculeName + sdfExtension);
 

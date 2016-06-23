@@ -10,6 +10,7 @@ package ch.unibas.fitting.shared.scripts.fitmtp;
 
 import ch.unibas.fitting.shared.directories.FitOutputDir;
 import ch.unibas.fitting.shared.directories.MoleculesDir;
+import ch.unibas.fitting.shared.molecules.Molecule;
 import ch.unibas.fitting.shared.molecules.MoleculeId;
 import java.io.File;
 import java.util.List;
@@ -27,7 +28,7 @@ public class FitMtpInput {
     private final int rank;
     private final boolean ignoreHydrongen;
     private final File initalCharges;
-    private final List<MoleculeId> moleculesForFit;
+    private final List<Molecule> moleculesForFit;
 
     public FitMtpInput(MoleculesDir moleculesDir,
                        FitOutputDir fitOutputDir,
@@ -36,7 +37,7 @@ public class FitMtpInput {
                        int rank,
                        boolean ignoreHydrogen,
                        File initalChargesFile,
-                       List<MoleculeId> moleculesForFit) {
+                       List<Molecule> moleculesForFit) {
         this.moleculesDir = moleculesDir;
         this.fitOutputDir = fitOutputDir;
         this.fitId = fitId;
@@ -75,7 +76,7 @@ public class FitMtpInput {
         return initalCharges;
     }
 
-    public List<MoleculeId> getMoleculesForFit() {
+    public List<Molecule> getMoleculesForFit() {
         return moleculesForFit;
     }
 }
