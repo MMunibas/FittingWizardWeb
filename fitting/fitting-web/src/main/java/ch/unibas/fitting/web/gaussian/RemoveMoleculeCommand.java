@@ -1,14 +1,14 @@
 package ch.unibas.fitting.web.gaussian;
 
 import ch.unibas.fitting.shared.directories.IUserDirectory;
-import ch.unibas.fitting.web.application.IAmAUsercase;
+import ch.unibas.fitting.web.application.IAmACommand;
 
 import javax.inject.Inject;
 
 /**
  * Created by mhelmer-mobile on 19.06.2016.
  */
-public class RemoveMolecule implements IAmAUsercase {
+public class RemoveMoleculeCommand implements IAmACommand {
 
     @Inject
     private IUserDirectory userDirectory;

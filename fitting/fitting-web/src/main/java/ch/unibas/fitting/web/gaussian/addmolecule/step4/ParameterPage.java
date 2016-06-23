@@ -1,11 +1,7 @@
 package ch.unibas.fitting.web.gaussian.addmolecule.step4;
 
-import ch.unibas.fitting.shared.directories.IUserDirectory;
-import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussInput;
-import ch.unibas.fitting.shared.xyz.XyzFile;
-import ch.unibas.fitting.shared.xyz.XyzFileParser;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
-import ch.unibas.fitting.web.gaussian.addmolecule.step5.ProgressPage;
+import ch.unibas.fitting.web.gaussian.step5.ProgressPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -19,7 +15,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.validation.validator.RangeValidator;
 
 import javax.inject.Inject;
-import java.io.File;
 import java.util.UUID;
 
 /**
@@ -37,7 +32,7 @@ public class ParameterPage extends HeaderPage {
     @Inject
     private IBackgroundTasks _tasks;
     @Inject
-    private RunGaussian runGaussian;
+    private RunGaussianCommand runGaussian;
 
     public ParameterPage(PageParameters pp) {
 

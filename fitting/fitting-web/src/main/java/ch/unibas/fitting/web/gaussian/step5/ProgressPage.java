@@ -1,11 +1,9 @@
-package ch.unibas.fitting.web.gaussian.addmolecule.step5;
+package ch.unibas.fitting.web.gaussian.step5;
 
 import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.application.TaskHandle;
 import ch.unibas.fitting.web.gaussian.addmolecule.step4.ParameterPage;
-import ch.unibas.fitting.web.gaussian.addmolecule.step6.AtomTypesPage;
 import ch.unibas.fitting.web.web.HeaderPage;
-import ch.unibas.fitting.web.web.WizardPage;
 import ch.unibas.fitting.web.welcome.WelcomePage;
 import com.google.inject.Inject;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;

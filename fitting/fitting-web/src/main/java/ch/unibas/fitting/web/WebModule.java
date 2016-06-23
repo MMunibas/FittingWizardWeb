@@ -31,8 +31,8 @@ import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianWorkflow;
 import ch.unibas.fitting.web.application.BackgroundTaskService;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
-import ch.unibas.fitting.web.gaussian.RemoveMolecule;
-import ch.unibas.fitting.web.gaussian.fit.step1.RunFit;
+import ch.unibas.fitting.web.gaussian.RemoveMoleculeCommand;
+import ch.unibas.fitting.web.gaussian.fit.step1.RunFitCommand;
 import ch.unibas.fitting.web.web.SessionCounter;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
@@ -86,9 +86,9 @@ public class WebModule extends AbstractModule {
         bind(Notifications.class).in(Scopes.SINGLETON);
         bind(ChargesFileGenerator.class).in(Scopes.SINGLETON);
 
-        bind(RemoveMolecule.class).in(Scopes.SINGLETON);
+        bind(RemoveMoleculeCommand.class).in(Scopes.SINGLETON);
         // fitting dependencies
-        bind(RunFit.class).in(Scopes.SINGLETON);
+        bind(RunFitCommand.class).in(Scopes.SINGLETON);
 
         if (settings.getMocksEnabled()) {
             bind(IFitMtpScript.class).to(MockFitMtpScript.class).in(Scopes.SINGLETON);

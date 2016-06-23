@@ -1,7 +1,7 @@
 package ch.unibas.fitting.web.gaussian.addmolecule.step1;
 
 import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
-import ch.unibas.fitting.web.gaussian.RemoveMolecule;
+import ch.unibas.fitting.web.gaussian.RemoveMoleculeCommand;
 import ch.unibas.fitting.web.gaussian.addmolecule.step2.UploadPage;
 import ch.unibas.fitting.web.gaussian.addmolecule.step6.AtomTypesPage;
 import ch.unibas.fitting.web.web.HeaderPage;
@@ -29,7 +29,7 @@ public class OverviewPage extends HeaderPage {
     private MoleculeUserRepo moleculeUserRepo;
 
     @Inject
-    private RemoveMolecule removeMolecule;
+    private RemoveMoleculeCommand removeMolecule;
 
     public OverviewPage() {
 

@@ -12,7 +12,7 @@ import ch.unibas.fitting.shared.scripts.fitmtp.FitMtpInput;
 import ch.unibas.fitting.shared.scripts.fitmtp.FitMtpOutput;
 import ch.unibas.fitting.shared.scripts.fitmtp.IFitMtpScript;
 import ch.unibas.fitting.shared.tools.FitOutputParser;
-import ch.unibas.fitting.web.application.IAmAUsercase;
+import ch.unibas.fitting.web.application.IAmACommand;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.application.TaskHandle;
 import ch.unibas.fitting.web.gaussian.FitUserRepo;
@@ -27,7 +27,7 @@ import java.util.UUID;
 /**
  * Created by mhelmer-mobile on 19.06.2016.
  */
-public class RunFit implements IAmAUsercase {
+public class RunFitCommand implements IAmACommand {
     @Inject
     private IBackgroundTasks tasks;
     @Inject

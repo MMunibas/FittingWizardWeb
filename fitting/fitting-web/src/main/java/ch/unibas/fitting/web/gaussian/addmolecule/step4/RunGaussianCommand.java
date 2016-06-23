@@ -5,7 +5,7 @@ import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussInput;
 import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
 import ch.unibas.fitting.shared.workflows.gaussian.GaussianWorkflow;
 import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianResult;
-import ch.unibas.fitting.web.application.IAmAUsercase;
+import ch.unibas.fitting.web.application.IAmACommand;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.application.TaskHandle;
 import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
@@ -17,7 +17,7 @@ import java.util.UUID;
 /**
  * Created by mhelmer-mobile on 17.06.2016.
  */
-public class RunGaussian implements IAmAUsercase {
+public class RunGaussianCommand implements IAmACommand {
     @Inject
     private IBackgroundTasks tasks;
     @Inject
