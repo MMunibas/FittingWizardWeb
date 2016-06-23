@@ -1,0 +1,33 @@
+<wicket:panel xmlns:wicket="http://www.w3.org/1999/xhtml">
+    <h3>Extra parameters used when submitting CHARMM simulations:</h3>
+
+    <form wicket:id="form">
+        <p>
+            <input wicket:id="ok" type="submit" value="Ok" class="btn btn-default" />
+            <input wicket:id="cancel" type="submit" value="Cancel" class="btn btn-default" />
+        </p>
+
+        <table cellspacing="0" class="table">
+            <colgroup>
+                <col class="col-md-4">
+                <col class="col-md-6">
+            </colgroup>
+            <tr>
+                <td>Ncpus (&rho;/&Delta;H)</td>
+                <td><input wicket:id="ncpusDeltaH" type="number" /></td>
+            </tr>
+            <tr>
+                <td>Ncpus (&Delta;G)</td>
+                <td><input wicket:id="ncpusDeltaG" type="number" /></td>
+            </tr>
+            <tr>
+                <td>Cluster</td>
+                <td><input wicket:id="clusterName" type="text" /></td>
+            </tr>
+        </table>
+
+    </form>
+
+    <div wicket:id="feedback"></div>
+
+</wicket:panel>

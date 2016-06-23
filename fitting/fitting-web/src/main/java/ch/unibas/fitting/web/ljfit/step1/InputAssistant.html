@@ -1,27 +1,64 @@
 <wicket:extend xmlns:wicket="http://www.w3.org/1999/xhtml">
     <h1>&rho; & &Delta;J & &Delta;G calculations</h1>
-
-    <p>
-        Please choose path to files:
-    </p>
-
     <form wicket:id="form">
-        <div class="form-group row">
-            <label for="parUploadFile" class="col-sm-2 form-control-label">Name of parameters PAR file:</label>
-            <label class="file col-sm-10">
-                <input wicket:id="parUploadFile" type="file" class="btn btn-default" accept=".par" id="parUploadFile"/>
+
+        <p>
+            <input wicket:id="start" type="submit" value="Generate Input file(s)" class="btn btn-default" />
+        </p>
+
+        <table cellspacing="0" class="table">
+        <tr>
+            <td>Name of parameters PAR file:</td>
+            <td><input wicket:id="parUploadFile" type="file" class="btn btn-default" accept=".par" id="parUploadFile"/>
                 <span class="file-custom"></span>
-            </label>
-        </div>
-        <div class="form-group row">
-            <label for="rtfUploadFile" class="col-sm-2 form-control-label">Name of parameters RTF|TOP file:</label>
-            <label class="file col-sm-10">
-                <input  wicket:id="rtfUploadFile" type="file" class="btn btn-default" accept=".rtf,.top" id="rtfUploadFile"/>
+            </td>
+        </tr>
+        <tr>
+            <td>Name of topology RTF|TOP file:</td>
+            <td><input wicket:id="rtfUploadFile" type="file" class="btn btn-default" accept=".rtf,top" id="rtfUploadFile"/>
                 <span class="file-custom"></span>
-            </label>
-        </div>
-        <input wicket:id="ajaxSubmit" type="button" value="Generate Input file(s)" class="btn btn-default" />
+            </td>
+        </tr>
+        <tr>
+            <td>Name of coordinate file (1 mol. in gas):</td>
+            <td><input wicket:id="molUploadFile" type="file" class="btn btn-default" accept=".pdb" id="molUploadFile"/>
+                <span class="file-custom"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>Name of coordinate file (pure liquid):</td>
+            <td>
+                <input wicket:id="liquidUploadFile" type="file" class="btn btn-default" accept=".pdb" id="liquidUploadFile"/>
+                <span class="file-custom"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>Name of coordinate file (solvent):</td>
+            <td>
+                <input wicket:id="solventUploadFile" type="file" class="btn btn-default" accept=".pdb" id="solventUploadFile"/>
+                <span class="file-custom"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>Name of parameters LPUN file:</td>
+            <td>
+                <input wicket:id="lpunUploadFile" type="file" class="btn btn-default" accept=".lpun" id="lpunUploadFile"/>
+                <span class="file-custom"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>&lambda; spacing parameter:</td>
+            <td><input wicket:id="lambda" type="number" accept=".par" id="lambda"/>
+            </td>
+        </tr>
+            </table>
+
     </form>
 
+    <input wicket:id="extraParameters" type="button" value="Extra Parameters" class="btn btn-default" />
+
     <div wicket:id="feedback"></div>
+
+    <div wicket:id="modalWindow"></div>
+
 </wicket:extend>
