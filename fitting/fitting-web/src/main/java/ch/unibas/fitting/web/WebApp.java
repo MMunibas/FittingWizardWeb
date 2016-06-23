@@ -24,13 +24,15 @@ public class WebApp extends WebApplication {
 
     private static final Logger LOGGER = Logger.getLogger(WebApp.class);
 
-    private Injector injector;
+    private final Injector injector;
     private final SessionCounter counter;
+    private final WebSettings settings;
 
     @Inject
-    public WebApp(Injector injector, SessionCounter counter) {
+    public WebApp(Injector injector, SessionCounter counter, WebSettings settings) {
         this.injector = injector;
         this.counter = counter;
+        this.settings = settings;
     }
 
     @Override
@@ -49,8 +51,8 @@ public class WebApp extends WebApplication {
     public Session newSession(Request request, Response response) {
         UserSession s = new UserSession(request);
         s.setLocale(Locale.ENGLISH);
-        if (Constants.IsDebuggingMode) {
-            s.setDebuggingMode(Constants.IsDebuggingMode);
+        if (settings.isDebuggingMode()) {
+            s.setDebuggingMode(true);
             s.setUsername("debugging-mode");
         }
         counter.track(s);

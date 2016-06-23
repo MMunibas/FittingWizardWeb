@@ -1,6 +1,6 @@
 subprojects {
     group 'ch.unibas.fitting'
-    version '1.0-SNAPSHOT'
+    version '0.3-BETA'
 
     apply plugin: 'java'
 
@@ -10,3 +10,4 @@ subprojects {
         mavenCentral()
     }
 }
+

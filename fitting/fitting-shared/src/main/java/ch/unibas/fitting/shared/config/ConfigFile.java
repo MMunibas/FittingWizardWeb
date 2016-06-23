@@ -66,4 +66,14 @@ public class ConfigFile {
     public int getInteger(String key) {
         return Integer.parseInt(value(key));
     }
+
+    public static ConfigFile loadDefaultConfig() {
+        return loadConfig("config.ini");
+    }
+
+    public boolean booleanOrDefault(String key, boolean defaultValue) {
+        if (containsKey(key))
+            return Boolean.valueOf(value(key));
+        return defaultValue;
+    }
 }

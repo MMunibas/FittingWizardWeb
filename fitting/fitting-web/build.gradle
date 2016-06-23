@@ -1,8 +1,9 @@
 apply plugin: 'application'
 
+
 jar {
     manifest {
-
+        attributes ('Version': version)
     }
 }
 
@@ -17,6 +18,16 @@ sourceSets {
             excludes = ["**/*.java"]
         }
     }
+}
+
+
+applicationDistribution.from('../config_release.ini') {
+    into 'bin/'
+    rename 'config_release.ini', 'config.ini'
+}
+
+applicationDistribution.from('../javascript') {
+    into 'javascript/'
 }
 
 dependencies {

@@ -15,7 +15,7 @@ public class WebSettings extends Settings {
     }
 
     public static WebSettings load() {
-        ConfigFile cf = ConfigFile.loadConfig(Settings.ConfigFileName);
+        ConfigFile cf = ConfigFile.loadDefaultConfig();
         return new WebSettings(cf);
     }
 

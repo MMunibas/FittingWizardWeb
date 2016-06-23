@@ -1,14 +1,13 @@
 package ch.unibas.fitting.web.web;
 
+import ch.unibas.fitting.shared.javaextensions.Version;
 import ch.unibas.fitting.web.WebApp;
-import ch.unibas.fitting.web.Constants;
 import ch.unibas.fitting.web.welcome.WelcomePage;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.ImmutableNavbarComponent;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.Navbar;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.CssReferenceHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -66,7 +65,7 @@ public abstract class HeaderPage extends WizardPage {
         lnk.setBody(Model.of("Logout"));
         navbar.addComponents(new ImmutableNavbarComponent(lnk, Navbar.ComponentPosition.RIGHT));
 
-        add(new Label("footer", new Model<>("Fitting Wizard Web " + Constants.WebVersion)));
+        add(new Label("footer", new Model<>("Fitting Wizard Web " + Version.getManifestVersion())));
     }
 
     @Override

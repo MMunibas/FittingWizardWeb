@@ -21,18 +21,18 @@ import org.apache.log4j.Logger;
  * Time: 18:27
  */
 public class Settings {
-    private static final Logger logger = Logger.getLogger(Settings.class);
+    private static final Logger LOGGER = Logger.getLogger(Settings.class);
 
     public static final String ScriptPathKey = "scripts.path";
-    public final static String ConfigFileName = "config_gui.ini";
     private final ConfigFile props;
+    private boolean get;
 
     public Settings(ConfigFile props) {
         this.props = props;
     }
 
     public static Settings loadConfig() {
-        ConfigFile cf = ConfigFile.loadConfig(ConfigFileName);
+        ConfigFile cf = ConfigFile.loadDefaultConfig();
         return new Settings(cf);
     }
 
@@ -57,7 +57,7 @@ public class Settings {
     }
 
     public File getLogDir() {
-        return getFile("logs.path");
+        return getFile("log.path");
     }
 
     public File getScriptsDir() {
@@ -98,5 +98,9 @@ public class Settings {
 
     public File getTestdataFitOutput() {
         return new File(getTestdataDir(), "output");
+    }
+
+    public boolean isDebuggingMode() {
+        return props.booleanOrDefault("debugging_enabled", false);
     }
 }
