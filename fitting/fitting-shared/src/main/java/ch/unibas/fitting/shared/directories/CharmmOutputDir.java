@@ -10,8 +10,8 @@ public class CharmmOutputDir extends FittingDirectory {
         super(directory);
     }
 
-    public File getGeneratedInputOutputDir() {
-        return createAndGet(getDirectory(), "generated_input");
+    public CharmmGeneratedInputOutputDir getGeneratedInputOutputDir() {
+        return new CharmmGeneratedInputOutputDir(createAndGet(this.getDirectory(), "generated_input"));
     }
 
     public File getDefaultExportDir() {

@@ -104,7 +104,7 @@ public class InputAssistantPage extends HeaderPage {
                 target.add(fp);
 
                 UUID uuid = runGenerateInput.generateInput(getCurrentUsername(),
-                        parFile,rtfFile,molFile,liquidFile,solventFile,lpunFile);
+                        parFile, rtfFile, molFile, liquidFile, solventFile, lpunFile, lambda.getObject());
                 PageParameters pp = new PageParameters();
                 pp.add("task_id", uuid);
                 setResponsePage(ProgressPage.class, pp);

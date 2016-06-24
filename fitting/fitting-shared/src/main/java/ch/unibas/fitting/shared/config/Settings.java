@@ -100,6 +100,10 @@ public class Settings {
         return new File(getTestdataDir(), "output");
     }
 
+    public File getTestdataCharmmGenerateInputOutputDir() {
+        return new File(new File(getTestdataDir().getAbsoluteFile(), "charmm"), "generated_input");
+    }
+
     public boolean isDebuggingMode() {
         return props.booleanOrDefault("debugging_enabled", false);
     }

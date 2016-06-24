@@ -52,7 +52,9 @@ public class UserDirectory implements IUserDirectory {
     }
 
     @Override
-    public CharmmOutputDir getCharmmOutputDir(String username) { return new CharmmOutputDir(userSubDir(username, "charmm")); }
+    public CharmmOutputDir getCharmmOutputDir(String username) {
+        return new CharmmOutputDir(userSubDir(username, "charmm"));
+    }
 
     private File ljfitInputFile(String username, String name) {
         File ljfitInputDir = ljfitInputDir(username);
