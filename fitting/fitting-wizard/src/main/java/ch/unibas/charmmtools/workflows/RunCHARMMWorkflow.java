@@ -8,8 +8,8 @@
  */
 package ch.unibas.charmmtools.workflows;
 
-import ch.unibas.charmmtools.generate.CHARMM_InOut;
-import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
+import ch.unibas.fitting.shared.charmm.generate.CHARMM_InOut;
+import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
 import ch.unibas.charmmtools.scripts.ICHARMMScript;
 import ch.unibas.fitting.shared.workflows.base.Workflow;

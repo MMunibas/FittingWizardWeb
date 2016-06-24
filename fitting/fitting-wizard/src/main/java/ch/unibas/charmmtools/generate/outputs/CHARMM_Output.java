@@ -8,7 +8,7 @@
  */
 package ch.unibas.charmmtools.generate.outputs;
 
-import ch.unibas.charmmtools.generate.CHARMM_InOut;
+import ch.unibas.fitting.shared.charmm.generate.CHARMM_InOut;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

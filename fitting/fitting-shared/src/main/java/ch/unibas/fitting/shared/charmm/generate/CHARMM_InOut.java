@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.generate;
+package ch.unibas.fitting.shared.charmm.generate;
 
 /**
  *

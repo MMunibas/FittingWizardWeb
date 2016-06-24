@@ -9,9 +9,9 @@
 package ch.unibas.charmmtools.gui.step3.showResults;
 
 import au.com.bytecode.opencsv.CSVWriter;
-import ch.unibas.charmmtools.generate.CHARMM_InOut;
-import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
-import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
+import ch.unibas.fitting.shared.charmm.generate.CHARMM_InOut;
+import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Generator_DGHydr;
+import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output_GasPhase;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output_PureLiquid;

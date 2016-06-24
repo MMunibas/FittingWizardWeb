@@ -8,7 +8,7 @@
  */
 package ch.unibas.charmmtools.scripts;
 
-import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
+import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input;
 import java.io.File;
 
 

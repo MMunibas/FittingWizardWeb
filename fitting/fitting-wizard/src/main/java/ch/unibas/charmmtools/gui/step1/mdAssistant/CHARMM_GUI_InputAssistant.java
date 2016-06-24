@@ -9,11 +9,11 @@
 package ch.unibas.charmmtools.gui.step1.mdAssistant;
 
 import ch.unibas.babelBinding.BabelConverterAPI;
-import ch.unibas.charmmtools.generate.CHARMM_InOut;
-import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
-import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
-import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_GasPhase;
-import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_PureLiquid;
+import ch.unibas.fitting.shared.charmm.generate.CHARMM_InOut;
+import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Generator_DGHydr;
+import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input;
+import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_GasPhase;
+import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_PureLiquid;
 import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
 import ch.unibas.charmmtools.gui.MyTab;
 import ch.unibas.charmmtools.gui.RunningCHARMM_DenVap;

@@ -8,8 +8,8 @@
  */
 package ch.unibas.fittingwizard.gaussian.base;
 
-import ch.unibas.charmmtools.generate.CHARMM_InOut;
-import ch.unibas.charmmtools.generate.inputs.CHARMM_Generator_DGHydr;
+import ch.unibas.fitting.shared.charmm.generate.CHARMM_InOut;
+import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.charmmtools.gui.RunningCHARMM_DG;
 import ch.unibas.charmmtools.gui.RunningCHARMM_DenVap;
 import ch.unibas.charmmtools.gui.database.DB_View_Edit_add;

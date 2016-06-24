@@ -8,9 +8,9 @@
  */
 package ch.unibas.charmmtools.scripts;
 
-import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
-import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_GasPhase;
-import ch.unibas.charmmtools.generate.inputs.CHARMM_Input_PureLiquid;
+import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input;
+import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_GasPhase;
+import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_PureLiquid;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output_GasPhase;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output_PureLiquid;
