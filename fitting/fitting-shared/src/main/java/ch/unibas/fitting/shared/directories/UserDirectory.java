@@ -6,7 +6,6 @@ import org.apache.log4j.Logger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,6 +50,9 @@ public class UserDirectory implements IUserDirectory {
     public XyzDirectory getXyzDir(String username) {
         return new XyzDirectory(userSubDir(username, "xyz_files"));
     }
+
+    @Override
+    public CharmmOutputDir getCharmmOutputDir(String username) { return new CharmmOutputDir(userSubDir(username, "charmm")); }
 
     private File ljfitInputFile(String username, String name) {
         File ljfitInputDir = ljfitInputDir(username);
