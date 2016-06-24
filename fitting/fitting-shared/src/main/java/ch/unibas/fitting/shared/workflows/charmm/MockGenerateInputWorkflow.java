@@ -1,11 +1,13 @@
 package ch.unibas.fitting.shared.workflows.charmm;
 
+import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.directories.CharmmGeneratedInputOutputDir;
 import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,8 +23,9 @@ public class MockGenerateInputWorkflow implements IGenerateInputWorkflow {
     private CharmmGeneratedInputOutputDir outputBaseDir;
     private File testdataDir;
 
-    public MockGenerateInputWorkflow(File testdataDir, CharmmGeneratedInputOutputDir outputBaseDir) {
-        this.testdataDir = testdataDir;
+    @Inject
+    public MockGenerateInputWorkflow(Settings settings, CharmmGeneratedInputOutputDir outputBaseDir) {
+        this.testdataDir = settings.getTestdataCharmmGenerateInputOutputDir();
         this.outputBaseDir = outputBaseDir;
     }
 

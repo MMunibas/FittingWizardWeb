@@ -9,8 +9,11 @@ import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.shared.fitting.Fit;
 import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
 import ch.unibas.fitting.shared.workflows.charmm.GenerateInputInput;
+import ch.unibas.fitting.shared.workflows.charmm.GenerateInputOutput;
 import ch.unibas.fitting.shared.workflows.charmm.IGenerateInputWorkflow;
 import ch.unibas.fitting.shared.workflows.charmm.MockGenerateInputWorkflow;
+import ch.unibas.fitting.shared.workflows.gaussian.GaussianWorkflow;
+import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianResult;
 import ch.unibas.fitting.web.application.IAmACommand;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.application.TaskHandle;
@@ -38,15 +41,15 @@ public class GenerateInputCommand implements IAmACommand {
     @Inject
     private IUserDirectory userDirectory;
 
+    private IGenerateInputWorkflow workflow;
+
     public UUID generateInput(String username, File parFile, File rtfFile, File molFile,
                               File liquidFile, File solventFile, File lpunFile, Double lambda) {
 
         Logger.debug(settings.getTestdataCharmmGenerateInputOutputDir().getAbsoluteFile());
         Logger.debug(settings.getTestdataFitOutput().getAbsoluteFile());
-        IGenerateInputWorkflow wf = new MockGenerateInputWorkflow(settings.getTestdataCharmmGenerateInputOutputDir(),
+        workflow = new MockGenerateInputWorkflow(settings,
                 userDirectory.getCharmmOutputDir(username).getGeneratedInputOutputDir());
-
-        wf.execute(WorkflowContext.withInput(new GenerateInputInput(new File(""), new File(""), new File(""), new File(""),new File(""), new File(""), 0.1)));
 
         File gas_dir = userDirectory.getCharmmOutputDir(username).getGeneratedInputOutputDir().getGasDir();
         File solv_dir = userDirectory.getCharmmOutputDir(username).getGeneratedInputOutputDir().getSolvDir();
@@ -57,9 +60,12 @@ public class GenerateInputCommand implements IAmACommand {
 
         Logger.debug("dirs " + gas_vdw_dir + " " + gas_mtp_dir + " " + solv_vdw_dir + " "  + solv_mtp_dir );
 
-        TaskHandle output = tasks.execute(username,
+        GenerateInputInput input = new GenerateInputInput(parFile, rtfFile, molFile, liquidFile, solventFile, lpunFile, lambda);
+
+        TaskHandle taskHandle = tasks.execute(username,
                 "Charmm Generate Input",
                 () -> {
+                    GenerateInputOutput output = workflow.execute(WorkflowContext.withInput(input));
 
 //                    CHARMM_Generator_DGHydr in_gas_vdw = null, in_gas_mtp = null,
 //                            in_solv_vdw = null, in_solv_mtp = null;
@@ -114,7 +120,7 @@ public class GenerateInputCommand implements IAmACommand {
 //                    // todo verify initial charges vs generated output
 //
 //                    Fit fit = fitRepo.createFit(username, rmse, input.getRank(), outputAtomTypes, initialQs);
-                    Thread.sleep(5000);
+                    Thread.sleep(1000);
 
                     return null;
                 },
@@ -122,7 +128,7 @@ public class GenerateInputCommand implements IAmACommand {
                     //pp.add("task_id", fit.getId());
                     return ShowGeneratedInputPage.class;
                 });
-        return output.getId();
+        return taskHandle.getId();
 
     };
 }
