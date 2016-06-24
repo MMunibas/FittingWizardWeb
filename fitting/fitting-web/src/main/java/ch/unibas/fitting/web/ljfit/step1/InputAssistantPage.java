@@ -1,6 +1,8 @@
 package ch.unibas.fitting.web.ljfit.step1;
 
 import ch.unibas.fitting.shared.directories.IUserDirectory;
+import ch.unibas.fitting.web.gaussian.fit.step1.RunFitCommand;
+import ch.unibas.fitting.web.gaussian.progress.ProgressPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -13,10 +15,12 @@ import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Bytes;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.util.UUID;
 
 /**
  * Created by martin on 29.05.2016.
@@ -25,6 +29,9 @@ public class InputAssistantPage extends HeaderPage {
 
     @Inject
     private IUserDirectory _userDir;
+
+    @Inject
+    private GenerateInputCommand runGenerateInput;
 
     private final FileUploadField parUploadFile;
     private final FileUploadField rtfUploadFile;
@@ -95,6 +102,12 @@ public class InputAssistantPage extends HeaderPage {
                 File solventFile = UploadFile(solventUploadFile.getFileUpload());
                 File lpunFile = UploadFile(lpunUploadFile.getFileUpload());
                 target.add(fp);
+
+                UUID uuid = runGenerateInput.generateInput(getCurrentUsername(),
+                        parFile,rtfFile,molFile,liquidFile,solventFile,lpunFile);
+                PageParameters pp = new PageParameters();
+                pp.add("task_id", uuid);
+                setResponsePage(ProgressPage.class, pp);
             }
 
             @Override
