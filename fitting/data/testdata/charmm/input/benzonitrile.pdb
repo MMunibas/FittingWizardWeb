@@ -1,0 +1,26 @@
+REMARK  FOR INFORMATIONS, PLEASE CONTACT:                                             
+REMARK  ZOETE VINCENT                                                                 
+REMARK  VINCENT.ZOETE_AT_ISB-SIB.CH                                                   
+REMARK  SWISS INSTITUTE OF BIOINFORMATICS                                             
+REMARK  MOLECULAR MODELING GROUP                                                      
+REMARK  QUARTIER SORGE - BATIMENT GENOPODE                                            
+REMARK  CH-1015 LAUSANNE                                                              
+REMARK  SWITZERLAND                                                                   
+REMARK  T: +41 21 692 4082                                                            
+REMARK ****************************************************************               
+REMARK   DATE:     6/17/15     15:25:16      CREATED BY USER: vzoete                  
+ATOM      1  C   LIG     1       0.544   0.000  -0.000  1.00  0.00      LIG 
+ATOM      2  C1  LIG     1      -0.154   1.208   0.000  1.00  0.00      LIG 
+ATOM      3  C2  LIG     1      -0.154  -1.208   0.000  1.00  0.00      LIG 
+ATOM      4  C3  LIG     1      -1.549   1.208   0.000  1.00  0.00      LIG 
+ATOM      5  C4  LIG     1      -1.549  -1.208   0.000  1.00  0.00      LIG 
+ATOM      6  C5  LIG     1      -2.246  -0.000   0.000  1.00  0.00      LIG 
+ATOM      7  N   LIG     1       3.135   0.000   0.000  1.00  0.00      LIG 
+ATOM      8  C6  LIG     1       1.973   0.000  -0.000  1.00  0.00      LIG 
+ATOM      9  H   LIG     1       0.376   2.158   0.000  1.00  0.00      LIG 
+ATOM     10  H1  LIG     1       0.376  -2.158   0.000  1.00  0.00      LIG 
+ATOM     11  H2  LIG     1      -2.092   2.148   0.000  1.00  0.00      LIG 
+ATOM     12  H3  LIG     1      -2.092  -2.148   0.000  1.00  0.00      LIG 
+ATOM     13  H4  LIG     1      -3.332  -0.000   0.000  1.00  0.00      LIG 
+TER      14      LIG      1
+END

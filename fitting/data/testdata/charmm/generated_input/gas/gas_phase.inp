@@ -1,0 +1,41 @@
+* CHARMM input file for benzonitrile.pdb
+* Gas Phase simulation with MTPs 
+* generated on Wed Jul 15 14:59:25 GMT 2015
+* by user hedin on machine Linux amd64 4.0.6-200.fc21.x86_64
+*
+
+bomlev 0
+prnlev 2
+
+! read parameters and coordinates
+read rtf card name -
+	benzonitrile.rtf
+read param card name -
+	benzonitrile.par
+
+OPEN UNIT 10 CARD READ NAME -
+	benzonitrile.pdb
+READ SEQUENCE PDB UNIT 10
+GENERATE SOLU
+REWIND UNIT 10
+READ COOR PDB UNIT 10
+CLOSE UNIT 10
+
+! Non bonded parameters
+NBONDS NBXMOD 5 ATOM CDIEL EPS 1.0 SHIFT VATOM VDISTANCE -
+	VSWITCH CUTNB 99.0 CTOFNB 98.0 CTONNB 97. E14FAC 1.0
+
+SHAKE BONH PARA SELE ALL END
+
+mini sd nstep 1000  
+
+mini abnr nstep 100 
+
+DYNA LEAP STRT NSTEP 20000 TIMESTEP 0.001 -
+	NTRFRQ 100 -
+	IPRFRQ 0 INBFRQ -1 IMGFRQ 250 -
+	TBATH 0. RBUF 0. ILBFRQ 10 FIRSTT 0. -
+	NPRINT 1000 NSAVC -1
+
+STOP
+

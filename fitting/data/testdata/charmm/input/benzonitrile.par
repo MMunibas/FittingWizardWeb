@@ -1,0 +1,48 @@
+* ---- 
+* Built parameters for benzonitrile.mol2 
+*    by user vzoete     Wed Jun 17 15:25:16 CEST 2015 
+* ---- 
+*
+
+BONDS
+OT   HT    450.000     0.9572 ! ALLOW   WAT
+HT   HT      0.000     1.5139 ! ALLOW WAT
+
+ANGLES
+HT   OT   HT     55.000   104.5200 ! ALLOW WAT
+OT   HT   HT     55.000   104.5200 ! ALLOW WAT
+
+NONBONDED
+OT     0.000000  -0.152100     1.768200 ! ALLOW   WAT
+HT     0.000000  -0.046000     0.224500 ! ALLOW WAT
+
+BONDS
+CB   CSP   391.856     1.4240 
+CB   CB    401.068     1.3740 
+CSP  NSP   1193.344     1.1600 
+CB   HCMM  381.853     1.0840 
+
+ANGLES
+CB   CB   CB     48.145    119.9770 
+CB   CB   CSP    65.201    119.6140 
+CB   CB   HCMM   40.517    120.5710 
+CB   CSP  NSP    33.968    180.0000 
+
+DIHEDRALS
+CB   CB   CB   CB       3.500  2   180.00 
+CB   CB   CB   HCMM     3.500  2   180.00 
+CB   CB   CSP  NSP      0.000  1     0.00 
+CB   CB   CB   CSP      3.500  2   180.00 
+CSP  CB   CB   HCMM     1.000  2   180.00 
+HCMM CB   CB   HCMM     3.500  2   180.00 
+
+IMPROPER
+CB   CB   CB   CSP      2.519  0     0.00 
+CB   CB   CB   HCMM     1.079  0     0.00 
+
+NONBONDED nbxmod  5 atom cdiel shift vatom vdistance vswitch - 
+cutnb 14.0 ctofnb 12.0 ctonnb 10.0 eps 1.0 e14fac 1.0 wmin 1.5 
+CB      0.000000  -0.070000     1.992400    
+NSP     0.000000  -0.200000     1.850000    
+CSP     0.000000  -0.068000     2.080000    
+HCMM    0.000000  -0.022000     1.320000    

@@ -1,0 +1,96 @@
+* ---- 
+* Built RTF for benzonitrile.mol2 
+*    by user vzoete     Wed Jun 17 15:25:16 CEST 2015 
+* ---- 
+*
+   22    0
+
+MASS   201 CB    12.011000
+MASS   202 NSP   14.006700
+MASS   203 CSP   12.011000
+MASS   204 HCMM   1.007940
+
+AUTOGENERATE ANGLES DIHE
+DEFA FIRS NONE LAST NONE
+
+RESI LIG  -0.000 
+GROUP
+ATOM C    CB    0.0730
+ATOM C1   CB   -0.1500
+ATOM C2   CB   -0.1500
+ATOM C3   CB   -0.1500
+ATOM C4   CB   -0.1500
+ATOM C5   CB   -0.1500
+ATOM N    NSP  -0.5571
+ATOM C6   CSP   0.4841
+ATOM H    HCMM  0.1500
+ATOM H1   HCMM  0.1500
+ATOM H2   HCMM  0.1500
+ATOM H3   HCMM  0.1500
+ATOM H4   HCMM  0.1500
+BOND C    C6  
+BOND C    C1  
+BOND C    C2  
+BOND C6   N   
+BOND C1   H   
+BOND C1   C3  
+BOND C2   H1  
+BOND C2   C4  
+BOND C5   C3  
+BOND C5   C4  
+BOND C5   H4  
+BOND C3   H2  
+BOND C4   H3  
+IMPH C    C1   C2   C6   
+IMPH C1   C3   C    H    
+IMPH C2   C4   C    H1   
+IMPH C3   C5   C1   H2   
+IMPH C4   C5   C2   H3   
+IMPH C5   C4   C3   H4   
+IC C    C1    C3   C5    1.40   120.02    0.00  119.98  1.39  
+IC C    C1    C3   H2    1.40   120.02    0.00  120.01  1.09  
+IC C    C2    C4   C5    1.40   120.02    0.00  119.98  1.39  
+IC C    C2    C4   H3    1.40   120.02    0.00  120.01  1.09  
+IC C1   C     C2   C4    1.40   119.96    0.00  120.02  1.40  
+IC C1   C     C2   H1    1.40   119.96    0.00  120.82  1.09  
+IC C1   C     C6   N     1.40   120.02 10313.24    0.00  1.16  
+IC C1   C3    C5   C4    1.40   119.98    0.00  120.03  1.39  
+IC C1   C3    C5   H4    1.40   119.98    0.00  119.98  1.09  
+IC C2   C     C1   C3    1.40   119.96    0.00  120.02  1.40  
+IC C2   C     C1   H     1.40   119.96    0.00  120.82  1.09  
+IC C2   C     C6   N     1.40   120.02 10313.24    0.00  1.16  
+IC C2   C4    C5   C3    1.40   119.98    0.00  120.03  1.39  
+IC C2   C4    C5   H4    1.40   119.98    0.00  119.98  1.09  
+IC C3   C1    C    C6    1.40   120.02    0.00  120.02  1.43  
+IC C3   C5    C4   H3    1.39   120.03    0.00  120.00  1.09  
+IC C4   C2    C    C6    1.40   120.02    0.00  120.02  1.43  
+IC C4   C5    C3   H2    1.39   120.03    0.00  120.00  1.09  
+IC C5   C3    C1   H     1.39   119.98    0.00  119.16  1.09  
+IC C5   C4    C2   H1    1.39   119.98    0.00  119.16  1.09  
+IC C6   C     C1   H     1.43   120.02    0.00  120.82  1.09  
+IC C6   C     C2   H1    1.43   120.02    0.00  120.82  1.09  
+IC H    C1    C3   H2    1.09   119.16    0.00  120.01  1.09  
+IC H1   C2    C4   H3    1.09   119.16    0.00  120.01  1.09  
+IC H2   C3    C5   H4    1.09   120.00    0.00  119.98  1.09  
+IC H3   C4    C5   H4    1.09   120.00    0.00  119.98  1.09  
+IC C1   C2   *C    C6    0.00     0.00  180.00    0.00  0.00  
+IC C3   C    *C1   H     0.00     0.00  180.00    0.00  0.00  
+IC C4   C    *C2   H1    0.00     0.00  180.00    0.00  0.00  
+IC C5   C1   *C3   H2    0.00     0.00  180.00    0.00  0.00  
+IC C5   C2   *C4   H3    0.00     0.00  180.00    0.00  0.00  
+IC C4   C3   *C5   H4    0.00     0.00  180.00    0.00  0.00  
+
+MASS     4  HT        1.00800 H ! TIPS3P WATER HYDROGEN
+MASS    75  OT       15.99940 O ! TIPS3P WATER OXYGEN
+
+RESI TIP3         0.000 ! tip3p water model, generate using noangle nodihedral
+GROUP
+ATOM OH2  OT     -0.834
+ATOM H1   HT      0.417
+ATOM H2   HT      0.417
+BOND OH2 H1 OH2 H2 H1 H2    ! the last bond is needed for shake
+ANGLE H1 OH2 H2             ! required
+ACCEPTOR OH2
+PATCHING FIRS NONE LAST NONE
+
+END
