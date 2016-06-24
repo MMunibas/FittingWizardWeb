@@ -5,5 +5,6 @@ import ch.unibas.fitting.web.web.HeaderPage;
 /**
  * Created by tschmidt on 16.06.2016.
  */
-public class ShowResults extends HeaderPage {
+public class ShowOutput extends HeaderPage {
+
 }
