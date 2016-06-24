@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.scripts;
+package ch.unibas.fitting.shared.charmm.scripts;
 
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input;
 import java.io.File;
@@ -19,6 +19,6 @@ import java.io.File;
 public interface ICHARMMScriptWithPython extends ICHARMMScript {
 
     // prepare python call
-    public void prepare_Python(CHARMM_Input input, File output);
+    void prepare_Python(CHARMM_Input input, File output);
 
 }

@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.babelBinding;
+package ch.unibas.fitting.shared.babelBinding;
 
 import java.io.File;
 import org.apache.log4j.Logger;

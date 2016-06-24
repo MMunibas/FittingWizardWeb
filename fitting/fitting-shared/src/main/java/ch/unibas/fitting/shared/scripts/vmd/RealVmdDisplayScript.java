@@ -6,19 +6,17 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.fittingwizard.scripts;
+package ch.unibas.fitting.shared.scripts.vmd;
 
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.molecules.MoleculeId;
 import ch.unibas.fitting.shared.scripts.fitmtp.RealFitMtpScript;
 import ch.unibas.fitting.shared.scripts.lra.RealLRAScript;
 import ch.unibas.fitting.shared.scripts.multipolegauss.RealMultipoleGaussScript;
-import ch.unibas.fitting.shared.scripts.vmd.IVmdDisplayScript;
-import ch.unibas.fitting.shared.scripts.vmd.VmdDisplayInput;
-import ch.unibas.fieldcomp.FieldcompRunner;
+import ch.unibas.fitting.shared.fieldcomp.FieldcompRunner;
 import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
 import ch.unibas.fitting.shared.scripts.base.ScriptUtilities;
-import ch.unibas.fitting.shared.scripts.vmd.VmdRunner;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;

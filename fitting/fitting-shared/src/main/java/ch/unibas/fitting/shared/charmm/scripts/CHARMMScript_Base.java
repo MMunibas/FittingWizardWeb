@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.scripts;
+package ch.unibas.fitting.shared.charmm.scripts;
 
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.directories.CharmmOutputDir;

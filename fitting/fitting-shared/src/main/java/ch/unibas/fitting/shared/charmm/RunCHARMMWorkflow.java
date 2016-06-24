@@ -6,19 +6,22 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.workflows;
+package ch.unibas.fitting.shared.charmm;
 
+
+import ch.unibas.fitting.shared.charmm.scripts.ICHARMMScript;
 import ch.unibas.fitting.shared.charmm.generate.CHARMM_InOut;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input;
-import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
-import ch.unibas.charmmtools.scripts.ICHARMMScript;
+
+import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output;
 import ch.unibas.fitting.shared.workflows.base.Workflow;
 import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.apache.log4j.Logger;
 
 /**
  *

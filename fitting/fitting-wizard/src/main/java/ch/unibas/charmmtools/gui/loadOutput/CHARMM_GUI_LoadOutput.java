@@ -8,21 +8,22 @@
  */
 package ch.unibas.charmmtools.gui.loadOutput;
 
+import ch.unibas.charmmtools.gui.step3.showResults.CHARMM_GUI_ShowResults;
 import ch.unibas.fitting.shared.charmm.generate.CHARMM_InOut;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Generator_DGHydr;
-import ch.unibas.charmmtools.generate.outputs.CHARMM_Output_GasPhase;
-import ch.unibas.charmmtools.generate.outputs.CHARMM_Output_PureLiquid;
-import ch.unibas.charmmtools.gui.step3.showResults.CHARMM_GUI_ShowResults;
+import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output_GasPhase;
+import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output_PureLiquid;
 import ch.unibas.fittingwizard.gaussian.base.WizardPage;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *

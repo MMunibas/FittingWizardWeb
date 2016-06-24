@@ -6,9 +6,9 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.fieldcomp;
+package ch.unibas.fitting.shared.fieldcomp;
 
-import ch.unibas.fieldcomp.exceptions.FieldcompParamsException;
+import ch.unibas.fitting.shared.fieldcomp.exceptions.FieldcompParamsException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;

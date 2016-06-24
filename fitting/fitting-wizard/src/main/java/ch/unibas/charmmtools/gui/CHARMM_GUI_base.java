@@ -9,8 +9,9 @@
 package ch.unibas.charmmtools.gui;
 
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input;
-import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
-import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
+
+import ch.unibas.fitting.shared.charmm.RunCHARMMWorkflow;
+import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output;
 import ch.unibas.fittingwizard.gaussian.base.WizardPage;
 import java.io.File;
 import java.io.FileOutputStream;

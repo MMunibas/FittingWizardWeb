@@ -6,14 +6,14 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.scripts;
+package ch.unibas.fitting.shared.charmm.scripts;
 
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_GasPhase;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_PureLiquid;
-import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
-import ch.unibas.charmmtools.generate.outputs.CHARMM_Output_GasPhase;
-import ch.unibas.charmmtools.generate.outputs.CHARMM_Output_PureLiquid;
+import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output;
+import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output_GasPhase;
+import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output_PureLiquid;
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.directories.CharmmOutputDir;
 

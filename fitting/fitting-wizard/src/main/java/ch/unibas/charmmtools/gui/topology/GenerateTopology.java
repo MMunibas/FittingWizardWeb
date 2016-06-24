@@ -15,7 +15,7 @@ import ch.unibas.charmmtools.files.structure.PSF_generate;
 import ch.unibas.charmmtools.files.topology.RTF_generate;
 import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
 import ch.unibas.charmmtools.gui.MyTab;
-import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
+import ch.unibas.fitting.shared.charmm.RunCHARMMWorkflow;
 import ch.unibas.fitting.shared.xyz.XyzFile;
 import ch.unibas.fitting.shared.xyz.XyzFileParser;
 import ch.unibas.fittingwizard.gaussian.base.dialog.OverlayDialog;

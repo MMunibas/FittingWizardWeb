@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.generate.outputs;
+package ch.unibas.fitting.shared.charmm.generate.outputs;
 
 import ch.unibas.fitting.shared.charmm.generate.CHARMM_InOut;
 import java.io.File;

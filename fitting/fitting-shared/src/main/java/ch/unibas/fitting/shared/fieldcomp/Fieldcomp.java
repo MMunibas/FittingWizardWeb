@@ -7,13 +7,13 @@
  *
  */
 
-package ch.unibas.fieldcomp;
+package ch.unibas.fitting.shared.fieldcomp;
 
-import ch.unibas.fieldcomp.exceptions.FieldcompFileRankException;
-import ch.unibas.fieldcomp.exceptions.FieldcompParamsException;
-import ch.unibas.fieldcomp.exceptions.FieldcompParamsShellException;
-import ch.unibas.fieldcomp.exceptions.FieldcompParamsUnknownException;
-import ch.unibas.fieldcomp.exceptions.FieldcompUnknownOutputFileType;
+import ch.unibas.fitting.shared.fieldcomp.exceptions.FieldcompFileRankException;
+import ch.unibas.fitting.shared.fieldcomp.exceptions.FieldcompParamsException;
+import ch.unibas.fitting.shared.fieldcomp.exceptions.FieldcompParamsShellException;
+import ch.unibas.fitting.shared.fieldcomp.exceptions.FieldcompParamsUnknownException;
+import ch.unibas.fitting.shared.fieldcomp.exceptions.FieldcompUnknownOutputFileType;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;

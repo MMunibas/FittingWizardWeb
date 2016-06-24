@@ -10,7 +10,7 @@ package ch.unibas.charmmtools.gui.step4.ParGrid;
 
 import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
 import ch.unibas.charmmtools.gui.step1.mdAssistant.CHARMM_GUI_InputAssistant;
-import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
+import ch.unibas.fitting.shared.charmm.RunCHARMMWorkflow;
 import ch.unibas.fitting.shared.scripts.base.ScriptExecutionException;
 import ch.unibas.fittingwizard.gaussian.base.ButtonFactory;
 import ch.unibas.fittingwizard.gaussian.base.dialog.OverlayDialog;

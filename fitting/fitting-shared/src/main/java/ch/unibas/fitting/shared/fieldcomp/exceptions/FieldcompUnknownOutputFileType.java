@@ -7,7 +7,7 @@
  *
  */
 
-package ch.unibas.fieldcomp.exceptions;
+package ch.unibas.fitting.shared.fieldcomp.exceptions;
 
 import org.apache.log4j.Logger;
 

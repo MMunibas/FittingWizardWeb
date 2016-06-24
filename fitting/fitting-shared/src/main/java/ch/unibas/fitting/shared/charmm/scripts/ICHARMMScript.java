@@ -6,11 +6,13 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.charmmtools.scripts;
+package ch.unibas.fitting.shared.charmm.scripts;
 
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input;
-import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
+import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output;
 import ch.unibas.fitting.shared.scripts.base.IScript;
+
+
 import java.io.File;
 
 

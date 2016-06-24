@@ -13,10 +13,11 @@ import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_GasPhase;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_PureLiquid;
-import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
+
 import ch.unibas.charmmtools.gui.step1.mdAssistant.CHARMM_GUI_InputAssistant;
 import ch.unibas.charmmtools.gui.step2.showOutput.CHARMM_GUI_ShowOutput;
-import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
+import ch.unibas.fitting.shared.charmm.RunCHARMMWorkflow;
+import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output;
 import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
 import ch.unibas.fittingwizard.gaussian.base.progress.Context;
 import ch.unibas.fittingwizard.gaussian.base.progress.ProgressPage;

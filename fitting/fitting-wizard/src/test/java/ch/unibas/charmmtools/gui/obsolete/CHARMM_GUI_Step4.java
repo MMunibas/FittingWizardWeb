@@ -13,11 +13,12 @@ import ch.unibas.fitting.shared.charmm.generate.CHARMM_InOut;
 import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input;
-import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
+
 import ch.unibas.charmmtools.gui.RunningCHARMM_DG;
 import ch.unibas.charmmtools.gui.step3.showResults.CHARMM_GUI_ShowResults;
 
-import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
+import ch.unibas.fitting.shared.charmm.RunCHARMMWorkflow;
+import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output;
 import ch.unibas.fittingwizard.gaussian.base.ButtonFactory;
 import java.io.File;
 import java.io.IOException;

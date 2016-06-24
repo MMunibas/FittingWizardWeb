@@ -8,7 +8,7 @@
  */
 package ch.unibas.charmmtools.gui.step1.mdAssistant;
 
-import ch.unibas.babelBinding.BabelConverterAPI;
+import ch.unibas.fitting.shared.babelBinding.BabelConverterAPI;
 import ch.unibas.fitting.shared.charmm.generate.CHARMM_InOut;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input;
@@ -17,7 +17,7 @@ import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_PureLiquid;
 import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
 import ch.unibas.charmmtools.gui.MyTab;
 import ch.unibas.charmmtools.gui.RunningCHARMM_DenVap;
-import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
+import ch.unibas.fitting.shared.charmm.RunCHARMMWorkflow;
 import ch.unibas.fittingwizard.gaussian.base.ButtonFactory;
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +27,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -669,12 +668,9 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base{
     @Override
     protected void fillButtonBar() {
 
-        button_reset = ButtonFactory.createButtonBarButton("Reset", new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                logger.info("Resetting all fields.");
-                ResetFields(actionEvent);
-            }
+        button_reset = ButtonFactory.createButtonBarButton("Reset", actionEvent -> {
+            logger.info("Resetting all fields.");
+            ResetFields(actionEvent);
         });
         addButtonToButtonBar(button_reset);
 
@@ -688,12 +684,9 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base{
 //        addButtonToButtonBar(button_save_to_file);
 //        button_save_to_file.setDisable(true);
         button_run_CHARMM = ButtonFactory.createButtonBarButton("Run CHARMM ρ - ΔH - ΔG simulations",
-                new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        logger.info("Running CHARMM input script.");
-                        runCHARMM(actionEvent);
-                    }
+                actionEvent -> {
+                    logger.info("Running CHARMM input script.");
+                    runCHARMM(actionEvent);
                 });
         addButtonToButtonBar(button_run_CHARMM);
         button_run_CHARMM.setDisable(true);
