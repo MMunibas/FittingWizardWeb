@@ -1,12 +1,13 @@
 package ch.unibas.fitting.web.ljfit.step2;
 
 import ch.unibas.fitting.shared.directories.IUserDirectory;
-import ch.unibas.fitting.shared.directories.UserDirectory;
-import ch.unibas.fitting.web.gaussian.FitUserRepo;
-import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
+import ch.unibas.fitting.web.ljfit.step1.InputAssistantPage;
+import ch.unibas.fitting.web.ljfit.step3.ShowOutput;
 import ch.unibas.fitting.web.web.HeaderPage;
 
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
@@ -29,6 +30,24 @@ public class ShowGeneratedInputPage extends HeaderPage {
     List<ITab> tabs = new ArrayList<>();
 
     public ShowGeneratedInputPage() {
+
+        add(new AjaxLink("runCharmm") {
+
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                setResponsePage(ShowOutput.class);
+            }
+
+        });
+
+        add(new AjaxLink("backToInput") {
+
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                setResponsePage(InputAssistantPage.class);
+            }
+
+        });
 
         setDefaultModel(new Model<String>("tabpanel"));
 

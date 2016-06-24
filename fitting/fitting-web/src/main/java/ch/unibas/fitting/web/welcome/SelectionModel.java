@@ -1,7 +1,7 @@
 package ch.unibas.fitting.web.welcome;
 
 import ch.unibas.fitting.web.gaussian.addmolecule.step1.OverviewPage;
-import ch.unibas.fitting.web.ljfit.step1.InputAssistant;
+import ch.unibas.fitting.web.ljfit.step1.InputAssistantPage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,8 +26,8 @@ public class SelectionModel {
 
     public static List<SelectionModel> createDefaultSelections() {
         return Arrays.asList(
-                new SelectionModel("MTP Fit using Gaussian", OverviewPage.class)
-                //new SelectionModel("LJ Fit using CHARMM", InputAssistant.class)
+                new SelectionModel("MTP Fit using Gaussian", OverviewPage.class),
+                new SelectionModel("LJ Fit using CHARMM", InputAssistantPage.class)
         );
     }
 }

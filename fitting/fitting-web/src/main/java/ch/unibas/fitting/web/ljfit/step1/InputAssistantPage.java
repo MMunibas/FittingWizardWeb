@@ -21,7 +21,7 @@ import java.io.File;
 /**
  * Created by martin on 29.05.2016.
  */
-public class InputAssistant extends HeaderPage {
+public class InputAssistantPage extends HeaderPage {
 
     @Inject
     private IUserDirectory _userDir;
@@ -36,7 +36,7 @@ public class InputAssistant extends HeaderPage {
 
     private ExtraParametersPanel extraParametersPage;
 
-    public InputAssistant() {
+    public InputAssistantPage() {
 
         FeedbackPanel fp = new FeedbackPanel("feedback");
         fp.setOutputMarkupId(true);
