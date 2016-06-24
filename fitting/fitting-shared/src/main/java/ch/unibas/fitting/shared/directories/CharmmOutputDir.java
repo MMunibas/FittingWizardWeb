@@ -17,4 +17,6 @@ public class CharmmOutputDir extends FittingDirectory {
     public File getDefaultExportDir() {
         return createAndGet(getDirectory(), "export");
     }
+
+    public File getOutputDir() {return createAndGet(getDirectory(), "output");}
 }

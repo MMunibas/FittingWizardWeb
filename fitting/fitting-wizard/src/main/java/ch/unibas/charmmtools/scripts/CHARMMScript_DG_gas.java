@@ -10,13 +10,15 @@ package ch.unibas.charmmtools.scripts;
 
 import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
 import ch.unibas.fitting.shared.config.Settings;
+import ch.unibas.fitting.shared.directories.CharmmOutputDir;
+
 import java.io.File;
 
 
 public class CHARMMScript_DG_gas extends CHARMMScript_DG {
 
-    public CHARMMScript_DG_gas(File _sessionDir, Settings _settings) {
-        super(_sessionDir, _settings);
+    public CHARMMScript_DG_gas(CharmmOutputDir charmmOutputDir, Settings _settings) {
+        super(charmmOutputDir, _settings);
     }
 
     @Override

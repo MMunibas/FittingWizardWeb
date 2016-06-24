@@ -12,6 +12,8 @@ import ch.unibas.charmmtools.generate.inputs.CHARMM_Input;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output;
 import ch.unibas.charmmtools.generate.outputs.CHARMM_Output_DGHydr;
 import ch.unibas.fitting.shared.config.Settings;
+import ch.unibas.fitting.shared.directories.CharmmOutputDir;
+
 import java.io.File;
 
 /**
@@ -23,16 +25,16 @@ public abstract class CHARMMScript_DG extends CHARMMScript_Base implements ICHAR
     protected static final String ScriptNameKey = "scripts.submitCHARMM_DG";
     //protected static final String OutputDirName = "test";
     
-    public CHARMMScript_DG(File _sessionDir, Settings _settings)
+    public CHARMMScript_DG(CharmmOutputDir charmmOutputDir, Settings _settings)
     {
-        super(_sessionDir,_settings,ScriptNameKey);
+        super(charmmOutputDir,_settings,ScriptNameKey);
     }
 
     @Override
     public CHARMM_Output execute(CHARMM_Input input) {
         
         String FileName = "dg_hydr.out";
-        File charmmout = new File(this.sessionDir,FileName);
+        File charmmout = new File(this.charmmOutputDir.getDirectory(),FileName);
         
         this.prepare_Python(input, null);
         

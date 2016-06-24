@@ -15,10 +15,6 @@ public class FitOutputDir extends FittingDirectory {
         return createAndGet(getDirectory(), "output");
     }
 
-    public File getCharmmOutputDir() {
-        return createAndGet(getDirectory(), "charmm");
-    }
-
     public File getDefaultExportDir() {
         return createAndGet(getDirectory(), "export");
     }

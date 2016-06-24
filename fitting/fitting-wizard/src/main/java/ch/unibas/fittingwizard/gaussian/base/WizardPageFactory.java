@@ -25,6 +25,7 @@ import ch.unibas.charmmtools.scripts.CHARMMScript_Den_Vap;
 import ch.unibas.charmmtools.scripts.ICHARMMScript;
 import ch.unibas.charmmtools.workflows.RunCHARMMWorkflow;
 import ch.unibas.fitting.shared.config.Settings;
+import ch.unibas.fitting.shared.directories.CharmmOutputDir;
 import ch.unibas.fitting.shared.directories.FitOutputDir;
 import ch.unibas.fitting.shared.directories.XyzDirectory;
 import ch.unibas.fitting.shared.workflows.gaussian.MoleculeCreator;
@@ -98,6 +99,7 @@ public class WizardPageFactory {
     private FitRepository fitRepository;
     private DefaultValues defaultValues;
     private FitOutputDir fitOutputDir;
+    private CharmmOutputDir charmmOutputDir;
     private MoleculesDir moleculesDir;
     private XyzDirectory xyzDirectory;
     private MoleculeCreator moleculeCreator;
@@ -125,8 +127,10 @@ public class WizardPageFactory {
 
     private void initializeDependencies(Stage primaryStage) {
         this.settings = Settings.loadConfig();
-        this.fitOutputDir = initializeCurrentSessionDirectory(settings.getDataDir());
+        File sessionDir = initializeCurrentSessionDirectory(settings.getDataDir());
 
+        this.fitOutputDir = new FitOutputDir(sessionDir);
+        this.charmmOutputDir = new CharmmOutputDir(sessionDir);
         this.moleculesDir = new MoleculesDir(settings.getMoleculeDir());
         this.xyzDirectory = new XyzDirectory(settings.getMoleculeDir());
         this.visualization = new Visualization(primaryStage);
@@ -177,10 +181,10 @@ public class WizardPageFactory {
             gaussScript = new RealMultipoleGaussScript(settings);
         }
 
-        charmmScript_Den_Vap = new CHARMMScript_Den_Vap(fitOutputDir.getCharmmOutputDir(), settings);
-        charmmScript_DG_gas = new CHARMMScript_DG_gas(fitOutputDir.getCharmmOutputDir(), settings);
-        charmmScript_DG_solvent = new CHARMMScript_DG_solvent(fitOutputDir.getCharmmOutputDir(), settings);
-        charmmScript_default = new CHARMMScript_Den_Vap(fitOutputDir.getCharmmOutputDir(), settings);
+        charmmScript_Den_Vap = new CHARMMScript_Den_Vap(charmmOutputDir, settings);
+        charmmScript_DG_gas = new CHARMMScript_DG_gas(charmmOutputDir, settings);
+        charmmScript_DG_solvent = new CHARMMScript_DG_solvent(charmmOutputDir, settings);
+        charmmScript_default = new CHARMMScript_Den_Vap(charmmOutputDir, settings);
     }
 
     private void initializeWorkflows() {
@@ -312,7 +316,7 @@ public class WizardPageFactory {
         return casted;
     }
 
-    private FitOutputDir initializeCurrentSessionDirectory(File dataDir) {
+    private File initializeCurrentSessionDirectory(File dataDir) {
         String sessionName = getSessionName();
         File sessionDir = new File(dataDir, sessionName);
         logger.info("Creating session directory " + sessionDir.getAbsolutePath());
@@ -323,7 +327,7 @@ public class WizardPageFactory {
             throw new RuntimeException("Could not create session directory.");
         }
 
-        return new FitOutputDir(sessionDir);
+        return sessionDir;
     }
 
     private String getSessionName() {
