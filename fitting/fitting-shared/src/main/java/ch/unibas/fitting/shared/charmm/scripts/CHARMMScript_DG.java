@@ -36,9 +36,7 @@ public abstract class CHARMMScript_DG extends CHARMMScript_Base implements ICHAR
         
         String FileName = "dg_hydr.out";
         File charmmout = new File(this.charmmOutputDir.getDirectory(),FileName);
-        
-        this.prepare_Python(input, null);
-        
+
         runner.exec(this.ScriptFile, this.args, charmmout);
         
         CHARMM_Output out = new CHARMM_Output_DGHydr(charmmout);

@@ -314,8 +314,8 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
     }
     
     @Override
-    public String getWorkDir() {
-        return myDir.getAbsolutePath();
+    public File getWorkDir() {
+        return new File(myDir.getAbsolutePath());
     }
     
 }

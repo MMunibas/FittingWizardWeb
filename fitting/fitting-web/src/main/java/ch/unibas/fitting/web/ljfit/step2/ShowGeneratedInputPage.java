@@ -25,6 +25,8 @@ import java.util.List;
 public class ShowGeneratedInputPage extends HeaderPage {
 
     @Inject
+    private RunCharmmCommand runCharmmCommand;
+    @Inject
     private IUserDirectory userDir;
 
     List<ITab> tabs = new ArrayList<>();

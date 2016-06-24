@@ -106,8 +106,8 @@ public abstract class CHARMM_Output implements CHARMM_InOut {
     }
 
     @Override
-    public String getWorkDir() {
-        return fileOut.getParent();
+    public File getWorkDir() {
+        return new File(fileOut.getParent());
     }
 
 }

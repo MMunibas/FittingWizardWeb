@@ -107,4 +107,8 @@ public class Settings {
     public boolean isDebuggingMode() {
         return props.booleanOrDefault("debugging_enabled", false);
     }
+
+    public File getCharmmConfig() {
+        return new File(getScriptsDir(), "charmm_config.ini");
+    }
 }

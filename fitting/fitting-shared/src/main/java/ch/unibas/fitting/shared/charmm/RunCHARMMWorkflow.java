@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class RunCHARMMWorkflow implements Workflow<CHARMM_Input, CHARMM_Output> {
     
-    private static final Logger logger = Logger.getLogger(RunCHARMMWorkflow.class);
+    private static final Logger LOGGER = Logger.getLogger(RunCHARMMWorkflow.class);
     
     private final List<ICHARMMScript> charmmScript = new ArrayList<>();
     
@@ -73,7 +73,7 @@ public class RunCHARMMWorkflow implements Workflow<CHARMM_Input, CHARMM_Output> 
         
         ICHARMMScript myScript = charmmScript.get(0);
                 
-        logger.info("Executing CHARMM workflow ...");
+        LOGGER.info("Executing CHARMM workflow ...");
         status.setCurrentStatus("Executing " + myScript.getScriptFileName() + " ...");
         
         CHARMM_Output out = myScript.execute(status.getParameter());
@@ -85,7 +85,7 @@ public class RunCHARMMWorkflow implements Workflow<CHARMM_Input, CHARMM_Output> 
         
         List<CHARMM_Output> out = new ArrayList<>();
         
-        logger.info("Executing CHARMM workflow ...");
+        LOGGER.info("Executing CHARMM workflow ...");
         
         int idx_scr=charmmScript.size(), idx_cont=status.size();
         

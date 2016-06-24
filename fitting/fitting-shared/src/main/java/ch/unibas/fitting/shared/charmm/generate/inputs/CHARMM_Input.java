@@ -289,8 +289,8 @@ public abstract class CHARMM_Input implements CHARMM_InOut {
     }
     
     @Override
-    public String getWorkDir() {
-        return out.getParent();
+    public File getWorkDir() {
+        return new File(out.getParent());
     }
 
 }

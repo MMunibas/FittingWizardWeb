@@ -8,6 +8,8 @@
  */
 package ch.unibas.fitting.shared.charmm.generate;
 
+import java.io.File;
+
 /**
  *
  * @author hedin
@@ -15,5 +17,5 @@ package ch.unibas.fitting.shared.charmm.generate;
 public interface CHARMM_InOut {
     public String getText();
     public String getType();
-    public String getWorkDir();
+    public File getWorkDir();
 }

@@ -40,7 +40,7 @@ public class CHARMMScript_Den_Vap extends CHARMMScript_Base implements ICHARMMSc
         String FileName = "generic.out";
         File charmmout = null;
         
-        String OutputDirName = input.getWorkDir();
+        File OutputDirName = input.getWorkDir();
         
         Class c = input.getClass();
         if(c==CHARMM_Input_GasPhase.class)
@@ -83,8 +83,7 @@ public class CHARMMScript_Den_Vap extends CHARMMScript_Base implements ICHARMMSc
      * @param input
      * @param output
      */
-    @Override
-    public void prepare_Python(CHARMM_Input input, File output) {
+    private void prepare_Python(CHARMM_Input input, File output) {
         
         String inpPath = input.getOut().getAbsolutePath();
         String parPath = input.getPar();
@@ -95,7 +94,7 @@ public class CHARMMScript_Den_Vap extends CHARMMScript_Base implements ICHARMMSc
         
         logger.info("Preparing PYTHON call with parameters : " + inpPath + " " + outPath + " " + parPath + " " + topPath + " " + lpunPath);
         
-        runner.setWorkingDir(new File(input.getWorkDir()));
+        runner.setWorkingDir(input.getWorkDir());
         
         args.clear();
         args.add("-inp");   args.add(inpPath);

@@ -19,6 +19,6 @@ import java.io.File;
 public interface ICHARMMScriptWithPython extends ICHARMMScript {
 
     // prepare python call
-    void prepare_Python(CHARMM_Input input, File output);
+
 
 }
