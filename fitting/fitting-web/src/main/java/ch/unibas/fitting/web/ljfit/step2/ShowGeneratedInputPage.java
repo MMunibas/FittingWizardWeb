@@ -2,7 +2,7 @@ package ch.unibas.fitting.web.ljfit.step2;
 
 import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.web.ljfit.step1.InputAssistantPage;
-import ch.unibas.fitting.web.ljfit.step3.ShowOutput;
+import ch.unibas.fitting.web.ljfit.step3.ShowOutputPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 
 
@@ -35,7 +35,7 @@ public class ShowGeneratedInputPage extends HeaderPage {
 
             @Override
             public void onClick(AjaxRequestTarget target) {
-                setResponsePage(ShowOutput.class);
+                setResponsePage(ShowOutputPage.class);
             }
 
         });
