@@ -42,30 +42,24 @@ public class ShowResultsPage extends HeaderPage {
         add(fp);
 
         add(new AjaxLink("download") {
-
             @Override
             public void onClick(AjaxRequestTarget target) {
                 // TODO: generate download link
             }
-
         });
 
         add(new AjaxLink("backToInput") {
-
             @Override
             public void onClick(AjaxRequestTarget target) {
                 setResponsePage(InputAssistantPage.class);
             }
-
         });
 
         add(new AjaxLink("backToOutput") {
-
             @Override
             public void onClick(AjaxRequestTarget target) {
                 setResponsePage(ShowOutputPage.class);
             }
-
         });
 
         Label densityLabel = new Label("density", new PropertyModel<>(this, "density"));

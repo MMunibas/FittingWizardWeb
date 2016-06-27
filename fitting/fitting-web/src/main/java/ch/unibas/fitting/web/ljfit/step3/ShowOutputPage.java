@@ -1,7 +1,6 @@
 package ch.unibas.fitting.web.ljfit.step3;
 
 import ch.unibas.fitting.shared.charmm.web.CharmmResult;
-import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.web.ljfit.CharmmRepository;
 import ch.unibas.fitting.web.ljfit.step1.InputAssistantPage;
 import ch.unibas.fitting.web.ljfit.step2.ShowFileContentPanel;
@@ -14,7 +13,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 import javax.inject.Inject;
-import java.io.File;
 import java.util.Optional;
 
 /**
@@ -60,13 +58,13 @@ public class ShowOutputPage extends HeaderPage {
             if (r.hasGasPhaseError())
                 gasPhaseError.setObject("ERROR !!!!!!!!");
 
-            add(new ShowFileContentPanel("gasPhasePanel", r.getGasPhaseOutput()));
+            add(new ShowFileContentPanel("gasPhasePanel", r.getGasPhaseOutputFile()));
 
             // TODO set to RED color
             if (r.hasLiquidPhaseError())
                 liquidPhaseError.setObject("ERROR !!!!!!!!!");
 
-            add(new ShowFileContentPanel("liquidPhasePanel", r.getLiquirdPhaseOutput()));
+            add(new ShowFileContentPanel("liquidPhasePanel", r.getLiquidPhaseOutputFile()));
         } else {
 
             add(new Label("gasPhasePanel", "no result available"));

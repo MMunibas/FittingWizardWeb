@@ -25,11 +25,16 @@ public class CharmmResult {
         return pureLiquidOut.getErrorOccured();
     }
 
-    public File getGasPhaseOutput() {
+    public File getGasPhaseOutputFile() {
         return gasOut.getFile();
     }
 
-    public File getLiquirdPhaseOutput() {
+    public File getLiquidPhaseOutputFile() {
         return pureLiquidOut.getFile();
     }
+
+    public CHARMM_Output_GasPhase getGasPhaseOutput() { return gasOut; }
+
+    public CHARMM_Output_PureLiquid getLiguidPhaseOutput() { return pureLiquidOut; }
+
 }
