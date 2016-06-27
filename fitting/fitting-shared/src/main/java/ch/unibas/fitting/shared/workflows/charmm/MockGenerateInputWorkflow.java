@@ -1,6 +1,5 @@
 package ch.unibas.fitting.shared.workflows.charmm;
 
-import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_GasPhase;
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.directories.CharmmRunFileContainer;
 import ch.unibas.fitting.shared.directories.CharmmOutputDir;
@@ -12,7 +11,6 @@ import org.apache.log4j.Logger;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -26,7 +24,7 @@ public class MockGenerateInputWorkflow extends RealGenerateInputWorkflow {
 
     @Inject
     public MockGenerateInputWorkflow(Settings settings) {
-        this.testdataDir = settings.getTestdataCharmmGenerateInputOutputDir();
+        this.testdataDir = settings.getTestdataCharmmOutputDir();
     }
 
     @Override
@@ -82,7 +80,7 @@ public class MockGenerateInputWorkflow extends RealGenerateInputWorkflow {
 
     private void copyTestFiles(Collection<File> srcFiles, File destinationDir) {
         for (File srcFile : srcFiles) {
-            LOGGER.debug(String.format("copyTestFile %s to directory %s.",
+            LOGGER.debug(String.format("copyTestFileToDir %s to directory %s.",
                     FilenameUtils.normalize(srcFile.getAbsolutePath()),
                     FilenameUtils.normalize(destinationDir.getAbsolutePath())));
             try {

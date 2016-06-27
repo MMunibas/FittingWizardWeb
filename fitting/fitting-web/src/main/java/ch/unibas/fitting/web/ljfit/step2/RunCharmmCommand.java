@@ -4,6 +4,7 @@ import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_GasPhase;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_PureLiquid;
 import ch.unibas.fitting.shared.charmm.web.CharmmResult;
+import ch.unibas.fitting.shared.charmm.web.IRunCharmmWorkflowNew;
 import ch.unibas.fitting.shared.charmm.web.RunCharmmWorkflowNew;
 import ch.unibas.fitting.shared.workflows.charmm.CharmmInputContainer;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
@@ -21,7 +22,7 @@ import java.util.UUID;
  */
 public class RunCharmmCommand {
     @Inject
-    private RunCharmmWorkflowNew runCharmmWorkflowNew;
+    private IRunCharmmWorkflowNew runCharmmWorkflowNew;
 
     @Inject
     private CharmmRepository charmmRepository;

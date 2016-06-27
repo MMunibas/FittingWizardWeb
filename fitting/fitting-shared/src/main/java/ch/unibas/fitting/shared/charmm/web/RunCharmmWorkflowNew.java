@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by mhelmer on 24.06.2016.
  */
-public class RunCharmmWorkflowNew {
+public class RunCharmmWorkflowNew implements IRunCharmmWorkflowNew {
     protected static final Logger LOGGER = Logger.getLogger(RunCharmmWorkflowNew.class);
 
     private final CHARMM_Den_Vap charmm_den_vap;
