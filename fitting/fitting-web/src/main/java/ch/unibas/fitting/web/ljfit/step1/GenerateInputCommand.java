@@ -73,7 +73,7 @@ public class GenerateInputCommand implements IAmACommand {
 //                    File gasFile = null;
 //                    CHARMM_Input gasInp = null;
 //                    try {
-//                        gasFile = new File(gas_vdw_dir.getParent(), "gas_phase.inp");
+//                        gasFile = new File(gas_dir.getAbsolutePath(), "gas_phase.inp");
 //                        gasInp = new CHARMM_Input_GasPhase(molFile.getAbsolutePath(), rtfFile.getAbsolutePath(),
 //                                parFile.getAbsolutePath(), lpunFile.getAbsolutePath(), gasFile);
 //
@@ -84,7 +84,7 @@ public class GenerateInputCommand implements IAmACommand {
 //                    File liqFile = null;
 //                    CHARMM_Input liqInp = null;
 //                    try {
-//                        liqFile = new File(solv_vdw_dir.getParent(), "pure_liquid.inp");
+//                        liqFile = new File(solv_dir.getAbsolutePath(), "pure_liquid.inp");
 //                        liqInp = new CHARMM_Input_PureLiquid(liquidFile.getAbsolutePath(), rtfFile.getAbsolutePath(),
 //                                parFile.getAbsolutePath(), lpunFile.getAbsolutePath(), liqFile);
 //                    } catch (IOException ex) {

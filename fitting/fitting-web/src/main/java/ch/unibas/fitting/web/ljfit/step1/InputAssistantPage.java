@@ -141,7 +141,7 @@ public class InputAssistantPage extends HeaderPage {
             Logger.debug("File-Name: " + upload.getClientFileName() + " File-Size: " +
                     Bytes.bytes(upload.getSize()).toString());
 
-            f = _userDir.getLjfitInputFileName(session().getUsername(), upload.getClientFileName());
+            f = new File(_userDir.getCharmmOutputDir(getCurrentUsername()).getInputDir(), upload.getClientFileName());
             try {
                 upload.writeTo(f);
             } catch (Exception e) {

@@ -56,17 +56,6 @@ public class UserDirectory implements IUserDirectory {
         return new CharmmOutputDir(userSubDir(username, "charmm"));
     }
 
-    private File ljfitInputFile(String username, String name) {
-        File ljfitInputDir = ljfitInputDir(username);
-        return new File(ljfitInputDir, name);
-    }
-
-    @Override
-    public File getLjfitInputFileName(String username, String name) {
-        ljfitInputDir(username).mkdirs();
-        return ljfitInputFile(username, name);
-    }
-
     @Override
     public List<String> listAllUserDirs() {
         return Arrays.stream(dataDir.listFiles(File::isDirectory))
@@ -74,7 +63,4 @@ public class UserDirectory implements IUserDirectory {
                 .collect(Collectors.toList());
     }
 
-    private File ljfitInputDir(String username) {
-        return userSubDir(username, "ljfit_files");
-    }
 }

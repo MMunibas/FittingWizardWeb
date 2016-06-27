@@ -13,7 +13,5 @@ public interface IUserDirectory {
 
     CharmmOutputDir getCharmmOutputDir(String username);
 
-    File getLjfitInputFileName(String username, String name);
-
     List<String> listAllUserDirs();
 }
