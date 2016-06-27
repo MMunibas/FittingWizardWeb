@@ -38,7 +38,7 @@ import ch.unibas.fitting.web.application.BackgroundTaskService;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
 import ch.unibas.fitting.web.gaussian.RemoveMoleculeCommand;
-import ch.unibas.fitting.web.gaussian.fit.step1.RunFitCommand;
+import ch.unibas.fitting.web.gaussian.fit.RunFitCommand;
 import ch.unibas.fitting.web.web.SessionCounter;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;

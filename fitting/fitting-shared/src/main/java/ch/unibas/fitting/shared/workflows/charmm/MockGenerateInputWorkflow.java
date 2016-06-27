@@ -24,6 +24,7 @@ public class MockGenerateInputWorkflow extends RealGenerateInputWorkflow {
 
     @Inject
     public MockGenerateInputWorkflow(Settings settings) {
+        super(settings);
         this.testdataDir = settings.getTestdataCharmmOutputDir();
     }
 

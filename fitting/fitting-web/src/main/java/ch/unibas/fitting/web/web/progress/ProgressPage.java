@@ -1,4 +1,4 @@
-package ch.unibas.fitting.web.gaussian.progress;
+package ch.unibas.fitting.web.web.progress;
 
 import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.application.TaskHandle;

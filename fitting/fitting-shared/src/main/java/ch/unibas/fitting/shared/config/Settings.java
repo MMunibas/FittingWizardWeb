@@ -111,4 +111,8 @@ public class Settings {
     public File getCharmmConfig() {
         return new File(getScriptsDir(), "charmm_config.ini");
     }
+
+    public File getCharmmScriptDir() {
+        return new File(getScriptsDir(), "charmm");
+    }
 }

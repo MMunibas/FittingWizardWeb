@@ -44,12 +44,16 @@ public abstract class CHARMM_Input implements CHARMM_InOut {
     protected int bomlev = 0;
     protected int prnlev = 2;
 
-    protected String par = null, top = null, lpun = null, cor = null;
+    protected File par = null, top = null, lpun = null, cor = null;
     protected File out = null;
 
     protected String type = null;
 
-    public CHARMM_Input(String _cor, String _top, String _par, File _outf, String _type) {
+    public CHARMM_Input(File _cor,
+                        File _top,
+                        File _par,
+                        File _outf,
+                        String _type) {
         this.cor = _cor;
         this.top = _top;
         this.par = _par;
@@ -63,7 +67,12 @@ public abstract class CHARMM_Input implements CHARMM_InOut {
         this.normalisePathAndCopyFiles();
     }
 
-    protected CHARMM_Input(String _cor, String _top, String _par, String _lpun, File _outf, String _type) {
+    protected CHARMM_Input(File _cor,
+                           File _top,
+                           File _par,
+                           File _lpun,
+                           File _outf,
+                           String _type) {
         this.cor = _cor;
         this.top = _top;
         this.par = _par;
@@ -84,26 +93,17 @@ public abstract class CHARMM_Input implements CHARMM_InOut {
 
         try {
 
-            FileUtils.copyFileToDirectory(new File(cor), parentFile);
-            FileUtils.copyFileToDirectory(new File(top), parentFile);
-            FileUtils.copyFileToDirectory(new File(par), parentFile);
+            FileUtils.copyFileToDirectory(cor, parentFile);
+            FileUtils.copyFileToDirectory(top, parentFile);
+            FileUtils.copyFileToDirectory(par, parentFile);
 
             if (lpun != null) {
-                FileUtils.copyFileToDirectory(new File(lpun), parentFile);
+                FileUtils.copyFileToDirectory(lpun, parentFile);
             }
 
         } catch (IOException ex) {
-            logger.error("Error while copying required files : " + ex);
+            throw new RuntimeException("Error while copying required files", ex);
         }
-                
-        cor = new File(cor).getName();
-        top = new File(top).getName();
-        par = new File(par).getName();
-
-        if (lpun != null) {
-            lpun = new File(lpun).getName();
-        }
-
     }
 
     /**
@@ -208,31 +208,28 @@ public abstract class CHARMM_Input implements CHARMM_InOut {
         return writer.toString();
     }
 
-    /**
-     * @return the par
-     */
-    public String getPar() {
+    public File getPar() {
         return par;
     }
 
     /**
      * @return the top
      */
-    public String getTop() {
+    public File getTop() {
         return top;
     }
 
     /**
      * @return the lpun
      */
-    public String getLpun() {
+    public File getLpun() {
         return lpun;
     }
 
     /**
      * @return the cor
      */
-    public String getCrd() {
+    public File getCrd() {
         return cor;
     }
 

@@ -19,5 +19,4 @@ public class CHARMM_Output_GasPhase extends CHARMM_Output{
     public CHARMM_Output_GasPhase(File _charmmout) {
         super(_charmmout,"Gas Phase");
     }
-    
 }

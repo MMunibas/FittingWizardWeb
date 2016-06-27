@@ -1,4 +1,4 @@
-package ch.unibas.fitting.web.gaussian.fit.step1;
+package ch.unibas.fitting.web.gaussian.fit;
 
 import ch.unibas.fitting.shared.charges.ChargesFileGenerator;
 import ch.unibas.fitting.shared.charges.ChargesFileParser;

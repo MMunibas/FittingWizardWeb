@@ -29,7 +29,10 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
      * @param _outf
      * @throws java.io.IOException
      */
-    public CHARMM_Input_PureLiquid(String _cor, String _top, String _par, File _outf) throws IOException {
+    public CHARMM_Input_PureLiquid(File _cor,
+                                   File _top,
+                                   File _par,
+                                   File _outf) throws IOException {
         super(_cor, _top, _par, _outf, "Pure Liquid");
         
         this.expectedFormats.clear();
@@ -47,7 +50,11 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
      * @param _outf
      * @throws java.io.IOException
      */
-    public CHARMM_Input_PureLiquid(String _cor, String _top, String _par, String _lpun, File _outf) {
+    public CHARMM_Input_PureLiquid(File _cor,
+                                   File _top,
+                                   File _par,
+                                   File _lpun,
+                                   File _outf) {
         super(_cor, _top, _par, _lpun, _outf, "Pure Liquid");
         
         this.expectedFormats.clear();

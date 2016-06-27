@@ -5,7 +5,10 @@ package ch.unibas.fitting.shared.charmm.web;
  */
 public class CharmmResultCalculator {
 
-    public static ResultCalculatorOutput calculateResult(int nres, double mmass, double temp, CharmmResultParserOutput parserOutput) {
+    public static ResultCalculatorOutput calculateResult(int nres,
+                                                         double mmass,
+                                                         double temp,
+                                                         CharmmResultParserOutput parserOutput) {
         Double density = mmass * nres / (PhysicalConstants.kBoltz * temp * parserOutput.getBox());
         Double deltaH = parserOutput.getEgas() - parserOutput.getEliq() + PhysicalConstants.kBoltz * temp;
         Double deltaG = (parserOutput.getSolvent_mtp() + parserOutput.getSolvent_vdw()) - (parserOutput.getGas_mtp() + parserOutput.getGas_vdw());

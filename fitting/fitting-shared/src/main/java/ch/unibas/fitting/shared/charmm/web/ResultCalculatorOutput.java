@@ -4,9 +4,9 @@ package ch.unibas.fitting.shared.charmm.web;
  * Created by tobias on 27.06.16.
  */
 public class ResultCalculatorOutput {
-    private Double density;
-    private Double deltaH;
-    private Double deltaG;
+    private double density;
+    private double deltaH;
+    private double deltaG;
 
     public ResultCalculatorOutput(Double density, Double deltaH, Double deltaG) {
         this.density = density;
@@ -14,15 +14,15 @@ public class ResultCalculatorOutput {
         this.deltaG = deltaG;
     }
 
-    public Double getDensity() {
+    public double getDensity() {
         return density;
     }
 
-    public Double getDeltaH() {
+    public double getDeltaH() {
         return deltaH;
     }
 
-    public Double getDeltaG() {
+    public double getDeltaG() {
         return deltaG;
     }
 }

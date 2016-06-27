@@ -11,13 +11,13 @@ package ch.unibas.charmmtools.gui.step1.mdAssistant;
 import ch.unibas.fitting.shared.babelBinding.BabelConverterAPI;
 import ch.unibas.fitting.shared.charmm.generate.CHARMM_InOut;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Generator_DGHydr;
-import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_GasPhase;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_PureLiquid;
 import ch.unibas.charmmtools.gui.CHARMM_GUI_base;
 import ch.unibas.charmmtools.gui.MyTab;
 import ch.unibas.charmmtools.gui.RunningCHARMM_DenVap;
 import ch.unibas.fitting.shared.charmm.RunCHARMMWorkflow;
+import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fittingwizard.gaussian.base.ButtonFactory;
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +39,7 @@ import org.apache.commons.io.FilenameUtils;
 public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base{
 
     private static final String title = "LJ fitting procedure : preparing CHARMM input files";
+    private final Settings settings;
 
     /**
      * All FXML variables
@@ -93,12 +94,14 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base{
     
     private List<ExtraParamsModel> charmm_parameters = new ArrayList<>();
 
-    public CHARMM_GUI_InputAssistant(RunCHARMMWorkflow chWflow) {
+    public CHARMM_GUI_InputAssistant(RunCHARMMWorkflow chWflow, Settings settings) {
         super(title, chWflow);
+        this.settings = settings;
     }
 
-    public CHARMM_GUI_InputAssistant(RunCHARMMWorkflow chWflow, List<File> flist) {
+    public CHARMM_GUI_InputAssistant(RunCHARMMWorkflow chWflow, List<File> flist, Settings settings) {
         super(title, chWflow);
+        this.settings = settings;
 
         logger.info("Creating a new instance of CHARMM_GUI_InputAssistant with a list<File> as parameter.");
 
@@ -359,11 +362,11 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base{
 //        String rtfname = ResourceUtils.getRelativePath(textfield_RTF.getText(), folderPath);
 //        String parname = ResourceUtils.getRelativePath(textfield_PAR.getText(), folderPath);
 //        String lpunname = ResourceUtils.getRelativePath(textfield_LPUN.getText(), folderPath);
-        String corname_gas = textfield_COR_gas.getText();
-        String corname_liquid = textfield_COR_liquid.getText();
-        String rtfname = textfield_RTF.getText();
-        String parname = textfield_PAR.getText();
-        String lpunname = textfield_LPUN.getText();
+        File corname_gas = new File(textfield_COR_gas.getText());
+        File corname_liquid = new File(textfield_COR_liquid.getText());
+        File rtfname = new File(textfield_RTF.getText());
+        File parname = new File(textfield_PAR.getText());
+        File lpunname = new File(textfield_LPUN.getText());
         String time = Long.toString(Instant.now().getEpochSecond());
 
         File gas_vdw_dir  = new File(folderPath + "/gas_" + time + "/vdw");
@@ -412,23 +415,23 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base{
         }
 
 //            RedLabel_Notice.setVisible(true);
-        String corname_solv = textfield_COR_solv.getText();
+        File corname_solv = new File(textfield_COR_solv.getText());
         double lamb_spacing_val = Double.valueOf(lambda_space.getText());
 
         in_gas_vdw = new CHARMM_Generator_DGHydr(corname_gas, rtfname, parname, lpunname, "vdw",
-                0.0, lamb_spacing_val, 1.0, gas_vdw_dir);
+                0.0, lamb_spacing_val, 1.0, gas_vdw_dir, settings);
         in_gas_vdw.generate();
 
         in_gas_mtp = new CHARMM_Generator_DGHydr(corname_gas, rtfname, parname, lpunname, "mtp",
-                0.0, lamb_spacing_val, 1.0, gas_mtp_dir);
+                0.0, lamb_spacing_val, 1.0, gas_mtp_dir, settings);
         in_gas_mtp.generate();
 
         in_solv_vdw = new CHARMM_Generator_DGHydr(corname_gas, corname_solv, rtfname, rtfname,
-                parname, lpunname, "vdw", 0.0, lamb_spacing_val, 1.0, solv_vdw_dir);
+                parname, lpunname, "vdw", 0.0, lamb_spacing_val, 1.0, solv_vdw_dir, settings);
         in_solv_vdw.generate();
 
         in_solv_mtp = new CHARMM_Generator_DGHydr(corname_gas, corname_solv, rtfname, rtfname,
-                parname, lpunname, "mtp", 0.0, lamb_spacing_val, 1.0, solv_mtp_dir);
+                parname, lpunname, "mtp", 0.0, lamb_spacing_val, 1.0, solv_mtp_dir, settings);
         in_solv_mtp.generate();
 
         try {

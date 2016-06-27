@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
  */
 public abstract class CHARMMScript_Base implements ICHARMMScript{
 
-    protected final static Logger logger = Logger.getLogger(CHARMMScript_Base.class);
+    protected final static Logger LOGGER = Logger.getLogger(CHARMMScript_Base.class);
 
     protected CharmmOutputDir charmmOutputDir;
     protected Settings settings;

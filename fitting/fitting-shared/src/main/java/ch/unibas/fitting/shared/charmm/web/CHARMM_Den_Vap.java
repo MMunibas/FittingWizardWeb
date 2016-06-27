@@ -46,8 +46,10 @@ public class CHARMM_Den_Vap {
 
     public File execute(String outputFilename, CHARMM_Input input) {
         PythonScriptRunner runner = new PythonScriptRunner();
-        runner.setWorkingDir(input.getWorkDir());
-        File charmmout = new File(input.getWorkDir(), outputFilename);
+
+        File baseDir = input.getWorkDir();
+        runner.setWorkingDir(baseDir);
+        File charmmout = new File(baseDir, outputFilename);
 
         LOGGER.debug("Saving to output file " + charmmout.getName());
 
@@ -59,11 +61,11 @@ public class CHARMM_Den_Vap {
 
     private List<String> prepare_Python(CHARMM_Input input, File output) {
 
-        String inpPath = FilenameUtils.normalize(input.getOut().getAbsolutePath());
-        String parPath = input.getPar();
-        String topPath = input.getTop();
-        String lpunPath = input.getLpun();
-        String pdbpath = input.getCrd();
+        String inpPath = input.getOut().getName();
+        String parPath = input.getPar().getName();
+        String topPath = input.getTop().getName();
+        String lpunPath = input.getLpun().getName();
+        String pdbpath = input.getCrd().getName();
         String outPath = output.getAbsolutePath();
 
         LOGGER.debug("Preparing PYTHON call with parameters : " + inpPath + " " + outPath + " " + parPath + " " + topPath + " " + lpunPath);

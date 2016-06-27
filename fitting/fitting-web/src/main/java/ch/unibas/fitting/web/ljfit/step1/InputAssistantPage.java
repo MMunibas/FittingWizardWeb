@@ -1,8 +1,8 @@
 package ch.unibas.fitting.web.ljfit.step1;
 
 import ch.unibas.fitting.shared.directories.IUserDirectory;
-import ch.unibas.fitting.web.gaussian.fit.step1.RunFitCommand;
-import ch.unibas.fitting.web.gaussian.progress.ProgressPage;
+import ch.unibas.fitting.web.ljfit.GenerateInputCommand;
+import ch.unibas.fitting.web.web.progress.ProgressPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;

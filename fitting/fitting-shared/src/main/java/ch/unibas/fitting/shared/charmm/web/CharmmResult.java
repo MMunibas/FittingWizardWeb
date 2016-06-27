@@ -11,10 +11,18 @@ import java.io.File;
 public class CharmmResult {
     private final CHARMM_Output_GasPhase gasOut;
     private final CHARMM_Output_PureLiquid pureLiquidOut;
+    private final CharmmResultParserOutput output;
 
-    public CharmmResult(CHARMM_Output_GasPhase gasOut, CHARMM_Output_PureLiquid pureLiquidOut) {
+    public CharmmResult(CHARMM_Output_GasPhase gasOut,
+                        CHARMM_Output_PureLiquid pureLiquidOut,
+                        CharmmResultParserOutput output) {
         this.gasOut = gasOut;
         this.pureLiquidOut = pureLiquidOut;
+        this.output = output;
+    }
+
+    public CharmmResultParserOutput getOutput() {
+        return output;
     }
 
     public boolean hasGasPhaseError() {

@@ -1,4 +1,4 @@
-package ch.unibas.fitting.web.ljfit.step1;
+package ch.unibas.fitting.web.ljfit;
 
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.directories.CharmmOutputDir;

@@ -17,7 +17,7 @@ public class JsonUserRepositoryTest {
         _repo = new DataRepo();
     }
 
-    @Test
+
     public void saveAndLoadReturnsSameStructure() {
 
         DataStructure s = new DataStructure(2, "test");

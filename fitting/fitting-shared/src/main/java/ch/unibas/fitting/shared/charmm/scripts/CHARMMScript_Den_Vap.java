@@ -47,18 +47,18 @@ public class CHARMMScript_Den_Vap extends CHARMMScript_Base implements ICHARMMSc
         {
             FileName = "gas_phase.out";
             charmmout = new File(OutputDirName,FileName);
-            this.prepare_Python(input,charmmout);
+            this.prepare_Python(input, charmmout);
         }
         else if(c==CHARMM_Input_PureLiquid.class)
         {
             FileName = "pure_liquid.out";
             charmmout = new File(OutputDirName,FileName);
-            this.prepare_Python(input,charmmout);
+            this.prepare_Python(input, charmmout);
         }
         else
             throw new UnknownError("Unknown type of object in CHARMM_Input : got " + c + " but expected types are " + CHARMM_Input_GasPhase.class + " or " + CHARMM_Output_PureLiquid.class);
         
-        logger.info("Saving to output file " + FileName);
+        LOGGER.info("Saving to output file " + FileName);
 
 //        runner.exec(this.ScriptFile, this.args, new File(OutputDirName,OutputFileName));
         runner.exec(this.ScriptFile, this.args);
@@ -84,15 +84,16 @@ public class CHARMMScript_Den_Vap extends CHARMMScript_Base implements ICHARMMSc
      * @param output
      */
     private void prepare_Python(CHARMM_Input input, File output) {
-        
-        String inpPath = input.getOut().getAbsolutePath();
-        String parPath = input.getPar();
-        String topPath = input.getTop();
-        String lpunPath = input.getLpun();   
-        String pdbpath = input.getCrd();
+
+        String inpPath = input.getOut().getName();
+        String parPath = input.getPar().getName();
+        String topPath = input.getTop().getName();
+        String lpunPath = input.getLpun().getName();
+        String pdbpath = input.getCrd().getName();
+
         String outPath = output.getAbsolutePath();
         
-        logger.info("Preparing PYTHON call with parameters : " + inpPath + " " + outPath + " " + parPath + " " + topPath + " " + lpunPath);
+        LOGGER.info("Preparing PYTHON call with parameters : " + inpPath + " " + outPath + " " + parPath + " " + topPath + " " + lpunPath);
         
         runner.setWorkingDir(input.getWorkDir());
         

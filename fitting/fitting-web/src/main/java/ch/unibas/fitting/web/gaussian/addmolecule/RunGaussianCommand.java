@@ -1,4 +1,4 @@
-package ch.unibas.fitting.web.gaussian.addmolecule.step4;
+package ch.unibas.fitting.web.gaussian.addmolecule;
 
 import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussInput;

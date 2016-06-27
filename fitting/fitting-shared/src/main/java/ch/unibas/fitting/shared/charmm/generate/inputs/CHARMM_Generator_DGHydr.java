@@ -9,6 +9,7 @@
 package ch.unibas.fitting.shared.charmm.generate.inputs;
 
 import ch.unibas.fitting.shared.charmm.generate.CHARMM_InOut;
+import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -28,26 +30,34 @@ import org.apache.log4j.Logger;
  */
 public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
     
-    protected String solu_cor, solu_top;
-    protected String solv_cor, solv_top;
-    protected String par, lpun;
+    protected File solu_cor, solu_top;
+    protected File solv_cor, solv_top;
+    protected File par, lpun;
     protected String ti_type;
     protected double l_min, l_space, l_max;
     protected String whoami;
-    
+    private final Settings settings;
+
     protected PythonScriptRunner runner = null;
-//    protected final File workDir = new File("test");
-    protected File myDir = null;
+
+    protected File baseDir = null;
 
     private File output = null;
     
-    protected static final Logger logger = Logger.getLogger(CHARMM_Generator_DGHydr.class);
+    protected static final Logger LOGGER = Logger.getLogger(CHARMM_Generator_DGHydr.class);
     
-    public CHARMM_Generator_DGHydr(String _solu_cor, String _solu_top,
-            String _par, String _lpun,
-            String _ti_type, double _l_min, double _l_space, double _l_max, File _mydir) {
-        
+    public CHARMM_Generator_DGHydr(File _solu_cor,
+                                   File _solu_top,
+                                   File _par,
+                                   File _lpun,
+                                   String _ti_type,
+                                   double _l_min,
+                                   double _l_space,
+                                   double _l_max,
+                                   File _baseDir,
+                                   Settings settings) {
         this.solu_cor = _solu_cor;
+        this.settings = settings;
         this.solv_cor = null;
         this.solu_top = _solu_top;
         this.solv_top = null;
@@ -57,19 +67,26 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
         this.l_min = _l_min;
         this.l_space = _l_space;
         this.l_max = _l_max;
-        this.myDir = _mydir;
+        this.baseDir = _baseDir;
         
         this.runner = new PythonScriptRunner();
-        this.runner.setWorkingDir(this.myDir);
+        this.runner.setWorkingDir(this.baseDir);
         
         whoami = "gas_" + ti_type;
     }
     
-    public CHARMM_Generator_DGHydr(String _solu_cor, String _solv_cor,
-            String _solu_top, String _solv_top,
-            String _par, String _lpun,
-            String _ti_type, double _l_min, double _l_space, double _l_max, File _mydir) {
-        
+    public CHARMM_Generator_DGHydr(File _solu_cor,
+                                   File _solv_cor,
+                                   File _solu_top,
+                                   File _solv_top,
+                                   File _par,
+                                   File _lpun,
+                                   String _ti_type,
+                                   double _l_min,
+                                   double _l_space,
+                                   double _l_max,
+                                   File _mydir,
+                                   Settings settings) {
         this.solu_cor = _solu_cor;
         this.solv_cor = _solv_cor;
         this.solu_top = _solu_top;
@@ -80,71 +97,63 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
         this.l_min = _l_min;
         this.l_space = _l_space;
         this.l_max = _l_max;
-        this.myDir = _mydir;
-        
+        this.baseDir = _mydir;
+        this.settings = settings;
+
         this.runner = new PythonScriptRunner();
-        this.runner.setWorkingDir(this.myDir);
+        this.runner.setWorkingDir(this.baseDir);
         
         whoami = "solvent_" + ti_type;
     }
     
-    public CHARMM_Generator_DGHydr(File _out, String _type){
+    public CHARMM_Generator_DGHydr(File _out,
+                                   String _type,
+                                   Settings settings){
         output = _out;
         whoami = _type;
+        this.settings = settings;
     }
     
     private void copyAndFixPaths() {
         try {
-            FileUtils.copyFileToDirectory(new File(solu_cor), myDir);
+            FileUtils.copyFileToDirectory(solu_cor, baseDir);
             
             if (this.solv_cor != null) {
-                FileUtils.copyFileToDirectory(new File(solv_cor), myDir);
+                FileUtils.copyFileToDirectory(solv_cor, baseDir);
             }
             
-            FileUtils.copyFileToDirectory(new File(solu_top), myDir);
+            FileUtils.copyFileToDirectory(solu_top, baseDir);
             
             if (this.solv_top != null) {
-                FileUtils.copyFileToDirectory(new File(solv_top), myDir);
+                FileUtils.copyFileToDirectory(solv_top, baseDir);
             }
             
-            FileUtils.copyFileToDirectory(new File(par), myDir);
+            FileUtils.copyFileToDirectory(par, baseDir);
             
-            FileUtils.copyFileToDirectory(new File(lpun), myDir);
+            FileUtils.copyFileToDirectory(lpun, baseDir);
             
         } catch (IOException | NullPointerException ex) {
-            logger.error("An error append while copying files to subdirectory " + this.myDir.getAbsolutePath() + " : " + ex.getMessage());
+            LOGGER.error("An error append while copying files to subdirectory " + this.baseDir.getAbsolutePath() + " : " + ex.getMessage());
         }
-        
-        this.solu_cor = new File(solu_cor).getName();
-        if (this.solv_cor != null) {
-            this.solv_cor = new File(solv_cor).getName();
-        }
-        this.solu_top = new File(solu_top).getName();
-        if (this.solv_top != null) {
-            this.solv_top = new File(solv_top).getName();
-        }
-        this.par = new File(par).getName();
-        this.lpun = new File(lpun).getName();
     }
 
     protected void genInputPythonGas(boolean genOnly) {
         List<String> args = new ArrayList<>();
-        args.clear();
-        
+
         args.add("--ti");
         args.add(this.ti_type);
         args.add("--tps");
-        args.add(this.solu_top);
+        args.add(this.solu_top.getName());
         args.add("--slu");
-        args.add(this.solu_cor);
+        args.add(this.solu_cor.getName());
         args.add("--par");
-        args.add(this.par);
+        args.add(this.par.getName());
         args.add("--lpun");
-        args.add(this.lpun);
+        args.add(this.lpun.getName());
         
         if (genOnly) {
             args.add("--chm");
-            args.add("../../scripts/charmm");
+            args.add(FilenameUtils.normalize(settings.getCharmmScriptDir().getAbsolutePath()));
         } else {
             args.add("--rem");
             args.add("verdi");
@@ -165,25 +174,9 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
             args.add("--generate");
         }
         
-        File script = new File("scripts/charmm-ti/perform-ti.py");
-        //File output = null;
+        File script = new File(settings.getScriptsDir(), "charmm-ti/perform-ti.py");
 
-        if (genOnly) {
-            output = new File(myDir + "/dg_gen_" + this.ti_type + "_gas" + ".out");
-            logger.info("OUTPUT file from perform-ti generate is : " + output.getAbsolutePath());
-        } else {
-            output = new File(myDir + "/dg_run_" + this.ti_type + "_gas" + ".out");
-            logger.info("OUTPUT file from perform-ti running  is : " + output.getAbsolutePath());
-        }
-        
-        int returnCode;
-////        if (genOnly) {
-        returnCode = runner.exec(script, args, output);
-//        } else {
-//        returnCode = runner.exec(script, args);
-//        }
-
-
+        runner.exec(script, args, output);
     }
     
     protected void genInputPythonSolvent(boolean genOnly) {
@@ -193,20 +186,20 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
         args.add("--ti");
         args.add(this.ti_type);
         args.add("--tps");
-        args.add(this.solu_top);
+        args.add(this.solu_top.getName());
 //        args.add("--top");
 //        args.add(this.solv_top);
         args.add("--slu");
-        args.add(this.solu_cor);
+        args.add(this.solu_cor.getName());
         args.add("--slv");
-        args.add(this.solv_cor);
+        args.add(this.solv_cor.getName());
         args.add("--par");
-        args.add(this.par);
+        args.add(this.par.getName());
         args.add("--lpun");
-        args.add(this.lpun);
+        args.add(this.lpun.getName());
         if (genOnly) {
             args.add("--chm");
-            args.add("../../scripts/charmm");
+            args.add(FilenameUtils.normalize(settings.getCharmmScriptDir().getAbsolutePath()));
         } else {
             args.add("--rem");
             args.add("studix");
@@ -227,23 +220,9 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
             args.add("--generate");
         }
         
-        File script = new File("scripts/charmm-ti/perform-ti.py");
-        //File output = null;
+        File script = new File(settings.getScriptsDir(), "charmm-ti/perform-ti.py");
 
-        if (genOnly) {
-            output = new File(myDir + "/dg_gen_" + this.ti_type + "_solv" + ".out");
-            logger.info("OUTPUT file from perform-ti generate is : " + output.getAbsolutePath());
-        } else {
-            output = new File(myDir + "/dg_run_" + this.ti_type + "_solv" + ".out");
-            logger.info("OUTPUT file from perform-ti running  is : " + output.getAbsolutePath());
-        }
-        
-        int returnCode;
-//        if (genOnly) {
-        returnCode = runner.exec(script, args, output);
-//        } else {
-//        returnCode = runner.exec(script, args);
-//        }
+        runner.exec(script, args, output);
     }
 
     /**
@@ -251,7 +230,7 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
      */
     public List<File> listOutputFiles() {
         String[] exts = {"inp"};
-        return FileUtils.listFiles(myDir, exts, false)
+        return FileUtils.listFiles(baseDir, exts, false)
                 .stream()
                 .collect(Collectors.toList());
     }
@@ -259,38 +238,64 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
     public void generate() {
         this.copyAndFixPaths();
         
-        if (this.solv_cor != null) {
+        if (isSolvent()) {
             this.genInputPythonSolvent(true);
         } else {
             this.genInputPythonGas(true);
         }
-        
     }
     
     public void run() {
-        
-        if (this.solv_cor != null) {
+        if (isSolvent()) {
             this.genInputPythonSolvent(false);
         } else {
             this.genInputPythonGas(false);
         }
-        
     }
 
-    /**
-     * @return the whoami
-     */
+    private boolean isSolvent() {
+        return this.solv_cor != null;
+    }
+
     public String Whoami() {
         return whoami;
     }
     
     @Override
     public String getText() {
+        return getOutput(output);
+    }
+
+    public String getGenOutput() {
+        File file;
+        if (isSolvent()) {
+            file = new File(baseDir + "/dg_gen_" + this.ti_type + "_solv" + ".out");
+            LOGGER.debug("OUTPUT file from perform-ti generate is : " + file.getAbsolutePath());
+        } else {
+            file = new File(baseDir + "/dg_gen_" + this.ti_type + "_gas" + ".out");
+            LOGGER.debug("OUTPUT file from perform-ti generate is : " + file.getAbsolutePath());
+        }
+        return getOutput(file);
+    }
+
+    public String getRunOutput() {
+        File file;
+        if (isSolvent()) {
+            file = new File(baseDir + "/dg_run_" + this.ti_type + "_solv" + ".out");
+            LOGGER.debug("OUTPUT file from perform-ti running  is : " + file.getAbsolutePath());
+        } else {
+            file = new File(baseDir + "/dg_run_" + this.ti_type + "_gas" + ".out");
+            LOGGER.debug("OUTPUT file from perform-ti running  is : " + file.getAbsolutePath());
+        }
+        return getOutput(file);
+    }
+
+    private String getOutput(File file) {
         String content = "";
         try {
-            content = new String(Files.readAllBytes(Paths.get(output.getAbsolutePath())));
+            content = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
         } catch (IOException ex) {
-            logger.error("Error while reading simulation output file : " + ex);
+            LOGGER.error("Error while reading simulation output file : " + ex);
         }
         return content;
     }
@@ -302,7 +307,6 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
     
     @Override
     public File getWorkDir() {
-        return new File(myDir.getAbsolutePath());
+        return new File(baseDir.getAbsolutePath());
     }
-    
 }

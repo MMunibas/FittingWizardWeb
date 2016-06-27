@@ -1,7 +1,8 @@
 package ch.unibas.fitting.web.ljfit.step2;
 
 import ch.unibas.fitting.shared.workflows.charmm.CharmmInputContainer;
-import ch.unibas.fitting.web.gaussian.progress.ProgressPage;
+import ch.unibas.fitting.web.ljfit.RunCharmmCommand;
+import ch.unibas.fitting.web.web.progress.ProgressPage;
 import ch.unibas.fitting.web.ljfit.CharmmRepository;
 import ch.unibas.fitting.web.ljfit.step1.InputAssistantPage;
 import ch.unibas.fitting.web.web.HeaderPage;

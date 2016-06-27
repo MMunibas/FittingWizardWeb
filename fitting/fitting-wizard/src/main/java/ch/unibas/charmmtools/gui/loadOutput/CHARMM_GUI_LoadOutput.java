@@ -13,6 +13,7 @@ import ch.unibas.fitting.shared.charmm.generate.CHARMM_InOut;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output_GasPhase;
 import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output_PureLiquid;
+import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fittingwizard.gaussian.base.WizardPage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -32,6 +33,7 @@ import java.util.List;
 public class CHARMM_GUI_LoadOutput extends WizardPage {
 
     private static final String title = "Extracting Thermodynamic properties from Output files";
+    private final Settings settings;
 
     @FXML // fx:id="text_liquid"
     private TextField text_liquid; // Value injected by FXMLLoader
@@ -85,8 +87,9 @@ public class CHARMM_GUI_LoadOutput extends WizardPage {
     private boolean solvent_vdw_selected = false;
     private boolean solvent_mtp_selected = false;
 
-    public CHARMM_GUI_LoadOutput() {
+    public CHARMM_GUI_LoadOutput(Settings settings) {
         super(title);
+        this.settings = settings;
     }
 
     @Override
@@ -206,10 +209,10 @@ public class CHARMM_GUI_LoadOutput extends WizardPage {
         ioList.add(new CHARMM_Output_GasPhase(gas_file));
         ioList.add(new CHARMM_Output_PureLiquid(liquid_file));
         
-        ioList.add(new CHARMM_Generator_DGHydr(gas_vdw_file,"gas_vdw"));
-        ioList.add(new CHARMM_Generator_DGHydr(gas_mtp_file,"gas_mtp"));
-        ioList.add(new CHARMM_Generator_DGHydr(solvent_vdw_file,"solvent_vdw"));
-        ioList.add(new CHARMM_Generator_DGHydr(solvent_mtp_file,"solvent_mtp"));
+        ioList.add(new CHARMM_Generator_DGHydr(gas_vdw_file,"gas_vdw", settings));
+        ioList.add(new CHARMM_Generator_DGHydr(gas_mtp_file,"gas_mtp", settings));
+        ioList.add(new CHARMM_Generator_DGHydr(solvent_vdw_file,"solvent_vdw", settings));
+        ioList.add(new CHARMM_Generator_DGHydr(solvent_mtp_file,"solvent_mtp", settings));
         
         this.navigateTo(CHARMM_GUI_ShowResults.class, ioList);
         

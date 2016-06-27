@@ -1,4 +1,4 @@
-package ch.unibas.fitting.web.ljfit.step2;
+package ch.unibas.fitting.web.ljfit;
 
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_GasPhase;
@@ -38,9 +38,7 @@ public class RunCharmmCommand {
                     Optional<CharmmInputContainer> c = charmmRepository.getContainerFor(username);
                     if (c.isPresent()) {
                         charmmRepository.removeResultFor(username);
-                        CharmmResult result = runCharmmWorkflowNew.executeCharmm(c.get().getGasInput(),
-                                c.get().getLiquidInput(),
-                                c.get().getAllGenerators());
+                        CharmmResult result = runCharmmWorkflowNew.executeCharmm(c.get());
                         charmmRepository.saveResult(username, result);
                     }
                     return null;

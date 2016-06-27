@@ -275,12 +275,12 @@ public class WizardPageFactory {
                 page = new RunningCHARMM_DG(charmmWorkflow_DG, dgList);
             } else if (type == CHARMM_GUI_InputAssistant.class) {
                 if (parameter == null) {
-                    page = new CHARMM_GUI_InputAssistant(charmmWorkflow_Den_Vap);
+                    page = new CHARMM_GUI_InputAssistant(charmmWorkflow_Den_Vap, settings);
                 } else {
 //                    List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
 //                    page = new CHARMM_GUI_InputAssistant(charmmWorkflow_Den_Vap, ioList);
                     List<File> ioList = throwIfParameterIsNull(parameter);
-                    page = new CHARMM_GUI_InputAssistant(charmmWorkflow_Den_Vap, ioList);
+                    page = new CHARMM_GUI_InputAssistant(charmmWorkflow_Den_Vap, ioList, settings);
                 }
             } else if (type == CHARMM_GUI_ShowOutput.class) {
                 List<CHARMM_InOut> ioList = throwIfParameterIsNull(parameter);
@@ -297,7 +297,7 @@ public class WizardPageFactory {
             } else if (type == GenerateTopology.class) {
                 page = new GenerateTopology(charmmWorkflow_other);
             } else if (type == CHARMM_GUI_LoadOutput.class) {
-                page = new CHARMM_GUI_LoadOutput();
+                page = new CHARMM_GUI_LoadOutput(settings);
             } // MISC
             else {
                 page = type.newInstance();

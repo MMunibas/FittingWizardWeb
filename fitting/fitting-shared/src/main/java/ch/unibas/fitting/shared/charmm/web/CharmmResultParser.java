@@ -1,6 +1,8 @@
 package ch.unibas.fitting.shared.charmm.web;
 
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Generator_DGHydr;
+import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output_GasPhase;
+import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output_PureLiquid;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -18,13 +20,14 @@ public class CharmmResultParser {
 
     private static Logger LOGGER = Logger.getLogger(CharmmResultParser.class);
 
-    public static CharmmResultParserOutput parseOutput(CharmmResult result,
+    public static CharmmResultParserOutput parseOutput(CHARMM_Output_GasPhase gasOutput,
+                                                       CHARMM_Output_PureLiquid pureLiquid,
                                                        CHARMM_Generator_DGHydr gasVdw,
                                                        CHARMM_Generator_DGHydr gasMtp,
                                                        CHARMM_Generator_DGHydr solvVdw,
                                                        CHARMM_Generator_DGHydr solvMtp) {
 
-        CharmmResultParserOutput output = parseCharmmResult(result);
+        CharmmResultParserOutput output = parseCharmmResult(gasOutput, pureLiquid);
 
         output.setGas_vdw(parseDeltaG(gasVdw));
         output.setGas_mtp(parseDeltaG(gasMtp));
@@ -48,11 +51,12 @@ public class CharmmResultParser {
         return output;
     }
 
-    private static CharmmResultParserOutput parseCharmmResult(CharmmResult result) {
+    private static CharmmResultParserOutput parseCharmmResult(CHARMM_Output_GasPhase gasOutput,
+                                                              CHARMM_Output_PureLiquid pureLiquid) {
         CharmmResultParserOutput output = new CharmmResultParserOutput();
 
-        List<String> pureLiqOut = splitOutFile(result.getLiguidPhaseOutput().getText().split("\n"));
-        List<String> gasPhaseOut = splitOutFile(result.getGasPhaseOutput().getText().split("\n"));
+        List<String> pureLiqOut = splitOutFile(pureLiquid.getText().split("\n"));
+        List<String> gasPhaseOut = splitOutFile(gasOutput.getText().split("\n"));
 
         List<String> nat = findInArray(gasPhaseOut, find_natom);
         String[] n = nat.get(nat.size() - 1).split("\\s+");
@@ -92,7 +96,7 @@ public class CharmmResultParser {
     }
 
     private static Double parseDeltaG(CHARMM_Generator_DGHydr deltaGOutput) {
-        List<String> output = splitOutFile(deltaGOutput.getText().split("\n"));
+        List<String> output = splitOutFile(deltaGOutput.getRunOutput().split("\n"));
         String line = findInArray(output, "kcal/mol").get(0);
         String text = line.split("\\s+")[4];
         Double value = Double.valueOf(text);

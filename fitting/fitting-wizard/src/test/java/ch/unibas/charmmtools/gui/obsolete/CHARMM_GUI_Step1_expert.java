@@ -261,11 +261,19 @@ public class CHARMM_GUI_Step1_expert extends CHARMM_GUI_base {
             parname = parname.length() == 0 ? "ADD_HERE_PATH_TO_PARAMETERS_FILE" : ResourceUtils.getRelativePath(parname, folderPath);
             lpunname = lpunname.length() == 0 ? "ADD_HERE_PATH_TO_LPUN_FILE" : ResourceUtils.getRelativePath(lpunname, folderPath);
 
-            CHARMM_Input_GasPhase gas = new CHARMM_Input_GasPhase(corname_gas, rtfname, parname, new File(lpunname));
+            CHARMM_Input_GasPhase gas = new CHARMM_Input_GasPhase(
+                    new File(corname_gas),
+                    new File(rtfname),
+                    new File(parname),
+                    new File(lpunname));
             gas.generate();
             inp.add(0, gas);
 
-            CHARMM_Input_PureLiquid liquid = new CHARMM_Input_PureLiquid(corname_liquid, rtfname, parname, new File(lpunname));
+            CHARMM_Input_PureLiquid liquid = new CHARMM_Input_PureLiquid(
+                    new File(corname_liquid),
+                    new File(rtfname),
+                    new File(parname),
+                    new File(lpunname));
             liquid.generate();
             inp.add(1, liquid);
             textarea_left.setText(inp.get(0).getText());
@@ -448,31 +456,22 @@ public class CHARMM_GUI_Step1_expert extends CHARMM_GUI_base {
     @Override
     protected void fillButtonBar() {
 
-        button_reset = ButtonFactory.createButtonBarButton("Reset", new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                logger.info("Resetting all fields.");
-                ResetFields(actionEvent);
-            }
+        button_reset = ButtonFactory.createButtonBarButton("Reset", actionEvent -> {
+            logger.info("Resetting all fields.");
+            ResetFields(actionEvent);
         });
         addButtonToButtonBar(button_reset);
 
-        button_save_to_file = ButtonFactory.createButtonBarButton("Click to save files ", new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                logger.info("Saving CHARMM input script(s) to file(s).");
-                SaveToFile(actionEvent);
-            }
+        button_save_to_file = ButtonFactory.createButtonBarButton("Click to save files ", actionEvent -> {
+            logger.info("Saving CHARMM input script(s) to file(s).");
+            SaveToFile(actionEvent);
         });
         addButtonToButtonBar(button_save_to_file);
         button_save_to_file.setDisable(true);
 
-        button_run_CHARMM = ButtonFactory.createButtonBarButton("Run CHARMM ρ and ΔH simulations", new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                logger.info("Running CHARMM input script.");
-                runCHARMM(actionEvent);
-            }
+        button_run_CHARMM = ButtonFactory.createButtonBarButton("Run CHARMM ρ and ΔH simulations", actionEvent -> {
+            logger.info("Running CHARMM input script.");
+            runCHARMM(actionEvent);
         });
         addButtonToButtonBar(button_run_CHARMM);
         button_run_CHARMM.setDisable(true);

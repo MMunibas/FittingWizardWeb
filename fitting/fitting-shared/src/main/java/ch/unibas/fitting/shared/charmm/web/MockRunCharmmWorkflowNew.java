@@ -7,7 +7,7 @@ import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output_GasPhase;
 import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output_PureLiquid;
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.directories.UserDirectory;
-import ch.unibas.fitting.shared.workflows.charmm.MockGenerateInputWorkflow;
+import ch.unibas.fitting.shared.workflows.charmm.CharmmInputContainer;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
@@ -22,9 +22,6 @@ import java.util.List;
  */
 public class MockRunCharmmWorkflowNew implements IRunCharmmWorkflowNew {
 
-    @Inject
-    UserDirectory userDirectory;
-
     private final Logger LOGGER = Logger.getLogger(MockRunCharmmWorkflowNew.class);
 
     private final File testdataDir;
@@ -35,21 +32,43 @@ public class MockRunCharmmWorkflowNew implements IRunCharmmWorkflowNew {
     }
 
     @Override
-    public CharmmResult executeCharmm(CHARMM_Input_GasPhase gasPhase,
-                                      CHARMM_Input_PureLiquid pureLiquid,
-                                      List<CHARMM_Generator_DGHydr> DGHydr) {
+    public CharmmResult executeCharmm(CharmmInputContainer container) {
 
         File gasDir = new File(testdataDir, "gas");
         File solvDir = new File(testdataDir, "solv");
 
-        LOGGER.debug("files " + new File(gasDir, "gas_phase.out") + " " + new File(solvDir, "pure_liquid.out") + " " + gasPhase.getWorkDir() + " " + pureLiquid.getWorkDir() );
+        CHARMM_Input_PureLiquid pureLiquid = container.getLiquidInput();
+        CHARMM_Input_GasPhase gasPhase = container.getGasInput();
+
+        LOGGER.debug("files " + new File(gasDir, "gas_phase.out")
+                + " "
+                + new File(solvDir, "pure_liquid.out")
+                + " "
+                + gasPhase.getWorkDir()
+                + " "
+                + pureLiquid.getWorkDir() );
+
         copyTestFileToDir(new File(gasDir, "gas_phase.out"), gasPhase.getWorkDir());
+        copyTestFileToDir(new File(gasDir, "mtp/dg_run_mtp_gas.out"), container.getGasMtp().getWorkDir());
+        copyTestFileToDir(new File(gasDir, "vdw/dg_run_vdw_gas.out"), container.getGasVdw().getWorkDir());
+
         copyTestFileToDir(new File(solvDir, "pure_liquid.out"), pureLiquid.getWorkDir());
+        copyTestFileToDir(new File(solvDir, "mtp/dg_run_mtp_solv.out"), container.getSolvMtp().getWorkDir());
+        copyTestFileToDir(new File(solvDir, "vdw/dg_run_vdw_solv.out"), container.getSolvVdw().getWorkDir());
 
         CHARMM_Output_GasPhase gasOut = new CHARMM_Output_GasPhase(new File(gasPhase.getWorkDir(), "gas_phase.out"));
         CHARMM_Output_PureLiquid pureLiquidOut = new CHARMM_Output_PureLiquid(new File(pureLiquid.getWorkDir(), "pure_liquid.out"));
-        CharmmResult result = new CharmmResult(gasOut, pureLiquidOut);
-        return result;
+
+        CharmmResultParserOutput out = CharmmResultParser.parseOutput(
+                gasOut,
+                pureLiquidOut,
+                container.getGasVdw(),
+                container.getGasMtp(),
+                container.getSolvVdw(),
+                container.getSolvMtp()
+        );
+
+        return new CharmmResult(gasOut, pureLiquidOut, out);
     }
 
     protected void copyTestFileToDir(File srcFile, File destinationDir) {
@@ -59,7 +78,7 @@ public class MockRunCharmmWorkflowNew implements IRunCharmmWorkflowNew {
         try {
             FileUtils.copyFileToDirectory(srcFile, destinationDir);
         } catch (IOException e) {
-            throw new RuntimeException("Could not copy mock data to output directory.");
+            throw new RuntimeException("Could not copy mock data to output directory.", e);
         }
     }
 }

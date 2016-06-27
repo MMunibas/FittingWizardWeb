@@ -214,7 +214,7 @@ public class CHARMM_GUI_Fitgrid extends CHARMM_GUI_base {
             pb.directory(myDir);
             String script = new File("./scripts/lj-fit/src/list-atom-types").getAbsolutePath();
             pb.command("/bin/bash", script, parFile.getAbsolutePath());
-//            pb.redirectOutput(new File(myDir, "scaled_e" + e_scale + "_s" + s_scale + ".par"));
+//            pb.redirectOutput(new File(baseDir, "scaled_e" + e_scale + "_s" + s_scale + ".par"));
             pb.redirectOutput(outfile);
             logger.info("Running bash script\n" + pb.command()
                     + "\nin directory:\n" + pb.directory()
