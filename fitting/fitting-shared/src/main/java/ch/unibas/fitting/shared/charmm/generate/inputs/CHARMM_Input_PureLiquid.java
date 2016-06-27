@@ -8,8 +8,6 @@
  */
 package ch.unibas.fitting.shared.charmm.generate.inputs;
 
-import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -21,28 +19,6 @@ import java.io.IOException;
  * @author hedin
  */
 public class CHARMM_Input_PureLiquid extends CHARMM_Input {
-    
-    /**
-     * If content of the field has to be retrieved later on it is stored on an internal CharArrayWriter within this class
-     *
-     * @param _cor
-     * @param _top
-     * @param _par
-     * @throws java.io.IOException
-     */
-//    public CHARMM_Input_PureLiquid(String _cor, String _top, String _par) throws IOException {
-//        
-//        super(_cor, _top, _par, "Pure Liquid");
-//        
-//        this.expectedFormats.clear();
-//        this.expectedFormats.add(".cor");
-//        
-//        writer = new CharArrayWriter();
-//        
-//        //build the input file by calling all the print_* sections
-//        this.build();
-//
-//    }
 
     /**
      * If content of the field has to be directly written to a file we use a BufferedWriter type
@@ -54,44 +30,11 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
      * @throws java.io.IOException
      */
     public CHARMM_Input_PureLiquid(String _cor, String _top, String _par, File _outf) throws IOException {
-        
         super(_cor, _top, _par, _outf, "Pure Liquid");
         
         this.expectedFormats.clear();
         this.expectedFormats.add(".cor");
-         
-        writer = new BufferedWriter(new FileWriter(_outf));
-        
-        //build the input file by calling all the print_* sections
-        this.build();
-
-        writer.close();
-
     }
-
-    /**
-     * If content of the field has to be retrieved later on it is stored on an internal CharArrayWriter within this class
-     * Requires also a lpun file when MTP module is used
-     * 
-     * @param _cor
-     * @param _top
-     * @param _par
-     * @param _lpun
-     * @throws java.io.IOException
-     */
-//    public CHARMM_Input_PureLiquid(String _cor, String _top, String _par, String _lpun) throws IOException {
-//
-//        super(_cor, _top, _par, _lpun, "Pure Liquid");
-//        
-//        this.expectedFormats.clear();
-//        this.expectedFormats.add(".cor");
-//        
-//        writer = new CharArrayWriter();
-//        
-//        //build the input file by calling all the print_* sections
-//        this.build();
-//
-//    }
 
     /**
      * If content of the field has to be directly written to a file we use a BufferedWriter type
@@ -104,20 +47,23 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
      * @param _outf
      * @throws java.io.IOException
      */
-    public CHARMM_Input_PureLiquid(String _cor, String _top, String _par, String _lpun, File _outf) throws IOException {
-
+    public CHARMM_Input_PureLiquid(String _cor, String _top, String _par, String _lpun, File _outf) {
         super(_cor, _top, _par, _lpun, _outf, "Pure Liquid");
         
         this.expectedFormats.clear();
         this.expectedFormats.add(".cor");
-        
-        writer = new BufferedWriter(new FileWriter(_outf));
-        
-        //build the input file by calling all the print_* sections
-        this.build();
+    }
 
-        writer.close();
+    public void generate() {
+        try {
+            writer = new BufferedWriter(new FileWriter(out));
+            //build the input file by calling all the print_* sections
+            this.build();
 
+            writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException("CHARMM_Input_PureLiquid ctor failed", e);
+        }
     }
     
     @Override
@@ -142,7 +88,6 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
         this.print_MiniSection();
         this.print_DynaSection();
         this.print_StopSection();
-        
     }
     
     /**
@@ -232,5 +177,4 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
                         "  cpt pint pconst pref 1 pgamma 0 pmass @pmass -\n" +
                         "  hoover reft 298 tmass @tmass\n\n");
     }
-
-}//end of class
+}

@@ -250,19 +250,19 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 //        try {
 //        in_gas_vdw = new CHARMM_Generator_DGHydr(corname_solu, rtfname, parname, lpunname, "vdw",
 //                0.0, lamb_spacing_val, 1.0);
-//            CHARMM_inFile.addAll(in_gas_vdw.getMyFiles());
+//            CHARMM_inFile.addAll(in_gas_vdw.listOutputFiles());
 ////
 //        in_gas_mtp = new CHARMM_Generator_DGHydr(corname_solu, rtfname, parname, lpunname, "mtp",
 //                0.0, lamb_spacing_val, 1.0);
-//            CHARMM_inFile.addAll(in_gas_mtp.getMyFiles());
+//            CHARMM_inFile.addAll(in_gas_mtp.listOutputFiles());
 //
 //        in_solv_vdw = new CHARMM_Generator_DGHydr(corname_solu, corname_solv, rtfname, rtfname,
 //                parname, lpunname, "vdw", 0.0, lamb_spacing_val, 1.0);
-//            CHARMM_inFile.addAll(in_solv_vdw.getMyFiles());
+//            CHARMM_inFile.addAll(in_solv_vdw.listOutputFiles());
 //
 //        in_solv_mtp = new CHARMM_Generator_DGHydr(corname_solu, corname_solv, rtfname, rtfname,
 //                parname, lpunname, "mtp", 0.0, lamb_spacing_val, 1.0);
-//            CHARMM_inFile.addAll(in_solv_mtp.getMyFiles());
+//            CHARMM_inFile.addAll(in_solv_mtp.listOutputFiles());
 
 //            tab_list_gas.add(new MyTab(in_gas_vdw.getType(), in_gas_vdw.getText()));
 //            tab_list_gas.add(new MyTab(in_gas_mtp.getType(), in_gas_mtp.getText()));
@@ -270,25 +270,25 @@ public class CHARMM_GUI_Step4 extends CHARMM_GUI_base {
 //            tab_list_solv.add(new MyTab(in_solv_vdw.getType(), in_solv_vdw.getText()));
 //            tab_list_solv.add(new MyTab(in_solv_mtp.getType(), in_solv_mtp.getText()));
         try {
-            for (File fi : in_gas_vdw.getMyFiles()) {
+            for (File fi : in_gas_vdw.listOutputFiles()) {
                 tab_list_gas.add(new MyTab(
                         "Gas & VDW", new String(Files.readAllBytes(Paths.get(fi.getAbsolutePath())))
                 ));
             }
             
-            for (File fi : in_gas_mtp.getMyFiles()) {
+            for (File fi : in_gas_mtp.listOutputFiles()) {
                 tab_list_gas.add(new MyTab(
                         "Gas & MTP", new String(Files.readAllBytes(Paths.get(fi.getAbsolutePath())))
                 ));
             }
             
-            for (File fi : in_solv_vdw.getMyFiles()) {
+            for (File fi : in_solv_vdw.listOutputFiles()) {
                 tab_list_solv.add(new MyTab(
                         "Solv & VDW", new String(Files.readAllBytes(Paths.get(fi.getAbsolutePath())))
                 ));
             }
             
-            for (File fi : in_solv_mtp.getMyFiles()) {
+            for (File fi : in_solv_mtp.listOutputFiles()) {
                 tab_list_solv.add(new MyTab(
                         "Solv & MTP", new String(Files.readAllBytes(Paths.get(fi.getAbsolutePath())))
                 ));

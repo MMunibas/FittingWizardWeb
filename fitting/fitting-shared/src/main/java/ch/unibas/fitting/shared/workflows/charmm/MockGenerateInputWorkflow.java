@@ -1,7 +1,9 @@
 package ch.unibas.fitting.shared.workflows.charmm;
 
+import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_GasPhase;
 import ch.unibas.fitting.shared.config.Settings;
-import ch.unibas.fitting.shared.directories.CharmmGeneratedInputOutputDir;
+import ch.unibas.fitting.shared.directories.CharmmRunFileContainer;
+import ch.unibas.fitting.shared.directories.CharmmOutputDir;
 import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -16,22 +18,23 @@ import java.util.Collection;
 /**
  * Created by tschmidt on 24.06.2016.
  */
-public class MockGenerateInputWorkflow implements IGenerateInputWorkflow {
+public class MockGenerateInputWorkflow extends RealGenerateInputWorkflow {
 
-    private final Logger Logger = org.apache.log4j.Logger.getLogger(MockGenerateInputWorkflow.class);
+    private final Logger LOGGER = Logger.getLogger(MockGenerateInputWorkflow.class);
 
-    private CharmmGeneratedInputOutputDir outputBaseDir;
     private File testdataDir;
 
     @Inject
-    public MockGenerateInputWorkflow(Settings settings, CharmmGeneratedInputOutputDir outputBaseDir) {
+    public MockGenerateInputWorkflow(Settings settings) {
         this.testdataDir = settings.getTestdataCharmmGenerateInputOutputDir();
-        this.outputBaseDir = outputBaseDir;
     }
 
     @Override
-    public GenerateInputOutput execute(WorkflowContext<GenerateInputInput> context) {
-        Logger.info("Executing mock generate input workflow.");
+    public CharmmInputContainer execute(WorkflowContext<GenerateInputWorkflowInput> context) {
+        LOGGER.info("Executing mock generate input workflow.");
+
+        CharmmOutputDir dir = context.getParameter().getCharmmOutputDir();
+        CharmmRunFileContainer charmmRunDir = dir.createRunDir();
 
         File gasTestdataDir = new File(testdataDir, "gas");
         File solvTestdataDir = new File(testdataDir, "solv");
@@ -40,51 +43,46 @@ public class MockGenerateInputWorkflow implements IGenerateInputWorkflow {
         File solvVdwTestdataDir = new File(solvTestdataDir, "vdw");
         File solvMtpTestdataDir = new File(solvTestdataDir, "mtp");
 
-        Logger.info("dirs " + gasTestdataDir.getAbsolutePath());
+        LOGGER.info("dirs " + gasTestdataDir.getAbsolutePath());
 
         Collection<File> gasSourceFiles = FileUtils.listFiles(gasTestdataDir.getAbsoluteFile(), new String[]{"inp"}, false);
-        Logger.debug("gasTestdataDir " + gasTestdataDir);
+        LOGGER.debug("gasTestdataDir " + gasTestdataDir);
         for (File f : gasSourceFiles) {
-            Logger.debug("gas Source file " + f.getAbsolutePath());
+            LOGGER.debug("gas Source file " + f.getAbsolutePath());
         }
-        ;
-        copyTestFiles(gasSourceFiles, outputBaseDir.getGasDir());
+
+        copyTestFiles(gasSourceFiles, charmmRunDir.getGasDir());
 
         Collection<File> solvSourceFiles = FileUtils.listFiles(solvTestdataDir, new String[]{"inp"}, false);
-        Logger.debug("solvTestdataDir " + solvTestdataDir);
+        LOGGER.debug("solvTestdataDir " + solvTestdataDir);
         for (File f : solvSourceFiles) {
-            Logger.debug("solv Source file " + f.getAbsolutePath());
+            LOGGER.debug("solv Source file " + f.getAbsolutePath());
         }
-        ;
-        copyTestFiles(solvSourceFiles, outputBaseDir.getSolvDir());
+
+        copyTestFiles(solvSourceFiles, charmmRunDir.getSolvDir());
 
         Collection<File> gasVdwSourceFiles = FileUtils.listFiles(gasVdwTestdataDir, new String[]{"inp"}, false);
-        Logger.debug("gasVdwTestdataDir " + gasVdwTestdataDir);
+        LOGGER.debug("gasVdwTestdataDir " + gasVdwTestdataDir);
         for (File f : gasVdwSourceFiles) {
-            Logger.debug("gas vdw Source file " + f.getAbsolutePath());
+            LOGGER.debug("gas vdw Source file " + f.getAbsolutePath());
         }
-        ;
-        copyTestFiles(gasVdwSourceFiles, outputBaseDir.getGasVdwDir());
-        Collection<File> gasMtpSourceFiles = FileUtils.listFiles(gasMtpTestdataDir, new String[]{"inp"}, false);
-        copyTestFiles(gasMtpSourceFiles, outputBaseDir.getGasMtpDir());
-        Collection<File> solvVdeSourceFiles = FileUtils.listFiles(solvVdwTestdataDir, new String[]{"inp"}, false);
-        copyTestFiles(solvVdeSourceFiles, outputBaseDir.getSolvVdwDir());
-        Collection<File> solvMtpSourceFiles = FileUtils.listFiles(solvMtpTestdataDir, new String[]{"inp"}, false);
-        copyTestFiles(solvMtpSourceFiles, outputBaseDir.getSolvMtpDir());
 
-        GenerateInputOutput output = new GenerateInputOutput(gasSourceFiles.iterator().next(),
-                solvSourceFiles.iterator().next(),
-                new ArrayList(gasVdwSourceFiles),
-                new ArrayList<>(gasMtpSourceFiles),
-                new ArrayList<>(solvVdeSourceFiles),
-                new ArrayList<>(solvMtpSourceFiles));
+        copyTestFiles(gasVdwSourceFiles, charmmRunDir.getGasVdwDir());
+        Collection<File> gasMtpSourceFiles = FileUtils.listFiles(gasMtpTestdataDir, new String[]{"inp"}, false);
+        copyTestFiles(gasMtpSourceFiles, charmmRunDir.getGasMtpDir());
+        Collection<File> solvVdeSourceFiles = FileUtils.listFiles(solvVdwTestdataDir, new String[]{"inp"}, false);
+        copyTestFiles(solvVdeSourceFiles, charmmRunDir.getSolvVdwDir());
+        Collection<File> solvMtpSourceFiles = FileUtils.listFiles(solvMtpTestdataDir, new String[]{"inp"}, false);
+        copyTestFiles(solvMtpSourceFiles, charmmRunDir.getSolvMtpDir());
+
+        CharmmInputContainer output = prepareInput(context.getParameter(), charmmRunDir);
 
         return output;
     }
 
     private void copyTestFiles(Collection<File> srcFiles, File destinationDir) {
         for (File srcFile : srcFiles) {
-            Logger.debug(String.format("copyTestFile %s to directory %s.",
+            LOGGER.debug(String.format("copyTestFile %s to directory %s.",
                     FilenameUtils.normalize(srcFile.getAbsolutePath()),
                     FilenameUtils.normalize(destinationDir.getAbsolutePath())));
             try {
@@ -92,6 +90,6 @@ public class MockGenerateInputWorkflow implements IGenerateInputWorkflow {
             } catch (IOException e) {
                 throw new RuntimeException("Could not copy mock data to output directory.");
             }
-        };
+        }
     }
 }

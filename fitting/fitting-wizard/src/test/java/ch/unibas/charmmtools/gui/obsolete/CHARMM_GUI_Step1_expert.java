@@ -261,8 +261,13 @@ public class CHARMM_GUI_Step1_expert extends CHARMM_GUI_base {
             parname = parname.length() == 0 ? "ADD_HERE_PATH_TO_PARAMETERS_FILE" : ResourceUtils.getRelativePath(parname, folderPath);
             lpunname = lpunname.length() == 0 ? "ADD_HERE_PATH_TO_LPUN_FILE" : ResourceUtils.getRelativePath(lpunname, folderPath);
 
-            inp.add(0, new CHARMM_Input_GasPhase(corname_gas, rtfname, parname, new File(lpunname)));
-            inp.add(1, new CHARMM_Input_PureLiquid(corname_liquid, rtfname, parname, new File(lpunname)));
+            CHARMM_Input_GasPhase gas = new CHARMM_Input_GasPhase(corname_gas, rtfname, parname, new File(lpunname));
+            gas.generate();
+            inp.add(0, gas);
+
+            CHARMM_Input_PureLiquid liquid = new CHARMM_Input_PureLiquid(corname_liquid, rtfname, parname, new File(lpunname));
+            liquid.generate();
+            inp.add(1, liquid);
             textarea_left.setText(inp.get(0).getText());
             textarea_right.setText(inp.get(1).getText());
 

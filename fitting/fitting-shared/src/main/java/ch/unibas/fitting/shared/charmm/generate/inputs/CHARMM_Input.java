@@ -45,22 +45,10 @@ public abstract class CHARMM_Input implements CHARMM_InOut {
     protected int prnlev = 2;
 
     protected String par = null, top = null, lpun = null, cor = null;
-//    protected File inp;
     protected File out = null;
 
     protected String type = null;
 
-//    protected CHARMM_Input(String _cor, String _top, String _par, String _type)
-//    {
-//        this.cor = _cor;
-//        this.top = _top;
-//        this.par = _par;
-//        this.type = _type;
-//        
-//        this.expectedFormats = new ArrayList<>();
-//        this.expectedFormats.add("*.pdb");
-//        this.expectedFormats.add("*.ent");
-//    }
     public CHARMM_Input(String _cor, String _top, String _par, File _outf, String _type) {
         this.cor = _cor;
         this.top = _top;
@@ -75,18 +63,6 @@ public abstract class CHARMM_Input implements CHARMM_InOut {
         this.normalisePathAndCopyFiles();
     }
 
-//    protected CHARMM_Input(String _cor, String _top, String _par, String _lpun, String _type)
-//    {
-//        this.cor = _cor;
-//        this.top = _top;
-//        this.par = _par;
-//        this.lpun = _lpun;
-//        this.type = _type;
-//                
-//        this.expectedFormats = new ArrayList<>();
-//        this.expectedFormats.add("*.pdb");
-//        this.expectedFormats.add("*.ent");
-//    }
     protected CHARMM_Input(String _cor, String _top, String _par, String _lpun, File _outf, String _type) {
         this.cor = _cor;
         this.top = _top;

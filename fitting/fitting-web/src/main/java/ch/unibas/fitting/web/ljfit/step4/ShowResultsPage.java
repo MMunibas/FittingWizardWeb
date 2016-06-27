@@ -1,5 +1,6 @@
 package ch.unibas.fitting.web.ljfit.step4;
 
+import ch.unibas.fitting.web.ljfit.CharmmRepository;
 import ch.unibas.fitting.web.ljfit.step1.InputAssistantPage;
 import ch.unibas.fitting.web.ljfit.step3.ShowOutputPage;
 import ch.unibas.fitting.web.web.HeaderPage;
@@ -15,6 +16,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
+import javax.inject.Inject;
+
 /**
  * Created by tschmidt on 16.06.2016.
  */
@@ -26,6 +29,9 @@ public class ShowResultsPage extends HeaderPage {
     private String density = "";
     private String deltaH = "";
     private String deltaG = "";
+
+    @Inject
+    private CharmmRepository charmmRepository;
 
     public ShowResultsPage() {
         loadInputValues();

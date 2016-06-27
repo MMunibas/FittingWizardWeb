@@ -1,20 +1,31 @@
 package ch.unibas.fitting.shared.workflows.charmm;
 
+import ch.unibas.fitting.shared.directories.CharmmOutputDir;
+
 import java.io.File;
 
 /**
  * Created by tschmidt on 24.06.2016.
  */
-public class GenerateInputInput {
+public class GenerateInputWorkflowInput {
+    private final CharmmOutputDir charmmOutputDir;
     private File parFile;
     private File rtfFile;
     private File molFile;
     private File liquidFile;
     private File solventFile;
     private File lpunFile;
-    private Double lambda;
+    private double lambda;
 
-    public GenerateInputInput(File parFile, File rtfFile, File molFile, File liquidFile, File solventFile, File lpunFile, Double lambda) {
+    public GenerateInputWorkflowInput(CharmmOutputDir charmmOutputDir,
+                                      File parFile,
+                                      File rtfFile,
+                                      File molFile,
+                                      File liquidFile,
+                                      File solventFile,
+                                      File lpunFile,
+                                      double lambda) {
+        this.charmmOutputDir = charmmOutputDir;
 
         this.parFile = parFile;
         this.rtfFile = rtfFile;
@@ -23,6 +34,10 @@ public class GenerateInputInput {
         this.solventFile = solventFile;
         this.lpunFile = lpunFile;
         this.lambda = lambda;
+    }
+
+    public CharmmOutputDir getCharmmOutputDir() {
+        return charmmOutputDir;
     }
 
     public File getParFile() {
@@ -49,7 +64,7 @@ public class GenerateInputInput {
         return lpunFile;
     }
 
-    public Double getLambda() {
+    public double getLambda() {
         return lambda;
     }
 }

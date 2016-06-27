@@ -32,14 +32,6 @@ public class MoleculeQueryService {
         return molecules.size();
     }
 
-    public List<MoleculeId> getMoleculeIds() {
-        ArrayList<MoleculeId> ids = molecules
-                .stream()
-                .map(Molecule::getId)
-                .collect(Collectors.toCollection(ArrayList::new));
-        return ids;
-    }
-
     public List<Molecule> findMoleculesWithMissingUserCharges() {
         return findMoleculeWith(Molecule.UserChargesState.NoChargesDefined);
     }

@@ -15,6 +15,7 @@ import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.validation.validator.RangeValidator;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -53,11 +54,7 @@ public class AtomTypesPage extends HeaderPage {
 
                 Optional<Molecule> mol = getMolecule();
                 if (mol.isPresent()) {
-                    types.forEach(charge -> {
-                        if (charge.isChargeDefined()) {
-                            mol.get().setUserCharge(charge.getName(), charge.getUserCharge());
-                        }
-                    });
+                    types.forEach(charge -> mol.get().setUserCharge(charge.getName(), charge.getUserCharge()));
                     moleculeUserRepo.save(getCurrentUsername(), mol.get());
                 }
                 setResponsePage(OverviewPage.class);
@@ -82,6 +79,7 @@ public class AtomTypesPage extends HeaderPage {
                 item.add(new Label("name", charge.getName()));
 
                 NumberTextField<Double> ntf = new NumberTextField<Double>("charge", new PropertyModel<>(charge, "userCharge"));
+                ntf.add(RangeValidator.range(-99.0, 99.0));
                 item.add(ntf);
             }
         });

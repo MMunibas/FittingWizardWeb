@@ -8,6 +8,7 @@ import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output_PureLiquid
 import ch.unibas.fitting.shared.config.Settings;
 import org.apache.log4j.Logger;
 
+import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -18,11 +19,12 @@ public class RunCharmmWorkflowNew {
 
     private final CHARMM_Den_Vap charmm_den_vap;
 
+    @Inject
     public RunCharmmWorkflowNew(Settings settings) {
         this.charmm_den_vap= new CHARMM_Den_Vap(settings);
     }
 
-    public void executeCharmm(CHARMM_Input_GasPhase gasPhase,
+    public CharmmResult executeCharmm(CHARMM_Input_GasPhase gasPhase,
                               CHARMM_Input_PureLiquid pureLiquid,
                               List<CHARMM_Generator_DGHydr> DGHydr) {
         LOGGER.debug("Executing Charm Workflow");
@@ -36,5 +38,6 @@ public class RunCharmmWorkflowNew {
         }
 
         LOGGER.debug("Executing Charm Workflow DONE.");
+        return new CharmmResult(gasOut, pureLiquidOut);
     }
 }

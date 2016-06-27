@@ -16,6 +16,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -36,9 +38,7 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
     protected PythonScriptRunner runner = null;
 //    protected final File workDir = new File("test");
     protected File myDir = null;
-    
-    private List<File> myFiles = new ArrayList<>();
-    
+
     private File output = null;
     
     protected static final Logger logger = Logger.getLogger(CHARMM_Generator_DGHydr.class);
@@ -57,18 +57,12 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
         this.l_min = _l_min;
         this.l_space = _l_space;
         this.l_max = _l_max;
-
-//        this.myDir = new File("test/gas_" + ti_type + "_" + Instant.now().getEpochSecond());
-//        this.myDir.mkdirs();
         this.myDir = _mydir;
         
         this.runner = new PythonScriptRunner();
         this.runner.setWorkingDir(this.myDir);
         
         whoami = "gas_" + ti_type;
-        
-        this.generate();
-        
     }
     
     public CHARMM_Generator_DGHydr(String _solu_cor, String _solv_cor,
@@ -86,18 +80,12 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
         this.l_min = _l_min;
         this.l_space = _l_space;
         this.l_max = _l_max;
-
-//        this.myDir = new File("test/solvent_" + ti_type + "_" + Instant.now().getEpochSecond());
-//        this.myDir.mkdirs();
         this.myDir = _mydir;
         
         this.runner = new PythonScriptRunner();
         this.runner.setWorkingDir(this.myDir);
         
         whoami = "solvent_" + ti_type;
-        
-        this.generate();
-        
     }
     
     public CHARMM_Generator_DGHydr(File _out, String _type){
@@ -138,8 +126,8 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
         this.par = new File(par).getName();
         this.lpun = new File(lpun).getName();
     }
-    
-    private void genInputPythonGas(boolean genOnly) {
+
+    protected void genInputPythonGas(boolean genOnly) {
         List<String> args = new ArrayList<>();
         args.clear();
         
@@ -195,11 +183,10 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
 //        returnCode = runner.exec(script, args);
 //        }
 
-        String[] exts = {"inp"};
-        myFiles.addAll(FileUtils.listFiles(myDir, exts, false));
+
     }
     
-    private void genInputPythonSolvent(boolean genOnly) {
+    protected void genInputPythonSolvent(boolean genOnly) {
         List<String> args = new ArrayList<>();
         args.clear();
         
@@ -257,19 +244,19 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
 //        } else {
 //        returnCode = runner.exec(script, args);
 //        }
-
-        String[] exts = {"inp"};
-        myFiles.addAll(FileUtils.listFiles(myDir, exts, false));
     }
 
     /**
      * @return the myFiles
      */
-    public List<File> getMyFiles() {
-        return myFiles;
+    public List<File> listOutputFiles() {
+        String[] exts = {"inp"};
+        return FileUtils.listFiles(myDir, exts, false)
+                .stream()
+                .collect(Collectors.toList());
     }
     
-    private void generate() {
+    public void generate() {
         this.copyAndFixPaths();
         
         if (this.solv_cor != null) {

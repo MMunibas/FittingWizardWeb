@@ -25,6 +25,9 @@ import ch.unibas.fitting.shared.scripts.multipolegauss.RealMultipoleGaussScript;
 import ch.unibas.fitting.shared.tools.GaussianLogModifier;
 import ch.unibas.fitting.shared.tools.LPunParser;
 import ch.unibas.fitting.shared.tools.Notifications;
+import ch.unibas.fitting.shared.workflows.charmm.IGenerateInputWorkflow;
+import ch.unibas.fitting.shared.workflows.charmm.MockGenerateInputWorkflow;
+import ch.unibas.fitting.shared.workflows.charmm.RealGenerateInputWorkflow;
 import ch.unibas.fitting.shared.workflows.gaussian.GaussianWorkflow;
 import ch.unibas.fitting.shared.workflows.gaussian.MoleculeCreator;
 import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianWorkflow;
@@ -74,10 +77,14 @@ public class WebModule extends AbstractModule {
             bind(IBabelScript.class).to(MockBabelScript.class).in(Scopes.SINGLETON);
             bind(ILRAScript.class).to(MockLRAScript.class).in(Scopes.SINGLETON);
             bind(IFittabScript.class).to(MockFittabMarkerScript.class).in(Scopes.SINGLETON);
+
+            bind(IGenerateInputWorkflow.class).to(MockGenerateInputWorkflow.class).in(Scopes.SINGLETON);
         } else {
             bind(IBabelScript.class).to(RealBabelScript.class).in(Scopes.SINGLETON);
             bind(ILRAScript.class).to(RealLRAScript.class).in(Scopes.SINGLETON);
             bind(IFittabScript.class).to(RealFittabMarkerScript.class).in(Scopes.SINGLETON);
+
+            bind(IGenerateInputWorkflow.class).to(RealGenerateInputWorkflow.class).in(Scopes.SINGLETON);
         }
 
         bind(LPunParser.class).in(Scopes.SINGLETON);

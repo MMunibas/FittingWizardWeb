@@ -7,7 +7,7 @@ import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
  */
 public class GenerateInputWorkflow implements IGenerateInputWorkflow {
     @Override
-    public GenerateInputOutput execute(WorkflowContext<GenerateInputInput> status) {
+    public CharmmInputContainer execute(WorkflowContext<GenerateInputWorkflowInput> status) {
         return null;
     }
 }

@@ -12,13 +12,13 @@ public class CharmmOutputDir extends FittingDirectory {
 
     public File getInputDir() { return createAndGet(getDirectory(), "input"); }
 
-    public CharmmGeneratedInputOutputDir getGeneratedInputOutputDir() {
-        return new CharmmGeneratedInputOutputDir(createAndGet(this.getDirectory(), "generated_input"));
-    }
-
     public File getDefaultExportDir() {
         return createAndGet(getDirectory(), "export");
     }
 
     public File getOutputDir() {return createAndGet(getDirectory(), "output");}
+
+    public CharmmRunFileContainer createRunDir() {
+        return new CharmmRunFileContainer(getOutputDir());
+    }
 }

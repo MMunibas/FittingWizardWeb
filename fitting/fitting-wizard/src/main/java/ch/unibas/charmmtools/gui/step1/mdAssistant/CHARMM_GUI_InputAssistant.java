@@ -380,10 +380,11 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base{
 //        }
 
         File gasFile = null;
-        CHARMM_Input gasInp = null;
+        CHARMM_Input_GasPhase gasInp = null;
         try {
             gasFile = new File(gas_vdw_dir.getParent(), "gas_phase.inp");
             gasInp = new CHARMM_Input_GasPhase(corname_gas, rtfname, parname, lpunname, gasFile);
+            gasInp.generate();
             tab_list.add(
                     new MyTab("ρ/ΔH Gas Phase",
                             new String(Files.readAllBytes(Paths.get(gasFile.getAbsolutePath())))
@@ -395,10 +396,11 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base{
         }
 
         File liqFile = null;
-        CHARMM_Input liqInp = null;
+        CHARMM_Input_PureLiquid liqInp = null;
         try {
             liqFile = new File(solv_vdw_dir.getParent(), "pure_liquid.inp");
             liqInp = new CHARMM_Input_PureLiquid(corname_liquid, rtfname, parname, lpunname, liqFile);
+            liqInp.generate();
             tab_list.add(
                     new MyTab("ρ/ΔH Pure Liquid",
                             new String(Files.readAllBytes(Paths.get(liqFile.getAbsolutePath())))
@@ -415,39 +417,40 @@ public class CHARMM_GUI_InputAssistant extends CHARMM_GUI_base{
 
         in_gas_vdw = new CHARMM_Generator_DGHydr(corname_gas, rtfname, parname, lpunname, "vdw",
                 0.0, lamb_spacing_val, 1.0, gas_vdw_dir);
-//            CHARMM_inFile.addAll(in_gas_vdw.getMyFiles());
-//
+        in_gas_vdw.generate();
+
         in_gas_mtp = new CHARMM_Generator_DGHydr(corname_gas, rtfname, parname, lpunname, "mtp",
                 0.0, lamb_spacing_val, 1.0, gas_mtp_dir);
-//            CHARMM_inFile.addAll(in_gas_mtp.getMyFiles());
-//
+        in_gas_mtp.generate();
+
         in_solv_vdw = new CHARMM_Generator_DGHydr(corname_gas, corname_solv, rtfname, rtfname,
                 parname, lpunname, "vdw", 0.0, lamb_spacing_val, 1.0, solv_vdw_dir);
-//            CHARMM_inFile.addAll(in_solv_vdw.getMyFiles());
-//
+        in_solv_vdw.generate();
+
         in_solv_mtp = new CHARMM_Generator_DGHydr(corname_gas, corname_solv, rtfname, rtfname,
                 parname, lpunname, "mtp", 0.0, lamb_spacing_val, 1.0, solv_mtp_dir);
+        in_solv_mtp.generate();
 
         try {
-            for (File fi : in_gas_vdw.getMyFiles()) {
+            for (File fi : in_gas_vdw.listOutputFiles()) {
                 tab_list.add(new MyTab(
                         "Gas & VDW", new String(Files.readAllBytes(Paths.get(fi.getAbsolutePath())))
                 ));
             }
 
-            for (File fi : in_gas_mtp.getMyFiles()) {
+            for (File fi : in_gas_mtp.listOutputFiles()) {
                 tab_list.add(new MyTab(
                         "Gas & MTP", new String(Files.readAllBytes(Paths.get(fi.getAbsolutePath())))
                 ));
             }
 
-            for (File fi : in_solv_vdw.getMyFiles()) {
+            for (File fi : in_solv_vdw.listOutputFiles()) {
                 tab_list.add(new MyTab(
                         "Solv & VDW", new String(Files.readAllBytes(Paths.get(fi.getAbsolutePath())))
                 ));
             }
 
-            for (File fi : in_solv_mtp.getMyFiles()) {
+            for (File fi : in_solv_mtp.listOutputFiles()) {
                 tab_list.add(new MyTab(
                         "Solv & MTP", new String(Files.readAllBytes(Paths.get(fi.getAbsolutePath())))
                 ));
