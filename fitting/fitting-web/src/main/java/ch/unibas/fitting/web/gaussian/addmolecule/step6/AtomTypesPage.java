@@ -6,6 +6,9 @@ import ch.unibas.fitting.web.gaussian.addmolecule.step1.OverviewPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.NumberTextField;
@@ -13,6 +16,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.validation.validator.RangeValidator;
@@ -81,6 +85,7 @@ public class AtomTypesPage extends HeaderPage {
                 NumberTextField<Double> ntf = new NumberTextField<Double>("charge", new PropertyModel<>(charge, "userCharge"));
                 ntf.add(RangeValidator.range(-99.0, 99.0));
                 item.add(ntf);
+                addAtomTypeHighlightingMouseEvent(item, charge);
             }
         });
     }
@@ -104,5 +109,40 @@ public class AtomTypesPage extends HeaderPage {
             return moleculeUserRepo.load(getCurrentUsername(), moleculeName);
         }
         return Optional.empty();
+    }
+
+    private void addAtomTypeHighlightingMouseEvent(Item<ChargesViewModel> item, ChargesViewModel model) {
+        String atomIdxString = createAtomSelectionString(model);
+        item.add(new AttributeAppender("onmouseover", new Model("Jmol.script(jmolApplet0,\"select " + atomIdxString + "\")"),";"));
+        item.add(new AttributeAppender("onmouseout", new Model("Jmol.script(jmolApplet0,\"select none\")"), ";"));
+    }
+
+    private String createAtomSelectionString(ChargesViewModel model) {
+        int[] indices = model.getIndices();
+        String atomIdxString = "";
+        for (int i = 0; i < indices.length; i++) {
+            atomIdxString += "atomIndex=" + indices[i];
+            if (i < indices.length - 1) {
+                atomIdxString += " OR ";
+            }
+        }
+        return atomIdxString;
+    }
+
+    private String getXyzUrl(String moleculeName) {
+        return "/data/" +
+                getCurrentUsername() +
+                "/xyz_files/" +
+                moleculeName +
+                ".xyz";
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+
+        response.render(JavaScriptHeaderItem.forUrl("/javascript/jsmol/JSmol.min.js"));
+        String filename = getXyzUrl(moleculeName);
+        response.render(JavaScriptHeaderItem.forScript("var Info = {width: 400,height: 400,serverURL: \"http://chemapps.stolaf.edu/jmol/jsmol/php/jsmol.php\",use: \"HTML5\",j2sPath: \"/javascript/jsmol/j2s\",script: \"background black;load " + filename + "; selectionhalos on;select none;\",console: \"jmolApplet0_infodiv\"}", "jsmol_info"));
     }
 }

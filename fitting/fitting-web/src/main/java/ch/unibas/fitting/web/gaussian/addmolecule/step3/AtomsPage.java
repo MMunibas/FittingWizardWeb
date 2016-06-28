@@ -5,6 +5,8 @@ import ch.unibas.fitting.shared.xyz.XyzFile;
 import ch.unibas.fitting.shared.xyz.XyzFileParser;
 import ch.unibas.fitting.web.gaussian.addmolecule.step4.ParameterPage;
 import ch.unibas.fitting.web.web.HeaderPage;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.logging.Log;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;

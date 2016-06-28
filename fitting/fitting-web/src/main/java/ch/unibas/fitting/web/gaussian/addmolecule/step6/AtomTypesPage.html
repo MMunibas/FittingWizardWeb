@@ -8,11 +8,13 @@
 
         <h3>The following table shows all atom types</h3>
 
-        <table cellspacing="0" class="table">
-            <tr>
-                <th>Atom type</th>
-                <th>Charge</th>
-            </tr>
+        <table cellspacing="0" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Atom type</th>
+                    <th>Charge</th>
+                </tr>
+            </thead>
             <tr wicket:id="charges">
                 <td><span wicket:id="name"></span></td>
                 <td><input wicket:id="charge" type="number" /></td>
@@ -21,5 +23,9 @@
     </form>
 
     <div wicket:id="feedback"></div>
+
+    <script type="text/javascript">
+        jmolApplet0 = Jmol.getApplet("jmolApplet0", Info);
+    </script>
 
 </wicket:extend>
