@@ -54,8 +54,6 @@ public class AtomTypesPage extends HeaderPage {
         form.add(new AjaxButton("next") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                // TODO set charges, only allow submit, if charger are present
-
                 Optional<Molecule> mol = getMolecule();
                 if (mol.isPresent()) {
                     types.forEach(charge -> mol.get().setUserCharge(charge.getName(), charge.getUserCharge()));
@@ -84,6 +82,7 @@ public class AtomTypesPage extends HeaderPage {
 
                 NumberTextField<Double> ntf = new NumberTextField<Double>("charge", new PropertyModel<>(charge, "userCharge"));
                 ntf.add(RangeValidator.range(-99.0, 99.0));
+                ntf.setRequired(true);
                 item.add(ntf);
                 addAtomTypeHighlightingMouseEvent(item, charge);
             }
