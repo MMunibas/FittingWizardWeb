@@ -1,7 +1,6 @@
 package ch.unibas.fitting.web.welcome;
 
 import ch.unibas.fitting.web.web.HeaderPage;
-import com.google.inject.Inject;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.model.PropertyModel;
@@ -25,7 +24,7 @@ public class WelcomePage extends HeaderPage {
             @Override
             protected void onSubmit() {
                 if (selected != null) {
-                    Logger.info("Navigating to " + selected.getType().getName());
+                    LOGGER.debug("Navigating to " + selected.getType().getName());
                     setResponsePage(selected.getType());
                 }
             }

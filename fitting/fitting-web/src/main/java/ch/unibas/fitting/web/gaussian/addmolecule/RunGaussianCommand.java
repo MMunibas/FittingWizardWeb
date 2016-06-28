@@ -9,6 +9,7 @@ import ch.unibas.fitting.web.application.IAmACommand;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.application.TaskHandle;
 import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
+import ch.unibas.fitting.web.gaussian.addmolecule.step4.ParameterPage;
 import ch.unibas.fitting.web.gaussian.addmolecule.step6.AtomTypesPage;
 
 import javax.inject.Inject;
@@ -51,7 +52,7 @@ public class RunGaussianCommand implements IAmACommand {
         }, (runGaussianResult, pageParameters) -> {
             pageParameters.add("molecule_name", runGaussianResult.getMolecule().getId().getName());
             return AtomTypesPage.class;
-        });
+        }, ParameterPage.class);
         return th.getId();
     }
 }

@@ -3,6 +3,7 @@ package ch.unibas.fitting.web.application;
 import ch.unibas.fitting.shared.javaextensions.Function2;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
@@ -13,10 +14,13 @@ public interface IBackgroundTasks {
     <T> TaskHandle<T> execute(String username,
                               String title,
                               Callable<T> callable,
-                              Function2<T, PageParameters, Class> nextPageCallback);
+                              Function2<T, PageParameters, Class> nextPageCallback,
+                              Class cancelPage);
 
-    <T> TaskHandle getHandle(UUID taskId);
-    <T> TaskHandle<T> getHandleForUser(String username);
+    <T> Optional<TaskHandle> getHandle(UUID taskId);
+    <T> Optional<TaskHandle> getHandleForUser(String username);
 
-    void cancel(UUID taskId);
+    Optional<Class> cancel(UUID taskId);
+
+    void remove(TaskHandle th);
 }

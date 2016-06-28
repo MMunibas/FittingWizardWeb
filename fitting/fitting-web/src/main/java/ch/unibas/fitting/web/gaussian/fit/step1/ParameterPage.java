@@ -94,7 +94,7 @@ public class ParameterPage extends HeaderPage {
         chargesPage = new EnterChargesPanel(chargesDialog.getContentId(), chargesDialog, _atomsTypes);
         chargesDialog.setContent(chargesPage);
         chargesDialog.setCloseButtonCallback(target -> {
-            Logger.info("window closed");
+            LOGGER.info("window closed");
             return true;
         });
         chargesDialog.setWindowClosedCallback(target -> {
@@ -126,8 +126,8 @@ public class ParameterPage extends HeaderPage {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 target.add(fp);
 
-                Logger.debug("Showing user charges dialog");
-                Logger.debug("FitMtpInput Parameters: " +
+                LOGGER.debug("Showing user charges dialog");
+                LOGGER.debug("FitMtpInput Parameters: " +
                         "convergence: " + convergence.getObject() + ", " +
                         "rank: " + rank.getRank() + ", " +
                         "ignoreHydrogens: " + ignoreHydrogens.getObject());
@@ -185,7 +185,7 @@ public class ParameterPage extends HeaderPage {
     }
 
     private void startFit() {
-        Logger.debug("Starting fit");
+        LOGGER.debug("Starting fit");
 
         // TODO dont, if canceled
 

@@ -87,7 +87,7 @@ public class ShowResultsPage extends HeaderPage {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 super.onSubmit(target, form);
                 if (result.isPresent()) {
-                    Logger.debug("Calculating with temperature: " + temperature.getObject() +
+                    LOGGER.debug("Calculating with temperature: " + temperature.getObject() +
                             " molar mass: " + molarMass.getObject() +
                             " number of residues " + numberOfResidues.getObject());
 
@@ -97,7 +97,7 @@ public class ShowResultsPage extends HeaderPage {
                             temperature.getObject(),
                             result.get().getOutput());
 
-                    Logger.debug("Calculated values: " +
+                    LOGGER.debug("Calculated values: " +
                             " density: " + calculatedResult.getDensity() +
                             " deltaH: " + calculatedResult.getDeltaH() +
                             " deltaG: " + calculatedResult.getDeltaG());

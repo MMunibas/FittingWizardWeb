@@ -12,6 +12,7 @@ import ch.unibas.fitting.web.application.IAmACommand;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.application.TaskHandle;
 import ch.unibas.fitting.web.ljfit.CharmmRepository;
+import ch.unibas.fitting.web.ljfit.step1.InputAssistantPage;
 import ch.unibas.fitting.web.ljfit.step2.ShowGeneratedInputPage;
 import org.apache.log4j.Logger;
 
@@ -64,7 +65,8 @@ public class GenerateInputCommand implements IAmACommand {
 
                     return null;
                 },
-                (fit, pp) -> ShowGeneratedInputPage.class);
+                (fit, pp) -> ShowGeneratedInputPage.class,
+                InputAssistantPage.class);
 
         LOGGER.debug("GenerateInputCommand generateInput DONE.");
         return taskHandle.getId();

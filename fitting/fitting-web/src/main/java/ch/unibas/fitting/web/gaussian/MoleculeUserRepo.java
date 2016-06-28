@@ -20,13 +20,13 @@ public class MoleculeUserRepo {
         getRepoFor(username).save(molecule);
     }
 
-    public List<Molecule> loadAll(String username) {
+    public synchronized List<Molecule> loadAll(String username) {
         if (!repos.containsKey(username))
             return new ArrayList<>();
         return repos.get(username).loadAll();
     }
 
-    public void remove(String username, String moleculeName) {
+    public synchronized void remove(String username, String moleculeName) {
         MoleculeRepository rep = getRepoFor(username);
         if (rep == null)
             return;
@@ -34,13 +34,13 @@ public class MoleculeUserRepo {
         rep.remove(mol);
     }
 
-    public MoleculeRepository getRepoFor(String username) {
+    public synchronized MoleculeRepository getRepoFor(String username) {
         if (!repos.containsKey(username))
             repos.put(username, new MoleculeRepository());
         return repos.get(username);
     }
 
-    public Optional<Molecule> load(String username, String moleculeName) {
+    public synchronized Optional<Molecule> load(String username, String moleculeName) {
         return loadAll(username).stream()
                 .filter(molecule -> molecule.getId().getName().equals(moleculeName))
                 .findFirst();

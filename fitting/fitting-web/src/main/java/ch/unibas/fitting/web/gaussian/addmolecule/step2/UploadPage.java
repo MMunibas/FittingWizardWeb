@@ -44,11 +44,11 @@ public class UploadPage extends HeaderPage {
                 FileUpload upload = file.getFileUpload();
                 if (upload == null)
                 {
-                    Logger.debug("No file uploaded");
+                    LOGGER.debug("No file uploaded");
                 }
                 else
                 {
-                    Logger.debug("File-Name: " + upload.getClientFileName() + " File-Size: " +
+                    LOGGER.debug("File-Name: " + upload.getClientFileName() + " File-Size: " +
                             Bytes.bytes(upload.getSize()).toString());
                     File f =_userDir.getXyzDir(session().getUsername())
                             .getXyzFileFor(upload.getClientFileName());
@@ -82,7 +82,7 @@ public class UploadPage extends HeaderPage {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form)
             {
-                Logger.debug("done");
+                LOGGER.debug("done");
                 target.add(feedback);
             }
 

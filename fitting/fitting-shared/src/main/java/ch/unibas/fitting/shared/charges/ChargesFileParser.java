@@ -28,10 +28,10 @@ import org.apache.log4j.Logger;
  */
 public class ChargesFileParser {
 
-    private static final Logger logger = Logger.getLogger(ChargesFileParser.class);
+    private static final Logger LOGGER = Logger.getLogger(ChargesFileParser.class);
 
     public InitialQ00 parseInitalCharges(File chargesFile) {
-        logger.info("parseInitalCharges chargesFile=" + chargesFile.getAbsolutePath());
+        LOGGER.debug("parseInitalCharges chargesFile=" + chargesFile.getAbsolutePath());
         List<ChargeValue> parsedChargeLines = parseFile(chargesFile);
         List<ChargeValue> initalCharges = new ArrayList<>();
         for (ChargeValue line : parsedChargeLines) {

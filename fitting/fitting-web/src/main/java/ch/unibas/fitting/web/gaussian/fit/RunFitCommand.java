@@ -18,6 +18,8 @@ import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.application.TaskHandle;
 import ch.unibas.fitting.web.gaussian.FitUserRepo;
 import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
+import ch.unibas.fitting.web.gaussian.addmolecule.step1.OverviewPage;
+import ch.unibas.fitting.web.gaussian.fit.step1.ParameterPage;
 import ch.unibas.fitting.web.gaussian.fit.step2.FittingResultsPage;
 
 import javax.inject.Inject;
@@ -91,7 +93,7 @@ public class RunFitCommand implements IAmACommand {
                 (fit, pp) -> {
                     pp.add("fit_id", fit.getId());
                     return FittingResultsPage.class;
-                });
+                }, ParameterPage.class);
         return output.getId();
     }
 }

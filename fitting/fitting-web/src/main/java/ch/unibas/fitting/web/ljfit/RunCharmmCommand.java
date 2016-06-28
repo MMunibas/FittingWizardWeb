@@ -10,6 +10,7 @@ import ch.unibas.fitting.shared.workflows.charmm.CharmmInputContainer;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.application.TaskHandle;
 import ch.unibas.fitting.web.ljfit.CharmmRepository;
+import ch.unibas.fitting.web.ljfit.step2.ShowGeneratedInputPage;
 import ch.unibas.fitting.web.ljfit.step3.ShowOutputPage;
 
 import javax.inject.Inject;
@@ -32,7 +33,7 @@ public class RunCharmmCommand {
 
     public UUID run(String username) {
 
-        TaskHandle th = backgroundTasks.execute(username, "",
+        TaskHandle th = backgroundTasks.execute(username, "CHARMM",
                 () -> {
 
                     Optional<CharmmInputContainer> c = charmmRepository.getContainerFor(username);
@@ -42,7 +43,9 @@ public class RunCharmmCommand {
                         charmmRepository.saveResult(username, result);
                     }
                     return null;
-                }, (t, pageParameters) -> ShowOutputPage.class);
+                },
+                (t, pageParameters) -> ShowOutputPage.class,
+                ShowGeneratedInputPage.class);
 
         return th.getId();
     }

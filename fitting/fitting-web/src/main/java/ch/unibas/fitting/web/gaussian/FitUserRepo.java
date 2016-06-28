@@ -27,15 +27,15 @@ public class FitUserRepo {
         this.moleculeRepo = moleculeRepo;
     }
 
-    public void save(String username, Fit fit) {
+    public synchronized void save(String username, Fit fit) {
         getRepoFor(username).save(fit);
     }
 
-    public List<Fit> loadAll(String username) {
+    public synchronized List<Fit> loadAll(String username) {
         return getRepoFor(username).loadAll();
     }
 
-    public void remove(String username, int fitId) {
+    public synchronized void remove(String username, int fitId) {
         FitRepository rep = getRepoFor(username);
         if (rep == null)
             return;
@@ -44,7 +44,7 @@ public class FitUserRepo {
             rep.remove(fit.get());
     }
 
-    public int getNextFitId(String username) {
+    public synchronized int getNextFitId(String username) {
         return getRepoFor(username).getNextFitId();
     }
 
@@ -56,7 +56,7 @@ public class FitUserRepo {
         return repos.get(username);
     }
 
-    public Fit createFit(String username, double rmse, int rank, List<OutputAtomType> atomTypes, InitialQ00 initialQs) {
+    public synchronized Fit createFit(String username, double rmse, int rank, List<OutputAtomType> atomTypes, InitialQ00 initialQs) {
         return getRepoFor(username).createAndSaveFit(rmse, rank, atomTypes, initialQs);
     }
 }

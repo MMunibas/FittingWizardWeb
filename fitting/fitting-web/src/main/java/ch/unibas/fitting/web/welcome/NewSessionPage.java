@@ -1,6 +1,5 @@
 package ch.unibas.fitting.web.welcome;
 
-import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.web.web.WizardPage;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
@@ -10,7 +9,6 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 
-import javax.inject.Inject;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,7 +45,7 @@ public class NewSessionPage extends WizardPage {
                     session().setUsername(username);
                     setResponsePage(WelcomePage.class);
                 } else {
-                    Logger.debug("Form not valid");
+                    LOGGER.debug("Form not valid");
                 }
             }
         });

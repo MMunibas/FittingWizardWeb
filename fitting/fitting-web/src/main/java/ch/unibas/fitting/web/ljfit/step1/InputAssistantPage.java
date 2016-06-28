@@ -62,7 +62,7 @@ public class InputAssistantPage extends HeaderPage {
         });
 
         extraParametersDialog.setWindowClosedCallback(target -> {
-            Logger.debug("Extra Parameters " + extraParameterViewModel.getNcpusDeltaH() + " " +
+            LOGGER.debug("Extra Parameters " + extraParameterViewModel.getNcpusDeltaH() + " " +
                     extraParameterViewModel.getNcpusDeltaG() + " " +
                     extraParameterViewModel.getClusterName());
         });
@@ -83,7 +83,7 @@ public class InputAssistantPage extends HeaderPage {
         add(new AjaxLink("extraParameters") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                Logger.debug("opening extra parameters dialog");
+                LOGGER.debug("opening extra parameters dialog");
                 extraParametersDialog.show(target);
             }
         });
@@ -133,12 +133,12 @@ public class InputAssistantPage extends HeaderPage {
 
         if (upload == null)
         {
-            Logger.debug("No file uploaded");
+            LOGGER.debug("No file uploaded");
         }
         else
         {
 
-            Logger.debug("File-Name: " + upload.getClientFileName() + " File-Size: " +
+            LOGGER.debug("File-Name: " + upload.getClientFileName() + " File-Size: " +
                     Bytes.bytes(upload.getSize()).toString());
 
             f = new File(_userDir.getCharmmOutputDir(getCurrentUsername()).getInputDir(), upload.getClientFileName());

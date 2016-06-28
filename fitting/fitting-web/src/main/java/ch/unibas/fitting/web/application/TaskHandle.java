@@ -4,6 +4,7 @@ import ch.unibas.fitting.shared.javaextensions.Function2;
 import ch.unibas.fitting.web.web.WizardPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
 
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -18,6 +19,7 @@ public class TaskHandle<T> {
     private String title;
     private final Future<T> future;
     private Function2<T, PageParameters, Class> nextPageCallback;
+    private final Class cancelPage;
     private final UUID id;
     private final DateTime startTime;
     private String username;
@@ -25,11 +27,13 @@ public class TaskHandle<T> {
     public TaskHandle(String username,
                       String title,
                       Future<T> future,
-                      Function2<T, PageParameters, Class> nextPageCallback) {
+                      Function2<T, PageParameters, Class> nextPageCallback,
+                      Class cancelPage) {
         this.username = username;
         this.title = title;
         this.future = future;
         this.nextPageCallback = nextPageCallback;
+        this.cancelPage = cancelPage;
         this.id = UUID.randomUUID();
         this.startTime = DateTime.now();
     }
@@ -77,6 +81,10 @@ public class TaskHandle<T> {
         return title;
     }
 
+    public Class getCancelPage() {
+        return cancelPage;
+    }
+
     public Function2<T, PageParameters, Class> getNextPageCallback() {
         return nextPageCallback;
     }
@@ -90,5 +98,15 @@ public class TaskHandle<T> {
             return e;
         }
         return null;
+    }
+
+    public Duration getRunningTime() {
+        Duration diff = Duration.millis(DateTime.now().getMillis() - getStartTime().getMillis());
+        return diff;
+    }
+
+    public boolean hasError() {
+        Throwable e = getException();
+        return e != null && !(e instanceof InterruptedException);
     }
 }
