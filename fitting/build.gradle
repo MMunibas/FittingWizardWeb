@@ -1,10 +1,12 @@
 subprojects {
     group 'ch.unibas.fitting'
-    version '0.6-BETA'
+    version '0.7-BETA'
 
     apply plugin: 'java'
 
-    compileJava.options.encoding = 'UTF-8'
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
 
     sourceCompatibility = 1.8
 

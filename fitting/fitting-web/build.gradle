@@ -46,9 +46,7 @@ dependencies {
     compile group: 'org.apache.wicket', name: 'wicket-guice', version: '7.3.0'
     compile group: 'org.apache.wicket', name: 'wicket-extensions', version: '7.3.0'
 
-    // http://mvnrepository.com/artifact/de.agilecoders.wicket/wicket-bootstrap-core
     compile group: 'de.agilecoders.wicket', name: 'wicket-bootstrap-core', version: '0.10.6'
-// http://mvnrepository.com/artifact/de.agilecoders.wicket/wicket-bootstrap-extensions
     compile group: 'de.agilecoders.wicket', name: 'wicket-bootstrap-extensions', version: '0.10.6'
 
 
