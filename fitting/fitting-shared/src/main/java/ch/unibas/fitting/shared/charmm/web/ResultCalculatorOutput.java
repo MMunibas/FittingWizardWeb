@@ -8,7 +8,7 @@ public class ResultCalculatorOutput {
     private double deltaH;
     private double deltaG;
 
-    public ResultCalculatorOutput(Double density, Double deltaH, Double deltaG) {
+    public ResultCalculatorOutput(double density, double deltaH, double deltaG) {
         this.density = density;
         this.deltaH = deltaH;
         this.deltaG = deltaG;
