@@ -50,12 +50,11 @@ public class AtomsPage extends HeaderPage {
             {
                 AtomViewModel mol = item.getModelObject();
 
-                Label label = createClickableAtomLabel("name", mol.getName(), mol.getIndex());
-                item.add(label);
-
+                item.add(new Label("name", mol.getName()));
                 item.add(new Label("x", mol.getX()));
                 item.add(new Label("y", mol.getY()));
                 item.add(new Label("z", mol.getZ()));
+                addAtomHighlightingMouseEvent(item, mol);
             }
         });
 
@@ -69,6 +68,11 @@ public class AtomsPage extends HeaderPage {
                 setResponsePage(ParameterPage.class, pp);
             }
         });
+    }
+
+    private void addAtomHighlightingMouseEvent(Item<AtomViewModel> item, AtomViewModel mol) {
+        item.add(new AttributeAppender("onmouseover", new Model("Jmol.script(jmolApplet0,\"select atomIndex=" + mol.getIndex() + "\")"),";"));
+        item.add(new AttributeAppender("onmouseout", new Model("Jmol.script(jmolApplet0,\"select none\")"), ";"));
     }
 
     private IDataProvider<AtomViewModel> loadAtoms() {
@@ -89,13 +93,6 @@ public class AtomsPage extends HeaderPage {
                 return _atoms;
             }
         };
-    }
-
-    private Label createClickableAtomLabel(final String id, String atom_name, int atom_index) {
-        Label label = new Label(id, atom_name);
-        label.add(new AttributeAppender("onmouseover", new Model("Jmol.script(jmolApplet0,\"select atomIndex=" + atom_index + "\")"), ";"));
-        label.add(new AttributeAppender("onmouseout", new Model("Jmol.script(jmolApplet0,\"select none\")"), ";"));
-        return label;
     }
 
     @Override
