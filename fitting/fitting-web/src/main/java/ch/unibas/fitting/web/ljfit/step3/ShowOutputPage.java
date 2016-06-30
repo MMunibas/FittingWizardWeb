@@ -6,6 +6,8 @@ import ch.unibas.fitting.web.ljfit.step1.InputAssistantPage;
 import ch.unibas.fitting.web.ljfit.step2.ShowFileContentPanel;
 import ch.unibas.fitting.web.ljfit.step4.ShowResultsPage;
 import ch.unibas.fitting.web.web.HeaderPage;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
@@ -20,8 +22,8 @@ import java.util.Optional;
  */
 public class ShowOutputPage extends HeaderPage {
 
-    private IModel<String> gasPhaseError;
-    private IModel<String> liquidPhaseError;
+    private final String noErrorString = "No error while running CHARMM";
+    private final String errorString = "Error while running CHARMM";
 
     @Inject
     private CharmmRepository charmmRepository;
@@ -43,32 +45,48 @@ public class ShowOutputPage extends HeaderPage {
 
         });
 
-        gasPhaseError = Model.of("No error while running CHARMM");
-        add(new Label("gasPhaseError", gasPhaseError));
-
-        liquidPhaseError = Model.of("No error while running CHARMM");
-        add(new Label("liquidPhaseError", liquidPhaseError));
+        Label gasPhaseErrorLabel = new Label("gasPhaseError", "");
+        Label liquidPhaseErrorLabel = new Label("liquidPhaseError", "");
 
         Optional<CharmmResult> result = charmmRepository.getResultFor(getCurrentUsername());
 
         if (result.isPresent()) {
             CharmmResult r = result.get();
+            
+            if (r.hasGasPhaseError()) {
+                gasPhaseErrorLabel = createErrorLabel("gasPhaseError");
 
-            // TODO set to RED color
-            if (r.hasGasPhaseError())
-                gasPhaseError.setObject("ERROR !!!!!!!!");
+            } else {
+                gasPhaseErrorLabel = createNoErrorLabel("gasPhaseError");
+            }
 
             add(new ShowFileContentPanel("gasPhasePanel", r.getGasPhaseOutputFile()));
 
-            // TODO set to RED color
-            if (r.hasLiquidPhaseError())
-                liquidPhaseError.setObject("ERROR !!!!!!!!!");
+            if (r.hasLiquidPhaseError()) {
+                liquidPhaseErrorLabel = createErrorLabel("liquidPhaseError");
+            } else {
+                liquidPhaseErrorLabel = createNoErrorLabel("liquidPhaseError");
+            }
 
             add(new ShowFileContentPanel("liquidPhasePanel", r.getLiquidPhaseOutputFile()));
         } else {
-
             add(new Label("gasPhasePanel", "no result available"));
             add(new Label("liquidPhasePanel", "no result available"));
         }
+
+        add(gasPhaseErrorLabel);
+        add(liquidPhaseErrorLabel);
+    }
+
+    private Label createErrorLabel(String id) {
+        Label label = new Label(id, errorString);
+        label.add(new AttributeModifier("class", "alert alert-danger"));
+        return label;
+    }
+
+    private Label createNoErrorLabel(String id) {
+        Label label = new Label(id, noErrorString);
+        label.add(new AttributeModifier("class", "alert alert-success"));
+        return label;
     }
 }
