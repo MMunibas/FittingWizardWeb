@@ -8,16 +8,20 @@ import ch.unibas.fitting.web.ljfit.step1.InputAssistantPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.tabs.AjaxBootstrapTabbedPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import javax.inject.Inject;
+import javax.swing.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +74,7 @@ public class ShowGeneratedInputPage extends HeaderPage {
             c.getSolvMtp().listOutputFiles().forEach(file -> addTab("Solv & MTP", file));
         }
 
-        add(new AjaxTabbedPanel("tabs", tabs));
+        add(new AjaxBootstrapTabbedPanel<>("tabs", tabs));
     }
 
     private void addTab(String name, File file) {
