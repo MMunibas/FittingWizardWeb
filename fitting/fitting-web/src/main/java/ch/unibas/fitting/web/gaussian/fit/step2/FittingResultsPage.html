@@ -9,9 +9,9 @@
         <p>
             Fit: <select wicket:id="fitNumbers"></select>
         </p>
-        <!--<p>-->
-            <!--Molecules: <select wicket:id="molecules"></select>-->
-        <!--</p>-->
+        <p>
+            Molecules: <select wicket:id="molecules"></select>
+        </p>
     </form>
 
     <table cellspacing="0" class="table">
@@ -44,5 +44,11 @@
     <p>
         Root Mean Square Error (RMSE): <span wicket:id="rmse"></span> kcal/mol
     </p>
+
+    <div wicket:id="jsmol">
+        <script type="text/javascript">
+            jmolApplet0 = Jmol.getApplet("jmolApplet0", Info);
+        </script>
+    </div>
 
 </wicket:extend>

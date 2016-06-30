@@ -5,12 +5,15 @@ import ch.unibas.fitting.shared.presentation.gaussian.ColorCoder;
 import ch.unibas.fitting.web.gaussian.FitUserRepo;
 import ch.unibas.fitting.web.gaussian.fit.step1.FitViewModel;
 import ch.unibas.fitting.web.gaussian.fit.step1.ParameterPage;
+import ch.unibas.fitting.web.jsmol.JsMolHelper;
 import ch.unibas.fitting.web.web.HeaderPage;
 import com.google.inject.Inject;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -22,6 +25,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,8 +48,8 @@ public class FittingResultsPage extends HeaderPage {
 
     private IModel<Double> rmse;
 
-    private List<String> _molecules;
-    private IModel<String> selectedMolecule;
+    private List<String> _molecules = Arrays.asList("all", "co2", "ethanol");
+    private IModel<String> selectedMolecule = Model.of("all");
 
     public FittingResultsPage(PageParameters pp) {
 
@@ -61,7 +65,7 @@ public class FittingResultsPage extends HeaderPage {
             if (fitId == null)
                 fitId = fits.get(0).getId();
             initalizedFits(fits, fitId);
-            _fitResults = lodFitResults(fits, fitId);
+            _fitResults = loadFitResults(fits, fitId);
         }
 
         Form form = new Form("selections");
@@ -79,23 +83,23 @@ public class FittingResultsPage extends HeaderPage {
             @Override
             protected void onSelectionChanged(FitViewModel newSelection) {
                 List<Fit> fits = fitUserRepo.loadAll(getCurrentUsername());
-                _fitResults = lodFitResults(fits, newSelection.getIndex());
+                _fitResults = loadFitResults(fits, newSelection.getIndex());
             }
         });
 
-//        form.add(new DropDownChoice<FitViewModel>("molecules",
-//                selectedMolecule,
-//                _molecules) {
-//            @Override
-//            protected boolean wantOnSelectionChangedNotifications() {
-//                return true;
-//            }
-//
-//            @Override
-//            protected void onSelectionChanged(FitViewModel newSelection) {
-//                super.onSelectionChanged(newSelection);
-//            }
-//        });
+        form.add(new DropDownChoice<String>("molecules",
+                selectedMolecule,
+                _molecules) {
+            @Override
+            protected boolean wantOnSelectionChangedNotifications() {
+                return true;
+            }
+
+            @Override
+            protected void onSelectionChanged(String newSelection) {
+                super.onSelectionChanged(newSelection);
+            }
+        });
 
         add(new AjaxLink("back") {
             @Override
@@ -120,6 +124,19 @@ public class FittingResultsPage extends HeaderPage {
                 item.add(createColoredLabel("Q21S", mol));
                 item.add(createColoredLabel("Q22C", mol));
                 item.add(createColoredLabel("Q22S", mol));
+
+                // Todo: add atom indices to highlight atoms in jsmol
+                //JsMolHelper.addAtomsHighlightingMouseEvent(item, ...);
+            }
+        });
+
+        add(new WebMarkupContainer("jsmol") {
+            public boolean isVisible() {
+                LOGGER.debug("visibility " + selectedMolecule + " " + selectedMolecule.getObject().equals("all"));
+                if(selectedMolecule==null || selectedMolecule.getObject().equals("all")) {
+                    return false;
+                }
+                return true;
             }
         });
     }
@@ -146,7 +163,7 @@ public class FittingResultsPage extends HeaderPage {
         return label;
     }
 
-    private List<FitResultViewModel> lodFitResults(List<Fit> fits, int selection) {
+    private List<FitResultViewModel> loadFitResults(List<Fit> fits, int selection) {
 
         Optional<Fit> first = fits.stream()
                 .filter(fit -> fit.getId() == selection)
@@ -165,4 +182,14 @@ public class FittingResultsPage extends HeaderPage {
         }
         return list;
     }
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+
+        response.render(JavaScriptHeaderItem.forUrl("/javascript/jsmol/JSmol.min.js"));
+        String filename = JsMolHelper.getXyzUrl(getCurrentUsername(), selectedMolecule.getObject());
+        response.render(JavaScriptHeaderItem.forScript("var Info = {width: 400,height: 400,serverURL: \"http://chemapps.stolaf.edu/jmol/jsmol/php/jsmol.php\",use: \"HTML5\",j2sPath: \"/javascript/jsmol/j2s\",script: \"background black;load " + filename + "; selectionhalos on;select none;\",console: \"jmolApplet0_infodiv\"}", "jsmol_info"));
+    }
+
 }

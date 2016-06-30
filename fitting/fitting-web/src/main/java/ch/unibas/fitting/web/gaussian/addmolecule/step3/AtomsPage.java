@@ -4,6 +4,7 @@ import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.shared.xyz.XyzFile;
 import ch.unibas.fitting.shared.xyz.XyzFileParser;
 import ch.unibas.fitting.web.gaussian.addmolecule.step4.ParameterPage;
+import ch.unibas.fitting.web.jsmol.JsMolHelper;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.logging.Log;
@@ -56,7 +57,7 @@ public class AtomsPage extends HeaderPage {
                 item.add(new Label("x", mol.getX()));
                 item.add(new Label("y", mol.getY()));
                 item.add(new Label("z", mol.getZ()));
-                addAtomHighlightingMouseEvent(item, mol);
+                JsMolHelper.addAtomsHighlightingMouseEvent(item, mol.getIndex());
             }
         });
 
@@ -70,11 +71,6 @@ public class AtomsPage extends HeaderPage {
                 setResponsePage(ParameterPage.class, pp);
             }
         });
-    }
-
-    private void addAtomHighlightingMouseEvent(Item<AtomViewModel> item, AtomViewModel mol) {
-        item.add(new AttributeAppender("onmouseover", new Model("Jmol.script(jmolApplet0,\"select atomIndex=" + mol.getIndex() + "\")"),";"));
-        item.add(new AttributeAppender("onmouseout", new Model("Jmol.script(jmolApplet0,\"select none\")"), ";"));
     }
 
     private IDataProvider<AtomViewModel> loadAtoms() {
@@ -102,15 +98,7 @@ public class AtomsPage extends HeaderPage {
         super.renderHead(response);
 
         response.render(JavaScriptHeaderItem.forUrl("/javascript/jsmol/JSmol.min.js"));
-        String filename = getXyzUrl(moleculeName);
+        String filename = JsMolHelper.getXyzUrl(getCurrentUsername(), moleculeName);
         response.render(JavaScriptHeaderItem.forScript("var Info = {width: 400,height: 400,serverURL: \"http://chemapps.stolaf.edu/jmol/jsmol/php/jsmol.php\",use: \"HTML5\",j2sPath: \"/javascript/jsmol/j2s\",script: \"background black;load " + filename + "; selectionhalos on;select none;\",console: \"jmolApplet0_infodiv\"}", "jsmol_info"));
-    }
-
-    private String getXyzUrl(String moleculeName) {
-        return "/data/" +
-                getCurrentUsername() +
-                "/xyz_files/" +
-                moleculeName +
-                ".xyz";
     }
 }
