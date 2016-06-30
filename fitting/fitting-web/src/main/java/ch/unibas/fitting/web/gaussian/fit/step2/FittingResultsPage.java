@@ -1,8 +1,13 @@
 package ch.unibas.fitting.web.gaussian.fit.step2;
 
+import ch.unibas.fitting.shared.directories.FitOutputDir;
+import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.shared.fitting.Fit;
+import ch.unibas.fitting.shared.fitting.FitResult;
+import ch.unibas.fitting.shared.molecules.MoleculeId;
 import ch.unibas.fitting.shared.presentation.gaussian.ColorCoder;
 import ch.unibas.fitting.web.gaussian.FitUserRepo;
+import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
 import ch.unibas.fitting.web.gaussian.fit.step1.FitViewModel;
 import ch.unibas.fitting.web.gaussian.fit.step1.ParameterPage;
 import ch.unibas.fitting.web.jsmol.JsMolHelper;
@@ -18,14 +23,16 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.link.DownloadLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,20 +43,21 @@ import java.util.stream.Collectors;
 public class FittingResultsPage extends HeaderPage {
 
     @Inject
+    private IUserDirectory userDirectory;
+    @Inject
     private ColorCoder colorCoder;
     @Inject
     private FitUserRepo fitUserRepo;
+    @Inject
+    private MoleculeUserRepo moleculeUserRepo;
 
     private Integer fitId;
-    private IModel<FitViewModel> selectedFit;
-    private List<FitViewModel> _fits;
+    private IModel<FitViewModel> selectedFit = Model.of();
+    private IModel<ArrayList<FitViewModel>> fitVms = Model.of();
+    private IModel<ArrayList<FitResultViewModel>> fitResults = Model.of();
 
-    private List<FitResultViewModel> _fitResults;
-
-    private IModel<Double> rmse;
-
-    private List<String> _molecules = Arrays.asList("all", "co2", "ethanol");
-    private IModel<String> selectedMolecule = Model.of("all");
+    private IModel<String> selectedMolecule = Model.of();
+    private IModel<ArrayList<String>> molecules = Model.of();
 
     public FittingResultsPage(PageParameters pp) {
 
@@ -57,23 +65,16 @@ public class FittingResultsPage extends HeaderPage {
         if  (value != null)
             fitId = Integer.parseInt(value);
 
-        rmse = Model.of();
-        add(new Label("rmse", rmse));
-        List<Fit> fits = fitUserRepo.loadAll(getCurrentUsername());
+        add(new Label("rmse", new PropertyModel<>(selectedFit, "rmse")));
 
-        if (fits.size() > 0) {
-            if (fitId == null)
-                fitId = fits.get(0).getId();
-            initalizedFits(fits, fitId);
-            _fitResults = loadFitResults(fits, fitId);
-        }
+        initializeFits(fitId, null);
 
         Form form = new Form("selections");
         add(form);
 
         form.add(new DropDownChoice<FitViewModel>("fitNumbers",
                 selectedFit,
-                _fits,
+                fitVms,
                 new ChoiceRenderer<>("index", "index")) {
             @Override
             protected boolean wantOnSelectionChangedNotifications() {
@@ -82,14 +83,14 @@ public class FittingResultsPage extends HeaderPage {
 
             @Override
             protected void onSelectionChanged(FitViewModel newSelection) {
-                List<Fit> fits = fitUserRepo.loadAll(getCurrentUsername());
-                _fitResults = loadFitResults(fits, newSelection.getIndex());
+                if (newSelection != null)
+                    initializeFits(newSelection.getIndex(), "ALL");
             }
         });
 
         form.add(new DropDownChoice<String>("molecules",
                 selectedMolecule,
-                _molecules) {
+                molecules) {
             @Override
             protected boolean wantOnSelectionChangedNotifications() {
                 return true;
@@ -97,7 +98,8 @@ public class FittingResultsPage extends HeaderPage {
 
             @Override
             protected void onSelectionChanged(String newSelection) {
-                super.onSelectionChanged(newSelection);
+                if (newSelection != null)
+                    initializeFits(selectedFit.getObject().getIndex(), newSelection);
             }
         });
 
@@ -108,7 +110,17 @@ public class FittingResultsPage extends HeaderPage {
             }
         });
 
-        add(new ListView<FitResultViewModel>("fitResults", _fitResults) {
+        IModel fileModel = new AbstractReadOnlyModel(){
+            public Object getObject() {
+                FitOutputDir dir = userDirectory.getFitOutputDir(getCurrentUsername());
+                java.io.File f = dir.getFitOutputFileRef(selectedFit.getObject().getIndex());
+                return f;
+            }
+        };
+
+        add(new DownloadLink("export", fileModel));
+
+        add(new ListView<FitResultViewModel>("fitResults", fitResults) {
             @Override
             protected void populateItem(ListItem<FitResultViewModel> item) {
                 FitResultViewModel mol = item.getModelObject();
@@ -132,23 +144,76 @@ public class FittingResultsPage extends HeaderPage {
 
         add(new WebMarkupContainer("jsmol") {
             public boolean isVisible() {
-                LOGGER.debug("visibility " + selectedMolecule + " " + selectedMolecule.getObject().equals("all"));
-                if(selectedMolecule==null || selectedMolecule.getObject().equals("all")) {
-                    return false;
-                }
-                return true;
+                return selectedMolecule.getObject() != null &&
+                        !selectedMolecule.getObject().equalsIgnoreCase("all");
             }
         });
     }
 
-    private void initalizedFits(List<Fit> fits, int fitId) {
-        _fits = fits.stream()
-                .map(fit -> new FitViewModel(fit))
-                .collect(Collectors.toList());
-        Optional<FitViewModel> selected = _fits.stream().filter(fitViewModel -> fitViewModel.getIndex() == fitId)
+    private void initializeFits(final Integer fitId, String molecule) {
+        List<Fit> allFits = fitUserRepo.loadAll(getCurrentUsername());
+
+        if (allFits.isEmpty()) {
+            fitResults.setObject(new ArrayList<>());
+            fitVms.setObject(new ArrayList<>());
+            return;
+        }
+
+        Fit selectedFit = null;
+        if (fitId != null) {
+            Optional<Fit> first = allFits.stream()
+                    .filter(fit -> fit.getId() == fitId)
+                    .findFirst();
+            if (first.isPresent())
+                selectedFit = first.get();
+        }
+
+        if (selectedFit == null)
+            selectedFit = allFits.get(0);
+
+        this.fitVms.setObject(allFits.stream()
+                .map(FitViewModel::new)
+                .collect(Collectors.toCollection(ArrayList<FitViewModel>::new)));
+
+        Fit finalSelectedFit = selectedFit;
+        Optional<FitViewModel> selectedVm = this.fitVms.getObject()
+                .stream()
+                .filter(fitViewModel -> fitViewModel.getIndex() == finalSelectedFit.getId())
                 .findFirst();
-        if (selected.isPresent())
-            selectedFit = Model.of(selected.get());
+
+        this.selectedFit.setObject(selectedVm.get());
+
+        // init all molcules from the selected fit
+        ArrayList<String> names = finalSelectedFit.getAllMoleculeIds()
+                .stream()
+                .map(moleculeId -> moleculeId.getName())
+                .collect(Collectors.toCollection(ArrayList::new));
+        names.add(0, "ALL");
+        molecules.setObject(names);
+
+        if (molecule == null)
+            molecule = "ALL";
+        selectedMolecule.setObject(molecule);
+
+        List<FitResult> fitResults;
+        if (molecule.equalsIgnoreCase("ALL"))
+            fitResults = finalSelectedFit.getFitResults();
+        else {
+            String finalMolecule = molecule;
+            fitResults = finalSelectedFit.getFitResults()
+                    .stream()
+                    .filter(fitResult -> fitResult.getMoleculeIds().contains(new MoleculeId(finalMolecule)))
+                    .collect(Collectors.toCollection(ArrayList::new));
+        }
+
+        this.fitResults.setObject(fitResults
+                .stream()
+                .map(fr -> createFitResultVM(fr, finalSelectedFit))
+                .collect(Collectors.toCollection(ArrayList::new)));
+    }
+
+    private FitResultViewModel createFitResultVM(FitResult result, Fit fit) {
+        return new FitResultViewModel(colorCoder, fit, result, new int[0]);
     }
 
     private Label createColoredLabel(String chargeType, FitResultViewModel fitResult) {
@@ -163,26 +228,6 @@ public class FittingResultsPage extends HeaderPage {
         return label;
     }
 
-    private List<FitResultViewModel> loadFitResults(List<Fit> fits, int selection) {
-
-        Optional<Fit> first = fits.stream()
-                .filter(fit -> fit.getId() == selection)
-                .findFirst();
-
-        List<FitResultViewModel> list;
-        if  (first.isPresent()) {
-            Fit fit  = first.get();
-            rmse.setObject(fit.getRmse());
-            list = first.get().getFitResults()
-                    .stream()
-                    .map(fr -> new FitResultViewModel(colorCoder, fit, fr))
-                    .collect(Collectors.toList());
-        } else {
-            list = new ArrayList<>();
-        }
-        return list;
-    }
-
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
@@ -191,5 +236,4 @@ public class FittingResultsPage extends HeaderPage {
         String filename = JsMolHelper.getXyzUrl(getCurrentUsername(), selectedMolecule.getObject());
         response.render(JavaScriptHeaderItem.forScript("var Info = {width: 400,height: 400,serverURL: \"http://chemapps.stolaf.edu/jmol/jsmol/php/jsmol.php\",use: \"HTML5\",j2sPath: \"/javascript/jsmol/j2s\",script: \"background black;load " + filename + "; selectionhalos on;select none;\",console: \"jmolApplet0_infodiv\"}", "jsmol_info"));
     }
-
 }

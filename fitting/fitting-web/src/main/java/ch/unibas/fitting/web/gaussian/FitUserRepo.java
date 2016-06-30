@@ -18,14 +18,6 @@ import java.util.Optional;
 @Singleton
 public class FitUserRepo {
     private final HashMap<String, FitRepository> repos = new HashMap<>();
-    private MoleculeUserRepo moleculeRepo;
-
-    public FitUserRepo() {}
-
-    @Inject
-    public FitUserRepo(MoleculeUserRepo moleculeRepo) {
-        this.moleculeRepo = moleculeRepo;
-    }
 
     public synchronized void save(String username, Fit fit) {
         getRepoFor(username).save(fit);
@@ -50,13 +42,8 @@ public class FitUserRepo {
 
     public FitRepository getRepoFor(String username) {
         if (!repos.containsKey(username)) {
-            MoleculeRepository repo = moleculeRepo.getRepoFor(username);
-            repos.put(username, new FitRepository(repo));
+            repos.put(username, new FitRepository());
         }
         return repos.get(username);
-    }
-
-    public synchronized Fit createFit(String username, double rmse, int rank, List<OutputAtomType> atomTypes, InitialQ00 initialQs) {
-        return getRepoFor(username).createAndSaveFit(rmse, rank, atomTypes, initialQs);
     }
 }

@@ -23,6 +23,8 @@ public class EnterChargesPanel extends Panel {
 
     private List<ChargesViewModel> atomTypes;
 
+    private boolean wasSuccess;
+
     public EnterChargesPanel(String id, ModalWindow window, List<ChargesViewModel> atomTypes) {
         super(id);
         this.atomTypes = atomTypes;
@@ -52,6 +54,7 @@ public class EnterChargesPanel extends Panel {
             @Override
             public void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 target.add(fp);
+                wasSuccess = true;
                 window.close(target);
             }
 
@@ -65,10 +68,15 @@ public class EnterChargesPanel extends Panel {
         AjaxButton btn = new AjaxButton("cancel") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+                wasSuccess = false;
                 window.close(target);
             }
         };
         btn.setDefaultFormProcessing(false);
         form.add(btn);
+    }
+
+    public boolean isWasSuccess() {
+        return wasSuccess;
     }
 }

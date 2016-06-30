@@ -8,6 +8,7 @@
  */
 package ch.unibas.fittingwizard.gaussian.base;
 
+import ch.unibas.fitting.shared.charges.ChargesFileParser;
 import ch.unibas.fitting.shared.charmm.generate.CHARMM_InOut;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.charmmtools.gui.RunningCHARMM_DG;
@@ -28,7 +29,10 @@ import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.directories.CharmmOutputDir;
 import ch.unibas.fitting.shared.directories.FitOutputDir;
 import ch.unibas.fitting.shared.directories.XyzDirectory;
+import ch.unibas.fitting.shared.tools.FitOutputParser;
 import ch.unibas.fitting.shared.workflows.gaussian.MoleculeCreator;
+import ch.unibas.fitting.shared.workflows.gaussian.fit.CreateFit;
+import ch.unibas.fitting.shared.workflows.gaussian.fit.RunFitInput;
 import ch.unibas.fittingwizard.WhereToGo;
 import ch.unibas.fittingwizard.gaussian.Visualization;
 import ch.unibas.fitting.shared.directories.MoleculesDir;
@@ -42,13 +46,11 @@ import ch.unibas.fitting.shared.scripts.fittab.IFittabScript;
 import ch.unibas.fitting.shared.scripts.lra.ILRAScript;
 import ch.unibas.fitting.shared.scripts.multipolegauss.IMultipoleGaussScript;
 import ch.unibas.fitting.shared.scripts.vmd.IVmdDisplayScript;
-import ch.unibas.fitting.shared.tools.FitOutputParser;
 import ch.unibas.fitting.shared.tools.GaussianLogModifier;
 import ch.unibas.fitting.shared.tools.LPunParser;
 import ch.unibas.fitting.shared.tools.Notifications;
-import ch.unibas.fitting.shared.charges.ChargesFileParser;
 import ch.unibas.fitting.shared.workflows.ExportFitWorkflow;
-import ch.unibas.fitting.shared.workflows.RunFitWorkflow;
+import ch.unibas.fitting.shared.workflows.gaussian.fit.RunFitWorkflow;
 import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianWorkflow;
 import ch.unibas.fitting.shared.workflows.RunVmdDisplayWorkflow;
 import ch.unibas.fitting.shared.scripts.babel.RealBabelScript;
@@ -137,7 +139,7 @@ public class WizardPageFactory {
 
         // TODO use repo to persist data into state dir
         this.moleculeRepository = new MoleculeRepository();
-        this.fitRepository = new FitRepository(moleculeRepository);
+        this.fitRepository = new FitRepository();
 
         this.defaultValues = new DefaultValues(settings);
         // TODO fill from settings.
@@ -188,10 +190,10 @@ public class WizardPageFactory {
     }
 
     private void initializeWorkflows() {
-        runFitWorkflow = new RunFitWorkflow(fitMtpScript,
-                fitRepository,
-                new ChargesFileParser(),
-                new FitOutputParser());
+        runFitWorkflow = new RunFitWorkflow(
+                new CreateFit(new ChargesFileParser(), new FitOutputParser()),
+                fitMtpScript,
+                fitRepository);
 
         exportFitWorkflow = new ExportFitWorkflow(exportScript);
 
@@ -256,7 +258,7 @@ public class WizardPageFactory {
                         editAtomTypeChargesDialog,
                         dto);
             } else if (type == RunningFitPage.class) {
-                FitMtpInput dto = throwIfParameterIsNull(parameter);
+                RunFitInput dto = throwIfParameterIsNull(parameter);
                 page = new RunningFitPage(runFitWorkflow, dto);
             } else if (type == FitResultPage.class) {
                 page = new FitResultPage(fitOutputDir,

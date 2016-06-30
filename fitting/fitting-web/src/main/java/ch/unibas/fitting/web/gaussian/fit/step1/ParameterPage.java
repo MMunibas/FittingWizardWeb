@@ -5,6 +5,7 @@ import ch.unibas.fitting.shared.fitting.ChargeValue;
 import ch.unibas.fitting.shared.molecules.*;
 import ch.unibas.fitting.web.gaussian.FitUserRepo;
 import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
+import ch.unibas.fitting.web.gaussian.fit.RemoveFitCommand;
 import ch.unibas.fitting.web.gaussian.fit.RunFitCommand;
 import ch.unibas.fitting.web.web.progress.ProgressPage;
 import ch.unibas.fitting.web.gaussian.addmolecule.step6.ChargesViewModel;
@@ -71,6 +72,8 @@ public class ParameterPage extends HeaderPage {
     private FitUserRepo fitUserRepo;
     @Inject
     private RunFitCommand runFit;
+    @Inject
+    private RemoveFitCommand removeFitCommand;
 
     private EnterChargesPanel chargesPage;
     private List<ChargesViewModel> _atomsTypes;
@@ -98,7 +101,7 @@ public class ParameterPage extends HeaderPage {
             return true;
         });
         chargesDialog.setWindowClosedCallback(target -> {
-            if (allChargesFilled())
+            if (allChargesFilled() && chargesPage.isWasSuccess())
                 startFit();
         });
         add(chargesDialog);
@@ -169,7 +172,7 @@ public class ParameterPage extends HeaderPage {
 
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        fitUserRepo.remove(getCurrentUsername(), vm.getIndex());
+                        removeFitCommand.remove(getCurrentUsername(), vm.getIndex());
                         setResponsePage(ParameterPage.class);
                     }
                 });
@@ -186,8 +189,6 @@ public class ParameterPage extends HeaderPage {
 
     private void startFit() {
         LOGGER.debug("Starting fit");
-
-        // TODO dont, if canceled
 
         LinkedHashSet<ChargeValue> charges = _atomsTypes.stream()
                 .map(a -> new ChargeValue(new AtomTypeId(a.getName()), ChargeTypes.charge, a.getUserCharge()))

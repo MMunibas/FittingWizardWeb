@@ -9,16 +9,13 @@
 package ch.unibas.fitting.shared.scripts.fitmtp;
 
 import ch.unibas.fitting.shared.config.Settings;
-import ch.unibas.fitting.shared.directories.MoleculesDir;
 import ch.unibas.fitting.shared.molecules.Molecule;
-import ch.unibas.fitting.shared.molecules.MoleculeId;
 import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
 import ch.unibas.fitting.shared.scripts.base.ResourceUtils;
 import ch.unibas.fitting.shared.scripts.base.ScriptUtilities;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -55,7 +52,7 @@ public class RealFitMtpScript implements IFitMtpScript {
         args.add("-rank");
         args.add(String.valueOf(input.getRank()));
 
-        String relativeCharges = ResourceUtils.getRelativePath(input.getInitalChargesFile(), outputDir);
+        String relativeCharges = ResourceUtils.getRelativePath(input.getGeneratedCharges(), outputDir);
         args.add("-l");
         args.add(relativeCharges);
 

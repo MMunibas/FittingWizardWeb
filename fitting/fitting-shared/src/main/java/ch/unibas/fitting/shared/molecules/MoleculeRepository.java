@@ -11,6 +11,8 @@ package ch.unibas.fitting.shared.molecules;
 import ch.unibas.fitting.shared.base.MemoryRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -19,18 +21,6 @@ import org.apache.log4j.Logger;
  * Time: 15:13
  */
 public class MoleculeRepository extends MemoryRepository<Molecule> {
-
-    private static final Logger logger = Logger.getLogger(MoleculeRepository.class);
-
-    public List<Molecule> findMoleculesWithAtomType(AtomTypeId atomTypeId) {
-        ArrayList<Molecule> molecules = new ArrayList<>();
-        for (Molecule molecule : loadAll()) {
-            if (molecule.containsAtomType(atomTypeId)) {
-                molecules.add(molecule);
-            }
-        }
-        return molecules;
-    }
 
     public Molecule findById(MoleculeId id) {
         for (Molecule molecule : loadAll()) {

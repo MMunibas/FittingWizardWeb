@@ -8,8 +8,8 @@
  */
 package ch.unibas.fittingwizard.gaussian.fitting;
 
-import ch.unibas.fitting.shared.scripts.fitmtp.FitMtpInput;
-import ch.unibas.fitting.shared.workflows.RunFitWorkflow;
+import ch.unibas.fitting.shared.workflows.gaussian.fit.RunFitInput;
+import ch.unibas.fitting.shared.workflows.gaussian.fit.RunFitWorkflow;
 import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
 import ch.unibas.fittingwizard.gaussian.base.progress.Context;
 import ch.unibas.fittingwizard.gaussian.base.progress.ProgressPage;
@@ -21,27 +21,27 @@ import ch.unibas.fittingwizard.gaussian.base.progress.ProgressPage;
  */
 public class RunningFitPage extends ProgressPage {
     private final RunFitWorkflow runFitWorkflow;
-    private final FitMtpInput fitMtpInput;
+    private final RunFitInput runFitInput;
 
     public RunningFitPage(RunFitWorkflow runFitWorkflow,
-                          FitMtpInput fitMtpInput) {
+                          RunFitInput runFitInput) {
         super("Running calculation");
         this.runFitWorkflow = runFitWorkflow;
-        this.fitMtpInput = fitMtpInput;
+        this.runFitInput = runFitInput;
     }
 
     @Override
     protected boolean run(final Context ctx) throws Exception {
 
-        runFitWorkflow.execute(new WorkflowContext<FitMtpInput>() {
+        runFitWorkflow.execute(new WorkflowContext<RunFitInput>() {
             @Override
             public void setCurrentStatus(String status) {
                 ctx.setTitle(status);
             }
 
             @Override
-            public FitMtpInput getParameter() {
-                return fitMtpInput;
+            public RunFitInput getParameter() {
+                return runFitInput;
             }
         });
 
@@ -51,7 +51,7 @@ public class RunningFitPage extends ProgressPage {
 
     @Override
     protected void handleCanceled() {
-        navigateTo(FittingParameterPage.class, fitMtpInput);
+        navigateTo(FittingParameterPage.class, runFitInput);
     }
 
     @Override

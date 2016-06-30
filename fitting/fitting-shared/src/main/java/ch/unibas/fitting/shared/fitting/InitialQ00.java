@@ -10,6 +10,8 @@ package ch.unibas.fitting.shared.fitting;
 
 import ch.unibas.fitting.shared.charges.ChargeTypes;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
@@ -20,9 +22,9 @@ import java.util.List;
  */
 public class InitialQ00 {
 
-    private final List<ChargeValue> chargeValues;
+    private final LinkedHashSet<ChargeValue> chargeValues;
 
-    public InitialQ00(List<ChargeValue> chargeValues) {
+    public InitialQ00(LinkedHashSet<ChargeValue> chargeValues) {
         this.chargeValues = chargeValues;
         verifyCharges();
     }
@@ -35,7 +37,7 @@ public class InitialQ00 {
         }
     }
 
-    public List<ChargeValue> getChargeValues() {
+    public LinkedHashSet<ChargeValue> getChargeValues() {
         return chargeValues;
     }
 }

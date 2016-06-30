@@ -157,27 +157,21 @@ public class CHARMM_GUI_ShowResults extends CHARMM_GUI_base {
 
     @Override
     protected void fillButtonBar() {
-        backInputAssistant = ButtonFactory.createButtonBarButton("Back to ρ and ΔH input assistant", new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
-                myList.addAll(inp);
-                myList.addAll(out);
-                logger.info("Going back to CHARMM input assistant Step1.");
-                navigateTo(CHARMM_GUI_InputAssistant.class, myList);
-            }
+        backInputAssistant = ButtonFactory.createButtonBarButton("Back to ρ and ΔH input assistant", actionEvent -> {
+            List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
+            myList.addAll(inp);
+            myList.addAll(out);
+            logger.info("Going back to CHARMM input assistant Step1.");
+            navigateTo(CHARMM_GUI_InputAssistant.class, myList);
         });
         addButtonToButtonBar(backInputAssistant);
 
-        backShowOutput = ButtonFactory.createButtonBarButton("Back to ρ and ΔH output", new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
-                myList.addAll(inp);
-                myList.addAll(out);
-                logger.info("Going to Step2 Results.");
-                navigateTo(CHARMM_GUI_ShowOutput.class, myList);
-            }
+        backShowOutput = ButtonFactory.createButtonBarButton("Back to ρ and ΔH output", actionEvent -> {
+            List<CHARMM_InOut> myList = new ArrayList<CHARMM_InOut>();
+            myList.addAll(inp);
+            myList.addAll(out);
+            logger.info("Going to Step2 Results.");
+            navigateTo(CHARMM_GUI_ShowOutput.class, myList);
         });
         addButtonToButtonBar(backShowOutput);
 
@@ -192,21 +186,15 @@ public class CHARMM_GUI_ShowResults extends CHARMM_GUI_base {
 //            }
 //        });
 //        addButtonToButtonBar(backStep4);
-        saveToFile = ButtonFactory.createButtonBarButton("Save to file", new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                logger.info("Saving to *.csv file");
-                exportResultsCSV();
-            }
+        saveToFile = ButtonFactory.createButtonBarButton("Save to file", actionEvent -> {
+            logger.info("Saving to *.csv file");
+            exportResultsCSV();
         });
         addButtonToButtonBar(saveToFile);
 
-        gotofitgrid = ButtonFactory.createButtonBarButton("Run using different LJ parameters", new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                logger.info("Going to grid of parameters");
-                navigateTo(CHARMM_GUI_Fitgrid.class, null);
-            }
+        gotofitgrid = ButtonFactory.createButtonBarButton("Run using different LJ parameters", actionEvent -> {
+            logger.info("Going to grid of parameters");
+            navigateTo(CHARMM_GUI_Fitgrid.class, null);
         });
         addButtonToButtonBar(gotofitgrid);
 

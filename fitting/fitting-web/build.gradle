@@ -37,7 +37,7 @@ dependencies {
 
     // http://mvnrepository.com/artifact/com.google.inject/guice
     compile group: 'com.google.inject', name: 'guice', version: '4.0'
-
+    compile group: 'au.com.bytecode', name: 'opencsv', version: '2.4'
 
     compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.3.9.v20160517'
     compile group: 'org.eclipse.jetty', name: 'jetty-webapp', version: '9.3.9.v20160517'

@@ -9,33 +9,28 @@
 package ch.unibas.fittingwizard.gaussian.fitting;
 
 import ch.unibas.charmmtools.gui.step1.mdAssistant.CHARMM_GUI_InputAssistant;
+import ch.unibas.fitting.shared.charges.ChargeTypes;
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.directories.FitOutputDir;
 import ch.unibas.fitting.shared.directories.MoleculesDir;
-import ch.unibas.fitting.shared.presentation.gaussian.ColorCoder;
-import ch.unibas.fittingwizard.gaussian.Visualization;
 import ch.unibas.fitting.shared.fitting.Fit;
 import ch.unibas.fitting.shared.fitting.FitRepository;
 import ch.unibas.fitting.shared.fitting.FitResult;
 import ch.unibas.fitting.shared.molecules.AtomType;
 import ch.unibas.fitting.shared.molecules.Molecule;
 import ch.unibas.fitting.shared.molecules.MoleculeRepository;
+import ch.unibas.fitting.shared.presentation.gaussian.ColorCoder;
 import ch.unibas.fitting.shared.scripts.vmd.VmdDisplayInput;
-import ch.unibas.fitting.shared.charges.ChargeTypes;
+import ch.unibas.fitting.shared.scripts.vmd.VmdRunner;
 import ch.unibas.fitting.shared.workflows.ExportFitInput;
 import ch.unibas.fitting.shared.workflows.ExportFitWorkflow;
 import ch.unibas.fitting.shared.workflows.RunVmdDisplayWorkflow;
 import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
-import ch.unibas.fitting.shared.scripts.vmd.VmdRunner;
 import ch.unibas.fittingwizard.gaussian.MoleculeListPage;
+import ch.unibas.fittingwizard.gaussian.Visualization;
 import ch.unibas.fittingwizard.gaussian.base.ButtonFactory;
 import ch.unibas.fittingwizard.gaussian.base.WizardPageWithVisualization;
 import ch.unibas.fittingwizard.gaussian.base.dialog.OverlayDialog;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -43,22 +38,23 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.*;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Callback;
 import org.apache.commons.io.FilenameUtils;
+
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * User: mhelmer Date: 29.11.13 Time: 17:40
@@ -193,26 +189,18 @@ public class FitResultPage extends WizardPageWithVisualization {
     }
 
     private void setupTable() {
-        atomsTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<FitResultViewModel>() {
-            @Override
-            public void changed(ObservableValue<? extends FitResultViewModel> observableValue, FitResultViewModel fitResultViewModel, FitResultViewModel type) {
-                setSelectedAtomType(type);
-            }
+        atomsTable.getSelectionModel().selectedItemProperty().addListener((observableValue, fitResultViewModel, type) -> {
+            setSelectedAtomType(type);
         });
 
-        atomTypeColumn.setCellValueFactory(new PropertyValueFactory<FitResultViewModel, String>("atomTypeName"));
+        atomTypeColumn.setCellValueFactory(new PropertyValueFactory<>("atomTypeName"));
 
         for (final String chargeType : ChargeTypes.all) {
             TableColumn<FitResultViewModel, FitResultViewModel.FitValue> column = new TableColumn<>(chargeType);
 
             column.setPrefWidth(80);
             column.setMinWidth(80);
-            column.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<FitResultViewModel, FitResultViewModel.FitValue>, ObservableValue<FitResultViewModel.FitValue>>() {
-                @Override
-                public ObservableValue<FitResultViewModel.FitValue> call(TableColumn.CellDataFeatures<FitResultViewModel, FitResultViewModel.FitValue> data) {
-                    return data.getValue().getChargeValueFor(chargeType);
-                }
-            });
+            column.setCellValueFactory(data -> data.getValue().getChargeValueFor(chargeType));
             column.setCellFactory(new ColoredCellCallback());
 
             atomsTable.getColumns().add(column);
@@ -221,43 +209,31 @@ public class FitResultPage extends WizardPageWithVisualization {
 
     @Override
     protected void fillButtonBar() {
-        backButton = ButtonFactory.createButtonBarButton("Go back to molecule list", new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                logger.info("Going back to molecule list.");
-                navigateTo(MoleculeListPage.class);
-            }
+        backButton = ButtonFactory.createButtonBarButton("Go back to molecule list", actionEvent -> {
+            logger.info("Going back to molecule list.");
+            navigateTo(MoleculeListPage.class);
         });
         addButtonToButtonBar(backButton);
 
-        exportButton = ButtonFactory.createButtonBarButton("Export data", new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                logger.info("Exporting data.");
-                exportFitData();
-            }
+        exportButton = ButtonFactory.createButtonBarButton("Export data", actionEvent -> {
+            logger.info("Exporting data.");
+            exportFitData();
         });
 //        exportButton.setDisable(true);
         addButtonToButtonBar(exportButton);
 
         Settings settings = Settings.loadConfig();
         if (settings.getValue("mocks.enabled").equals("false") && VmdRunner.isAvailable() /*&& FieldcompRunner.isAvailable(settings.getScriptsDir())*/) {
-            vmdButton = ButtonFactory.createButtonBarButton("Show in VMD", new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    logger.info("Show in VMD.");
-                    showInVmd();
-                }
+            vmdButton = ButtonFactory.createButtonBarButton("Show in VMD", actionEvent -> {
+                logger.info("Show in VMD.");
+                showInVmd();
             });
             addButtonToButtonBar(vmdButton);
         }
 
-        anotherFit = ButtonFactory.createButtonBarButton("Do another fit", new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                logger.info("Going for another fit.");
-                navigateTo(FittingParameterPage.class);
-            }
+        anotherFit = ButtonFactory.createButtonBarButton("Do another fit", actionEvent -> {
+            logger.info("Going for another fit.");
+            navigateTo(FittingParameterPage.class);
         });
         addButtonToButtonBar(anotherFit);
 
@@ -296,14 +272,14 @@ public class FitResultPage extends WizardPageWithVisualization {
             flist_for_charmm = exportFitWorkflow.execute(WorkflowContext.withInput(
                     new ExportFitInput(fitOutputDir, moleculesDir, fit, destination)), true);
 
-            this.gotoCharmmFit.setDisable(false);
+            //this.gotoCharmmFit.setDisable(false);
 
-//            Desktop desktop = Desktop.getDesktop();
-//            try {
-//                desktop.open(destination);
-//            } catch (IOException e) {
-//                logger.error("Could not open export directory.");
-//            }
+            Desktop desktop = Desktop.getDesktop();
+            try {
+                desktop.open(destination);
+            } catch (IOException e) {
+                logger.error("Could not open export directory.");
+            }
         }
     }
 

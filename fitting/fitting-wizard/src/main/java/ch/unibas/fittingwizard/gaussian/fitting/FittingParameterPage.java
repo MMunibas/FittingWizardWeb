@@ -12,9 +12,11 @@ import ch.unibas.fitting.shared.directories.FitOutputDir;
 import ch.unibas.fitting.shared.directories.MoleculesDir;
 import ch.unibas.fitting.shared.fitting.ChargeValue;
 import ch.unibas.fitting.shared.fitting.FitRepository;
+import ch.unibas.fitting.shared.fitting.InitialQ00;
 import ch.unibas.fitting.shared.molecules.*;
 import ch.unibas.fitting.shared.scripts.fitmtp.FitMtpInput;
 import ch.unibas.fitting.shared.charges.ChargesFileGenerator;
+import ch.unibas.fitting.shared.workflows.gaussian.fit.RunFitInput;
 import ch.unibas.fittingwizard.gaussian.MoleculeListPage;
 import ch.unibas.fittingwizard.gaussian.base.ButtonFactory;
 import ch.unibas.fittingwizard.gaussian.base.DefaultValues;
@@ -112,7 +114,7 @@ public class FittingParameterPage extends WizardPage {
             logger.info("Starting fit.");
 
             MoleculeQueryService queryService = moleculeRepository.getQueryServiceForAllMolecules();
-            File initalCharges = getInitalCharges(queryService);
+            InitialQ00 initalCharges = getInitalCharges(queryService);
             if (initalCharges != null) {
                 navigateTo(RunningFitPage.class, createFittingParameter(initalCharges, queryService.getMolecules()));
             }
@@ -120,7 +122,7 @@ public class FittingParameterPage extends WizardPage {
         addButtonToButtonBar(startButton);
     }
 
-    private File getInitalCharges(MoleculeQueryService queryService) {
+    private InitialQ00 getInitalCharges(MoleculeQueryService queryService) {
         LinkedHashSet<ChargeValue> userCharges = new LinkedHashSet<>();
         LinkedHashSet<AtomTypeId> atomTypesRequiringUserInput = new LinkedHashSet<>();
 
@@ -151,8 +153,7 @@ public class FittingParameterPage extends WizardPage {
             }
         }
 
-        File initalChargesFile = generateInitialChargesFileFromUserCharges(userCharges);
-        return initalChargesFile;
+        return new InitialQ00(userCharges);
     }
 
     private LinkedHashSet<AtomTypeId> getAllAtomTypeIds(List<Molecule> molecules) {
@@ -163,13 +164,7 @@ public class FittingParameterPage extends WizardPage {
         return allIds;
     }
 
-    private File generateInitialChargesFileFromUserCharges(LinkedHashSet<ChargeValue> chargeValues) {
 
-        File generatedFile = new ChargesFileGenerator().generate(fitOutputDir.getFitMtpOutputDir(),
-                "generated_charges.txt",
-                chargeValues);
-        return generatedFile;
-    }
 
     private File generateInitalValuesFromScript() {
         // TODO generate inital values by script
@@ -185,21 +180,27 @@ public class FittingParameterPage extends WizardPage {
     public void initializeData() {
     }
 
-    private FitMtpInput createFittingParameter(File initalChargesFile, List<Molecule> moleculesForFit) {
+    private RunFitInput createFittingParameter(InitialQ00 initalChargesFile, List<Molecule> moleculesForFit) {
         try {
             double convergence = Double.parseDouble(txtConvergence.getText());
             int rank = cmbRank.getSelectionModel().getSelectedItem().getRankValue();
             boolean ignoreHydrongen = chkIgnoreHydrogen.isSelected();
             int id = fitRepository.getNextFitId();
 
-            return new FitMtpInput(moleculesDir,
+            File generatedFile = new ChargesFileGenerator().generate(fitOutputDir.getFitMtpOutputDir(),
+                    "fit_" + id +"_generated_charges.txt",
+                    initalChargesFile.getChargeValues());
+
+            FitMtpInput input = new FitMtpInput(moleculesDir,
                     fitOutputDir,
                     id,
                     convergence,
                     rank,
                     ignoreHydrongen,
-                    initalChargesFile,
+                    generatedFile,
                     moleculesForFit);
+
+            return  new RunFitInput(initalChargesFile, input);
         } catch (Exception e) {
             OverlayDialog.showError("Invalid parameters", "The provided parameters are invalid.");
             throw e;

@@ -36,6 +36,15 @@ public class MoleculeQueryService {
         return findMoleculeWith(Molecule.UserChargesState.NoChargesDefined);
     }
 
+    public List<MoleculeId> findMoleculeIdsWithAtomType(AtomTypeId atomTypeId) {
+        ArrayList<MoleculeId> ids = molecules
+                .stream()
+                .filter(molecule -> molecule.containsAtomType(atomTypeId))
+                .map(Molecule::getId)
+                .collect(Collectors.toCollection(ArrayList::new));
+        return ids;
+    }
+
     private List<Molecule> findMoleculeWith(Molecule.UserChargesState userChargesState) {
         ArrayList<Molecule> moleculeWithMissingUserCharges = molecules
                 .stream()

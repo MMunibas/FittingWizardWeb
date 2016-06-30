@@ -30,9 +30,9 @@ public abstract class MemoryRepository<T> {
         return data;
     }
 
-    public void save(T molecule) {
-        if (!data.contains(molecule))
-            data.add(molecule);
+    public void save(T data) {
+        if (!this.data.contains(data))
+            this.data.add(data);
     }
 
     public void remove(T molecule) {

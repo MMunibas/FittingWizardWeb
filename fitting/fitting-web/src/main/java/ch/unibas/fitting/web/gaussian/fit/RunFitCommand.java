@@ -1,24 +1,21 @@
 package ch.unibas.fitting.web.gaussian.fit;
 
 import ch.unibas.fitting.shared.charges.ChargesFileGenerator;
-import ch.unibas.fitting.shared.charges.ChargesFileParser;
 import ch.unibas.fitting.shared.directories.FitOutputDir;
 import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.shared.fitting.ChargeValue;
 import ch.unibas.fitting.shared.fitting.Fit;
 import ch.unibas.fitting.shared.fitting.InitialQ00;
-import ch.unibas.fitting.shared.fitting.OutputAtomType;
 import ch.unibas.fitting.shared.molecules.Molecule;
 import ch.unibas.fitting.shared.scripts.fitmtp.FitMtpInput;
 import ch.unibas.fitting.shared.scripts.fitmtp.FitMtpOutput;
 import ch.unibas.fitting.shared.scripts.fitmtp.IFitMtpScript;
-import ch.unibas.fitting.shared.tools.FitOutputParser;
+import ch.unibas.fitting.shared.workflows.gaussian.fit.CreateFit;
 import ch.unibas.fitting.web.application.IAmACommand;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.application.TaskHandle;
 import ch.unibas.fitting.web.gaussian.FitUserRepo;
 import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
-import ch.unibas.fitting.web.gaussian.addmolecule.step1.OverviewPage;
 import ch.unibas.fitting.web.gaussian.fit.step1.ParameterPage;
 import ch.unibas.fitting.web.gaussian.fit.step2.FittingResultsPage;
 
@@ -43,11 +40,10 @@ public class RunFitCommand implements IAmACommand {
     @Inject
     private FitUserRepo fitRepo;
     @Inject
-    private MoleculeUserRepo userRepo;
+    private MoleculeUserRepo moleculeUserRepo;
+
     @Inject
-    private ChargesFileParser chargesFileParser;
-    @Inject
-    private FitOutputParser fitOutputParser;
+    private CreateFit createFit;
 
     public UUID runFit(String username,
                        double convergence,
@@ -55,38 +51,41 @@ public class RunFitCommand implements IAmACommand {
                        boolean ignoreHydrogens,
                        LinkedHashSet<ChargeValue> chargeValues) {
 
-        FitOutputDir fitOutputDir = userDirectory.getFitOutputDir(username);
-        // generate charges file
-        File chargesFile = chargesFileGenerator.generate(fitOutputDir.getDirectory(),
-                "generated_charges.txt",
-                chargeValues);
-
-        List<Molecule> molesForFit = userRepo.loadAll(username);
-
-        FitMtpInput input = new FitMtpInput(
-                userDirectory.getMoleculesDir(username),
-                fitOutputDir,
-                fitRepo.getNextFitId(username),
-                convergence,
-                rank,
-                ignoreHydrogens,
-                chargesFile,
-                molesForFit);
-
         TaskHandle output = tasks.execute(username,
                 "MTP Fit",
                 () -> {
+
+                    int id = fitRepo.getNextFitId(username);
+
+                    FitOutputDir fitOutputDir = userDirectory.getFitOutputDir(username);
+                    fitOutputDir.removeFitResult(id);
+
+                    File generatedCharges = chargesFileGenerator.generate(fitOutputDir.getFitMtpOutputDir(),
+                            "fit_" + id + "_generated_charges.txt",
+                            chargeValues);
+
+                    List<Molecule> molesForFit = moleculeUserRepo.loadAll(username);
+
+                    FitMtpInput input = new FitMtpInput(
+                            userDirectory.getMoleculesDir(username),
+                            fitOutputDir,
+                            id,
+                            convergence,
+                            rank,
+                            ignoreHydrogens,
+                            generatedCharges,
+                            molesForFit);
+
                     FitMtpOutput result = fitScript.execute(input);
 
-                    double rmse = fitOutputParser.parseRmseValue(result.getOutputFile());
+                    Fit fit = createFit.createFit(id,
+                            rank,
+                            result.getResultsFile(),
+                            result.getOutputFile(),
+                            new InitialQ00(chargeValues),
+                            molesForFit);
 
-                    List<OutputAtomType> outputAtomTypes = chargesFileParser.parseOutputFile(result.getResultsFile());
-                    File intialQsFile = input.getInitalChargesFile();
-
-                    InitialQ00 initialQs = new ChargesFileParser().parseInitalCharges(intialQsFile);
-                    // todo verify initial charges vs generated output
-
-                    Fit fit = fitRepo.createFit(username, rmse, input.getRank(), outputAtomTypes, initialQs);
+                    fitRepo.save(username, fit);
 
                     return fit;
                 },

@@ -25,7 +25,9 @@ import org.apache.log4j.Logger;
 public class ChargesFileGenerator {
     private static final Logger logger = Logger.getLogger(ChargesFileGenerator.class);
 
-    public File generate(File destination, String chargesFileName, LinkedHashSet<ChargeValue> chargeValues) {
+    public File generate(File destination,
+                         String chargesFileName,
+                         LinkedHashSet<ChargeValue> chargeValues) {
         destination.mkdir();
         if (destination == null || !destination.isDirectory()) {
             throw new IllegalArgumentException("Invalid destination directory.");

@@ -14,10 +14,9 @@ import ch.unibas.fitting.shared.fitting.OutputAtomType;
 import ch.unibas.fitting.shared.molecules.AtomTypeId;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -33,14 +32,11 @@ public class ChargesFileParser {
     public InitialQ00 parseInitalCharges(File chargesFile) {
         LOGGER.debug("parseInitalCharges chargesFile=" + chargesFile.getAbsolutePath());
         List<ChargeValue> parsedChargeLines = parseFile(chargesFile);
-        List<ChargeValue> initalCharges = new ArrayList<>();
-        for (ChargeValue line : parsedChargeLines) {
-            if (line.getType().equalsIgnoreCase(ChargeTypes.charge)) {
-                initalCharges.add(line);
-            }
-        }
-        InitialQ00 initialQ00 = new InitialQ00(initalCharges);
-        return initialQ00;
+        LinkedHashSet<ChargeValue> initalCharges =
+                parsedChargeLines.stream()
+                        .filter(line -> line.getType().equalsIgnoreCase(ChargeTypes.charge))
+                        .collect(Collectors.toCollection(LinkedHashSet::new));
+        return new InitialQ00(initalCharges);
     }
 
     public List<OutputAtomType> parseOutputFile(File outputFile) {

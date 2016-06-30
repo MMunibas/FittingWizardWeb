@@ -50,14 +50,26 @@ public class AtomTypesPage extends HeaderPage {
         Form form = new Form("form");
         add(form);
 
-        form.add(new AjaxButton("next") {
+        form.add(new AjaxButton("save") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 Optional<Molecule> mol = getMolecule();
-                if (mol.isPresent()) {
+                if (mol.isPresent() && isValid()) {
                     types.forEach(charge -> mol.get().setUserCharge(charge.getName(), charge.getUserCharge()));
                     moleculeUserRepo.save(getCurrentUsername(), mol.get());
+                    setResponsePage(OverviewPage.class);
                 }
+            }
+
+            @Override
+            protected void onError(AjaxRequestTarget target, Form<?> form) {
+                target.add(fp);
+            }
+        });
+
+        form.add(new AjaxButton("overview") {
+            @Override
+            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 setResponsePage(OverviewPage.class);
             }
 
@@ -80,8 +92,7 @@ public class AtomTypesPage extends HeaderPage {
                 item.add(new Label("name", charge.getName()));
 
                 NumberTextField<Double> ntf = new NumberTextField<Double>("charge", new PropertyModel<>(charge, "userCharge"));
-                ntf.add(RangeValidator.range(-99.0, 99.0));
-                ntf.setRequired(true);
+                ntf.setStep(NumberTextField.ANY);
                 item.add(ntf);
                 JsMolHelper.addAtomsHighlightingMouseEvent(item, charge.getIndices());
             }

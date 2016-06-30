@@ -12,6 +12,7 @@ import ch.unibas.fitting.shared.charges.ChargeTypes;
 import ch.unibas.fitting.shared.molecules.MoleculeId;
 import org.joda.time.DateTime;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -24,13 +25,22 @@ public class Fit {
     private double rmse;
     private ArrayList<FitResult> fitResults;
     private int rank;
+    private final File resultsFile;
+    private final File outputFile;
     private DateTime created;
 
-    public Fit(int id, double rmse, int rank, ArrayList<FitResult> fitResults) {
+    public Fit(int id,
+               double rmse,
+               int rank,
+               ArrayList<FitResult> fitResults,
+               File resultsFile,
+               File outputFile) {
         this.id = id;
         this.rmse = rmse;
         this.fitResults = fitResults;
         this.rank = rank;
+        this.resultsFile = resultsFile;
+        this.outputFile = outputFile;
         this.created = DateTime.now();
     }
 
@@ -44,6 +54,14 @@ public class Fit {
     
     public int getRank() {
     	return rank;
+    }
+
+    public File getOutputFile() {
+        return outputFile;
+    }
+
+    public File getResultsFile() {
+        return resultsFile;
     }
 
     public LinkedHashSet<MoleculeId> getAllMoleculeIds() {

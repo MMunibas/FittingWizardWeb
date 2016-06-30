@@ -3,7 +3,11 @@ package ch.unibas.fitting.web.ljfit.step4;
 import ch.unibas.fitting.shared.charmm.web.CharmmResult;
 import ch.unibas.fitting.shared.charmm.web.CharmmResultCalculator;
 import ch.unibas.fitting.shared.charmm.web.ResultCalculatorOutput;
+import ch.unibas.fitting.shared.directories.CharmmOutputDir;
+import ch.unibas.fitting.shared.directories.FitOutputDir;
+import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.web.ljfit.CharmmRepository;
+import ch.unibas.fitting.web.ljfit.CreateCsvExport;
 import ch.unibas.fitting.web.ljfit.step1.InputAssistantPage;
 import ch.unibas.fitting.web.ljfit.step3.ShowOutputPage;
 import ch.unibas.fitting.web.web.HeaderPage;
@@ -13,12 +17,15 @@ import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.NumberTextField;
+import org.apache.wicket.markup.html.link.DownloadLink;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import javax.inject.Inject;
+import java.io.File;
 import java.util.Optional;
 
 /**
@@ -29,12 +36,16 @@ public class ShowResultsPage extends HeaderPage {
     private IModel<Double> temperature = Model.of(0.0);
     private IModel<Double> molarMass = Model.of(0.0);
     private IModel<Integer> numberOfResidues = Model.of(0);
-    private String density = "";
-    private String deltaH = "";
-    private String deltaG = "";
+    private Double density;
+    private Double deltaH;
+    private Double deltaG;
 
     @Inject
     private CharmmRepository charmmRepository;
+    @Inject
+    private CreateCsvExport createCsvExport;
+    @Inject
+    private IUserDirectory userDirectory;
 
     public ShowResultsPage() {
         Optional<CharmmResult> result = charmmRepository.getResultFor(getCurrentUsername());
@@ -45,12 +56,37 @@ public class ShowResultsPage extends HeaderPage {
         fp.setOutputMarkupPlaceholderTag(true);
         add(fp);
 
-        add(new AjaxLink("download") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                // TODO: generate download link
+        IModel fileModel = new AbstractReadOnlyModel(){
+            public Object getObject() {
+
+                Optional<CharmmResult> result = charmmRepository.getResultFor(getCurrentUsername());
+
+                CharmmOutputDir dir = userDirectory.getCharmmOutputDir(getCurrentUsername());
+                File f = createCsvExport.create(dir.getDefaultExportDir(), new CreateCsvExport.Input(
+                        result.get().getOutput().getEgas(),
+                        result.get().getOutput().getEliq(),
+                        temperature.getObject(),
+                        molarMass.getObject(),
+                        density,
+                        deltaH,
+                        deltaG
+                ));
+
+                return f;
             }
-        });
+        };
+
+        final DownloadLink link = new DownloadLink("download", fileModel) {
+            @Override
+            public boolean isVisible() {
+                return density != null &&
+                        deltaG != null &&
+                        deltaH != null;
+            }
+        };
+        link.setOutputMarkupId(true);
+        link.setOutputMarkupPlaceholderTag(true);
+        add(link);
 
         add(new AjaxLink("backToInput") {
             @Override
@@ -102,14 +138,15 @@ public class ShowResultsPage extends HeaderPage {
                             " deltaH: " + calculatedResult.getDeltaH() +
                             " deltaG: " + calculatedResult.getDeltaG());
 
-                    density = Double.toString(calculatedResult.getDensity());
-                    deltaH = Double.toString(calculatedResult.getDeltaH());
-                    deltaG = Double.toString(calculatedResult.getDeltaG());
+                    density = calculatedResult.getDensity();
+                    deltaH = calculatedResult.getDeltaH();
+                    deltaG = calculatedResult.getDeltaG();
 
                     target.add(densityLabel);
                     target.add(deltaHLabel);
                     target.add(deltaGLabel);
                     target.add(fp);
+                    target.add(link);
                 }
             }
 

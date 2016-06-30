@@ -84,13 +84,13 @@ public class DataGenerator {
     public static Fit createEmptyFit() {
         ArrayList<FitResult> atoms = new ArrayList<>();
         ArrayList<Molecule> molecules = new ArrayList<>();
-        return new Fit(0, 0.2840, 0, atoms);
+        return new Fit(0, 0.2840, 0, atoms, new File(""), new File(""));
     }
 
     public static Fit createCo2Fit(int id) {
         ArrayList<FitResult> atoms = new ArrayList<>();
         atoms.add(createC2O1O1AtomType());
         atoms.add(createO1C2O1AtomType());
-        return new Fit(id, 0.2840, 2, atoms);
+        return new Fit(id, 0.2840, 2, atoms, new File(""), new File(""));
     }
 }
