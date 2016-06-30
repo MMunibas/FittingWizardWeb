@@ -26,9 +26,9 @@ import java.util.Optional;
  */
 public class ShowResultsPage extends HeaderPage {
 
-    private IModel<Double> temperature = Model.of();
-    private IModel<Double> molarMass = Model.of();
-    private IModel<Integer> numberOfResidues = Model.of();
+    private IModel<Double> temperature = Model.of(0.0);
+    private IModel<Double> molarMass = Model.of(0.0);
+    private IModel<Integer> numberOfResidues = Model.of(0);
     private String density = "";
     private String deltaH = "";
     private String deltaG = "";
@@ -127,6 +127,7 @@ public class ShowResultsPage extends HeaderPage {
         NumberTextField numberTextField = new NumberTextField(id, model);
         numberTextField.setRequired(true);
         numberTextField.setStep(NumberTextField.ANY);
+        numberTextField.setMinimum(Double.MIN_VALUE);
         return numberTextField;
     }
 
@@ -138,13 +139,8 @@ public class ShowResultsPage extends HeaderPage {
 
     private void setInitialValues(Optional<CharmmResult> result) {
         if (result.isPresent()) {
-            temperature = Model.of(result.get().getOutput().getTemp());
-            molarMass = Model.of(0.0);
-            numberOfResidues = Model.of(result.get().getOutput().getNres());
-        } else {
-            temperature = Model.of();
-            molarMass = Model.of();
-            numberOfResidues = Model.of();
+            temperature.setObject(result.get().getOutput().getTemp());
+            numberOfResidues.setObject(result.get().getOutput().getNres());
         }
     }
 }
