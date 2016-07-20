@@ -74,6 +74,8 @@ public class WebApp extends WebApplication {
 
     @Override
     public RuntimeConfigurationType getConfigurationType() {
-        return super.getConfigurationType();
+        if (settings.isDebuggingMode())
+            return RuntimeConfigurationType.DEVELOPMENT;
+        return RuntimeConfigurationType.DEPLOYMENT;
     }
 }
