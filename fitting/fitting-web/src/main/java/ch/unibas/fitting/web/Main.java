@@ -1,7 +1,7 @@
 package ch.unibas.fitting.web;
 
 import ch.unibas.fitting.shared.config.Settings;
-import ch.unibas.fitting.shared.javaextensions.Version;
+import ch.unibas.fitting.web.application.Version;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.apache.log4j.*;

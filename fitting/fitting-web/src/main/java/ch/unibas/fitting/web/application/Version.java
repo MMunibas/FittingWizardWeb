@@ -1,4 +1,4 @@
-package ch.unibas.fitting.shared.javaextensions;
+package ch.unibas.fitting.web.application;
 
 import java.io.IOException;
 import java.net.URL;

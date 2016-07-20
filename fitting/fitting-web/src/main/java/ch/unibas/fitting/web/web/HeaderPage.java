@@ -1,6 +1,6 @@
 package ch.unibas.fitting.web.web;
 
-import ch.unibas.fitting.shared.javaextensions.Version;
+import ch.unibas.fitting.web.application.Version;
 import ch.unibas.fitting.web.WebApp;
 import ch.unibas.fitting.web.welcome.WelcomePage;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.ImmutableNavbarComponent;
