@@ -5,6 +5,9 @@ import ch.unibas.fitting.web.web.UserSession;
 import ch.unibas.fitting.web.welcome.WelcomePage;
 import com.google.inject.Injector;
 import de.agilecoders.wicket.core.Bootstrap;
+import de.agilecoders.wicket.core.settings.*;
+import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchTheme;
+import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchThemeProvider;
 import org.apache.log4j.Logger;
 import org.apache.wicket.Page;
 import org.apache.wicket.RuntimeConfigurationType;
@@ -13,8 +16,10 @@ import org.apache.wicket.guice.GuiceComponentInjector;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.request.resource.ResourceReference;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -43,7 +48,9 @@ public class WebApp extends WebApplication {
     @Override
     protected void init() {
         super.init();
-        Bootstrap.install(this);
+        IBootstrapSettings set = new BootstrapSettings();
+        set.setThemeProvider(new BootswatchThemeProvider(BootswatchTheme.Yeti));
+        Bootstrap.install(this, set);
         getComponentInstantiationListeners().add(new GuiceComponentInjector(this, injector));
     }
 
