@@ -33,6 +33,6 @@ public class ErrorViewModel {
     }
 
     public String getDetails() {
-        return details.replace("\n", "<br/>");
+        return details;
     }
 }

@@ -33,9 +33,8 @@ public class RunCharmmCommand {
 
     public UUID run(String username) {
 
-        TaskHandle th = backgroundTasks.execute(username, "CHARMM",
+        TaskHandle th = backgroundTasks.execute(username, "Run CHARMM",
                 () -> {
-
                     Optional<CharmmInputContainer> c = charmmRepository.getContainerFor(username);
                     if (c.isPresent()) {
                         charmmRepository.removeResultFor(username);

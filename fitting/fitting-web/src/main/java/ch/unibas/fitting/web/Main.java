@@ -1,6 +1,7 @@
 package ch.unibas.fitting.web;
 
 import ch.unibas.fitting.shared.config.Settings;
+import ch.unibas.fitting.shared.javaextensions.Version;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.apache.log4j.*;
@@ -28,7 +29,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         WebSettings settings = WebSettings.load();
         setupConsoleLogger(settings);
-        Logger.getLogger(Main.class).info("Starting fitting web");
+        LOGGER.info("Starting fitting web " + Version.getManifestVersion());
 
         Injector injector = Guice.createInjector(new WebModule(settings));
 
