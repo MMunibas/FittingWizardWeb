@@ -1,6 +1,6 @@
 subprojects {
     group 'ch.unibas.fitting'
-    version '0.8-BETA'
+    version '1.0'
 
     apply plugin: 'java'
 

@@ -33,8 +33,6 @@ public class MockMultipoleGaussScript extends MockScriptBase implements IMultipo
 	private final List<String> filesToCopy = Arrays.asList(logExtension, punExtension,
 														   cubeExtension, vdwExtension);
 
-	private final static Logger logger = Logger.getLogger(MockLRAScript.class);
-
     @Inject
 	public MockMultipoleGaussScript(Settings settings) {
         super(settings.getMoleculeTestdataDir());
