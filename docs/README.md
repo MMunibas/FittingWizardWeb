@@ -21,6 +21,8 @@ The fitting web & wizard software requires the following installation:
 - `Python`
 - `Custom scripts`  
 
+A detailed installation description may be found [here](Installation.md).
+
 # Configuration
 
 There are two configuration files. One development (`config.ini`), one release (`config_release.ini`).
