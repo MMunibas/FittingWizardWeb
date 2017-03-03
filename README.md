@@ -1,10 +1,10 @@
 ----------------------------------------------
 # FittingWizard
 ----------------------------------------------
-A JavaFX application that assists the user for perfoming forcefield parameters 
+A Java-based Web application that assists the user for perfoming forcefield parameters 
 optimisation by using Quantum Chemistry and Molecular Dynamics software.
 
-https://bitbucket.org/FHedin/fitting_wizard
+https://github.com/MMunibas/FittingWizardWeb
 
 Florent Hédin (florent.hedin@unibas.ch) , Markus Meuwly (m.meuwly@unibas.ch)
 
