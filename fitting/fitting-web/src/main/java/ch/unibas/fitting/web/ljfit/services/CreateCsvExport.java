@@ -1,4 +1,4 @@
-package ch.unibas.fitting.web.ljfit;
+package ch.unibas.fitting.web.ljfit.services;
 
 import au.com.bytecode.opencsv.CSVWriter;
 

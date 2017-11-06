@@ -1,20 +1,15 @@
-package ch.unibas.fitting.web.ljfit;
+package ch.unibas.fitting.web.ljfit.ui.step2;
 
-import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Generator_DGHydr;
-import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_GasPhase;
-import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_PureLiquid;
 import ch.unibas.fitting.shared.charmm.web.CharmmResult;
 import ch.unibas.fitting.shared.charmm.web.IRunCharmmWorkflowNew;
-import ch.unibas.fitting.shared.charmm.web.RunCharmmWorkflowNew;
 import ch.unibas.fitting.shared.workflows.charmm.CharmmInputContainer;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.application.TaskHandle;
-import ch.unibas.fitting.web.ljfit.CharmmRepository;
-import ch.unibas.fitting.web.ljfit.step2.ShowGeneratedInputPage;
-import ch.unibas.fitting.web.ljfit.step3.ShowOutputPage;
+import ch.unibas.fitting.web.ljfit.services.CharmmRepository;
+import ch.unibas.fitting.web.ljfit.ui.step3.ShowGeneratedInputPage;
+import ch.unibas.fitting.web.ljfit.ui.step3.ShowOutputPage;
 
 import javax.inject.Inject;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 

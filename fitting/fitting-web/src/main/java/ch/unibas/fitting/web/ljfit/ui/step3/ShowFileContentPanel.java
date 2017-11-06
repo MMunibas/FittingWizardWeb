@@ -1,4 +1,4 @@
-package ch.unibas.fitting.web.ljfit.step2;
+package ch.unibas.fitting.web.ljfit.ui.step3;
 
 import ch.unibas.fitting.web.web.WizardPanel;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;

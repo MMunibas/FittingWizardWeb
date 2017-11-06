@@ -1,19 +1,16 @@
-package ch.unibas.fitting.web.ljfit;
+package ch.unibas.fitting.web.ljfit.ui.step1;
 
-import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.directories.CharmmOutputDir;
 import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
 import ch.unibas.fitting.shared.workflows.charmm.GenerateInputWorkflowInput;
 import ch.unibas.fitting.shared.workflows.charmm.CharmmInputContainer;
 import ch.unibas.fitting.shared.workflows.charmm.IGenerateInputWorkflow;
-import ch.unibas.fitting.shared.workflows.charmm.MockGenerateInputWorkflow;
 import ch.unibas.fitting.web.application.IAmACommand;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.application.TaskHandle;
-import ch.unibas.fitting.web.ljfit.CharmmRepository;
-import ch.unibas.fitting.web.ljfit.step1.InputAssistantPage;
-import ch.unibas.fitting.web.ljfit.step2.ShowGeneratedInputPage;
+import ch.unibas.fitting.web.ljfit.services.CharmmRepository;
+import ch.unibas.fitting.web.ljfit.ui.step3.ShowGeneratedInputPage;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;

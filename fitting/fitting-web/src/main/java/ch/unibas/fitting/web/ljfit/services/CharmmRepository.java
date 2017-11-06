@@ -1,4 +1,4 @@
-package ch.unibas.fitting.web.ljfit;
+package ch.unibas.fitting.web.ljfit.services;
 
 import ch.unibas.fitting.shared.charmm.web.CharmmResult;
 import ch.unibas.fitting.shared.workflows.charmm.CharmmInputContainer;

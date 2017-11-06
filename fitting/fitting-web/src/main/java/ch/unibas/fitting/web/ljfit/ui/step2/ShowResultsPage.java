@@ -1,15 +1,14 @@
-package ch.unibas.fitting.web.ljfit.step4;
+package ch.unibas.fitting.web.ljfit.ui.step2;
 
 import ch.unibas.fitting.shared.charmm.web.CharmmResult;
 import ch.unibas.fitting.shared.charmm.web.CharmmResultCalculator;
 import ch.unibas.fitting.shared.charmm.web.ResultCalculatorOutput;
 import ch.unibas.fitting.shared.directories.CharmmOutputDir;
-import ch.unibas.fitting.shared.directories.FitOutputDir;
 import ch.unibas.fitting.shared.directories.IUserDirectory;
-import ch.unibas.fitting.web.ljfit.CharmmRepository;
-import ch.unibas.fitting.web.ljfit.CreateCsvExport;
-import ch.unibas.fitting.web.ljfit.step1.InputAssistantPage;
-import ch.unibas.fitting.web.ljfit.step3.ShowOutputPage;
+import ch.unibas.fitting.web.ljfit.services.CharmmRepository;
+import ch.unibas.fitting.web.ljfit.services.CreateCsvExport;
+import ch.unibas.fitting.web.ljfit.ui.step1.InputAssistantPage;
+import ch.unibas.fitting.web.ljfit.ui.step3.ShowOutputPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;

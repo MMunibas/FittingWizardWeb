@@ -1,7 +1,6 @@
-package ch.unibas.fitting.web.ljfit.step1;
+package ch.unibas.fitting.web.ljfit.ui.step1;
 
 import ch.unibas.fitting.shared.directories.IUserDirectory;
-import ch.unibas.fitting.web.ljfit.GenerateInputCommand;
 import ch.unibas.fitting.web.web.progress.ProgressPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -57,9 +56,7 @@ public class InputAssistantPage extends HeaderPage {
                 extraParametersDialog, extraParameterViewModel);
         extraParametersDialog.setContent(extraParametersPage);
 
-        extraParametersDialog.setCloseButtonCallback(target -> {
-            return true;
-        });
+        extraParametersDialog.setCloseButtonCallback(target -> true);
 
         extraParametersDialog.setWindowClosedCallback(target -> {
             LOGGER.debug("Extra Parameters " + extraParameterViewModel.getNcpusDeltaH() + " " +
@@ -95,12 +92,13 @@ public class InputAssistantPage extends HeaderPage {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form)
             {
-                File parFile = UploadFile(parUploadFile.getFileUpload());
-                File rtfFile = UploadFile(rtfUploadFile.getFileUpload());
-                File molFile = UploadFile(molUploadFile.getFileUpload());
-                File liquidFile = UploadFile(liquidUploadFile.getFileUpload());
-                File solventFile = UploadFile(solventUploadFile.getFileUpload());
-                File lpunFile = UploadFile(lpunUploadFile.getFileUpload());
+                File parFile = uploadFile(parUploadFile.getFileUpload());
+                File rtfFile = uploadFile(rtfUploadFile.getFileUpload());
+                File molFile = uploadFile(molUploadFile.getFileUpload());
+                File liquidFile = uploadFile(liquidUploadFile.getFileUpload());
+                File solventFile = uploadFile(solventUploadFile.getFileUpload());
+                File lpunFile = uploadFile(lpunUploadFile.getFileUpload());
+
                 target.add(fp);
 
                 UUID uuid = runGenerateInput.generateInput(getCurrentUsername(),
@@ -122,32 +120,34 @@ public class InputAssistantPage extends HeaderPage {
         add(form);
     }
 
+    private void saveUploadedFiles(String currentUsername) {
+        File parFile = uploadFile(parUploadFile.getFileUpload());
+        File rtfFile = uploadFile(rtfUploadFile.getFileUpload());
+        File molFile = uploadFile(molUploadFile.getFileUpload());
+        File liquidFile = uploadFile(liquidUploadFile.getFileUpload());
+        File solventFile = uploadFile(solventUploadFile.getFileUpload());
+        File lpunFile = uploadFile(lpunUploadFile.getFileUpload());
+    }
+
     private FileUploadField createFileUploadField(String id) {
         FileUploadField upload = new FileUploadField(id);
         upload.setRequired(true);
         return upload;
     }
 
-    private File UploadFile(FileUpload upload) {
+    private File uploadFile(FileUpload upload) {
         File f = null;
 
-        if (upload == null)
-        {
-            LOGGER.debug("No file uploaded");
-        }
-        else
-        {
+        LOGGER.debug("File-Name: " + upload.getClientFileName() + " File-Size: " +
+                Bytes.bytes(upload.getSize()).toString());
 
-            LOGGER.debug("File-Name: " + upload.getClientFileName() + " File-Size: " +
-                    Bytes.bytes(upload.getSize()).toString());
-
-            f = new File(_userDir.getCharmmOutputDir(getCurrentUsername()).getInputDir(), upload.getClientFileName());
-            try {
-                upload.writeTo(f);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+        f = new File(_userDir.getCharmmOutputDir(getCurrentUsername()).getInputDir(), upload.getClientFileName());
+        try {
+            upload.writeTo(f);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+
         return f;
     }
 }

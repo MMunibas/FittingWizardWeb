@@ -1,18 +1,14 @@
-package ch.unibas.fitting.web.ljfit.step3;
+package ch.unibas.fitting.web.ljfit.ui.step3;
 
 import ch.unibas.fitting.shared.charmm.web.CharmmResult;
-import ch.unibas.fitting.web.ljfit.CharmmRepository;
-import ch.unibas.fitting.web.ljfit.step1.InputAssistantPage;
-import ch.unibas.fitting.web.ljfit.step2.ShowFileContentPanel;
-import ch.unibas.fitting.web.ljfit.step4.ShowResultsPage;
+import ch.unibas.fitting.web.ljfit.services.CharmmRepository;
+import ch.unibas.fitting.web.ljfit.ui.step1.InputAssistantPage;
+import ch.unibas.fitting.web.ljfit.ui.step2.ShowResultsPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 
 import javax.inject.Inject;
 import java.util.Optional;
