@@ -1,7 +1,13 @@
 <wicket:extend xmlns:wicket="http://www.w3.org/1999/xhtml">
 
     <h1>View Files</h1>
-
-    <button wicket:id="goBack">Go back</button>
-
+    <p style="text-align: left;">
+        <input wicket:id="goBack" type="button" value="Go back" class="btn btn-default"/>
+        <span style="float:right;">
+            <select name="Result File" wicket:id="resultFile"></select>
+        </span>
+    </p>
+    <div style="height: 75vh;overflow-y: scroll;">
+        <span wicket:id="resultPanel" style="padding: 0;">[user data]</span>
+    </div>
 </wicket:extend>

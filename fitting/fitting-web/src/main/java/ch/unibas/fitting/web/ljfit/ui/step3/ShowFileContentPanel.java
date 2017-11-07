@@ -23,7 +23,6 @@ public class ShowFileContentPanel extends WizardPanel {
     private String readFileContent(File file) {
         String content = "";
 
-        Random random = new Random();
         try {
             content = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
         } catch (IOException ex) {
