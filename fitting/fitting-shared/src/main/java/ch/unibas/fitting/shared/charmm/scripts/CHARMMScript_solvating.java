@@ -13,7 +13,7 @@ import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input;
 import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output;
 import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output_solvating;
 import ch.unibas.fitting.shared.config.Settings;
-import ch.unibas.fitting.shared.directories.CharmmOutputDir;
+import ch.unibas.fitting.shared.directories.LjFitSessionDir;
 
 import java.io.File;
 
@@ -26,16 +26,16 @@ public class CHARMMScript_solvating extends CHARMMScript_Base implements ICHARMM
     private static final String ScriptNameKey = "scripts.solvate";
     //private static final String OutputDirName = "test";
     
-    public CHARMMScript_solvating(CharmmOutputDir charmmOutputDir, Settings _settings)
+    public CHARMMScript_solvating(LjFitSessionDir ljFitSessionDir, Settings _settings)
     {
-        super(charmmOutputDir,_settings,ScriptNameKey);
+        super(ljFitSessionDir,_settings,ScriptNameKey);
     }
 
     @Override
     public CHARMM_Output execute(CHARMM_Input input) {
         
         String FileName = "solvating.out";
-        File charmmout = new File(this.charmmOutputDir.getDirectory(),FileName);
+        File charmmout = new File(this.ljFitSessionDir.getDirectory(),FileName);
         
         this.prepare_Bash(input, null);
         

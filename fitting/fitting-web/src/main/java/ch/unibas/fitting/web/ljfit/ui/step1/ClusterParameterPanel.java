@@ -13,9 +13,9 @@ import org.apache.wicket.model.PropertyModel;
 /**
  * Created by tschmidt on 23.06.2016.
  */
-public class ExtraParametersPanel extends Panel {
+public class ClusterParameterPanel extends Panel {
 
-    public ExtraParametersPanel(String id, ModalWindow window, ExtraParameterViewModel extraParameterViewModel) {
+    public ClusterParameterPanel(String id, ModalWindow window, ClusterParameterViewModel clusterParameterViewModel) {
         super(id);
 
         Form form = new Form("form");
@@ -26,19 +26,19 @@ public class ExtraParametersPanel extends Panel {
         fp.setOutputMarkupPlaceholderTag(true);
         add(fp);
 
-        NumberTextField ncpuRhoDeltaHField = new NumberTextField<>("ncpusDeltaH", new PropertyModel(extraParameterViewModel, "ncpusDeltaH"));
+        NumberTextField ncpuRhoDeltaHField = new NumberTextField<>("ncpusDeltaH", new PropertyModel(clusterParameterViewModel, "ncpusDeltaH"));
         ncpuRhoDeltaHField.setStep(1);
         ncpuRhoDeltaHField.setMinimum(1);
         ncpuRhoDeltaHField.setRequired(true);
         form.add(ncpuRhoDeltaHField);
 
-        NumberTextField ncpuDeltaGField = new NumberTextField<>("ncpusDeltaG",  new PropertyModel(extraParameterViewModel, "ncpusDeltaG"));
+        NumberTextField ncpuDeltaGField = new NumberTextField<>("ncpusDeltaG",  new PropertyModel(clusterParameterViewModel, "ncpusDeltaG"));
         ncpuDeltaGField.setStep(1);
         ncpuDeltaGField.setMinimum(1);
         ncpuDeltaGField.setRequired(true);
         form.add(ncpuDeltaGField);
 
-        TextField clusterField = new TextField("clusterName", new PropertyModel(extraParameterViewModel, "clusterName"));
+        TextField clusterField = new TextField("clusterName", new PropertyModel(clusterParameterViewModel, "clusterName"));
         clusterField.setRequired(true);
         form.add(clusterField);
 

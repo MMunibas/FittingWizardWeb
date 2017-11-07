@@ -7,8 +7,8 @@ import java.io.File;
  */
 public class FitOutputDir extends FittingDirectory {
 
-    public FitOutputDir(File directory) {
-        super(directory);
+    public FitOutputDir(String username, File directory) {
+        super(username, directory);
     }
 
     public File getFitMtpOutputDir() {

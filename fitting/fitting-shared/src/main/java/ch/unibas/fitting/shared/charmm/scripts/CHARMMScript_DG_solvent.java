@@ -9,12 +9,12 @@
 package ch.unibas.fitting.shared.charmm.scripts;
 
 import ch.unibas.fitting.shared.config.Settings;
-import ch.unibas.fitting.shared.directories.CharmmOutputDir;
+import ch.unibas.fitting.shared.directories.LjFitSessionDir;
 
 
 public class CHARMMScript_DG_solvent extends CHARMMScript_DG {
 
-    public CHARMMScript_DG_solvent(CharmmOutputDir charmmOutputDir, Settings _settings) {
-        super(charmmOutputDir, _settings);
+    public CHARMMScript_DG_solvent(LjFitSessionDir ljFitSessionDir, Settings _settings) {
+        super(ljFitSessionDir, _settings);
     }
 }

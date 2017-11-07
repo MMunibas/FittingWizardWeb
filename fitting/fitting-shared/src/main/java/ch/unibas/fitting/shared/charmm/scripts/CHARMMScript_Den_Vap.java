@@ -15,7 +15,7 @@ import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output;
 import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output_GasPhase;
 import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output_PureLiquid;
 import ch.unibas.fitting.shared.config.Settings;
-import ch.unibas.fitting.shared.directories.CharmmOutputDir;
+import ch.unibas.fitting.shared.directories.LjFitSessionDir;
 
 import java.io.File;
 
@@ -25,9 +25,9 @@ public class CHARMMScript_Den_Vap extends CHARMMScript_Base implements ICHARMMSc
     private static final String ScriptNameKey = "scripts.submitCHARMM_Den_Vap";
 //    private static final String OutputDirName = "test";
     
-    public CHARMMScript_Den_Vap(CharmmOutputDir charmmOutputDir, Settings _settings)
+    public CHARMMScript_Den_Vap(LjFitSessionDir ljFitSessionDir, Settings _settings)
     {
-        super(charmmOutputDir,_settings,ScriptNameKey);
+        super(ljFitSessionDir,_settings,ScriptNameKey);
     }
     
     /**

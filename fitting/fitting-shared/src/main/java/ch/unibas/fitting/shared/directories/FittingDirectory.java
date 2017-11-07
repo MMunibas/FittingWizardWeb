@@ -10,9 +10,12 @@ import java.io.File;
  */
 abstract class FittingDirectory {
     protected final Logger LOGGER;
-    private final File directory;
 
-    protected FittingDirectory(File directory) {
+    private final File directory;
+    protected final String username;
+
+    protected FittingDirectory(String username, File directory) {
+        this.username = username;
         LOGGER = Logger.getLogger(getClass());
         directory.mkdirs();
         if (!directory.isDirectory()) {
@@ -29,5 +32,9 @@ abstract class FittingDirectory {
         File f =  new File(file, dir);
         f.mkdirs();
         return f;
+    }
+
+    public boolean exists() {
+        return directory.exists();
     }
 }

@@ -3,11 +3,11 @@ package ch.unibas.fitting.web.ljfit.ui.step2;
 import ch.unibas.fitting.shared.charmm.web.CharmmResult;
 import ch.unibas.fitting.shared.charmm.web.CharmmResultCalculator;
 import ch.unibas.fitting.shared.charmm.web.ResultCalculatorOutput;
-import ch.unibas.fitting.shared.directories.CharmmOutputDir;
+import ch.unibas.fitting.shared.directories.LjFitSessionDir;
 import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.web.ljfit.services.CharmmRepository;
 import ch.unibas.fitting.web.ljfit.services.CreateCsvExport;
-import ch.unibas.fitting.web.ljfit.ui.step1.InputAssistantPage;
+import ch.unibas.fitting.web.ljfit.ui.step1.CreateNewSessionPage;
 import ch.unibas.fitting.web.ljfit.ui.step3.ShowOutputPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -60,7 +60,7 @@ public class ShowResultsPage extends HeaderPage {
 
                 Optional<CharmmResult> result = charmmRepository.getResultFor(getCurrentUsername());
 
-                CharmmOutputDir dir = userDirectory.getCharmmOutputDir(getCurrentUsername());
+                LjFitSessionDir dir = userDirectory.getLjFitSessionDir(getCurrentUsername());
                 File f = createCsvExport.create(dir.getDefaultExportDir(), new CreateCsvExport.Input(
                         result.get().getOutput().getEgas(),
                         result.get().getOutput().getEliq(),
@@ -90,7 +90,7 @@ public class ShowResultsPage extends HeaderPage {
         add(new AjaxLink("backToInput") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                setResponsePage(InputAssistantPage.class);
+                setResponsePage(CreateNewSessionPage.class);
             }
         });
 

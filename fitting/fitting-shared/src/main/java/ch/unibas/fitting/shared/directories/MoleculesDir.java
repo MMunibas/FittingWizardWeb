@@ -30,8 +30,8 @@ public class MoleculesDir extends FittingDirectory {
 
     private final static String MtpFitSuffix = "_mtpfittab.txt";
 
-    public MoleculesDir(File directory) {
-        super(directory);
+    public MoleculesDir(String username, File directory) {
+        super(username, directory);
     }
 
     public boolean contains(File selectedDir) {

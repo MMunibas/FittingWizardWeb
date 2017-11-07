@@ -26,7 +26,7 @@ import ch.unibas.fitting.shared.charmm.scripts.CHARMMScript_Den_Vap;
 import ch.unibas.fitting.shared.charmm.scripts.ICHARMMScript;
 import ch.unibas.fitting.shared.charmm.RunCHARMMWorkflow;
 import ch.unibas.fitting.shared.config.Settings;
-import ch.unibas.fitting.shared.directories.CharmmOutputDir;
+import ch.unibas.fitting.shared.directories.LjFitSessionDir;
 import ch.unibas.fitting.shared.directories.FitOutputDir;
 import ch.unibas.fitting.shared.directories.XyzDirectory;
 import ch.unibas.fitting.shared.tools.FitOutputParser;
@@ -101,7 +101,7 @@ public class WizardPageFactory {
     private FitRepository fitRepository;
     private DefaultValues defaultValues;
     private FitOutputDir fitOutputDir;
-    private CharmmOutputDir charmmOutputDir;
+    private LjFitSessionDir ljFitSessionDir;
     private MoleculesDir moleculesDir;
     private XyzDirectory xyzDirectory;
     private MoleculeCreator moleculeCreator;
@@ -132,7 +132,7 @@ public class WizardPageFactory {
         File sessionDir = initializeCurrentSessionDirectory(settings.getDataDir());
 
         this.fitOutputDir = new FitOutputDir(sessionDir);
-        this.charmmOutputDir = new CharmmOutputDir(sessionDir);
+        this.ljFitSessionDir = new LjFitSessionDir(sessionDir);
         this.moleculesDir = new MoleculesDir(settings.getMoleculeDir());
         this.xyzDirectory = new XyzDirectory(settings.getMoleculeDir());
         this.visualization = new Visualization(primaryStage);
@@ -183,10 +183,10 @@ public class WizardPageFactory {
             gaussScript = new RealMultipoleGaussScript(settings);
         }
 
-        charmmScript_Den_Vap = new CHARMMScript_Den_Vap(charmmOutputDir, settings);
-        charmmScript_DG_gas = new CHARMMScript_DG_gas(charmmOutputDir, settings);
-        charmmScript_DG_solvent = new CHARMMScript_DG_solvent(charmmOutputDir, settings);
-        charmmScript_default = new CHARMMScript_Den_Vap(charmmOutputDir, settings);
+        charmmScript_Den_Vap = new CHARMMScript_Den_Vap(ljFitSessionDir, settings);
+        charmmScript_DG_gas = new CHARMMScript_DG_gas(ljFitSessionDir, settings);
+        charmmScript_DG_solvent = new CHARMMScript_DG_solvent(ljFitSessionDir, settings);
+        charmmScript_default = new CHARMMScript_Den_Vap(ljFitSessionDir, settings);
     }
 
     private void initializeWorkflows() {

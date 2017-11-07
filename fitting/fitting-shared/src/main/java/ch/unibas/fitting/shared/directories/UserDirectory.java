@@ -35,25 +35,24 @@ public class UserDirectory implements IUserDirectory {
         return new File(dataDir, username);
     }
 
-
     @Override
     public MoleculesDir getMoleculesDir(String username) {
-        return new MoleculesDir(userSubDir(username, "molecules"));
+        return new MoleculesDir(username, userSubDir(username, "molecules"));
     }
 
     @Override
     public FitOutputDir getFitOutputDir(String username) {
-        return new FitOutputDir(userSubDir(username, "fit_mtp"));
+        return new FitOutputDir(username, userSubDir(username, "fit_mtp"));
     }
 
     @Override
     public XyzDirectory getXyzDir(String username) {
-        return new XyzDirectory(userSubDir(username, "xyz_files"));
+        return new XyzDirectory(username, userSubDir(username, "xyz_files"));
     }
 
     @Override
-    public CharmmOutputDir getCharmmOutputDir(String username) {
-        return new CharmmOutputDir(userSubDir(username, "charmm"));
+    public LjFitSessionDir getLjFitSessionDir(String username) {
+        return new LjFitSessionDir(username, getLjFitSessionFile(username));
     }
 
     @Override
@@ -63,4 +62,19 @@ public class UserDirectory implements IUserDirectory {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public boolean ljFitSessionDirectoryExists(String username) {
+        return getLjFitSessionFile(username).exists();
+    }
+
+    @Override
+    public void deleteLjFitSession(String username) {
+        File f = getLjFitSessionFile(username);
+        if (f.exists())
+            f.delete();
+    }
+
+    private File getLjFitSessionFile(String username) {
+        return userSubDir(username, "ljfit");
+    }
 }
