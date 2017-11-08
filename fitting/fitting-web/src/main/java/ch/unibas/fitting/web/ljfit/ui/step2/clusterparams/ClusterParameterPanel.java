@@ -1,4 +1,4 @@
-package ch.unibas.fitting.web.ljfit.ui.step1;
+package ch.unibas.fitting.web.ljfit.ui.step2.clusterparams;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;

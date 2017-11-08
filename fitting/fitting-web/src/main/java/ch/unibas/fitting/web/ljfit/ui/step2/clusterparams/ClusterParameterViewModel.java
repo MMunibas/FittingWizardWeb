@@ -1,4 +1,4 @@
-package ch.unibas.fitting.web.ljfit.ui.step1;
+package ch.unibas.fitting.web.ljfit.ui.step2.clusterparams;
 
 import java.io.Serializable;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
