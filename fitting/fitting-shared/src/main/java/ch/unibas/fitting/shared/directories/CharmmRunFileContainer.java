@@ -1,7 +1,6 @@
 package ch.unibas.fitting.shared.directories;
 
 import java.io.File;
-import java.io.ObjectInputStream;
 import java.time.Instant;
 
 /**
@@ -17,8 +16,8 @@ public class CharmmRunFileContainer extends FittingDirectory {
     private File solv_vdw_dir;
     private File solv_mtp_dir;
 
-    public CharmmRunFileContainer(File directory) {
-        super(directory);
+    public CharmmRunFileContainer(String username, File directory) {
+        super(username, directory);
         String time = Long.toString(Instant.now().getEpochSecond());
 
         gas_dir = new File(getDirectory(), "gas_" + time);

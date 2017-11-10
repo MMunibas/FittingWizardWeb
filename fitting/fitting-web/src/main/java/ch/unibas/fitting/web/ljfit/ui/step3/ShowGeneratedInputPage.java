@@ -4,7 +4,7 @@ import ch.unibas.fitting.shared.workflows.charmm.CharmmInputContainer;
 import ch.unibas.fitting.web.ljfit.ui.step2.RunCharmmCommand;
 import ch.unibas.fitting.web.web.progress.ProgressPage;
 import ch.unibas.fitting.web.ljfit.services.CharmmRepository;
-import ch.unibas.fitting.web.ljfit.ui.step1.InputAssistantPage;
+import ch.unibas.fitting.web.ljfit.ui.step1.CreateNewSessionPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 
 
@@ -51,7 +51,7 @@ public class ShowGeneratedInputPage extends HeaderPage {
         add(new AjaxLink("backToInput") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                setResponsePage(InputAssistantPage.class);
+                setResponsePage(CreateNewSessionPage.class);
             }
         });
 

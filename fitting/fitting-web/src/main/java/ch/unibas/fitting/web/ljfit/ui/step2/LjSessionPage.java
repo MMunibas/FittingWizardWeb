@@ -1,6 +1,6 @@
 package ch.unibas.fitting.web.ljfit.ui.step2;
 
-import ch.unibas.fitting.web.ljfit.ui.step1.InputAssistantPage;
+import ch.unibas.fitting.web.ljfit.ui.step1.CreateNewSessionPage;
 import ch.unibas.fitting.web.ljfit.ui.step3.ViewFilesPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -25,20 +25,17 @@ public class LjSessionPage extends HeaderPage {
         add(new AjaxLink("newSession") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                setResponsePage(InputAssistantPage.class);
+                setResponsePage(CreateNewSessionPage.class);
             }
         });
-
         GridPanelParameter gridPanelParameter = new GridPanelParameter(1, 0.1,1,0.2);
         EpsilonSigmaPair singlePair = new EpsilonSigmaPair(1.0,1.0, true);
-
         ModalWindow gridRunDialogue = new ModalWindow("gridRunModalWindow");
         gridRunDialogue.setAutoSize(true);
         gridRunSetup = new GridRunPanel(gridRunDialogue.getContentId(), gridRunDialogue, gridPanelParameter);
         gridRunDialogue.setContent(gridRunSetup);
         gridRunDialogue.setCloseButtonCallback(target -> true);
         add(gridRunDialogue);
-
         add(new AjaxLink("gridRunValues") {
             @Override
             public void onClick(AjaxRequestTarget target) {

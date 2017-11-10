@@ -1,6 +1,5 @@
 package ch.unibas.fitting.shared.directories;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -11,7 +10,11 @@ public interface IUserDirectory {
     FitOutputDir getFitOutputDir(String username);
     XyzDirectory getXyzDir(String username);
 
-    CharmmOutputDir getCharmmOutputDir(String username);
+    LjFitSessionDir getLjFitSessionDir(String username);
 
     List<String> listAllUserDirs();
+
+    boolean ljFitSessionDirectoryExists(String username);
+
+    void deleteLjFitSession(String username);
 }

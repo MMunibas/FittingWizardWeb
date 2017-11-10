@@ -6,6 +6,8 @@ import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_PureLiquid;
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.directories.CharmmRunFileContainer;
 import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
+import ch.unibas.fitting.shared.workflows.ljfit.LjFitSession;
+import ch.unibas.fitting.shared.workflows.ljfit.UploadedFiles;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
@@ -28,9 +30,9 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
     public CharmmInputContainer execute(WorkflowContext<GenerateInputWorkflowInput> status) {
 
         GenerateInputWorkflowInput input = status.getParameter();
-        CharmmRunFileContainer charmmRunDir = status.getParameter().getCharmmOutputDir().createRunDir();
+        CharmmRunFileContainer charmmRunDir = status.getParameter().ljFitSessionDir.createRunDir();
 
-        CharmmInputContainer preparedInput = prepareInput(input, charmmRunDir);
+        CharmmInputContainer preparedInput = prepareInput(input.ljFitSession, charmmRunDir);
 
         preparedInput.getGasInput().generate();
         preparedInput.getLiquidInput().generate();
@@ -44,14 +46,15 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
         return preparedInput;
     }
 
-    protected CharmmInputContainer prepareInput(GenerateInputWorkflowInput input, CharmmRunFileContainer charmmRunDir) {
-        File liquidFile = input.getLiquidFile();
-        File lpunFile = input.getLpunFile();
-        File molFile = input.getMolFile();
-        File rtfFile = input.getRtfFile();
-        File parFile = input.getParFile();
-        File solventFile = input.getSolventFile();
-        double lambda = input.getLambda();
+    protected CharmmInputContainer prepareInput(LjFitSession input, CharmmRunFileContainer charmmRunDir) {
+        UploadedFiles uploaded = input.getUploadedFiles();
+        File liquidFile = uploaded.liquidFile;
+        File lpunFile = uploaded.lpunFile;
+        File molFile = uploaded.molFile;
+        File rtfFile = uploaded.rtfFile;
+        File parFile = uploaded.parFile;
+        File solventFile = uploaded.solventFile;
+        double lambda = input.getSessionParameter().lambdaSpacing;
 
         File gas_dir = charmmRunDir.getGasDir();
         File gas_vdw_dir  = charmmRunDir.getGasVdwDir();

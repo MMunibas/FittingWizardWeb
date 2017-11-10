@@ -10,8 +10,8 @@ import java.io.File;
  * Created by mhelmer-mobile on 19.06.2016.
  */
 public class XyzDirectory extends FittingDirectory {
-    public XyzDirectory(File directory) {
-        super(directory);
+    public XyzDirectory(String username, File directory) {
+        super(username, directory);
     }
 
     public File getXyzFileFor(String moleculeName) {

@@ -86,7 +86,8 @@ public class ProgressPage extends HeaderPage {
                         taskService.remove(th);
                         PageParameters pp = new PageParameters();
                         Class page = (Class) th.getNextPageCallback().apply(th.getResult(), pp);
-                        setResponsePage(page, pp);
+                        if (page != null)
+                            setResponsePage(page, pp);
                     } else if (th.hasError()) {
                         session().setFailedTask(th);
                         taskService.remove(th);

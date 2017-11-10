@@ -9,7 +9,7 @@
 package ch.unibas.fitting.shared.charmm.scripts;
 
 import ch.unibas.fitting.shared.config.Settings;
-import ch.unibas.fitting.shared.directories.CharmmOutputDir;
+import ch.unibas.fitting.shared.directories.LjFitSessionDir;
 import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
 import java.io.File;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public abstract class CHARMMScript_Base implements ICHARMMScript{
 
     protected final static Logger LOGGER = Logger.getLogger(CHARMMScript_Base.class);
 
-    protected CharmmOutputDir charmmOutputDir;
+    protected LjFitSessionDir ljFitSessionDir;
     protected Settings settings;
     protected PythonScriptRunner runner;
     protected File ScriptFile;
@@ -32,9 +32,9 @@ public abstract class CHARMMScript_Base implements ICHARMMScript{
     
     protected List<String> args = new ArrayList<>();
     
-    public CHARMMScript_Base(CharmmOutputDir charmmOutputDir, Settings _settings, String _scriptKey)
+    public CHARMMScript_Base(LjFitSessionDir ljFitSessionDir, Settings _settings, String _scriptKey)
     {
-        this.charmmOutputDir = charmmOutputDir;
+        this.ljFitSessionDir = ljFitSessionDir;
         this.settings = _settings;
         this.runner = new PythonScriptRunner();
         this.ScriptFile = new File(settings.getScriptsDir(), settings.getValue(_scriptKey));
@@ -57,7 +57,7 @@ public abstract class CHARMMScript_Base implements ICHARMMScript{
     
     @Override
     public File getWorkingDirectory(){
-        return charmmOutputDir.getDirectory();
+        return ljFitSessionDir.getDirectory();
     }
     
 }
