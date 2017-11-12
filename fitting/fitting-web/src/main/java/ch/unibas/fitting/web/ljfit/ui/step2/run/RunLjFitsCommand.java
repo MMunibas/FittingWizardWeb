@@ -19,13 +19,10 @@ import ch.unibas.fitting.shared.workflows.ljfit.LjFitRunResult;
 import ch.unibas.fitting.shared.workflows.ljfit.LjFitSession;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.application.ProgressPageTaskHandle;
-import ch.unibas.fitting.web.ljfit.services.CharmmRepository;
 import ch.unibas.fitting.web.ljfit.services.LjFitRepository;
 import ch.unibas.fitting.web.ljfit.ui.commands.OpenLjFitSessionCommand;
-import ch.unibas.fitting.web.ljfit.ui.step3.ShowGeneratedInputPage;
+import ch.unibas.fitting.web.ljfit.ui.step2.LjSessionPage;
 import ch.unibas.fitting.web.web.PageNavigation;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
 
@@ -42,9 +39,6 @@ public class RunLjFitsCommand {
 
     @Inject
     private IRunCharmmWorkflowNew runCharmmWorkflowNew;
-
-    @Inject
-    private CharmmRepository charmmRepository;
 
     @Inject
     private IBackgroundTasks backgroundTasks;
@@ -80,7 +74,7 @@ public class RunLjFitsCommand {
                     openLjFitSessionCommand.execute(username);
                     return null;
                 },
-                ShowGeneratedInputPage.class);
+                LjSessionPage.class);
 
         PageNavigation.ToProgressForTask(th);
     }
