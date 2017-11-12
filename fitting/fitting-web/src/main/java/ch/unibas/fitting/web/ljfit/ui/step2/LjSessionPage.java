@@ -1,6 +1,8 @@
 package ch.unibas.fitting.web.ljfit.ui.step2;
 
+import ch.unibas.fitting.web.ljfit.services.LjFitRepository;
 import ch.unibas.fitting.web.ljfit.ui.step1.CreateNewSessionPage;
+import ch.unibas.fitting.web.ljfit.ui.step2.run.RunLjFitsCommand;
 import ch.unibas.fitting.web.ljfit.ui.step3.ViewFilesPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -9,13 +11,22 @@ import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.util.ListModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
+import javax.inject.Inject;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Arrays;
 import java.util.List;
 
 public class LjSessionPage extends HeaderPage {
+
+    @Inject
+    private LjFitRepository ljFitRepository;
+    @Inject
+    private RunLjFitsCommand runLjFitsCommand;
+
+    private ListModel<SingleRunResult> runResults = new ListModel<>();
 
     private GridRunPanel gridRunSetup;
     private SingleRunPanel singleRunSetup;
@@ -29,10 +40,15 @@ public class LjSessionPage extends HeaderPage {
             }
         });
         GridPanelParameter gridPanelParameter = new GridPanelParameter(1, 0.1,1,0.2);
-        EpsilonSigmaPair singlePair = new EpsilonSigmaPair(1.0,1.0, true);
         ModalWindow gridRunDialogue = new ModalWindow("gridRunModalWindow");
+        gridRunDialogue.showUnloadConfirmation(false);
         gridRunDialogue.setAutoSize(true);
-        gridRunSetup = new GridRunPanel(gridRunDialogue.getContentId(), gridRunDialogue, gridPanelParameter);
+        gridRunSetup = new GridRunPanel(
+                gridRunDialogue.getContentId(),
+                gridRunDialogue,
+                gridPanelParameter,
+                getCurrentUsername(),
+                runLjFitsCommand);
         gridRunDialogue.setContent(gridRunSetup);
         gridRunDialogue.setCloseButtonCallback(target -> true);
         add(gridRunDialogue);
@@ -45,8 +61,13 @@ public class LjSessionPage extends HeaderPage {
         });
 
         ModalWindow singleRunDialogue = new ModalWindow("singleRunModalWindow");
-        singleRunSetup = new SingleRunPanel(singleRunDialogue.getContentId(), singleRunDialogue, singlePair);
+        singleRunSetup = new SingleRunPanel(
+                singleRunDialogue.getContentId(),
+                singleRunDialogue,
+                getCurrentUsername(),
+                runLjFitsCommand);
         singleRunDialogue.setContent(singleRunSetup);
+        singleRunDialogue.showUnloadConfirmation(false);
         singleRunDialogue.setCloseButtonCallback(target -> true);
         add(singleRunDialogue);
 
@@ -58,20 +79,15 @@ public class LjSessionPage extends HeaderPage {
             }
         });
 
-        List userList = Arrays.asList(
-                new SingleRunResult[] {
-                        new SingleRunResult(0.95, 0.95,-2.655,6.81544,-23.13735,-26.8116,7.83469,-16.32191,-18.97691,-7.03,17.0552,11.24,1.1184,1.22,19.140625,33.81655104,0.01032256,197.1631006),
-                        new SingleRunResult(0.95, 0.95,-2.655,6.81544,-23.13735,-26.8116,7.83469,-16.32191,-18.97691,-7.03,17.0552,11.24,1.1184,1.22,19.140625,33.81655104,0.01032256,197.1631006),
-                        new SingleRunResult(0.95, 0.95,-2.655,6.81544,-23.13735,-26.8116,7.83469,-16.32191,-18.97691,-7.03,17.0552,11.24,1.1184,1.22,19.140625,33.81655104,0.01032256,197.1631006)
-                });
-
-        add(new ListView("listview", userList) {
+        add(new ListView("listview", runResults) {
             protected void populateItem(ListItem item) {
                 SingleRunResult singleResult = (SingleRunResult) item.getModelObject();
                 item.add(new AjaxLink("resultPageLink") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        setResponsePage(ViewFilesPage.class);
+                        PageParameters pp = new PageParameters();
+                        pp.add("run_dir", singleResult.getDirName());
+                        setResponsePage(ViewFilesPage.class, pp);
                     }
                 });
 
@@ -99,6 +115,23 @@ public class LjSessionPage extends HeaderPage {
                 item.add(new Label("SOLTOTAL", twoDecimal.format(singleResult.get_SOLTOTAL())));
             }
         });
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+        List<SingleRunResult> runs =  ljFitRepository.listRuns(getCurrentUsername())
+                .map(run -> new SingleRunResult(run.dirName, run.result))
+                .toJavaList();
+
+        ljFitRepository.loadSessionForUser(getCurrentUsername())
+                .flatMap(ljFitSession -> {
+                    gridRunSetup.lambda.setObject(ljFitSession.getSessionParameter().lambdaSpacing);
+                    singleRunSetup.lambda.setObject(ljFitSession.getSessionParameter().lambdaSpacing);
+                   return null;
+                });
+
+        runResults.setObject(runs);
     }
 }
 

@@ -1,9 +1,12 @@
 package ch.unibas.fitting.shared.directories;
 
+import ch.unibas.fitting.shared.workflows.charmm.UploadedFiles;
+import ch.unibas.fitting.shared.workflows.ljfit.UploadedFileNames;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by mhelmer-mobile on 19.06.2016.

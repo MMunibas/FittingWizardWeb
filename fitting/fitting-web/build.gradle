@@ -41,6 +41,9 @@ dependencies {
     compile group: 'org.eclipse.jetty', name: 'jetty-webapp', version: '9.3.9.v20160517'
     compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
 
+    compile "io.vavr:vavr:0.9.1"
+    compile "io.vavr:vavr-gson:0.9.1"
+
     compile 'org.apache.wicket:wicket-core:7.9.0'
     compile 'org.apache.wicket:wicket-guice:7.9.0'
     compile 'org.apache.wicket:wicket-extensions:7.9.0'

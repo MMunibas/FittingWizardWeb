@@ -1,7 +1,7 @@
 package ch.unibas.fitting.web.web.progress;
 
 import ch.unibas.fitting.web.application.IBackgroundTasks;
-import ch.unibas.fitting.web.application.TaskHandle;
+import ch.unibas.fitting.web.application.ProgressPageTaskHandle;
 import ch.unibas.fitting.web.web.HeaderPage;
 import ch.unibas.fitting.web.web.errors.ErrorPage;
 import ch.unibas.fitting.web.welcome.WelcomePage;
@@ -40,7 +40,7 @@ public class ProgressPage extends HeaderPage {
 
         text = Model.of("Just started ...");
         title = Model.of("Processing...");
-        Optional<TaskHandle> taskHandle = taskService.getHandle(taskId);
+        Optional<ProgressPageTaskHandle> taskHandle = taskService.getHandle(taskId);
         if (taskHandle.isPresent()) {
             title.setObject("Processing: " + taskHandle.get().getTitle());
             updateRunningTime(taskHandle.get());
@@ -68,14 +68,14 @@ public class ProgressPage extends HeaderPage {
         add(new AbstractAjaxTimerBehavior(Duration.seconds(2)) {
             @Override
             protected void onTimer(AjaxRequestTarget target) {
-                Optional<TaskHandle> optional = taskService.getHandle(taskId);
+                Optional<ProgressPageTaskHandle> optional = taskService.getHandle(taskId);
 
                 if (!optional.isPresent()) {
                     setResponsePage(WelcomePage.class);
                     return;
                 }
 
-                TaskHandle th = optional.get();
+                ProgressPageTaskHandle th = optional.get();
                 updateRunningTime(th);
                 target.add(lblProgress);
 
@@ -98,11 +98,11 @@ public class ProgressPage extends HeaderPage {
         });
     }
 
-    private void updateRunningTime(TaskHandle th) {
+    private void updateRunningTime(ProgressPageTaskHandle th) {
         text.setObject(th.getTitle() + " is running since " + runningTime(th) + " ...");
     }
 
-    private String runningTime(TaskHandle th) {
+    private String runningTime(ProgressPageTaskHandle th) {
         org.joda.time.Duration time = th.getRunningTime();
         String txt;
         if (time.getStandardMinutes() > 0) {

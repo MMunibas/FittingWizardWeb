@@ -4,10 +4,10 @@ import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_GasPhase;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_PureLiquid;
 import ch.unibas.fitting.shared.config.Settings;
-import ch.unibas.fitting.shared.directories.CharmmRunFileContainer;
+import ch.unibas.fitting.shared.directories.LjFitRunDir;
 import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
-import ch.unibas.fitting.shared.workflows.ljfit.LjFitSession;
-import ch.unibas.fitting.shared.workflows.ljfit.UploadedFiles;
+import ch.unibas.fitting.shared.workflows.ljfit.LjFitRunInput;
+import ch.unibas.fitting.shared.workflows.ljfit.UploadedFileNames;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
@@ -27,12 +27,13 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
     }
 
     @Override
-    public CharmmInputContainer execute(WorkflowContext<GenerateInputWorkflowInput> status) {
+    public CharmmInputContainer execute(WorkflowContext<GenerateInputWorkflowInput> context) {
 
-        GenerateInputWorkflowInput input = status.getParameter();
-        CharmmRunFileContainer charmmRunDir = status.getParameter().ljFitSessionDir.createRunDir();
+        UploadedFiles uploaded = context.getParameter().uploadedFiles;
+        LjFitRunInput input = context.getParameter().runInput;
+        LjFitRunDir charmmRunDir = context.getParameter().runDir;
 
-        CharmmInputContainer preparedInput = prepareInput(input.ljFitSession, charmmRunDir);
+        CharmmInputContainer preparedInput = prepareInput(uploaded, input, charmmRunDir);
 
         preparedInput.getGasInput().generate();
         preparedInput.getLiquidInput().generate();
@@ -46,15 +47,18 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
         return preparedInput;
     }
 
-    protected CharmmInputContainer prepareInput(LjFitSession input, CharmmRunFileContainer charmmRunDir) {
-        UploadedFiles uploaded = input.getUploadedFiles();
+    protected CharmmInputContainer prepareInput(
+            UploadedFiles uploaded,
+            LjFitRunInput input,
+            LjFitRunDir charmmRunDir) {
+
         File liquidFile = uploaded.liquidFile;
         File lpunFile = uploaded.lpunFile;
         File molFile = uploaded.molFile;
         File rtfFile = uploaded.rtfFile;
         File parFile = uploaded.parFile;
         File solventFile = uploaded.solventFile;
-        double lambda = input.getSessionParameter().lambdaSpacing;
+        double lambda_spacing = input.lambdaSpacing;
 
         File gas_dir = charmmRunDir.getGasDir();
         File gas_vdw_dir  = charmmRunDir.getGasVdwDir();
@@ -87,7 +91,7 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
                 lpunFile,
                 "vdw",
                 0.0,
-                lambda,
+                lambda_spacing,
                 1.0,
                 gas_vdw_dir,
                 settings);
@@ -99,7 +103,7 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
                 lpunFile,
                 "mtp",
                 0.0,
-                lambda,
+                lambda_spacing,
                 1.0,
                 gas_mtp_dir,
                 settings);
@@ -114,7 +118,7 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
                 lpunFile,
                 "vdw",
                 0.0,
-                lambda,
+                lambda_spacing,
                 1.0,
                 solv_vdw_dir,
                 settings);
@@ -128,7 +132,7 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
                 lpunFile,
                 "mtp",
                 0.0,
-                lambda,
+                lambda_spacing,
                 1.0,
                 solv_mtp_dir,
                 settings);

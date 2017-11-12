@@ -4,7 +4,7 @@ public class SessionParameter {
     public final double lambdaSpacing;
     public final double temperature;
     public final double molarMass;
-    public final double numberOfResidues;
+    public final int numberOfResidues;
     public final double expectedDensity;
     public final double expectedDeltaH;
     public final double expectedDeltaG;
@@ -13,7 +13,7 @@ public class SessionParameter {
             double lambdaSpacing,
             double temperature,
             double molarMass,
-            double numberOfResidues,
+            int numberOfResidues,
             double expectedDensity,
             double expectedDeltaH,
             double expectedDeltaG) {

@@ -14,7 +14,7 @@ import java.util.function.Function;
 /**
  * Created by mhelmer-mobile on 17.06.2016.
  */
-public class TaskHandle<T> {
+public class ProgressPageTaskHandle<T> {
 
     private String title;
     private final Future<T> future;
@@ -24,11 +24,11 @@ public class TaskHandle<T> {
     private final DateTime startTime;
     private String username;
 
-    public TaskHandle(String username,
-                      String title,
-                      Future<T> future,
-                      Function2<T, PageParameters, Class> nextPageCallback,
-                      Class cancelPage) {
+    public ProgressPageTaskHandle(String username,
+                                  String title,
+                                  Future<T> future,
+                                  Function2<T, PageParameters, Class> nextPageCallback,
+                                  Class cancelPage) {
         this.username = username;
         this.title = title;
         this.future = future;

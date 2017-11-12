@@ -60,7 +60,7 @@ public class ShowResultsPage extends HeaderPage {
 
                 Optional<CharmmResult> result = charmmRepository.getResultFor(getCurrentUsername());
 
-                LjFitSessionDir dir = userDirectory.getLjFitSessionDir(getCurrentUsername());
+                LjFitSessionDir dir = userDirectory.getLjFitSessionDir(getCurrentUsername()).get();
                 File f = createCsvExport.create(dir.getDefaultExportDir(), new CreateCsvExport.Input(
                         result.get().getOutput().getEgas(),
                         result.get().getOutput().getEliq(),

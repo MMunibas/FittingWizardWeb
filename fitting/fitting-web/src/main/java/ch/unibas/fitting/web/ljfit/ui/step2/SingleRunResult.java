@@ -1,12 +1,16 @@
 package ch.unibas.fitting.web.ljfit.ui.step2;
 
+import ch.unibas.fitting.shared.workflows.ljfit.LjFitRunResult;
+
 public class SingleRunResult {
+    String dirName;
     Double _eps, _sigma, _VDWGAS, _MTPGAS, _MTPSOL, _VDWSOL, _GASTOTAL, _SOLTOTAL, _calcdeltaG, _expdeltaG, _calcdeltaH, _expdeltaH, _calcdensity, _expdensity, _deltaG, _deltaH, _density, _Score;
 
     public SingleRunResult(Double _eps,Double _sigma,Double _deltaGofhydration,Double _VDWGAS,
                            Double _MTPGAS,Double _MTPSOL,Double _VDWSOL,Double _GASTOTAL,Double _SOLTOTAL,
                            Double _expdeltaG,Double _calcdeltaH,Double _expdeltaH,Double _calcdensity,
-                           Double _expdensity,Double _deltag,Double _DeltaH,Double _density,Double _Score) {
+                           Double _expdensity,Double _deltag,Double _DeltaH,Double _density,Double _Score,
+                           String dirName) {
         this._eps = _eps;
         this._sigma = _sigma;
         this._calcdeltaG = _deltaGofhydration;
@@ -25,6 +29,33 @@ public class SingleRunResult {
         this._deltaH = _DeltaH;
         this._density = _density;
         this._Score = _Score;
+        this.dirName = dirName;
+    }
+
+    public SingleRunResult(String dirName, LjFitRunResult result) {
+        this(result.lambdaEpsilon,
+                result.lambdaSigma,
+                result.vdwGas,
+                result.mtpGas,
+                result.mtpSol,
+                result.vdwSol,
+                result.totalGas,
+                result.totalSol,
+                result.calcdeltaG,
+                result.expdeltaG,
+                result.calcdeltaH,
+                result.expdeltaH,
+                result.calcdensity,
+                result.expdensity,
+                result.deltaG,
+                result.deltaH,
+                result.density,
+                result.score,
+                dirName);
+    }
+
+    public String getDirName() {
+        return dirName;
     }
 
     public Double get_eps() { return _eps; }

@@ -1,11 +1,14 @@
 package ch.unibas.fitting.shared.directories;
 
 import ch.unibas.fitting.shared.config.Settings;
+import io.vavr.control.Option;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,8 +54,17 @@ public class UserDirectory implements IUserDirectory {
     }
 
     @Override
-    public LjFitSessionDir getLjFitSessionDir(String username) {
-        return new LjFitSessionDir(username, getLjFitSessionFile(username));
+    public LjFitSessionDir createLjFitSessionDir(String username) {
+        File f = getLjFitSessionFile(username);
+        f.mkdirs();
+        return new LjFitSessionDir(username, f);
+    }
+
+    @Override
+    public Option<LjFitSessionDir> getLjFitSessionDir(String username) {
+        if (!ljFitSessionDirectoryExists(username))
+            return Option.none();
+        return Option.of(new LjFitSessionDir(username, getLjFitSessionFile(username)));
     }
 
     @Override
@@ -70,8 +82,11 @@ public class UserDirectory implements IUserDirectory {
     @Override
     public void deleteLjFitSession(String username) {
         File f = getLjFitSessionFile(username);
-        if (f.exists())
-            f.delete();
+        try {
+            FileUtils.deleteDirectory(f);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not delete " + f, e);
+        }
     }
 
     private File getLjFitSessionFile(String username) {

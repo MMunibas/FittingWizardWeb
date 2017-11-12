@@ -1,16 +1,15 @@
 package ch.unibas.fitting.web.ljfit.ui.step1;
 
 import ch.unibas.fitting.shared.directories.IUserDirectory;
+import ch.unibas.fitting.shared.directories.LjFitSessionDir;
 import ch.unibas.fitting.shared.workflows.ljfit.LjFitSession;
 import ch.unibas.fitting.shared.workflows.ljfit.SessionParameter;
-import ch.unibas.fitting.shared.workflows.ljfit.UploadedFiles;
+import ch.unibas.fitting.shared.workflows.ljfit.UploadedFileNames;
 import ch.unibas.fitting.web.ljfit.services.LjFitRepository;
 import ch.unibas.fitting.web.ljfit.ui.commands.OpenLjFitSessionCommand;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
@@ -36,7 +35,7 @@ public class CreateNewSessionPage extends HeaderPage {
     private LjFitRepository ljFitRepository;
 
     private final FileUploadField parUploadFile;
-    private final FileUploadField rtfUploadFile;
+    private final FileUploadField rtfOrTopUploadFile;
     private final FileUploadField molUploadFile;
     private final FileUploadField liquidUploadFile;
     private final FileUploadField solventUploadFile;
@@ -46,7 +45,7 @@ public class CreateNewSessionPage extends HeaderPage {
 
     private final IModel<Double> temperature = Model.of(0.0);
     private final IModel<Double> molarMass = Model.of(0.0);
-    private final IModel<Double> numberOfResidues = Model.of(0.0);
+    private final IModel<Integer> numberOfResidues = Model.of(0);
 
     private final IModel<Double> expectedDensity = Model.of(0.0);
     private final IModel<Double> expectedDeltaH = Model.of(0.0);
@@ -61,7 +60,7 @@ public class CreateNewSessionPage extends HeaderPage {
 
         final Form form = new Form("form");
         form.add(parUploadFile = createFileUploadField("parUploadFile"));
-        form.add(rtfUploadFile = createFileUploadField("rtfUploadFile"));
+        form.add(rtfOrTopUploadFile = createFileUploadField("rtfOrTopUploadFile"));
         form.add(molUploadFile = createFileUploadField("molUploadFile"));
         form.add(liquidUploadFile = createFileUploadField("liquidUploadFile"));
         form.add(solventUploadFile = createFileUploadField("solventUploadFile"));
@@ -106,13 +105,11 @@ public class CreateNewSessionPage extends HeaderPage {
             private static final long serialVersionUID = 1L;
 
             @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form)
-            {
+            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 target.add(fp);
-
                 _userDir.deleteLjFitSession(getCurrentUsername());
-                File destionation = _userDir.getLjFitSessionDir(getCurrentUsername()).getUploadDir();
-                UploadedFiles uploadedFiles = saveUploadedFiles(destionation);
+                LjFitSessionDir dir = _userDir.createLjFitSessionDir(getCurrentUsername());
+                UploadedFileNames uploadedFileNames = saveUploadedFiles(dir.getUploadDir());
 
                 SessionParameter parameter = new SessionParameter(
                         lambda.getObject(),
@@ -126,7 +123,7 @@ public class CreateNewSessionPage extends HeaderPage {
                 LjFitSession session = new LjFitSession(
                         getCurrentUsername(),
                         parameter,
-                        uploadedFiles);
+                        uploadedFileNames);
 
                 ljFitRepository.save(getCurrentUsername(), session);
                 openLjFitSession.execute(getCurrentUsername());
@@ -142,15 +139,15 @@ public class CreateNewSessionPage extends HeaderPage {
         add(form);
     }
 
-    private UploadedFiles saveUploadedFiles(File destination) {
+    private UploadedFileNames saveUploadedFiles(File destination) {
         File parFile = uploadFile(destination, parUploadFile.getFileUpload());
-        File rtfFile = uploadFile(destination, rtfUploadFile.getFileUpload());
+        File rtfFile = uploadFile(destination, rtfOrTopUploadFile.getFileUpload());
         File molFile = uploadFile(destination, molUploadFile.getFileUpload());
         File liquidFile = uploadFile(destination, liquidUploadFile.getFileUpload());
         File solventFile = uploadFile(destination, solventUploadFile.getFileUpload());
         File lpunFile = uploadFile(destination, lpunUploadFile.getFileUpload());
 
-        return new UploadedFiles(
+        return new UploadedFileNames(
                 parFile,
                 rtfFile,
                 molFile,

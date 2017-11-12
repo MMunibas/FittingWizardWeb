@@ -92,7 +92,6 @@ public abstract class CHARMM_Input implements CHARMM_InOut {
         File parentFile = out.getParentFile();
 
         try {
-
             FileUtils.copyFileToDirectory(cor, parentFile);
             FileUtils.copyFileToDirectory(top, parentFile);
             FileUtils.copyFileToDirectory(par, parentFile);

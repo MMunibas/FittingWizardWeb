@@ -1,6 +1,6 @@
 package ch.unibas.fitting.web.web.errors;
 
-import ch.unibas.fitting.web.application.TaskHandle;
+import ch.unibas.fitting.web.application.ProgressPageTaskHandle;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.joda.time.DateTime;
 
@@ -13,7 +13,7 @@ public class ErrorViewModel {
     private String details;
     private String taskTitle;
 
-    public ErrorViewModel(TaskHandle th, Throwable ex) {
+    public ErrorViewModel(ProgressPageTaskHandle th, Throwable ex) {
         taskTitle = th.getTitle();
         date = DateTime.now();
         message = ex.getMessage();

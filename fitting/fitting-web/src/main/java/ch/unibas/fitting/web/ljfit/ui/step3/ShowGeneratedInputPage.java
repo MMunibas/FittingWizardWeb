@@ -1,8 +1,7 @@
 package ch.unibas.fitting.web.ljfit.ui.step3;
 
 import ch.unibas.fitting.shared.workflows.charmm.CharmmInputContainer;
-import ch.unibas.fitting.web.ljfit.ui.step2.RunCharmmCommand;
-import ch.unibas.fitting.web.web.progress.ProgressPage;
+import ch.unibas.fitting.web.ljfit.ui.step2.run.RunLjFitsCommand;
 import ch.unibas.fitting.web.ljfit.services.CharmmRepository;
 import ch.unibas.fitting.web.ljfit.ui.step1.CreateNewSessionPage;
 import ch.unibas.fitting.web.web.HeaderPage;
@@ -15,14 +14,12 @@ import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import javax.inject.Inject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Created by tschmidt on 16.06.2016.
@@ -30,7 +27,7 @@ import java.util.UUID;
 public class ShowGeneratedInputPage extends HeaderPage {
 
     @Inject
-    private RunCharmmCommand runCharmmCommand;
+    private RunLjFitsCommand runLjFitsCommand;
     @Inject
     private CharmmRepository charmmRepository;
 
@@ -41,10 +38,7 @@ public class ShowGeneratedInputPage extends HeaderPage {
         add(new AjaxLink("runCharmm") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                UUID id = runCharmmCommand.run(getCurrentUsername());
-                PageParameters pp = new PageParameters();
-                pp.add("task_id", id);
-                setResponsePage(ProgressPage.class, pp);
+
             }
         });
 

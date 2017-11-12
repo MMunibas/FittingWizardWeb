@@ -13,7 +13,7 @@ import ch.unibas.fitting.shared.scripts.fitmtp.IFitMtpScript;
 import ch.unibas.fitting.shared.workflows.gaussian.fit.CreateFit;
 import ch.unibas.fitting.web.application.IAmACommand;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
-import ch.unibas.fitting.web.application.TaskHandle;
+import ch.unibas.fitting.web.application.ProgressPageTaskHandle;
 import ch.unibas.fitting.web.gaussian.FitUserRepo;
 import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
 import ch.unibas.fitting.web.gaussian.fit.step1.ParameterPage;
@@ -51,7 +51,7 @@ public class RunFitCommand implements IAmACommand {
                        boolean ignoreHydrogens,
                        LinkedHashSet<ChargeValue> chargeValues) {
 
-        TaskHandle output = tasks.execute(username,
+        ProgressPageTaskHandle output = tasks.execute(username,
                 "MTP Fit",
                 () -> {
 

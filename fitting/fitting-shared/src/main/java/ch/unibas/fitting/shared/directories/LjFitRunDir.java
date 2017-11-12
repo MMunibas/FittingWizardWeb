@@ -6,7 +6,7 @@ import java.time.Instant;
 /**
  * Created by tschmidt on 24.06.2016.
  */
-public class CharmmRunFileContainer extends FittingDirectory {
+public class LjFitRunDir extends FittingDirectory {
 
     private File gas_dir;
     private File gas_vdw_dir;
@@ -16,9 +16,12 @@ public class CharmmRunFileContainer extends FittingDirectory {
     private File solv_vdw_dir;
     private File solv_mtp_dir;
 
-    public CharmmRunFileContainer(String username, File directory) {
+    public LjFitRunDir(String username, File directory) {
+        this(username, directory, Instant.now().getEpochSecond());
+    }
+
+    public LjFitRunDir(String username, File directory, long time) {
         super(username, directory);
-        String time = Long.toString(Instant.now().getEpochSecond());
 
         gas_dir = new File(getDirectory(), "gas_" + time);
         gas_vdw_dir  = new File(gas_dir, "vdw");
@@ -52,4 +55,6 @@ public class CharmmRunFileContainer extends FittingDirectory {
     public File getSolvMtpDir() {
         return solv_mtp_dir;
     }
+
+    public File getRunJson() {return new File(getDirectory(),"run.json");}
 }

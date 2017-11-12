@@ -11,6 +11,7 @@ import java.util.Optional;
  * Created by mhelmer on 27.06.2016.
  */
 @Singleton
+@Deprecated
 public class CharmmRepository {
     private HashMap<String, CharmmInputContainer> containerHashMap = new HashMap<>();
     private HashMap<String, CharmmResult> resultHashMap = new HashMap<>();

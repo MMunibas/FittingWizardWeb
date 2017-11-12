@@ -13,6 +13,9 @@ dependencies {
 
     compile group: 'joda-time', name: 'joda-time', version: '2.3'
 
+    compile "io.vavr:vavr:0.9.1"
+    compile "io.vavr:vavr-gson:0.9.1"
+
     compile files('../lib/openbabel.jar')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'

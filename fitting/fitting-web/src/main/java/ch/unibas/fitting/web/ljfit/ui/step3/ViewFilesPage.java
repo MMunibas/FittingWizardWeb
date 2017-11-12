@@ -1,65 +1,77 @@
 package ch.unibas.fitting.web.ljfit.ui.step3;
 
 
+import ch.unibas.fitting.shared.directories.IUserDirectory;
+import ch.unibas.fitting.shared.directories.LjFitSessionDir;
 import ch.unibas.fitting.web.ljfit.ui.step2.LjSessionPage;
 import ch.unibas.fitting.web.web.HeaderPage;
+import io.vavr.control.Option;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
+import javax.inject.Inject;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class ViewFilesPage extends HeaderPage {
 
-    private File selected;
+    @Inject
+    private IUserDirectory userDirectory;
 
-    public ViewFilesPage(){
+    private IModel<List<FileViewModel>> files = Model.ofList(new ArrayList<>());
 
-        List<File> resultFileList = Arrays.asList(new File("D:/UNIBASEL/dummyText.txt")
-                                                  {
-                                                      @Override
-                                                      public String toString() {
-                                                          return this.getName();
-                                                      }
-                                                  },
-                new File("D:/UNIBASEL/dummyText2.txt"),
-                new File("D:/UNIBASEL/dummyText3.txt"),
-                new File("D:/UNIBASEL/dummyText4.txt"),
-                new File("D:/UNIBASEL/dummyText5.txt"),
-                new File("D:/UNIBASEL/dummyText6.txt"));
+    private FileViewModel selected;
 
-        selected = resultFileList.get(0);
+    public ViewFilesPage(PageParameters pp){
+
+        String runDirName = pp.get("run_dir").toString();
+
+        Option<LjFitSessionDir> dir = userDirectory.getLjFitSessionDir(getCurrentUsername());
+        if (dir.isDefined()) {
+            List<FileViewModel> resultFileList = dir.get()
+                    .listRunFiles(runDirName)
+                    .map(file -> new FileViewModel(file))
+                    .sortBy(model -> model.toString())
+                    .toJavaList();
+            files.setObject(resultFileList);
+            selected = resultFileList.get(0);
+        }
 
         add(new AjaxLink("goBack") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 setResponsePage(LjSessionPage.class);
             }
-
         });
 
-        DropDownChoice<File> dropDownChoice = new DropDownChoice<File>("resultFile",new PropertyModel<>(this, "selected"), resultFileList) {
+        DropDownChoice<FileViewModel> dropDownChoice = new DropDownChoice<FileViewModel>("resultFile",
+                new PropertyModel<>(this, "selected"), files) {
             @Override
             protected boolean wantOnSelectionChangedNotifications() {
                 return true;
             }
 
             @Override
-            protected void onSelectionChanged(File newSelection) {
-                updateResultPanel(newSelection);
+            protected void onSelectionChanged(FileViewModel newSelection) {
+                update(newSelection);
             }
         };
 
         add(dropDownChoice);
 
-        add(new ShowFileContentPanel("resultPanel", selected));
+        if (selected != null) {
+            add(new ShowFileContentPanel("resultPanel", selected.getFile()));
+        }
     }
 
-    private void updateResultPanel(File file) {
-        replace(new ShowFileContentPanel("resultPanel", file));
+    private void update(FileViewModel model) {
+        replace(new ShowFileContentPanel("resultPanel", model.getFile()));
     }
 }

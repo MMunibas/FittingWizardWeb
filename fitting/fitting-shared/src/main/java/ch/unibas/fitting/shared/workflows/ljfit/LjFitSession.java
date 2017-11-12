@@ -3,15 +3,15 @@ package ch.unibas.fitting.shared.workflows.ljfit;
 public class LjFitSession {
     private final String username;
     private final SessionParameter sessionParameter;
-    private final UploadedFiles uploadedFiles;
+    private final UploadedFileNames uploadedFileNames;
 
     public LjFitSession(
             String username,
             SessionParameter sessionParameter,
-            UploadedFiles uploadedFiles) {
+            UploadedFileNames uploadedFileNames) {
         this.username = username;
         this.sessionParameter = sessionParameter;
-        this.uploadedFiles = uploadedFiles;
+        this.uploadedFileNames = uploadedFileNames;
     }
 
     public String getUsername() {
@@ -22,5 +22,7 @@ public class LjFitSession {
         return sessionParameter;
     }
 
-    public UploadedFiles getUploadedFiles() { return uploadedFiles; }
+    public UploadedFileNames getUploadedFileNames() {
+        return uploadedFileNames;
+    }
 }

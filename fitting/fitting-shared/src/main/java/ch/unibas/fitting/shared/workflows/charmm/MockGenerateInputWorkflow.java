@@ -1,8 +1,7 @@
 package ch.unibas.fitting.shared.workflows.charmm;
 
 import ch.unibas.fitting.shared.config.Settings;
-import ch.unibas.fitting.shared.directories.CharmmRunFileContainer;
-import ch.unibas.fitting.shared.directories.LjFitSessionDir;
+import ch.unibas.fitting.shared.directories.LjFitRunDir;
 import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -32,8 +31,7 @@ public class MockGenerateInputWorkflow extends RealGenerateInputWorkflow {
     public CharmmInputContainer execute(WorkflowContext<GenerateInputWorkflowInput> context) {
         LOGGER.info("Executing mock generate input workflow.");
 
-        LjFitSessionDir dir = context.getParameter().ljFitSessionDir;
-        CharmmRunFileContainer charmmRunDir = dir.createRunDir();
+        LjFitRunDir charmmRunDir = context.getParameter().runDir;
 
         File gasTestdataDir = new File(testdataDir, "gas");
         File solvTestdataDir = new File(testdataDir, "solv");
@@ -74,7 +72,10 @@ public class MockGenerateInputWorkflow extends RealGenerateInputWorkflow {
         Collection<File> solvMtpSourceFiles = FileUtils.listFiles(solvMtpTestdataDir, new String[]{"inp"}, false);
         copyTestFiles(solvMtpSourceFiles, charmmRunDir.getSolvMtpDir());
 
-        CharmmInputContainer output = prepareInput(context.getParameter().ljFitSession, charmmRunDir);
+        CharmmInputContainer output = prepareInput(
+                context.getParameter().uploadedFiles,
+                context.getParameter().runInput,
+                charmmRunDir);
 
         return output;
     }
