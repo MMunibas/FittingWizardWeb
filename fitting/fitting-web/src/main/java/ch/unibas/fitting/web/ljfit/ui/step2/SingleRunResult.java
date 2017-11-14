@@ -1,57 +1,40 @@
 package ch.unibas.fitting.web.ljfit.ui.step2;
 
+import ch.unibas.fitting.shared.javaextensions.Function1;
+import ch.unibas.fitting.shared.workflows.ljfit.LjFitRun;
 import ch.unibas.fitting.shared.workflows.ljfit.LjFitRunResult;
 
 public class SingleRunResult {
+    boolean wasSuccessful;
     String dirName;
     Double _eps, _sigma, _VDWGAS, _MTPGAS, _MTPSOL, _VDWSOL, _GASTOTAL, _SOLTOTAL, _calcdeltaG, _expdeltaG, _calcdeltaH, _expdeltaH, _calcdensity, _expdensity, _deltaG, _deltaH, _density, _Score;
 
-    public SingleRunResult(Double _eps,Double _sigma,Double _deltaGofhydration,Double _VDWGAS,
-                           Double _MTPGAS,Double _MTPSOL,Double _VDWSOL,Double _GASTOTAL,Double _SOLTOTAL,
-                           Double _expdeltaG,Double _calcdeltaH,Double _expdeltaH,Double _calcdensity,
-                           Double _expdensity,Double _deltag,Double _DeltaH,Double _density,Double _Score,
-                           String dirName) {
-        this._eps = _eps;
-        this._sigma = _sigma;
-        this._calcdeltaG = _deltaGofhydration;
-        this._VDWGAS = _VDWGAS;
-        this._MTPGAS = _MTPGAS;
-        this._MTPSOL = _MTPSOL;
-        this._VDWSOL = _MTPSOL;
-        this._GASTOTAL = _GASTOTAL;
-        this._SOLTOTAL = _SOLTOTAL;
-        this._expdeltaG = _expdeltaG;
-        this._calcdeltaH = _calcdeltaH;
-        this._expdeltaH = _expdeltaH;
-        this._calcdensity = _calcdensity;
-        this._expdensity = _expdensity;
-        this._deltaG = _deltag;
-        this._deltaH = _DeltaH;
-        this._density = _density;
-        this._Score = _Score;
-        this.dirName = dirName;
+    public SingleRunResult(LjFitRun result) {
+        this.wasSuccessful = result.wasSuccessful();
+        this._eps = valueOrNan(result, p1 -> p1.lambdaEpsilon);
+        this._sigma = valueOrNan(result, p1 -> p1.lambdaSigma);
+        this._calcdeltaG = valueOrNan(result, p1 -> p1.calcdeltaG);
+        this._VDWGAS = valueOrNan(result, p1 -> p1.vdwGas);
+        this._MTPGAS = valueOrNan(result, p1 -> p1.mtpGas);
+        this._MTPSOL = valueOrNan(result, p1 -> p1.mtpSol);
+        this._VDWSOL = valueOrNan(result, p1 -> p1.mtpSol);
+        this._GASTOTAL = valueOrNan(result, p1 -> p1.totalGas);
+        this._SOLTOTAL = valueOrNan(result, p1 -> p1.totalSol);
+        this._expdeltaG = valueOrNan(result, p1 -> p1.expdeltaG);
+        this._calcdeltaH = valueOrNan(result, p1 -> p1.calcdeltaH);
+        this._expdeltaH = valueOrNan(result, p1 -> p1.expdeltaH);
+        this._calcdensity = valueOrNan(result, p1 -> p1.calcdensity);
+        this._expdensity = valueOrNan(result, p1 -> p1.expdensity);
+        this._deltaG = valueOrNan(result, p1 -> p1.deltaG);
+        this._deltaH = valueOrNan(result, p1 -> p1.deltaH);
+        this._density = valueOrNan(result, p1 -> p1.density);
+        this._Score = valueOrNan(result, p1 -> p1.score);
+        this.dirName = result.dirName;
     }
 
-    public SingleRunResult(String dirName, LjFitRunResult result) {
-        this(result.lambdaEpsilon,
-                result.lambdaSigma,
-                result.vdwGas,
-                result.mtpGas,
-                result.mtpSol,
-                result.vdwSol,
-                result.totalGas,
-                result.totalSol,
-                result.calcdeltaG,
-                result.expdeltaG,
-                result.calcdeltaH,
-                result.expdeltaH,
-                result.calcdensity,
-                result.expdensity,
-                result.deltaG,
-                result.deltaH,
-                result.density,
-                result.score,
-                dirName);
+    private Double valueOrNan(LjFitRun result,
+                              Function1<LjFitRunResult, Double> callback) {
+        return result.result.map(callback::apply).getOrElse(Double.NaN);
     }
 
     public String getDirName() {

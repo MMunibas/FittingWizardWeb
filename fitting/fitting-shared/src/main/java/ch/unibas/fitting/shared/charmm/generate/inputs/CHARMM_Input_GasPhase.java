@@ -114,7 +114,7 @@ public class CHARMM_Input_GasPhase extends CHARMM_Input {
     @Override
     protected void print_lpunfile() throws IOException {
         writer.write("OPEN UNIT 40 CARD READ NAME -" + "\n");
-        writer.write(lpun + "\n");
+        writer.write(lpun.getName() + "\n");
         writer.write("MTPL MTPUNIT 40" + "\n");
         writer.write("CLOSE UNIT 40" + "\n\n");
     }

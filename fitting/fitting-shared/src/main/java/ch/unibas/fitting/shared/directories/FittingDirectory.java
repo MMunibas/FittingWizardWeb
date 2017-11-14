@@ -40,4 +40,8 @@ abstract class FittingDirectory {
     public boolean exists() {
         return directory.exists();
     }
+
+    public String getUsername() {
+        return username;
+    }
 }

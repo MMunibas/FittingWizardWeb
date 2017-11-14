@@ -3,6 +3,7 @@ package ch.unibas.fitting.shared.workflows.charmm;
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.directories.LjFitRunDir;
 import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
+import ch.unibas.fitting.shared.workflows.ljfit.LjFitRunInput;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
@@ -78,6 +79,20 @@ public class MockGenerateInputWorkflow extends RealGenerateInputWorkflow {
                 charmmRunDir);
 
         return output;
+    }
+
+    @Override
+    protected File scaleParFile(UploadedFiles uploadedFiles, LjFitRunDir charmmRunDir, LjFitRunInput input) {
+        File scaled = scaledFileName(uploadedFiles, charmmRunDir);
+        try {
+            FileUtils.copyFile(
+                    uploadedFiles.parFile,
+                    scaled
+            );
+        } catch (IOException e) {
+            throw new RuntimeException("Could not copy par file", e);
+        }
+        return scaled;
     }
 
     private void copyTestFiles(Collection<File> srcFiles, File destinationDir) {

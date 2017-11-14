@@ -25,7 +25,7 @@ import javax.inject.Inject;
 
 public class RealMultipoleGaussScript implements IMultipoleGaussScript {
 
-	public static final String logExtension = ".log";
+	public static final String logExtension = ".out";
 	public static final String fchkExtension = ".fchk";
 	public static final String punExtension = ".pun";
 	public static final String cubeExtension = ".cube";
@@ -33,7 +33,7 @@ public class RealMultipoleGaussScript implements IMultipoleGaussScript {
 	
 	private final static Logger logger = Logger.getLogger(RealMultipoleGaussScript.class);
 
-    private final String MultipoleGaussScriptFileNameKey = "scripts.multipole_gauss";
+    private final String MultipoleGaussScriptFileNameKey = "submit-remote-abinitio.py";
 
     private final File multipoleGaussScriptFile;
 
@@ -61,7 +61,7 @@ public class RealMultipoleGaussScript implements IMultipoleGaussScript {
         args.add(String.valueOf(input.getState()));
         
         args.add("-Gauss");
-        args.add(input.getQuantChemDetails());
+        args.add("\"" + input.getQuantChemDetails() + "\"");
         
         args.add("-n");
         args.add(String.valueOf(input.getnCores()));

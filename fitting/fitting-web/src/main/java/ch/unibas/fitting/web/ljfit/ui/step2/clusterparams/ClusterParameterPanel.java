@@ -15,7 +15,9 @@ import org.apache.wicket.model.PropertyModel;
  */
 public class ClusterParameterPanel extends Panel {
 
-    public ClusterParameterPanel(String id, ModalWindow window, ClusterParameterViewModel clusterParameterViewModel) {
+    public ClusterParameterPanel(String id,
+                                 ModalWindow window,
+                                 ClusterParameterViewModel clusterParameterViewModel) {
         super(id);
 
         Form form = new Form("form");
@@ -26,13 +28,7 @@ public class ClusterParameterPanel extends Panel {
         fp.setOutputMarkupPlaceholderTag(true);
         add(fp);
 
-        NumberTextField ncpuRhoDeltaHField = new NumberTextField<>("ncpusDeltaH", new PropertyModel(clusterParameterViewModel, "ncpusDeltaH"));
-        ncpuRhoDeltaHField.setStep(1);
-        ncpuRhoDeltaHField.setMinimum(1);
-        ncpuRhoDeltaHField.setRequired(true);
-        form.add(ncpuRhoDeltaHField);
-
-        NumberTextField ncpuDeltaGField = new NumberTextField<>("ncpusDeltaG",  new PropertyModel(clusterParameterViewModel, "ncpusDeltaG"));
+        NumberTextField ncpuDeltaGField = new NumberTextField<>("ncpus", new PropertyModel(clusterParameterViewModel, "ncpus"));
         ncpuDeltaGField.setStep(1);
         ncpuDeltaGField.setMinimum(1);
         ncpuDeltaGField.setRequired(true);
@@ -55,14 +51,5 @@ public class ClusterParameterPanel extends Panel {
                 target.add(fp);
             }
         });
-
-        form.add(new AjaxButton("cancel") {
-            @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                window.close(target);
-            }
-        });
-
-
     }
 }

@@ -28,7 +28,7 @@ public class WelcomePage extends HeaderPage {
         RadioChoice<String> fittingOptions = new RadioChoice<>("types",
                 new PropertyModel<>(this, "navigationSelection"), selections);
         fittingOptions.setSuffix("</br>");
-        add(fittingOptions);
+        //add(fittingOptions);
 
         Form<?> form = new Form<Void>("form") {
             @Override
@@ -41,9 +41,8 @@ public class WelcomePage extends HeaderPage {
                 }
             }
         };
-
-        add(form);
         form.add(fittingOptions);
+        add(form);
     }
 }
 

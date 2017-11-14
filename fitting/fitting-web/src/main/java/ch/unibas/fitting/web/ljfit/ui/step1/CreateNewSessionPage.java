@@ -43,13 +43,13 @@ public class CreateNewSessionPage extends HeaderPage {
 
     private final IModel<Double> lambda = Model.of(0.1);
 
-    private final IModel<Double> temperature = Model.of(0.0);
-    private final IModel<Double> molarMass = Model.of(0.0);
-    private final IModel<Integer> numberOfResidues = Model.of(0);
+    private final IModel<Double> temperature = Model.of(1.0);
+    private final IModel<Double> molarMass = Model.of(1.0);
+    private final IModel<Integer> numberOfResidues = Model.of(1);
 
-    private final IModel<Double> expectedDensity = Model.of(0.0);
-    private final IModel<Double> expectedDeltaH = Model.of(0.0);
-    private final IModel<Double> expectedDeltaG = Model.of(0.0);
+    private final IModel<Double> expectedDensity = Model.of(1.0);
+    private final IModel<Double> expectedDeltaH = Model.of(1.0);
+    private final IModel<Double> expectedDeltaG = Model.of(1.0);
 
     public CreateNewSessionPage() {
 
@@ -66,37 +66,37 @@ public class CreateNewSessionPage extends HeaderPage {
         form.add(solventUploadFile = createFileUploadField("solventUploadFile"));
         form.add(lpunUploadFile = createFileUploadField("lpunUploadFile"));
 
-        NumberTextField lambdaField = new NumberTextField("lambda", lambda);
+        NumberTextField<Double> lambdaField = new NumberTextField<>("lambda", lambda);
         lambdaField.setRequired(true);
         lambdaField.setStep(NumberTextField.ANY);
         form.add(lambdaField);
 
-        NumberTextField temperatureField = new NumberTextField("temperature", temperature);
+        NumberTextField<Double> temperatureField = new NumberTextField<>("temperature", temperature);
         temperatureField.setRequired(true);
         temperatureField.setStep(NumberTextField.ANY);
         form.add(temperatureField);
 
-        NumberTextField molarMassField = new NumberTextField("molarMass", molarMass);
+        NumberTextField<Double> molarMassField = new NumberTextField<>("molarMass", molarMass);
         molarMassField.setRequired(true);
         molarMassField.setStep(NumberTextField.ANY);
         form.add(molarMassField);
 
-        NumberTextField numberOfResiduesField = new NumberTextField("numberOfResidues", numberOfResidues);
+        NumberTextField<Integer> numberOfResiduesField = new NumberTextField<>("numberOfResidues", numberOfResidues);
         numberOfResiduesField.setRequired(true);
-        numberOfResiduesField.setStep(NumberTextField.ANY);
+        numberOfResiduesField.setStep(1);
         form.add(numberOfResiduesField);
 
-        NumberTextField expectedDensityField = new NumberTextField("expectedDensity", expectedDensity);
+        NumberTextField<Double> expectedDensityField = new NumberTextField<>("expectedDensity", expectedDensity);
         expectedDensityField.setRequired(true);
         expectedDensityField.setStep(NumberTextField.ANY);
         form.add(expectedDensityField);
 
-        NumberTextField expectedDeltaHField = new NumberTextField("expectedDeltaH", expectedDeltaH);
+        NumberTextField<Double> expectedDeltaHField = new NumberTextField<>("expectedDeltaH", expectedDeltaH);
         expectedDeltaHField.setRequired(true);
         expectedDeltaHField.setStep(NumberTextField.ANY);
         form.add(expectedDeltaHField);
 
-        NumberTextField expectedDeltaGField = new NumberTextField("expectedDeltaG", expectedDeltaG);
+        NumberTextField<Double> expectedDeltaGField = new NumberTextField<>("expectedDeltaG", expectedDeltaG);
         expectedDeltaGField.setRequired(true);
         expectedDeltaGField.setStep(NumberTextField.ANY);
         form.add(expectedDeltaGField);
@@ -107,10 +107,6 @@ public class CreateNewSessionPage extends HeaderPage {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 target.add(fp);
-                _userDir.deleteLjFitSession(getCurrentUsername());
-                LjFitSessionDir dir = _userDir.createLjFitSessionDir(getCurrentUsername());
-                UploadedFileNames uploadedFileNames = saveUploadedFiles(dir.getUploadDir());
-
                 SessionParameter parameter = new SessionParameter(
                         lambda.getObject(),
                         temperature.getObject(),
@@ -120,12 +116,7 @@ public class CreateNewSessionPage extends HeaderPage {
                         expectedDeltaH.getObject(),
                         expectedDeltaG.getObject());
 
-                LjFitSession session = new LjFitSession(
-                        getCurrentUsername(),
-                        parameter,
-                        uploadedFileNames);
-
-                ljFitRepository.save(getCurrentUsername(), session);
+                createNewSession(getCurrentUsername(), parameter);
                 openLjFitSession.execute(getCurrentUsername());
             }
 
@@ -137,6 +128,19 @@ public class CreateNewSessionPage extends HeaderPage {
         });
 
         add(form);
+    }
+
+    private void createNewSession(String currentUsername, SessionParameter parameter) {
+        _userDir.deleteLjFitSession(currentUsername);
+        LjFitSessionDir dir = _userDir.createLjFitSessionDir(currentUsername);
+        UploadedFileNames uploadedFileNames = saveUploadedFiles(dir.getUploadDir());
+
+        LjFitSession session = new LjFitSession(
+                currentUsername,
+                parameter,
+                uploadedFileNames);
+
+        ljFitRepository.save(currentUsername, session);
     }
 
     private UploadedFileNames saveUploadedFiles(File destination) {

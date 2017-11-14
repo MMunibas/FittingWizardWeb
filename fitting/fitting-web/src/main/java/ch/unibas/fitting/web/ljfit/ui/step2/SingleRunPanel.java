@@ -1,9 +1,11 @@
 package ch.unibas.fitting.web.ljfit.ui.step2;
 
+import ch.unibas.fitting.web.ljfit.ui.step2.clusterparams.ClusterParameterViewModel;
 import ch.unibas.fitting.web.ljfit.ui.step2.run.RunFromPage;
 import ch.unibas.fitting.web.ljfit.ui.step2.run.RunLjFitsCommand;
 import ch.unibas.fitting.web.ljfit.ui.step2.run.RunPair;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.form.Form;
@@ -18,12 +20,16 @@ public class SingleRunPanel extends Panel {
 
     public IModel<Double> lambda = Model.of(0.0);
 
-    public SingleRunPanel(String id, ModalWindow window,
+    public SingleRunPanel(String id,
                           String username,
-                          RunLjFitsCommand runLjFitsCommand) {
+                          RunLjFitsCommand runLjFitsCommand,
+                          ClusterParameterViewModel clusterParameter) {
         super(id);
 
-        EpsilonSigmaPair singlePair = new EpsilonSigmaPair(1.0,1.0, true);
+        EpsilonSigmaPair singlePair = new EpsilonSigmaPair(
+                1.0,
+                1.0,
+                true);
 
         Form singleForm = new Form("singleForm");
         add(singleForm);
@@ -46,7 +52,12 @@ public class SingleRunPanel extends Panel {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 RunPair pair = new RunPair(singlePair.getEps(), singlePair.getSigma());
 
-                runLjFitsCommand.execute(username, new RunFromPage(pair, lambda.getObject()));
+                runLjFitsCommand.execute(username, new RunFromPage(
+                        pair,
+                        lambda.getObject(),
+                        clusterParameter.getNcpus(),
+                        clusterParameter.getClusterName()
+                        ));
             }
         });
     }

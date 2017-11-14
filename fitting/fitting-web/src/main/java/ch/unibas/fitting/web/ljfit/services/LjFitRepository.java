@@ -4,6 +4,8 @@ import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.shared.directories.LjFitSessionDir;
 import ch.unibas.fitting.shared.infrastructure.JsonSerializer;
 import ch.unibas.fitting.shared.workflows.ljfit.LjFitRun;
+import ch.unibas.fitting.shared.workflows.ljfit.LjFitRunInput;
+import ch.unibas.fitting.shared.workflows.ljfit.LjFitRunResult;
 import ch.unibas.fitting.shared.workflows.ljfit.LjFitSession;
 import com.google.gson.Gson;
 import io.vavr.collection.List;
@@ -29,49 +31,29 @@ public class LjFitRepository {
         if (dir.isEmpty())
             return List.empty();
 
-        List<File> jsons = dir.get().listAllRunJsons();
-
-        return jsons
-                .map(file -> {
-                    try {
-                        return FileUtils.readFileToString(file, Charset.defaultCharset());
-                    } catch (IOException e) {
-                        throw new RuntimeException("Could not load file " + file);
-                    }
-                })
-                .map(r -> fromJson(r, LjFitRun.class))
+        return dir.get()
+                .listRunDirs()
+                .map(runDir -> new LjFitRun(
+                        runDir.getUsername(),
+                        runDir.getDirectory().getName(),
+                        runDir.getCreated(),
+                        readJsonFile(runDir.getRunInputJson(), LjFitRunInput.class),
+                        readJsonFile(runDir.getRunOutputJson(), LjFitRunResult.class)
+                ))
                 .toList();
     }
 
     public synchronized Option<LjFitSession> loadSessionForUser(String username) {
-        Option<LjFitSessionDir> dir = userDirectory.getLjFitSessionDir(username);
-        if (dir.isEmpty())
-            return Option.none();
-
-        File f = dir.get().getSessionJsonFile();
-        try {
-            String json = FileUtils.readFileToString(f, Charset.defaultCharset());
-            Gson gson = new Gson();
-            LjFitSession session = gson.fromJson(json, LjFitSession.class);
-
-            return Option.of(session);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not load " + f);
-        }
+        return userDirectory.getLjFitSessionDir(username)
+            .map(dir -> readJsonFile(dir.getSessionJsonFile(), LjFitSession.class).get());
     }
 
     public synchronized void save(String username, LjFitSession session) {
         userDirectory.getLjFitSessionDir(username)
                 .map(dir -> {
-                    String json = toJson(session);
-
-                    File f = new File(dir.getDirectory(), "session.json");
-
-                    try {
-                        FileUtils.write(f, json, Charset.defaultCharset());
-                    } catch (IOException e) {
-                        throw new RuntimeException("save json file failed " + f, e);
-                    }
+                    writeJsonFile(
+                            new File(dir.getDirectory(), "session.json"),
+                            session);
                     return null;
                 });
     }
@@ -84,12 +66,32 @@ public class LjFitRepository {
         return userDirectory.ljFitSessionDirectoryExists(username);
     }
 
-    private String toJson(Object src) {
-        return serializer.toJson(src);
+    private void writeJsonFile(File file, Object src) {
+        String json = serializer.toJson(src);
+        try {
+            FileUtils.write(file, json, Charset.defaultCharset());
+        } catch (IOException e) {
+            throw new RuntimeException("save json file failed " + file, e);
+        }
     }
 
-    public <T> T fromJson(String json, Class<T> classOfT) {
-        return serializer.fromJson(json, classOfT);
+    public <T> Option<T> readJsonFile(File file, Class<T> classOfT) {
+        if (!file.isFile())
+            return Option.none();
+        try {
+            String content = FileUtils.readFileToString(file, Charset.defaultCharset());
+            T result = serializer.fromJson(content, classOfT);
+            return Option.of(result);
+        } catch (Exception e) {
+            throw new RuntimeException("Could deserialize file " + file);
+        }
     }
 
+    public void deleteRunDir(String username, String runDir) {
+        userDirectory.getLjFitSessionDir(username)
+                .map(dir -> {
+                    dir.deleteRunDir(runDir);
+                    return null;
+                });
+    }
 }

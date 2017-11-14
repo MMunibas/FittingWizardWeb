@@ -11,7 +11,9 @@ public class GenerateInputWorkflowInput {
     public final LjFitRunInput runInput;
     public final UploadedFiles uploadedFiles;
 
-    public GenerateInputWorkflowInput(LjFitRunDir runDir, LjFitRunInput runInput, UploadedFiles uploadedFiles) {
+    public GenerateInputWorkflowInput(LjFitRunDir runDir,
+                                      LjFitRunInput runInput,
+                                      UploadedFiles uploadedFiles) {
         this.runDir = runDir;
         this.runInput = runInput;
         this.uploadedFiles = uploadedFiles;

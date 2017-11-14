@@ -45,7 +45,7 @@ public abstract class HeaderPage extends WizardPage {
             @Override
             protected void onComponentTag(ComponentTag tag) {
                 super.onComponentTag(tag);
-                tag.put("style", "margin-top: 15px;");
+                tag.put("style", "margin-top: 15px;color:white;");
             }
         };
         navbar.addComponents(new ImmutableNavbarComponent(lbl, Navbar.ComponentPosition.RIGHT));
@@ -59,11 +59,11 @@ public abstract class HeaderPage extends WizardPage {
             @Override
             protected void onComponentTag(ComponentTag tag) {
                 super.onComponentTag(tag);
-                tag.put("style", "margin-top: 15px;margin-left: 15px;font-weight:bold;");
+                tag.put("style", "margin-top: 15px;margin-left: 15px;font-weight:bold;color:white;");
             }
         };
         lnk.setBody(Model.of("Logout"));
-        navbar.addComponents(new ImmutableNavbarComponent(lnk, Navbar.ComponentPosition.RIGHT));
+        //navbar.addComponents(new ImmutableNavbarComponent(lnk, Navbar.ComponentPosition.RIGHT));
 
         add(new Label("footer", new Model<>("Fitting Wizard Web " + Version.getManifestVersion())));
     }

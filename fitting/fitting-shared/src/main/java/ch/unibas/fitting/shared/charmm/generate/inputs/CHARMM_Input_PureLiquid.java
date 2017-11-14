@@ -141,7 +141,7 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
     @Override
     protected void print_lpunfile() throws IOException {
         writer.write("OPEN UNIT 40 CARD READ NAME -" + "\n");
-        writer.write(lpun + "\n");
+        writer.write(lpun.getName() + "\n");
         writer.write("MTPL MTPUNIT 40 ron2 10 roff2 12 ron3 9 roff3 11 -" + "\n");
         writer.write("\t" + "ron4 8 roff4 10 ron5 7 roff5 9" + "\n");
         writer.write("CLOSE UNIT 40" + "\n\n");

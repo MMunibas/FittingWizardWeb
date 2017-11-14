@@ -1,5 +1,5 @@
 <wicket:panel xmlns:wicket="http://www.w3.org/1999/xhtml">
-    <h3>Extra parameters used when submitting CHARMM simulations:</h3>
+    <h3>Cluster parameter:</h3>
 
     <form wicket:id="form">
         <p>
@@ -11,17 +11,14 @@
                 <col class="col-md-4">
                 <col class="col-md-6">
             </colgroup>
+
             <tr>
-                <td>Ncpus (&rho;/&Delta;H)</td>
-                <td><input wicket:id="ncpusDeltaH" type="number" /></td>
-            </tr>
-            <tr>
-                <td>Ncpus (&Delta;G)</td>
-                <td><input wicket:id="ncpusDeltaG" type="number" /></td>
-            </tr>
-            <tr>
-                <td>Cluster</td>
+                <td>Cluster name</td>
                 <td><input wicket:id="clusterName" type="text" /></td>
+            </tr>
+            <tr>
+                <td>Number of CPUs</td>
+                <td><input wicket:id="ncpus" type="number" /></td>
             </tr>
         </table>
 

@@ -15,9 +15,7 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import javax.inject.Inject;
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ViewFilesPage extends HeaderPage {
@@ -36,12 +34,14 @@ public class ViewFilesPage extends HeaderPage {
         Option<LjFitSessionDir> dir = userDirectory.getLjFitSessionDir(getCurrentUsername());
         if (dir.isDefined()) {
             List<FileViewModel> resultFileList = dir.get()
-                    .listRunFiles(runDirName)
+                    .listGeneratedRunFiles(runDirName)
                     .map(file -> new FileViewModel(file))
                     .sortBy(model -> model.toString())
                     .toJavaList();
             files.setObject(resultFileList);
-            selected = resultFileList.get(0);
+            if (resultFileList.size() > 0) {
+                selected = resultFileList.get(0);
+            }
         }
 
         add(new AjaxLink("goBack") {

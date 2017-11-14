@@ -1,18 +1,17 @@
 <wicket:panel xmlns:wicket="http://www.w3.org/1999/xhtml">
-    <h3>Enter parameters for single run (e.g. 1.05):</h3>
+    <h3>Enter parameters for single run:</h3>
 
     <form wicket:id="singleForm">
             <div style="width: 50vw">
-                Epsilon: <input wicket:id="epsilon" type="text" style="width: 3vw"/>
-                Sigma: <input wicket:id="sigma" type="text"  style="width: 3vw"/>
+                &lambda;&epsilon;: <input wicket:id="epsilon" type="text" style="width: 3vw"/>
+                &lambda;&sigma;: <input wicket:id="sigma" type="text"  style="width: 3vw"/>
             </div>
 
-            <div>
+            <div style="padding: 5px 0px">
                 &lambda; spacing parameter: <input wicket:id="lambda" type="number" />
             </div>
             <input wicket:id="runSingle" type="submit" value="Execute single run" class="btn btn-default" />
 
     </form>
-
 
 </wicket:panel>

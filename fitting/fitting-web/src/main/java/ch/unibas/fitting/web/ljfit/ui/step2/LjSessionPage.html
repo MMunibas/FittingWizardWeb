@@ -10,6 +10,7 @@
         &nbsp
         <input wicket:id="gridRunValues" type="button" value="Run grid values" class="btn btn-default" />
         <input wicket:id="singleRunValues" type="button" value="Run custom values" class="btn btn-default" />
+        <input wicket:id="showClusterParameter" type="button" value="Cluster parameter" class="btn btn-default" />
     </div>
 
     <div>
@@ -20,45 +21,54 @@
             <tr>
                 <td align="center" style="border: 1px solid;"></td>
                 <td align="center" style="border: 1px solid; width: 40px">&epsilon;</td>
-                <td align="center" style="border-right-style: double; border-top-style: solid; border-top-width: 1px; border-top-color: black;  border-bottom-style: solid; border-bottom-width: 1px; width: 40px">&sigma;</td>
-                <td align="center" style="border: 1px solid; width: 60px">Score</td>
+                <td align="center" style="border-top: 1px solid black;border-right-style: double;border-bottom: 1px solid;width: 40px">&sigma;</td>
+                <td align="center" style="border-top: 1px solid black;border-right-style: double;border-bottom: 1px solid;width: 40px">Score</td>
                 <td align="center" style="border: 1px solid; width: 60px">&Delta;&Delta;G<sub>solv</sub><sup>2</sup></td>
                 <td align="center" style="border: 1px solid; width: 60px">&Delta;&Delta;H<sub>vap</sub><sup>2</sup></td>
-                <td align="center" style="border: 1px solid; width: 60px">&Delta;&rho;<sup>2</sup></td>
+                <td align="center" style="border-top: 1px solid black;border-right-style: double;border-bottom: 1px solid;width: 40px">&Delta;&rho;<sup>2</sup></td>
                 <td align="center" style="border: 1px solid; width: 60px">&Delta;G<sub>solv.calc</sub></td>
                 <td align="center" style="border: 1px solid; width: 60px">&Delta;G<sub>solv.exp</sub></td>
                 <td align="center" style="border: 1px solid; width: 60px">&Delta;H<sub>vap.calc</sub></td>
                 <td align="center" style="border: 1px solid; width: 60px">&Delta;H<sub>vap.exp</sub></td>
                 <td align="center" style="border: 1px solid; width: 60px">&rho;<sub>calc</sub></td>
-                <td align="center" style="border: 1px solid; width: 60px">&rho;<sub>exp</sub></td>
+                <td align="center" style="border-top: 1px solid black;border-right-style: double;border-bottom: 1px solid;width: 40px">&rho;<sub>exp</sub></td>
                 <td align="center" style="border: 1px solid; width: 60px">VDW GAS</td>
                 <td align="center" style="border: 1px solid; width: 60px">ELE GAS</td>
                 <td align="center" style="border: 1px solid; width: 60px">VDW SOL</td>
                 <td align="center" style="border: 1px solid; width: 60px">ELE SOL</td>
                 <td align="center" style="border: 1px solid; width: 60px">GAS TOTAL</td>
-                <td align="center" style="border: 1px solid; width: 60px">SOL TOTAL</td>
+                <td align="center" style="border-top: 1px solid black;border-right-style: double;border-bottom: 1px solid;width: 40px">SOL TOTAL</td>
+                <td align="center" style="border: 1px solid; width: 60px"></td>
             </tr>
             <tr wicket:id="listview" >
-                <td align="center" style="border: 1px solid"><input wicket:id="resultPageLink" type="button" value="Files" class="btn btn-default"/></td>
+                <td align="center" style="border: 1px solid">
+                    <button wicket:id="resultPageLink" type="button" class="btn btn-default">
+                        <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                    </button>
+                </td>
                 <td align="center" style="border: 1px solid; width: 40px"><span wicket:id="eps"></span></td>
                 <td align="center" style="border-right-style: double; border-bottom-style: solid; border-bottom-width: 1px; width: 40px"><span wicket:id="sigma"></span></td>
-                <td align="center" style="border: 1px solid; width: 60px"><span wicket:id="score"></span></td>
+                <td align="center" style="border-top: 1px solid black;border-right-style: double;border-bottom: 1px solid;width: 40px"><span wicket:id="score"></span></td>
                 <td align="center" style="border: 1px solid; width: 60px"><span wicket:id="deltaG"></span></td>
                 <td align="center" style="border: 1px solid; width: 60px"><span wicket:id="deltaH"></span></td>
-                <td align="center" style="border: 1px solid; width: 60px"><span wicket:id="density"></span></td>
+                <td align="center" style="border-top: 1px solid black;border-right-style: double;border-bottom: 1px solid;width: 40px"><span wicket:id="density"></span></td>
                 <td align="center" style="border: 1px solid; width: 60px"><span wicket:id="calcdeltaG"></span></td>
                 <td align="center" style="border: 1px solid; width: 60px"><span wicket:id="expdeltaG"></span></td>
                 <td align="center" style="border: 1px solid; width: 60px"><span wicket:id="calcdeltaH"></span></td>
                 <td align="center" style="border: 1px solid; width: 60px"><span wicket:id="expdeltaH"></span></td>
                 <td align="center" style="border: 1px solid; width: 60px"><span wicket:id="calcdensity"></span></td>
-                <td align="center" style="border: 1px solid; width: 60px"><span wicket:id="expdensity"></span></td>
+                <td align="center" style="border-top: 1px solid black;border-right-style: double;border-bottom: 1px solid;width: 40px"><span wicket:id="expdensity"></span></td>
                 <td align="center" style="border: 1px solid; width: 60px"><span wicket:id="VDWGAS"></span></td>
                 <td align="center" style="border: 1px solid; width: 60px"><span wicket:id="ELEGAS"></span></td>
                 <td align="center" style="border: 1px solid; width: 60px"><span wicket:id="VDWSOL"></span></td>
                 <td align="center" style="border: 1px solid; width: 60px"><span wicket:id="ELESOL"></span></td>
                 <td align="center" style="border: 1px solid; width: 60px"><span wicket:id="GASTOTAL"></span></td>
-                <td align="center" style="border: 1px solid; width: 60px"><span wicket:id="SOLTOTAL"></span></td>
-
+                <td align="center" style="border-top: 1px solid black;border-right-style: double;border-bottom: 1px solid;width: 40px"><span wicket:id="SOLTOTAL"></span></td>
+                <td align="center" style="border: 1px solid">
+                    <button wicket:id="deleteRun" type="button" class="btn btn-default">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    </button>
+                </td>
             </tr>
         </table>
     </div>
@@ -66,5 +76,7 @@
     <div wicket:id="singleRunModalWindow"></div>
 
     <div wicket:id="gridRunModalWindow"></div>
+
+    <div wicket:id="clusterParameterWindow"></div>
 
 </wicket:extend>

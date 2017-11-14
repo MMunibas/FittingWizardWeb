@@ -44,8 +44,7 @@ public class RunGaussianCommand implements IAmACommand {
                 nCores,
                 multiplicity);
 
-        ProgressPageTaskHandle th = tasks.execute(username, "Multiple Gaussian MEP", () -> {
-            Thread.sleep(1000);
+        ProgressPageTaskHandle th = tasks.execute(username, "Gaussian MEP", () -> {
             RunGaussianResult result = workflow.execute(WorkflowContext.withInput(input));
             moleculeUserRepo.save(username, result.getMolecule());
             return result;

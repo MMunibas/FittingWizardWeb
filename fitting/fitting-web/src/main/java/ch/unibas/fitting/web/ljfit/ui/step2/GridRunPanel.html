@@ -2,22 +2,22 @@
     <div style="height: 50vh;">
     <h3>Enter parameters for grid run:</h3>
 
-    <form wicket:id="inputForm">
+    <form wicket:id="inputForm" style="padding: 5px 0px">
         <div style="width: 50vw">
-            Number Eps: <input wicket:id="numberEps" type="number" style="width: 3vw"/>
-            Delta Eps: <input wicket:id="deltaEps" type="text"  style="width: 3vw"/>
-            Number Sigma: <input wicket:id="numberSigma" type="number"  style="width: 3vw"/>
-            Delta Sigma: <input wicket:id="deltaSigma" type="text"  style="width: 3vw"/>
+            Number &lambda;&epsilon;: <input wicket:id="numberEps" type="number" style="width: 3vw"/>
+            &Delta; &lambda;&epsilon;: <input wicket:id="deltaEps" type="text"  style="width: 3vw"/>
+            Number &lambda;&sigma;: <input wicket:id="numberSigma" type="number"  style="width: 3vw"/>
+            &Delta; &lambda;&sigma;: <input wicket:id="deltaSigma" type="text"  style="width: 3vw"/>
         </div>
         <input wicket:id="generateGrid" type="submit" value="Generate values" class="btn btn-default" />
     </form>
 
-    <form wicket:id="choiceForm">
+    <form wicket:id="choiceForm" style="padding: 5px 0px">
         Choose the parameters you want to run.
         <table wicket:id="choiceContainer" style="border: 1px solid; " class="table table-striped">
             <tr>
-                <td align="center" style="border: 1px solid; width: 10vw">&epsilon;</td>
-                <td align="center" style="border-right-style: double; border-top-style: solid; border-top-width: 1px; border-top-color: black;  border-bottom-style: solid; border-bottom-width: 1px; width: 10vw">&sigma;</td>
+                <td align="center" style="border: 1px solid; width: 10vw">&lambda;&epsilon;</td>
+                <td align="center" style="border-right-style: double; border-top-style: solid; border-top-width: 1px; border-top-color: black;  border-bottom-style: solid; border-bottom-width: 1px; width: 10vw">&lambda;&sigma;</td>
                 <td align="center" style="border: 1px solid; width: 10vw">Choice</td>
             </tr>
             <tr wicket:id="gridListview" >
@@ -27,7 +27,7 @@
             </tr>
         </table>
         <div>
-            &lambda; spacing parameter: <input wicket:id="lambda" type="number" />
+            &lambda; spacing: <input wicket:id="lambda" type="number" />
         </div>
         <input wicket:id="runGrid" type="submit" value="Run grid" class="btn btn-default" />
 

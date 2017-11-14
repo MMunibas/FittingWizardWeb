@@ -1,7 +1,10 @@
 package ch.unibas.fitting.web.ljfit.ui.step2;
 
+import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.web.ljfit.services.LjFitRepository;
 import ch.unibas.fitting.web.ljfit.ui.step1.CreateNewSessionPage;
+import ch.unibas.fitting.web.ljfit.ui.step2.clusterparams.ClusterParameterPanel;
+import ch.unibas.fitting.web.ljfit.ui.step2.clusterparams.ClusterParameterViewModel;
 import ch.unibas.fitting.web.ljfit.ui.step2.run.RunLjFitsCommand;
 import ch.unibas.fitting.web.ljfit.ui.step3.ViewFilesPage;
 import ch.unibas.fitting.web.web.HeaderPage;
@@ -30,8 +33,12 @@ public class LjSessionPage extends HeaderPage {
 
     private GridRunPanel gridRunSetup;
     private SingleRunPanel singleRunSetup;
+    private ClusterParameterPanel clusterParameterPanel;
+
+    private ClusterParameterViewModel clusterParameter;
 
     public LjSessionPage() {
+        this.clusterParameter = new ClusterParameterViewModel(8, "beethoven");
 
         add(new AjaxLink("newSession") {
             @Override
@@ -39,16 +46,36 @@ public class LjSessionPage extends HeaderPage {
                 setResponsePage(CreateNewSessionPage.class);
             }
         });
-        GridPanelParameter gridPanelParameter = new GridPanelParameter(1, 0.1,1,0.2);
+
+        ModalWindow clusterWindow = new ModalWindow("clusterParameterWindow");
+        clusterWindow.showUnloadConfirmation(false);
+        clusterWindow.setAutoSize(true);
+        clusterWindow.setContent(new ClusterParameterPanel(
+                clusterWindow.getContentId(),
+                clusterWindow,
+                clusterParameter
+        ));
+        clusterWindow.setCloseButtonCallback(target -> true);
+        add(clusterWindow);
+
+        add(new AjaxLink("showClusterParameter") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                LOGGER.debug("opening single run dialog");
+                clusterWindow.show(target);
+            }
+        });
+
+        GridPanelParameter gridPanelParameter = new GridPanelParameter(1, 0.1,1,0.1);
         ModalWindow gridRunDialogue = new ModalWindow("gridRunModalWindow");
         gridRunDialogue.showUnloadConfirmation(false);
         gridRunDialogue.setAutoSize(true);
         gridRunSetup = new GridRunPanel(
                 gridRunDialogue.getContentId(),
-                gridRunDialogue,
                 gridPanelParameter,
                 getCurrentUsername(),
-                runLjFitsCommand);
+                runLjFitsCommand,
+                clusterParameter);
         gridRunDialogue.setContent(gridRunSetup);
         gridRunDialogue.setCloseButtonCallback(target -> true);
         add(gridRunDialogue);
@@ -63,9 +90,9 @@ public class LjSessionPage extends HeaderPage {
         ModalWindow singleRunDialogue = new ModalWindow("singleRunModalWindow");
         singleRunSetup = new SingleRunPanel(
                 singleRunDialogue.getContentId(),
-                singleRunDialogue,
                 getCurrentUsername(),
-                runLjFitsCommand);
+                runLjFitsCommand,
+                clusterParameter);
         singleRunDialogue.setContent(singleRunSetup);
         singleRunDialogue.showUnloadConfirmation(false);
         singleRunDialogue.setCloseButtonCallback(target -> true);
@@ -113,6 +140,14 @@ public class LjSessionPage extends HeaderPage {
                 item.add(new Label("VDWSOL", twoDecimal.format(singleResult.get_VDWSOL())));
                 item.add(new Label("GASTOTAL", twoDecimal.format(singleResult.get_GASTOTAL())));
                 item.add(new Label("SOLTOTAL", twoDecimal.format(singleResult.get_SOLTOTAL())));
+
+                item.add(new AjaxLink("deleteRun") {
+                    @Override
+                    public void onClick(AjaxRequestTarget target) {
+                        ljFitRepository.deleteRunDir(getCurrentUsername(), singleResult.getDirName());
+                        setResponsePage(LjSessionPage.class);
+                    }
+                });
             }
         });
     }
@@ -121,7 +156,7 @@ public class LjSessionPage extends HeaderPage {
     protected void onInitialize() {
         super.onInitialize();
         List<SingleRunResult> runs =  ljFitRepository.listRuns(getCurrentUsername())
-                .map(run -> new SingleRunResult(run.dirName, run.result))
+                .map(run -> new SingleRunResult(run))
                 .toJavaList();
 
         ljFitRepository.loadSessionForUser(getCurrentUsername())

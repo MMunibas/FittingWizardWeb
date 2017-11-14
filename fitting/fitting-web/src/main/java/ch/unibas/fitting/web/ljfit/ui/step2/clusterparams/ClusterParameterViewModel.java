@@ -7,30 +7,22 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
  * Created by tschmidt on 23.06.2016.
  */
 public class ClusterParameterViewModel implements Serializable {
-    private Integer ncpusDeltaH;
-    private Integer ncpusDeltaG;
+    private Integer ncpus;
     private String clusterName;
 
-    public ClusterParameterViewModel(int ncpusDeltaH, int ncpusDeltaG, String clusterName) {
-        this.ncpusDeltaH = ncpusDeltaH;
-        this.ncpusDeltaG = ncpusDeltaG;
+    public ClusterParameterViewModel(
+            int ncpus,
+            String clusterName) {
+        this.ncpus = ncpus;
         this.clusterName = clusterName;
     }
 
-    public Integer getNcpusDeltaH() {
-        return ncpusDeltaH;
+    public Integer getNcpus() {
+        return ncpus;
     }
 
-    public void setNcpusDeltaH(Integer ncpusDeltaH) {
-        this.ncpusDeltaH = ncpusDeltaH;
-    }
-
-    public Integer getNcpusDeltaG() {
-        return ncpusDeltaG;
-    }
-
-    public void setNcpusDeltaG(Integer ncpusDeltaG) {
-        this.ncpusDeltaG = ncpusDeltaG;
+    public void setNcpus(Integer ncpus) {
+        this.ncpus = ncpus;
     }
 
     public String getClusterName() {

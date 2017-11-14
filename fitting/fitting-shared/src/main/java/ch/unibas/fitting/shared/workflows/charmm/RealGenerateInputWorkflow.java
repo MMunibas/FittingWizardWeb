@@ -5,13 +5,18 @@ import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_GasPhase;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_PureLiquid;
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.directories.LjFitRunDir;
+import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
 import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
 import ch.unibas.fitting.shared.workflows.ljfit.LjFitRunInput;
 import ch.unibas.fitting.shared.workflows.ljfit.UploadedFileNames;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by mhelmer on 27.06.2016.
@@ -27,13 +32,17 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
     }
 
     @Override
-    public CharmmInputContainer execute(WorkflowContext<GenerateInputWorkflowInput> context) {
+    public CharmmInputContainer execute(
+            WorkflowContext<GenerateInputWorkflowInput> context) {
 
         UploadedFiles uploaded = context.getParameter().uploadedFiles;
         LjFitRunInput input = context.getParameter().runInput;
         LjFitRunDir charmmRunDir = context.getParameter().runDir;
 
-        CharmmInputContainer preparedInput = prepareInput(uploaded, input, charmmRunDir);
+        CharmmInputContainer preparedInput = prepareInput(
+                uploaded,
+                input,
+                charmmRunDir);
 
         preparedInput.getGasInput().generate();
         preparedInput.getLiquidInput().generate();
@@ -56,19 +65,12 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
         File lpunFile = uploaded.lpunFile;
         File molFile = uploaded.molFile;
         File rtfFile = uploaded.rtfFile;
-        File parFile = uploaded.parFile;
         File solventFile = uploaded.solventFile;
+        File parFile = scaleParFile(uploaded, charmmRunDir, input);
         double lambda_spacing = input.lambdaSpacing;
 
-        File gas_dir = charmmRunDir.getGasDir();
-        File gas_vdw_dir  = charmmRunDir.getGasVdwDir();
-        File gas_mtp_dir  = charmmRunDir.getGasMtpDir();
 
-        File solv_dir = charmmRunDir.getSolvDir();
-        File solv_vdw_dir = charmmRunDir.getSolvVdwDir();
-        File solv_mtp_dir = charmmRunDir.getSolvMtpDir();
-
-        File gasFile = new File(gas_dir.getAbsolutePath(), "gas_phase.inp");
+        File gasFile = new File(charmmRunDir.getDensity_dir(), "gas_phase.inp");
         CHARMM_Input_GasPhase  gasInp = new CHARMM_Input_GasPhase(
                 molFile,
                 rtfFile,
@@ -76,7 +78,7 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
                 lpunFile,
                 gasFile);
 
-        File liqFile = new File(solv_dir.getAbsolutePath(), "pure_liquid.inp");
+        File liqFile = new File(charmmRunDir.getDensity_dir(), "pure_liquid.inp");
         CHARMM_Input_PureLiquid liqInp = new CHARMM_Input_PureLiquid(
                 liquidFile,
                 rtfFile,
@@ -93,7 +95,7 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
                 0.0,
                 lambda_spacing,
                 1.0,
-                gas_vdw_dir,
+                charmmRunDir.getGasVdwDir(),
                 settings);
 
         CHARMM_Generator_DGHydr in_gas_mtp = new CHARMM_Generator_DGHydr(
@@ -105,7 +107,7 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
                 0.0,
                 lambda_spacing,
                 1.0,
-                gas_mtp_dir,
+                charmmRunDir.getGasMtpDir(),
                 settings);
 
         // solvent
@@ -120,7 +122,7 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
                 0.0,
                 lambda_spacing,
                 1.0,
-                solv_vdw_dir,
+                charmmRunDir.getSolvVdwDir(),
                 settings);
         // solvent
         CHARMM_Generator_DGHydr in_solv_mtp = new CHARMM_Generator_DGHydr(
@@ -134,9 +136,50 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
                 0.0,
                 lambda_spacing,
                 1.0,
-                solv_mtp_dir,
+                charmmRunDir.getSolvMtpDir(),
                 settings);
 
-        return new CharmmInputContainer(gasInp, liqInp, in_gas_vdw, in_gas_mtp, in_solv_vdw, in_solv_mtp);
+        return new CharmmInputContainer(
+                gasInp,
+                liqInp,
+                in_gas_vdw,
+                in_gas_mtp,
+                in_solv_vdw,
+                in_solv_mtp);
+    }
+
+    protected File scaleParFile(UploadedFiles uploadedFiles,
+                              LjFitRunDir charmmRunDir,
+                              LjFitRunInput input) {
+
+
+        List<String> args = List.of(
+                "--tps",
+                FilenameUtils.normalize(uploadedFiles.rtfFile.getAbsolutePath()),
+                "--par",
+                FilenameUtils.normalize(uploadedFiles.parFile.getAbsolutePath()),
+                "--slu",
+                FilenameUtils.normalize(uploadedFiles.molFile.getAbsolutePath()),
+                "--lambda_sigma",
+                Double.toString(input.lambdaSigma),
+                "--lambda_epsilon",
+                Double.toString(input.lambdaEpsilon)
+        );
+
+        File script = new File(settings.getScriptsDir(), "scale-par.py");
+        PythonScriptRunner runner = new PythonScriptRunner();
+        runner.setWorkingDir(charmmRunDir.getDirectory());
+        runner.exec(script, args);
+
+        return scaledFileName(uploadedFiles, charmmRunDir);
+    }
+
+    protected File scaledFileName(UploadedFiles uploadedFiles,
+                                  LjFitRunDir charmmRunDir) {
+        return new File(
+                charmmRunDir.getDirectory(),
+                String.format("%s_scaled.%s",
+                        FilenameUtils.getBaseName(uploadedFiles.parFile.getName()),
+                        FilenameUtils.getExtension(uploadedFiles.parFile.getName())));
     }
 }

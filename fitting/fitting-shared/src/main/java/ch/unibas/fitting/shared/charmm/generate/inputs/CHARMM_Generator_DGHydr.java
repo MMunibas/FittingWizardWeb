@@ -9,6 +9,7 @@
 package ch.unibas.fitting.shared.charmm.generate.inputs;
 
 import ch.unibas.fitting.shared.charmm.generate.CHARMM_InOut;
+import ch.unibas.fitting.shared.charmm.scripts.ClusterParameter;
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
 import java.io.File;
@@ -105,15 +106,7 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
         
         whoami = "solvent_" + ti_type;
     }
-    
-    public CHARMM_Generator_DGHydr(File _out,
-                                   String _type,
-                                   Settings settings){
-        output = _out;
-        whoami = _type;
-        this.settings = settings;
-    }
-    
+
     private void copyAndFixPaths() {
         try {
             FileUtils.copyFileToDirectory(solu_cor, baseDir);
@@ -137,7 +130,7 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
         }
     }
 
-    protected void genInputPythonGas(boolean genOnly) {
+    protected void genInputPythonGas(ClusterParameter clusterParameter) {
         List<String> args = new ArrayList<>();
 
         args.add("--ti");
@@ -151,26 +144,22 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
         args.add("--lpun");
         args.add(this.lpun.getName());
         
-        if (genOnly) {
+        if (clusterParameter == null) {
             args.add("--chm");
             args.add(FilenameUtils.normalize(settings.getCharmmScriptDir().getAbsolutePath()));
         } else {
             args.add("--rem");
-            args.add("verdi");
+            args.add(clusterParameter.clusterName);
             args.add("--num");
-            args.add("8");
+            args.add(String.valueOf(clusterParameter.ncpus));
         }
         
         args.add("--lmb");
         args.add(Double.toString(this.l_min));
         args.add(Double.toString(this.l_space));
         args.add(Double.toString(this.l_max));
-//        args.add("--nst");
-//        args.add("5000");
-//        args.add("--neq");
-//        args.add("1000");
 
-        if (genOnly) {
+        if (clusterParameter == null) {
             args.add("--generate");
         }
         
@@ -179,7 +168,7 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
         runner.exec(script, args, output);
     }
     
-    protected void genInputPythonSolvent(boolean genOnly) {
+    protected void genInputPythonSolvent(ClusterParameter clusterParameter) {
         List<String> args = new ArrayList<>();
         args.clear();
         
@@ -187,8 +176,6 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
         args.add(this.ti_type);
         args.add("--tps");
         args.add(this.solu_top.getName());
-//        args.add("--top");
-//        args.add(this.solv_top);
         args.add("--slu");
         args.add(this.solu_cor.getName());
         args.add("--slv");
@@ -197,26 +184,22 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
         args.add(this.par.getName());
         args.add("--lpun");
         args.add(this.lpun.getName());
-        if (genOnly) {
+        if (clusterParameter == null) {
             args.add("--chm");
             args.add(FilenameUtils.normalize(settings.getCharmmScriptDir().getAbsolutePath()));
         } else {
             args.add("--rem");
-            args.add("studix");
+            args.add(clusterParameter.clusterName); //"studix"
             args.add("--num");
-            args.add("8");
+            args.add(String.valueOf(clusterParameter.ncpus));
         }
         
         args.add("--lmb");
         args.add(Double.toString(this.l_min));
         args.add(Double.toString(this.l_space));
         args.add(Double.toString(this.l_max));
-//        args.add("--nst");
-//        args.add("5000");
-//        args.add("--neq");
-//        args.add("1000");
 
-        if (genOnly) {
+        if (clusterParameter == null) {
             args.add("--generate");
         }
         
@@ -239,17 +222,17 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
         this.copyAndFixPaths();
         
         if (isSolvent()) {
-            this.genInputPythonSolvent(true);
+            this.genInputPythonSolvent(null);
         } else {
-            this.genInputPythonGas(true);
+            this.genInputPythonGas( null);
         }
     }
     
-    public void run() {
+    public void run(ClusterParameter clusterParameter) {
         if (isSolvent()) {
-            this.genInputPythonSolvent(false);
+            this.genInputPythonSolvent(clusterParameter);
         } else {
-            this.genInputPythonGas(false);
+            this.genInputPythonGas(clusterParameter);
         }
     }
 
@@ -266,25 +249,13 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
         return getOutput(output);
     }
 
-    public String getGenOutput() {
-        File file;
-        if (isSolvent()) {
-            file = new File(baseDir + "/dg_gen_" + this.ti_type + "_solv" + ".out");
-            LOGGER.debug("OUTPUT file from perform-ti generate is : " + file.getAbsolutePath());
-        } else {
-            file = new File(baseDir + "/dg_gen_" + this.ti_type + "_gas" + ".out");
-            LOGGER.debug("OUTPUT file from perform-ti generate is : " + file.getAbsolutePath());
-        }
-        return getOutput(file);
-    }
-
     public String getRunOutput() {
         File file;
         if (isSolvent()) {
-            file = new File(baseDir + "/dg_run_" + this.ti_type + "_solv" + ".out");
+            file = new File(baseDir + "/dg.out");
             LOGGER.debug("OUTPUT file from perform-ti running  is : " + file.getAbsolutePath());
         } else {
-            file = new File(baseDir + "/dg_run_" + this.ti_type + "_gas" + ".out");
+            file = new File(baseDir + "/dg.out");
             LOGGER.debug("OUTPUT file from perform-ti running  is : " + file.getAbsolutePath());
         }
         return getOutput(file);

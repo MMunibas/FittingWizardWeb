@@ -8,6 +8,7 @@ import io.vavr.collection.Stream;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.regex.Matcher;
@@ -22,10 +23,6 @@ public class LjFitSessionDir extends FittingDirectory {
 
     public LjFitSessionDir(String username, File directory) {
         super(username, directory);
-    }
-
-    public File getDefaultExportDir() {
-        return createAndGet(getDirectory(), "export");
     }
 
     public File getSessionJsonFile() {return  new File(getDirectory(), "session.json");}
@@ -48,13 +45,7 @@ public class LjFitSessionDir extends FittingDirectory {
         return createAndGet(getDirectory(), "runs");
     }
 
-    public List<File> listAllRunJsons() {
-        return listRuns().map(dir -> dir.getRunJson())
-                .filter(file -> file.exists())
-                .toList();
-    }
-
-    private List<LjFitRunDir> listRuns() {
+    public List<LjFitRunDir> listRunDirs() {
         return Stream.ofAll(Arrays.stream(getBaseRunDir().listFiles((dir, name) -> dir.isDirectory() && name.startsWith("eps"))))
                 .map(file -> {
                     return new LjFitRunDir(username, file, parseDirName(file.getName())._3);
@@ -75,12 +66,21 @@ public class LjFitSessionDir extends FittingDirectory {
         return new Tuple3<>(eps, sigma, time);
     }
 
-    public List<File> listRunFiles(String run) {
+    public List<File> listGeneratedRunFiles(String run) {
         File runDir = new File(getBaseRunDir(), run);
         if (!runDir.isDirectory())
             return List.empty();
 
         return Stream.ofAll(FileUtils.listFiles(runDir, new String[] {"inp", "out"}, true))
                 .toList();
+    }
+
+    public void deleteRunDir(String runDirName) {
+        File runDir = new File(getBaseRunDir(), runDirName);
+        try {
+            FileUtils.deleteDirectory(runDir);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not delete " + runDir);
+        }
     }
 }

@@ -5,6 +5,7 @@ import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_GasPhase;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_PureLiquid;
 import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output_GasPhase;
 import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output_PureLiquid;
+import ch.unibas.fitting.shared.charmm.scripts.ClusterParameter;
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.workflows.charmm.CharmmInputContainer;
 import org.apache.log4j.Logger;
@@ -22,18 +23,26 @@ public class RunCharmmWorkflowNew implements IRunCharmmWorkflowNew {
 
     @Inject
     public RunCharmmWorkflowNew(Settings settings) {
+
         this.charmm_den_vap= new CHARMM_Den_Vap(settings);
     }
 
-    public CharmmResult executeCharmm(CharmmInputContainer container) {
+    public CharmmResult executeCharmm(CharmmInputContainer container,
+            ClusterParameter clusterParameter) {
         LOGGER.debug("Executing Charm Workflow");
 
-        CHARMM_Output_GasPhase gasOut = charmm_den_vap.execute(container.getGasInput());
-        CHARMM_Output_PureLiquid pureLiquidOut = charmm_den_vap.execute(container.getLiquidInput());
+        // Calculation: density and deltaH
+        CHARMM_Output_GasPhase gasOut = charmm_den_vap.execute(
+                container.getGasInput(),
+                clusterParameter);
+        CHARMM_Output_PureLiquid pureLiquidOut = charmm_den_vap.execute(
+                container.getLiquidInput(),
+                clusterParameter);
 
+        // Calculation: deltaG, VDW GAS,ELE GAS,VDW SOL,ELE SOL
         for (CHARMM_Generator_DGHydr script : container.getAllGenerators()){
             LOGGER.debug("Executing CHARMM_Generator_DGHydr: " + script.Whoami());
-            script.run();
+            script.run(clusterParameter);
         }
 
         CharmmResultParserOutput output = CharmmResultParser.parseOutput(

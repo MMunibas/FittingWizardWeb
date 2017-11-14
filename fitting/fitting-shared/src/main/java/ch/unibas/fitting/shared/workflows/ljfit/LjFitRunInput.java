@@ -5,7 +5,9 @@ public class LjFitRunInput {
     public final double lambdaSigma;
     public final double lambdaSpacing;
 
-    public LjFitRunInput(double lambdaEpsilon, double lambdaSigma, double lambdaSpacing) {
+    public LjFitRunInput(double lambdaEpsilon,
+                         double lambdaSigma,
+                         double lambdaSpacing) {
         this.lambdaEpsilon = lambdaEpsilon;
         this.lambdaSigma = lambdaSigma;
         this.lambdaSpacing = lambdaSpacing;

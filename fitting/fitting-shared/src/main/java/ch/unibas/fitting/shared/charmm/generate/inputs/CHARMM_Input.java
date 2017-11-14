@@ -119,7 +119,7 @@ public abstract class CHARMM_Input implements CHARMM_InOut {
      * @throws IOException
      */
     protected void print_title() throws IOException {
-        this.title += "* CHARMM input file for " + cor + "\n";
+        this.title += "* CHARMM input file for " + cor.getName() + "\n";
         this.title += "* generated on " + d.toString() + "\n";
         this.title += "* by user " + System.getProperty("user.name") + " on machine " + System.getProperty("os.name") + " " + System.getProperty("os.arch") + " " + System.getProperty("os.version") + "\n";
         this.title += "*\n";
@@ -139,14 +139,14 @@ public abstract class CHARMM_Input implements CHARMM_InOut {
         //print commands for reading forcefield parameters and topology file
         writer.write("! read parameters and coordinates" + "\n");
         writer.write("read rtf card name -" + "\n");
-        writer.write("\t" + top + "\n");
+        writer.write("\t" + top.getName() + "\n");
         writer.write("read param card name -" + "\n");
-        writer.write("\t" + par + "\n\n");
+        writer.write("\t" + par.getName() + "\n\n");
     }
 
     protected void print_corSection() throws IOException {
         writer.write("OPEN UNIT 10 CARD READ NAME -" + "\n");
-        writer.write("\t" + cor + "\n");
+        writer.write("\t" + cor.getName() + "\n");
         writer.write("READ SEQUENCE PDB UNIT 10" + "\n");
         writer.write("GENERATE SOLU" + "\n");
         writer.write("REWIND UNIT 10" + "\n");
@@ -262,7 +262,7 @@ public abstract class CHARMM_Input implements CHARMM_InOut {
     
     @Override
     public File getWorkDir() {
-        return new File(out.getParent());
+        return out.getParentFile();
     }
 
 }

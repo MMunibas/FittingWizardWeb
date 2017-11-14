@@ -1,5 +1,8 @@
 <wicket:extend xmlns:wicket="http://www.w3.org/1999/xhtml">
     <h1>&rho; & &Delta;J & &Delta;G calculations</h1>
+
+    <div wicket:id="feedback"></div>
+
     <form wicket:id="form">
 
         <p>
@@ -80,20 +83,18 @@
                 </td>
             </tr>
             <tr>
-                <td>Expected Density (g/cm&sup3;)</td>
+                <td>Experimental Density (g/cm&sup3;)</td>
                 <td><input wicket:id="expectedDensity" type="number" /></td>
             </tr>
             <tr>
-                <td>Expected &Delta;H vap (kcal/mol)</td>
+                <td>Experimental &Delta;H vap (kcal/mol)</td>
                 <td><input wicket:id="expectedDeltaH" type="number"/></td>
             </tr>
             <tr>
-                <td>Expected &Delta;G hyd (kcal/mol)</td>
+                <td>Experimental &Delta;G hyd (kcal/mol)</td>
                 <td><input wicket:id="expectedDeltaG"  type="number"/></td>
             </tr>
         </table>
     </form>
-
-    <div wicket:id="feedback"></div>
 
 </wicket:extend>

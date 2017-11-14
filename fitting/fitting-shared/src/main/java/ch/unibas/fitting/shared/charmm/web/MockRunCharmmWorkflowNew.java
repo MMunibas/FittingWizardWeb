@@ -5,6 +5,7 @@ import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_GasPhase;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Input_PureLiquid;
 import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output_GasPhase;
 import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output_PureLiquid;
+import ch.unibas.fitting.shared.charmm.scripts.ClusterParameter;
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.directories.UserDirectory;
 import ch.unibas.fitting.shared.workflows.charmm.CharmmInputContainer;
@@ -32,7 +33,9 @@ public class MockRunCharmmWorkflowNew implements IRunCharmmWorkflowNew {
     }
 
     @Override
-    public CharmmResult executeCharmm(CharmmInputContainer container) {
+    public CharmmResult executeCharmm(
+            CharmmInputContainer container,
+            ClusterParameter clusterParameter) {
 
         File gasDir = new File(testdataDir, "gas");
         File solvDir = new File(testdataDir, "solv");
@@ -49,12 +52,12 @@ public class MockRunCharmmWorkflowNew implements IRunCharmmWorkflowNew {
                 + pureLiquid.getWorkDir() );
 
         copyTestFileToDir(new File(gasDir, "gas_phase.out"), gasPhase.getWorkDir());
-        copyTestFileToDir(new File(gasDir, "mtp/dg_run_mtp_gas.out"), container.getGasMtp().getWorkDir());
-        copyTestFileToDir(new File(gasDir, "vdw/dg_run_vdw_gas.out"), container.getGasVdw().getWorkDir());
+        copyTestFileToDir(new File(gasDir, "mtp/dg.out"), container.getGasMtp().getWorkDir());
+        copyTestFileToDir(new File(gasDir, "vdw/dg.out"), container.getGasVdw().getWorkDir());
 
         copyTestFileToDir(new File(solvDir, "pure_liquid.out"), pureLiquid.getWorkDir());
-        copyTestFileToDir(new File(solvDir, "mtp/dg_run_mtp_solv.out"), container.getSolvMtp().getWorkDir());
-        copyTestFileToDir(new File(solvDir, "vdw/dg_run_vdw_solv.out"), container.getSolvVdw().getWorkDir());
+        copyTestFileToDir(new File(solvDir, "mtp/dg.out"), container.getSolvMtp().getWorkDir());
+        copyTestFileToDir(new File(solvDir, "vdw/dg.out"), container.getSolvVdw().getWorkDir());
 
         CHARMM_Output_GasPhase gasOut = new CHARMM_Output_GasPhase(new File(gasPhase.getWorkDir(), "gas_phase.out"));
         CHARMM_Output_PureLiquid pureLiquidOut = new CHARMM_Output_PureLiquid(new File(pureLiquid.getWorkDir(), "pure_liquid.out"));

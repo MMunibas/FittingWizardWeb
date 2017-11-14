@@ -1,5 +1,6 @@
 package ch.unibas.fitting.web.ljfit.ui.step2;
 
+import ch.unibas.fitting.web.ljfit.ui.step2.clusterparams.ClusterParameterViewModel;
 import ch.unibas.fitting.web.ljfit.ui.step2.run.RunFromPage;
 import ch.unibas.fitting.web.ljfit.ui.step2.run.RunLjFitsCommand;
 import ch.unibas.fitting.web.ljfit.ui.step2.run.RunPair;
@@ -40,10 +41,10 @@ public class GridRunPanel extends Panel {
     private List<EpsilonSigmaPair> epsilonSigmaPairCandidates = new ArrayList<>();
 
     public GridRunPanel(String id,
-                        ModalWindow window,
                         GridPanelParameter gridPanelParameter,
                         String username,
-                        RunLjFitsCommand runLjFitsCommand) {
+                        RunLjFitsCommand runLjFitsCommand,
+                        ClusterParameterViewModel clusterParameter) {
         super(id);
 
         epsilonSigmaPairCandidates.add(new EpsilonSigmaPair(1.0, 1.0, true));
@@ -66,8 +67,6 @@ public class GridRunPanel extends Panel {
         numberSigmaField.setRequired(true);
         inputForm.add(numberSigmaField);
 
-
-
         TextField deltaSigmaField = new TextField("deltaSigma", new PropertyModel(gridPanelParameter, "delta_sigma"));
         inputForm.add(deltaSigmaField);
 
@@ -85,10 +84,10 @@ public class GridRunPanel extends Panel {
 
                 runLjFitsCommand.execute(username, new RunFromPage(
                         pairs,
-                        lambda.getObject()
+                        lambda.getObject(),
+                        clusterParameter.getNcpus(),
+                        clusterParameter.getClusterName()
                 ));
-
-                window.close(target);
             }
         });
 
