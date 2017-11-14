@@ -1,11 +1,13 @@
 package ch.unibas.fitting.web.application;
 
+import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.javaextensions.Action;
 import ch.unibas.fitting.shared.javaextensions.Action1;
 import ch.unibas.fitting.shared.javaextensions.Function2;
 import org.apache.log4j.Logger;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,8 +27,10 @@ public class BackgroundTaskService implements IBackgroundTasks {
     private final HashMap<String, UUID> usernames = new HashMap<>();
     private final HashMap<UUID, ProgressPageTaskHandle> handles = new HashMap<>();
 
-    public BackgroundTaskService() {
-        executor = Executors.newFixedThreadPool(2);
+    @Inject
+    public BackgroundTaskService(Settings settings) {
+        int n = settings.getNumberOfBackgroundTaskThreads();
+        executor = Executors.newFixedThreadPool(n);
     }
 
     @Override

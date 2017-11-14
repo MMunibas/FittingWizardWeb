@@ -115,4 +115,8 @@ public class Settings {
     public File getCharmmScriptDir() {
         return new File(getScriptsDir(), "charmm");
     }
+
+    public int getNumberOfBackgroundTaskThreads() {
+        return props.getInteger("server.background_threads");
+    }
 }
