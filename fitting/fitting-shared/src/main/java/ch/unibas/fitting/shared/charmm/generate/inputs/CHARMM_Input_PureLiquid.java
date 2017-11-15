@@ -104,7 +104,7 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
      */
     @Override
     protected void print_title() throws IOException {
-        this.title += "* CHARMM input file for " + cor + "\n";
+        this.title += "* CHARMM input file for " + cor.getName() + "\n";
         this.title += "* Pure Liquid simulation with MTPs \n";
         this.title += "* generated on " + d.toString() + "\n";
         this.title += "* by user " + System.getProperty("user.name") + " on machine " + System.getProperty("os.name") + " " + System.getProperty("os.arch") + " " + System.getProperty("os.version") + "\n";
