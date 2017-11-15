@@ -3,11 +3,13 @@ package ch.unibas.fitting.web.web;
 import ch.unibas.fitting.web.WebApp;
 import org.apache.log4j.Logger;
 
+import javax.inject.Singleton;
 import java.util.ArrayList;
 
 /**
  * Created by martin on 05.06.2016.
  */
+@Singleton
 public class SessionCounter  {
 
     private static final Logger LOGGER = Logger.getLogger(WebApp.class);

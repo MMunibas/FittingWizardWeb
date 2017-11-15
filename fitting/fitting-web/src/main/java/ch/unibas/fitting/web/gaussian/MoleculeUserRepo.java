@@ -4,6 +4,7 @@ import ch.unibas.fitting.shared.molecules.Molecule;
 import ch.unibas.fitting.shared.molecules.MoleculeId;
 import ch.unibas.fitting.shared.molecules.MoleculeRepository;
 
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.Optional;
 /**
  * Created by mhelmer-mobile on 17.06.2016.
  */
+@Singleton
 public class MoleculeUserRepo {
 
     private final HashMap<String, MoleculeRepository> repos = new HashMap<>();

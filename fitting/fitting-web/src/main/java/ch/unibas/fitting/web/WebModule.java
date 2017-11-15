@@ -57,57 +57,38 @@ public class WebModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(WebSettings.class).toInstance(settings);
-        bind(DataLoader.class).in(Scopes.SINGLETON);
-        // web app dependencies
+        bind(Settings.class).to(WebSettings.class);
         bind(IBackgroundTasks.class).to(BackgroundTaskService.class).in(Scopes.SINGLETON);
         bind(IUserDirectory.class).to(UserDirectory.class);
 
-        bind(Settings.class).to(WebSettings.class);
-
-        bind(SessionCounter.class).in(Scopes.SINGLETON);
-
-        bind(MoleculeUserRepo.class).in(Scopes.SINGLETON);
-        // gaussian dependencies
-        bind(GaussianWorkflow.class).to(RunGaussianWorkflow.class).asEagerSingleton();
-
         if (settings.getUseGaussianMock()) {
-            bind(IMultipoleGaussScript.class).to(MockMultipoleGaussScript.class).in(Scopes.SINGLETON);
+            bind(IMultipoleGaussScript.class).to(MockMultipoleGaussScript.class);
         } else {
-            bind(IMultipoleGaussScript.class).to(RealMultipoleGaussScript.class).in(Scopes.SINGLETON);
+            bind(IMultipoleGaussScript.class).to(RealMultipoleGaussScript.class);
         }
 
         if (settings.getMocksEnabled()) {
-            bind(IBabelScript.class).to(MockBabelScript.class).in(Scopes.SINGLETON);
-            bind(ILRAScript.class).to(MockLRAScript.class).in(Scopes.SINGLETON);
-            bind(IFittabScript.class).to(MockFittabMarkerScript.class).in(Scopes.SINGLETON);
+            bind(IBabelScript.class).to(MockBabelScript.class);
+            bind(ILRAScript.class).to(MockLRAScript.class);
+            bind(IFittabScript.class).to(MockFittabMarkerScript.class);
 
-            bind(IGenerateInputWorkflow.class).to(MockGenerateInputWorkflow.class).in(Scopes.SINGLETON);
-            bind(IRunCharmmWorkflowNew.class).to(MockRunCharmmWorkflowNew.class).in(Scopes.SINGLETON);
+            bind(IGenerateInputWorkflow.class).to(MockGenerateInputWorkflow.class);
+            bind(IRunCharmmWorkflowNew.class).to(MockRunCharmmWorkflowNew.class);
         } else {
-            bind(IBabelScript.class).to(RealBabelScript.class).in(Scopes.SINGLETON);
-            bind(ILRAScript.class).to(RealLRAScript.class).in(Scopes.SINGLETON);
-            bind(IFittabScript.class).to(RealFittabMarkerScript.class).in(Scopes.SINGLETON);
+            bind(IBabelScript.class).to(RealBabelScript.class);
+            bind(ILRAScript.class).to(RealLRAScript.class);
+            bind(IFittabScript.class).to(RealFittabMarkerScript.class);
 
-            bind(IGenerateInputWorkflow.class).to(RealGenerateInputWorkflow.class).in(Scopes.SINGLETON);
-            bind(IRunCharmmWorkflowNew.class).to(RunCharmmWorkflowNew.class).in(Scopes.SINGLETON);
+            bind(IGenerateInputWorkflow.class).to(RealGenerateInputWorkflow.class);
+            bind(IRunCharmmWorkflowNew.class).to(RunCharmmWorkflowNew.class);
         }
 
-        bind(LPunParser.class).in(Scopes.SINGLETON);
-        bind(MoleculeCreator.class).in(Scopes.SINGLETON);
-        bind(GaussianLogModifier.class).in(Scopes.SINGLETON);
-        bind(Notifications.class).in(Scopes.SINGLETON);
-        bind(ChargesFileGenerator.class).in(Scopes.SINGLETON);
-
-        bind(RemoveMoleculeCommand.class).in(Scopes.SINGLETON);
-        // fitting dependencies
-        bind(RunFitCommand.class).in(Scopes.SINGLETON);
-
         if (settings.getMocksEnabled()) {
-            bind(IFitMtpScript.class).to(MockFitMtpScript.class).in(Scopes.SINGLETON);
-            bind(IExportScript.class).to(MockExportScript.class).in(Scopes.SINGLETON);
+            bind(IFitMtpScript.class).to(MockFitMtpScript.class);
+            bind(IExportScript.class).to(MockExportScript.class);
         } else {
-            bind(IFitMtpScript.class).to(RealFitMtpScript.class).in(Scopes.SINGLETON);
-            bind(IExportScript.class).to(RealExportScript.class).in(Scopes.SINGLETON);
+            bind(IFitMtpScript.class).to(RealFitMtpScript.class);
+            bind(IExportScript.class).to(RealExportScript.class);
         }
     }
 }
