@@ -23,9 +23,7 @@ import org.apache.log4j.Logger;
 public class Settings {
     private static final Logger LOGGER = Logger.getLogger(Settings.class);
 
-    public static final String ScriptPathKey = "scripts.path";
     private final ConfigFile props;
-    private boolean get;
 
     public Settings(ConfigFile props) {
         this.props = props;
@@ -48,10 +46,6 @@ public class Settings {
         return getFile("testdata.path");
     }
 
-    public File getMoleculeDir() {
-        return new File(getDataDir(), "molecules");
-    }
-
     public File getDataDir() {
         return getFile("data.path");
     }
@@ -61,7 +55,7 @@ public class Settings {
     }
 
     public File getScriptsDir() {
-        return new File(getValue(ScriptPathKey));
+        return new File(getValue("scripts.path"));
     }
     
     public File getPythonPath(){
@@ -73,10 +67,13 @@ public class Settings {
     }
 
     public String getValue(String key) {
-        return props.valueOrDefault(key, "No default in config_gui.ini");
+        if (!hasValue(key)) {
+            throw new RuntimeException("Key " + key + "not found in config.");
+        }
+        return props.valueOrDefault(key, null);
     }
     
-    public boolean hasValue(String key) {
+    private boolean hasValue(String key) {
     	return props.containsKey(key);
     }
 

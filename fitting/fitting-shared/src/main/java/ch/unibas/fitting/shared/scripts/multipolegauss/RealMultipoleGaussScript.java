@@ -33,13 +33,11 @@ public class RealMultipoleGaussScript implements IMultipoleGaussScript {
 	
 	private final static Logger logger = Logger.getLogger(RealMultipoleGaussScript.class);
 
-    private final String MultipoleGaussScriptFileNameKey = "submit-remote-abinitio.py";
-
     private final File multipoleGaussScriptFile;
 
     @Inject
     public RealMultipoleGaussScript(Settings settings) {
-        multipoleGaussScriptFile = new File(settings.getScriptsDir(), settings.getValue(MultipoleGaussScriptFileNameKey));
+        multipoleGaussScriptFile = new File(settings.getScriptsDir(), "submit-remote-abinitio.py");
 	}
 
 	@Override
