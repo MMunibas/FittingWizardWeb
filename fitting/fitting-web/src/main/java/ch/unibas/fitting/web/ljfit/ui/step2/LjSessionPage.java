@@ -1,6 +1,7 @@
 package ch.unibas.fitting.web.ljfit.ui.step2;
 
 import ch.unibas.fitting.shared.directories.IUserDirectory;
+import ch.unibas.fitting.shared.workflows.ljfit.LjFitRun;
 import ch.unibas.fitting.web.ljfit.services.LjFitRepository;
 import ch.unibas.fitting.web.ljfit.ui.step1.CreateNewSessionPage;
 import ch.unibas.fitting.web.ljfit.ui.step2.clusterparams.ClusterParameterPanel;
@@ -8,8 +9,10 @@ import ch.unibas.fitting.web.ljfit.ui.step2.clusterparams.ClusterParameterViewMo
 import ch.unibas.fitting.web.ljfit.ui.step2.run.RunLjFitsCommand;
 import ch.unibas.fitting.web.ljfit.ui.step3.ViewFilesPage;
 import ch.unibas.fitting.web.web.HeaderPage;
+import io.vavr.control.Option;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -18,6 +21,7 @@ import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import javax.inject.Inject;
+import javax.swing.text.SimpleAttributeSet;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
@@ -109,6 +113,7 @@ public class LjSessionPage extends HeaderPage {
         add(new ListView("listview", runResults) {
             protected void populateItem(ListItem item) {
                 SingleRunResult singleResult = (SingleRunResult) item.getModelObject();
+
                 item.add(new AjaxLink("resultPageLink") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
@@ -117,6 +122,11 @@ public class LjSessionPage extends HeaderPage {
                         setResponsePage(ViewFilesPage.class, pp);
                     }
                 });
+
+                if (singleResult.hasLowestScore())
+                    item.add(new AttributeAppender("style", "font-weight:bold;"));
+                if (!singleResult.wasSuccessful)
+                    item.add(new AttributeAppender("style", "background-color:red;"));
 
                 NumberFormat oneDecimal = new DecimalFormat("0.0");
                 NumberFormat twoDecimal = new DecimalFormat("0.00");
@@ -155,8 +165,14 @@ public class LjSessionPage extends HeaderPage {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        List<SingleRunResult> runs =  ljFitRepository.listRuns(getCurrentUsername())
-                .map(run -> new SingleRunResult(run))
+        io.vavr.collection.List<LjFitRun> all = ljFitRepository.listRuns(getCurrentUsername());
+
+        Option<Double> minScore = all.flatMap(r -> r.result)
+                .map(r -> r.score)
+                .min();
+
+        List<SingleRunResult> runs =  all
+                .map(run -> new SingleRunResult(run, minScore))
                 .toJavaList();
 
         ljFitRepository.loadSessionForUser(getCurrentUsername())

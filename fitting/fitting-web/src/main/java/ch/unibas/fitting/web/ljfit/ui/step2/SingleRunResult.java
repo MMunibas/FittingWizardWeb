@@ -3,13 +3,15 @@ package ch.unibas.fitting.web.ljfit.ui.step2;
 import ch.unibas.fitting.shared.javaextensions.Function1;
 import ch.unibas.fitting.shared.workflows.ljfit.LjFitRun;
 import ch.unibas.fitting.shared.workflows.ljfit.LjFitRunResult;
+import io.vavr.collection.List;
+import io.vavr.control.Option;
 
 public class SingleRunResult {
-    boolean wasSuccessful;
+    boolean wasSuccessful, isLowestScore;
     String dirName;
     Double _eps, _sigma, _VDWGAS, _MTPGAS, _MTPSOL, _VDWSOL, _GASTOTAL, _SOLTOTAL, _calcdeltaG, _expdeltaG, _calcdeltaH, _expdeltaH, _calcdensity, _expdensity, _deltaG, _deltaH, _density, _Score;
 
-    public SingleRunResult(LjFitRun result) {
+    public SingleRunResult(LjFitRun result, Option<Double> minRun) {
         this.wasSuccessful = result.wasSuccessful();
         this._eps = valueOrNan(result, p1 -> p1.lambdaEpsilon);
         this._sigma = valueOrNan(result, p1 -> p1.lambdaSigma);
@@ -30,6 +32,10 @@ public class SingleRunResult {
         this._density = valueOrNan(result, p1 -> p1.density);
         this._Score = valueOrNan(result, p1 -> p1.score);
         this.dirName = result.dirName;
+
+        minRun.peek(minScore -> isLowestScore = !minScore.isNaN()
+                && !_Score.isNaN()
+                && minScore.equals(_Score));
     }
 
     private Double valueOrNan(LjFitRun result,
@@ -76,4 +82,8 @@ public class SingleRunResult {
     public Double get_density() { return _density;    }
 
     public Double get_Score() { return _Score;    }
+
+    public boolean hasLowestScore() {
+        return isLowestScore;
+    }
 }
