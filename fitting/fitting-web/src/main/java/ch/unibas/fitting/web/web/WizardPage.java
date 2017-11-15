@@ -1,7 +1,7 @@
 package ch.unibas.fitting.web.web;
 
 import ch.unibas.fitting.web.application.IBackgroundTasks;
-import ch.unibas.fitting.web.application.ProgressPageTaskHandle;
+import ch.unibas.fitting.web.application.TaskHandle;
 import ch.unibas.fitting.web.web.progress.ProgressPage;
 import ch.unibas.fitting.web.welcome.NewSessionPage;
 import org.apache.log4j.Logger;
@@ -44,14 +44,9 @@ public abstract class WizardPage extends WebPage {
             return;
         }
 
-        Optional<ProgressPageTaskHandle> th = tasks.getHandleForUser(getCurrentUsername());
-        if (    th.isPresent() &&
-                !this.getClass().equals(ProgressPage.class)) {
-            PageParameters pp = new PageParameters();
-            pp.add("task_id", th.get().getId());
-            setResponsePage(ProgressPage.class, pp);
-            LOGGER.debug("User "+ getCurrentUsername() + " has running task. Redirecting to ProgressPage");
-            return;
+        if (!this.getClass().equals(ProgressPage.class)) {
+            tasks.getHandleForUser(getCurrentUsername())
+                    .peek(th -> PageNavigation.ToProgressForTask(th));
         }
     }
 }

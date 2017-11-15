@@ -14,18 +14,16 @@ import ch.unibas.fitting.shared.workflows.charmm.CharmmInputContainer;
 import ch.unibas.fitting.shared.workflows.charmm.GenerateInputWorkflowInput;
 import ch.unibas.fitting.shared.workflows.charmm.IGenerateInputWorkflow;
 import ch.unibas.fitting.shared.workflows.charmm.UploadedFiles;
-import ch.unibas.fitting.shared.workflows.ljfit.LjFitRun;
 import ch.unibas.fitting.shared.workflows.ljfit.LjFitRunInput;
 import ch.unibas.fitting.shared.workflows.ljfit.LjFitRunResult;
 import ch.unibas.fitting.shared.workflows.ljfit.LjFitSession;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
-import ch.unibas.fitting.web.application.ProgressPageTaskHandle;
+import ch.unibas.fitting.web.application.TaskHandle;
 import ch.unibas.fitting.web.ljfit.services.LjFitRepository;
 import ch.unibas.fitting.web.ljfit.ui.commands.OpenLjFitSessionCommand;
 import ch.unibas.fitting.web.ljfit.ui.step2.LjSessionPage;
 import ch.unibas.fitting.web.web.PageNavigation;
 import org.apache.commons.io.FileUtils;
-import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -60,13 +58,24 @@ public class RunLjFitsCommand {
 
     public void execute(String username, RunFromPage runs) {
 
-        ProgressPageTaskHandle th = backgroundTasks.execute(username, "Running LJ Fits ...",
-                () -> {
-                    for (RunPair pair : runs.runPairs) {
+        TaskHandle th = backgroundTasks.spawnTask(
+                username,
+                "Running LJ Fits ...",
+                (ctx) -> {
+                    for (int i = 0; i < runs.runPairs.length(); i++) {
+                        RunPair pair = runs.runPairs.get(i);
+
                         LjFitRunInput input = new LjFitRunInput(
                                 pair.lambda_epsiolon,
                                 pair.lambda_sigma,
                                 runs.lambda_spacing);
+
+                        ctx.setStatus(String.format("Executing fit lambda_epsilon %f lambda_sigma %f (%d/%s)",
+                                pair.lambda_epsiolon,
+                                pair.lambda_sigma,
+                                i + 1,
+                                runs.runPairs.length()));
+
                         runSingleFit(username,
                                 input,
                                 new ClusterParameter(runs.ncpus,runs.clusterName));

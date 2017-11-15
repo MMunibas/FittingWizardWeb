@@ -1,11 +1,13 @@
 package ch.unibas.fitting.web.web.progress;
 
 import ch.unibas.fitting.web.application.IBackgroundTasks;
-import ch.unibas.fitting.web.application.ProgressPageTaskHandle;
+import ch.unibas.fitting.web.application.TaskHandle;
 import ch.unibas.fitting.web.web.HeaderPage;
 import ch.unibas.fitting.web.web.errors.ErrorPage;
 import ch.unibas.fitting.web.welcome.WelcomePage;
 import com.google.inject.Inject;
+import io.vavr.control.Option;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -23,8 +25,9 @@ import java.util.UUID;
  */
 public class ProgressPage extends HeaderPage {
 
-    private final IModel<String> text;
-    private final IModel<String> title;
+    private final IModel<String> title = Model.of("Processing...");
+    private final IModel<String> progress = Model.of("Just started ...");
+    private final IModel<String> status = Model.of("");
 
     private final UUID taskId;
 
@@ -38,71 +41,68 @@ public class ProgressPage extends HeaderPage {
         else
             taskId = null;
 
-        text = Model.of("Just started ...");
-        title = Model.of("Processing...");
-        Optional<ProgressPageTaskHandle> taskHandle = taskService.getHandle(taskId);
-        if (taskHandle.isPresent()) {
-            title.setObject("Processing: " + taskHandle.get().getTitle());
-            updateRunningTime(taskHandle.get());
-        }
+        taskService.getHandle(taskId)
+                .forEach(th -> updateLabels(th));
 
         add(new Label("title", title));
 
-        final Label lblProgress = new Label("progress", text);
-        lblProgress.setOutputMarkupId(true);
-        lblProgress.setOutputMarkupPlaceholderTag(true);
-        add(lblProgress);
+        final Component lblProgress;
+        add(lblProgress = new Label("progress", progress)
+                .setOutputMarkupId(true)
+                .setOutputMarkupPlaceholderTag(true));
+
+        final Component lblStatus;
+        add(lblStatus = new Label("status", status)
+                .setOutputMarkupId(true)
+                .setOutputMarkupPlaceholderTag(true));
 
         add(new AjaxLink("cancel") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                Optional<Class> page = taskService.cancel(taskId);
-                if (page.isPresent()) {
-                    setResponsePage(page.get());
-                } else {
-                    setResponsePage(WelcomePage.class);
-                }
+                taskService.cancel(taskId)
+                    .peek(page -> setResponsePage(page))
+                    .onEmpty(() -> setResponsePage(WelcomePage.class));
             }
         });
 
         add(new AbstractAjaxTimerBehavior(Duration.seconds(2)) {
             @Override
             protected void onTimer(AjaxRequestTarget target) {
-                Optional<ProgressPageTaskHandle> optional = taskService.getHandle(taskId);
-
-                if (!optional.isPresent()) {
-                    setResponsePage(WelcomePage.class);
-                    return;
-                }
-
-                ProgressPageTaskHandle th = optional.get();
-                updateRunningTime(th);
                 target.add(lblProgress);
+                target.add(lblStatus);
 
-                if (th.isDone()) {
-                    stop(target);
+                taskService.getHandle(taskId)
+                    .peek(th -> {
+                        updateLabels(th);
 
-                    if (th.wasSuccessful()) {
-                        taskService.remove(th);
-                        PageParameters pp = new PageParameters();
-                        Class page = (Class) th.getNextPageCallback().apply(th.getResult(), pp);
-                        if (page != null)
-                            setResponsePage(page, pp);
-                    } else if (th.hasError()) {
-                        session().setFailedTask(th);
-                        taskService.remove(th);
-                        setResponsePage(ErrorPage.class);
-                    }
-                }
+                        if (th.isDone()) {
+                            stop(target);
+
+                            if (th.wasSuccessful()) {
+                                taskService.remove(th);
+                                PageParameters pp = new PageParameters();
+                                Class page = (Class) th.getNextPageCallback().apply(th.getResult(), pp);
+                                if (page != null)
+                                    setResponsePage(page, pp);
+                            } else if (th.hasError()) {
+                                session().setFailedTask(th);
+                                taskService.remove(th);
+                                setResponsePage(ErrorPage.class);
+                            }
+                        }
+                    })
+                    .onEmpty(() -> setResponsePage(WelcomePage.class));
             }
         });
     }
 
-    private void updateRunningTime(ProgressPageTaskHandle th) {
-        text.setObject(th.getTitle() + " is running since " + runningTime(th) + " ...");
+    private void updateLabels(TaskHandle th) {
+        title.setObject("Processing: " + th.getTitle());
+        progress.setObject("Running since " + runningTime(th) + " ...");
+        status.setObject("Status: " + th.getStatus());
     }
 
-    private String runningTime(ProgressPageTaskHandle th) {
+    private String runningTime(TaskHandle th) {
         org.joda.time.Duration time = th.getRunningTime();
         String txt;
         if (time.getStandardMinutes() > 0) {

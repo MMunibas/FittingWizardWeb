@@ -2,7 +2,6 @@ package ch.unibas.fitting.web.gaussian.addmolecule.step4;
 
 import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.gaussian.addmolecule.RunGaussianCommand;
-import ch.unibas.fitting.web.web.progress.ProgressPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -16,7 +15,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.validation.validator.RangeValidator;
 
 import javax.inject.Inject;
-import java.util.UUID;
 
 /**
  * Created by martin on 05.06.2016.
@@ -70,16 +68,12 @@ public class ParameterPage extends HeaderPage {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 target.add(fp);
 
-                UUID id = runGaussian.runGaussian(getCurrentUsername(),
+                runGaussian.execute(getCurrentUsername(),
                         moleculeName,
                         _netCharge.getObject(),
                         _quantum.getObject(),
                         _nCores.getObject(),
                         _multiplicity.getObject());
-
-                PageParameters pp = new PageParameters();
-                pp.add("task_id", id);
-                setResponsePage(ProgressPage.class, pp);
             }
 
             @Override

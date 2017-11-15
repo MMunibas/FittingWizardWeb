@@ -1,13 +1,13 @@
 package ch.unibas.fitting.web.web;
 
-import ch.unibas.fitting.web.application.ProgressPageTaskHandle;
+import ch.unibas.fitting.web.application.TaskHandle;
 import ch.unibas.fitting.web.web.progress.ProgressPage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class PageNavigation {
 
-    public static void ToProgressForTask(ProgressPageTaskHandle handle) {
+    public static void ToProgressForTask(TaskHandle handle) {
         ToPageWithParameter(ProgressPage.class, "task_id", String.valueOf(handle.getId()));
     }
 

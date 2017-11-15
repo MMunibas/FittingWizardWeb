@@ -13,11 +13,12 @@ import ch.unibas.fitting.shared.scripts.fitmtp.IFitMtpScript;
 import ch.unibas.fitting.shared.workflows.gaussian.fit.CreateFit;
 import ch.unibas.fitting.web.application.IAmACommand;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
-import ch.unibas.fitting.web.application.ProgressPageTaskHandle;
+import ch.unibas.fitting.web.application.TaskHandle;
 import ch.unibas.fitting.web.gaussian.FitUserRepo;
 import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
 import ch.unibas.fitting.web.gaussian.fit.step1.ParameterPage;
 import ch.unibas.fitting.web.gaussian.fit.step2.FittingResultsPage;
+import ch.unibas.fitting.web.web.PageNavigation;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -45,15 +46,16 @@ public class RunFitCommand implements IAmACommand {
     @Inject
     private CreateFit createFit;
 
-    public UUID runFit(String username,
-                       double convergence,
-                       int rank,
-                       boolean ignoreHydrogens,
-                       LinkedHashSet<ChargeValue> chargeValues) {
+    public void execute(String username,
+                        double convergence,
+                        int rank,
+                        boolean ignoreHydrogens,
+                        LinkedHashSet<ChargeValue> chargeValues) {
 
-        ProgressPageTaskHandle output = tasks.execute(username,
+        TaskHandle output = tasks.spawnTask(
+                username,
                 "MTP Fit",
-                () -> {
+                (ctx) -> {
 
                     int id = fitRepo.getNextFitId(username);
 
@@ -93,6 +95,7 @@ public class RunFitCommand implements IAmACommand {
                     pp.add("fit_id", fit.getId());
                     return FittingResultsPage.class;
                 }, ParameterPage.class);
-        return output.getId();
+
+        PageNavigation.ToProgressForTask(output);
     }
 }

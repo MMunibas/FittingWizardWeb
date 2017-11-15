@@ -1,6 +1,6 @@
 package ch.unibas.fitting.web.web;
 
-import ch.unibas.fitting.web.application.ProgressPageTaskHandle;
+import ch.unibas.fitting.web.application.TaskHandle;
 import ch.unibas.fitting.web.web.errors.ErrorViewModel;
 import org.apache.log4j.Logger;
 import org.apache.wicket.Session;
@@ -66,7 +66,7 @@ public class UserSession extends WebSession {
         return Optional.ofNullable(lastError);
     }
 
-    public void setFailedTask(ProgressPageTaskHandle th) {
+    public void setFailedTask(TaskHandle th) {
         Throwable ex = th.getException();
         LOGGER.debug("Failed task id [" + th.getId() + "] reported for user [" + th.getUsername() + "]", ex);
         lastError = new ErrorViewModel(th, ex);

@@ -7,7 +7,6 @@ import ch.unibas.fitting.web.gaussian.FitUserRepo;
 import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
 import ch.unibas.fitting.web.gaussian.fit.RemoveFitCommand;
 import ch.unibas.fitting.web.gaussian.fit.RunFitCommand;
-import ch.unibas.fitting.web.web.progress.ProgressPage;
 import ch.unibas.fitting.web.gaussian.addmolecule.step6.ChargesViewModel;
 import ch.unibas.fitting.web.gaussian.fit.step2.FittingResultsPage;
 import ch.unibas.fitting.web.web.HeaderPage;
@@ -23,13 +22,11 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -194,14 +191,11 @@ public class ParameterPage extends HeaderPage {
                 .map(a -> new ChargeValue(new AtomTypeId(a.getName()), ChargeTypes.charge, a.getUserCharge()))
                 .collect(Collectors.toCollection(() -> new LinkedHashSet<>()));
 
-        UUID uuid = runFit.runFit(getCurrentUsername(),
+        runFit.execute(getCurrentUsername(),
                 convergence.getObject(),
                 rank.getRank(),
                 ignoreHydrogens.getObject(),
                 charges);
-        PageParameters pp = new PageParameters();
-        pp.add("task_id", uuid);
-        setResponsePage(ProgressPage.class, pp);
     }
 
     private List<ChargesViewModel> loadAtomTypes() {

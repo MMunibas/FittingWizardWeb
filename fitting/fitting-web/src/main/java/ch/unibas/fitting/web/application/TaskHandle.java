@@ -1,41 +1,65 @@
 package ch.unibas.fitting.web.application;
 
+import ch.unibas.fitting.shared.javaextensions.Function1;
 import ch.unibas.fitting.shared.javaextensions.Function2;
 import ch.unibas.fitting.web.web.WizardPage;
+import org.apache.log4j.Logger;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
 import java.util.UUID;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.function.Function;
 
 /**
  * Created by mhelmer-mobile on 17.06.2016.
  */
-public class ProgressPageTaskHandle<T> {
+public class TaskHandle<T> implements ITaskContext {
 
-    private String title;
-    private final Future<T> future;
-    private Function2<T, PageParameters, Class> nextPageCallback;
+    private static final Logger LOGGER = Logger.getLogger(TaskHandle.class);
+
+    private final String title;
+    private final Function1<ITaskContext, T> callable;
+
+    private final Function2<T, PageParameters, Class> nextPageCallback;
     private final Class cancelPage;
-    private final UUID id;
-    private final DateTime startTime;
-    private String username;
 
-    public ProgressPageTaskHandle(String username,
-                                  String title,
-                                  Future<T> future,
-                                  Function2<T, PageParameters, Class> nextPageCallback,
-                                  Class cancelPage) {
+    private final String username;
+    private final UUID id = UUID.randomUUID();
+    private final DateTime startTime = DateTime.now();
+
+    private String status;
+    private Future<T> future;
+
+    public TaskHandle(String username,
+                      String title,
+                      Function1<ITaskContext, T> callable,
+                      Function2<T, PageParameters, Class> nextPageCallback,
+                      Class cancelPage) {
         this.username = username;
         this.title = title;
-        this.future = future;
+        this.callable = callable;
         this.nextPageCallback = nextPageCallback;
         this.cancelPage = cancelPage;
-        this.id = UUID.randomUUID();
-        this.startTime = DateTime.now();
+    }
+
+    public void submit(ExecutorService executor) {
+        future = executor.submit(() -> {
+            LOGGER.debug("Started task for user [" + username + "] title [" + title + "] id [" + id + "]");
+
+            status = "Started";
+            T result = callable.apply(this);
+            status = "Succeeded";
+
+            LOGGER.debug("Succeeded task for user [" + username + "] title [" + title + "] id [" + id + "]");
+            return result;
+        });
+        status = "Queued for execution";
+        LOGGER.debug("Submitted task for user [" + username + "] title [" + title + "] id [" + id + "]");
     }
 
     public T getResult() {
@@ -108,5 +132,14 @@ public class ProgressPageTaskHandle<T> {
     public boolean hasError() {
         Throwable e = getException();
         return e != null && !(e instanceof InterruptedException);
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    @Override
+    public synchronized void setStatus(String status) {
+        this.status = status;
     }
 }

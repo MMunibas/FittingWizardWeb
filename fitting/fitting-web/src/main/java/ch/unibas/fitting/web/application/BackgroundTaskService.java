@@ -1,31 +1,31 @@
 package ch.unibas.fitting.web.application;
 
 import ch.unibas.fitting.shared.config.Settings;
-import ch.unibas.fitting.shared.javaextensions.Action;
-import ch.unibas.fitting.shared.javaextensions.Action1;
+import ch.unibas.fitting.shared.javaextensions.Function1;
 import ch.unibas.fitting.shared.javaextensions.Function2;
+import io.vavr.control.Option;
 import org.apache.log4j.Logger;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.HashMap;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 /**
  * Created by mhelmer-mobile on 16.06.2016.
  */
+@Singleton
 public class BackgroundTaskService implements IBackgroundTasks {
 
     private static final Logger LOGGER = Logger.getLogger(BackgroundTaskService.class);
 
     private final ExecutorService executor;
     private final HashMap<String, UUID> usernames = new HashMap<>();
-    private final HashMap<UUID, ProgressPageTaskHandle> handles = new HashMap<>();
+    private final HashMap<UUID, TaskHandle> handles = new HashMap<>();
 
     @Inject
     public BackgroundTaskService(Settings settings) {
@@ -34,53 +34,51 @@ public class BackgroundTaskService implements IBackgroundTasks {
     }
 
     @Override
-    public synchronized <T> ProgressPageTaskHandle<T> execute(String username,
-                                                              String title,
-                                                              Callable<T> callable,
-                                                              Function2<T, PageParameters, Class> nextPageCallback,
-                                                              Class cancelPage) {
-        Future<T> f = executor.submit(callable);
-        ProgressPageTaskHandle handle = new ProgressPageTaskHandle<T>(username, title, f, nextPageCallback, cancelPage);
-        LOGGER.debug("executing task for user [" + username + "] title [" + title + "] id [" + handle.getId() + "]");
+    public synchronized <T> TaskHandle<T> spawnTask(String username,
+                                                    String title,
+                                                    Function1<ITaskContext, T> callable,
+                                                    Function2<T, PageParameters, Class> nextPageCallback,
+                                                    Class cancelPage) {
+
+        TaskHandle handle = new TaskHandle<T>(username, title, callable, nextPageCallback, cancelPage);
+        handle.submit(executor);
         usernames.put(handle.getUsername(), handle.getId());
         handles.put(handle.getId(), handle);
         return handle;
     }
 
     @Override
-    public synchronized <T> Optional<ProgressPageTaskHandle> getHandle(UUID taskId) {
+    public synchronized <T> Option<TaskHandle> getHandle(UUID taskId) {
         return handleFor(taskId);
     }
 
     @Override
-    public synchronized <T> Optional<ProgressPageTaskHandle> getHandleForUser(String username) {
+    public synchronized <T> Option<TaskHandle> getHandleForUser(String username) {
         UUID id = usernames.get(username);
         return handleFor(id);
     }
 
     @Override
-    public synchronized Optional<Class> cancel(UUID taskId) {
-        Optional<ProgressPageTaskHandle> h = handleFor(taskId);
-        Class page = null;
-        if (h.isPresent()) {
+    public synchronized Option<Class> cancel(UUID taskId) {
+        Option<TaskHandle> h = handleFor(taskId);
+
+        return h.peek(th -> {
             LOGGER.debug("canceling task with id " + taskId);
-            h.get().cancel();
-            page = h.get().getCancelPage();
+            th.cancel();
             removeReferences(h.get());
-        }
-        return Optional.ofNullable(page);
+        }).map(th -> th.getCancelPage());
     }
 
     @Override
-    public synchronized void remove(ProgressPageTaskHandle th) {
+    public synchronized void remove(TaskHandle th) {
         removeReferences(th);
     }
 
-    private Optional<ProgressPageTaskHandle> handleFor(UUID id) {
-        return Optional.ofNullable(handles.get(id));
+    private Option<TaskHandle> handleFor(UUID id) {
+        return Option.of(handles.get(id));
     }
 
-    private void removeReferences(ProgressPageTaskHandle th) {
+    private void removeReferences(TaskHandle th) {
         LOGGER.debug("removing task id [" + th.getId() + "] username [" + th.getUsername() + "]");
         usernames.remove(th.getUsername());
         handles.remove(th.getId());
