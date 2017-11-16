@@ -1,6 +1,5 @@
 package ch.unibas.fitting.web;
 
-import ch.unibas.fitting.shared.charges.ChargesFileGenerator;
 import ch.unibas.fitting.shared.charmm.web.IRunCharmmWorkflowNew;
 import ch.unibas.fitting.shared.charmm.web.MockRunCharmmWorkflowNew;
 import ch.unibas.fitting.shared.charmm.web.RunCharmmWorkflowNew;
@@ -25,21 +24,11 @@ import ch.unibas.fitting.shared.scripts.lra.RealLRAScript;
 import ch.unibas.fitting.shared.scripts.multipolegauss.IMultipoleGaussScript;
 import ch.unibas.fitting.shared.scripts.multipolegauss.MockMultipoleGaussScript;
 import ch.unibas.fitting.shared.scripts.multipolegauss.RealMultipoleGaussScript;
-import ch.unibas.fitting.shared.tools.GaussianLogModifier;
-import ch.unibas.fitting.shared.tools.LPunParser;
-import ch.unibas.fitting.shared.tools.Notifications;
 import ch.unibas.fitting.shared.workflows.charmm.IGenerateInputWorkflow;
 import ch.unibas.fitting.shared.workflows.charmm.MockGenerateInputWorkflow;
 import ch.unibas.fitting.shared.workflows.charmm.RealGenerateInputWorkflow;
-import ch.unibas.fitting.shared.workflows.gaussian.GaussianWorkflow;
-import ch.unibas.fitting.shared.workflows.gaussian.MoleculeCreator;
-import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianWorkflow;
 import ch.unibas.fitting.web.application.BackgroundTaskService;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
-import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
-import ch.unibas.fitting.web.gaussian.RemoveMoleculeCommand;
-import ch.unibas.fitting.web.gaussian.fit.RunFitCommand;
-import ch.unibas.fitting.web.web.SessionCounter;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 

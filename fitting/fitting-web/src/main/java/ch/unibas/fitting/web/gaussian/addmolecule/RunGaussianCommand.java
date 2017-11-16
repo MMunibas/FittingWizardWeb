@@ -3,8 +3,8 @@ package ch.unibas.fitting.web.gaussian.addmolecule;
 import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussInput;
 import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
-import ch.unibas.fitting.shared.workflows.gaussian.GaussianWorkflow;
 import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianResult;
+import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianWorkflow;
 import ch.unibas.fitting.web.application.IAmACommand;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.application.TaskHandle;
@@ -14,16 +14,16 @@ import ch.unibas.fitting.web.gaussian.addmolecule.step6.AtomTypesPage;
 import ch.unibas.fitting.web.web.PageNavigation;
 
 import javax.inject.Inject;
-import java.util.UUID;
 
 /**
  * Created by mhelmer-mobile on 17.06.2016.
  */
+
 public class RunGaussianCommand implements IAmACommand {
     @Inject
     private IBackgroundTasks tasks;
     @Inject
-    private GaussianWorkflow workflow;
+    private RunGaussianWorkflow workflow;
     @Inject
     private MoleculeUserRepo moleculeUserRepo;
     @Inject

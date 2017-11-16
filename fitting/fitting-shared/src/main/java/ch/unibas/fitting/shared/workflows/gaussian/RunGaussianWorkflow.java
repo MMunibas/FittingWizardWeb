@@ -34,7 +34,7 @@ import javax.inject.Inject;
  * Date: 16.12.13
  * Time: 09:28
  */
-public class RunGaussianWorkflow implements Workflow<MultipoleGaussInput,RunGaussianResult>, GaussianWorkflow {
+public class RunGaussianWorkflow implements Workflow<MultipoleGaussInput,RunGaussianResult> {
 
     private static final Logger logger = Logger.getLogger(RunGaussianWorkflow.class);
 

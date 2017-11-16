@@ -29,8 +29,6 @@ public class ParameterPage extends HeaderPage {
     private final String moleculeName;
 
     @Inject
-    private IBackgroundTasks _tasks;
-    @Inject
     private RunGaussianCommand runGaussian;
 
     public ParameterPage(PageParameters pp) {
