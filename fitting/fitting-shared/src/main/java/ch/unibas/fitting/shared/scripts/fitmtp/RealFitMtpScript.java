@@ -28,8 +28,6 @@ public class RealFitMtpScript implements IFitMtpScript {
 
     private final static Logger LOGGER = Logger.getLogger(RealFitMtpScript.class);
 
-    public static final String MtpFitScriptNameKey = "scripts.fitting";
-
     public static final String FitNamePrefix = "fit_";
     public static final String ConsoleOutputFileName = "output.txt";
     public static final String FitResultFileName = "fit_results.txt";
@@ -38,7 +36,7 @@ public class RealFitMtpScript implements IFitMtpScript {
 
     @Inject
     public RealFitMtpScript(Settings settings) {
-        mtpFitScriptFile = new File(settings.getScriptsDir(), settings.getValue(MtpFitScriptNameKey));
+        mtpFitScriptFile = new File(settings.getScriptsDir(), "fit.mtp.py");
     }
 
     @Override
