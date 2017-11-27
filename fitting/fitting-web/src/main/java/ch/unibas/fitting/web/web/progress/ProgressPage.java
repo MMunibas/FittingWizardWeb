@@ -13,6 +13,7 @@ import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -53,7 +54,7 @@ public class ProgressPage extends HeaderPage {
                 .setOutputMarkupPlaceholderTag(true));
 
         final Component lblStatus;
-        add(lblStatus = new Label("status", status)
+        add(lblStatus = new MultiLineLabel("status", status)
                 .setOutputMarkupId(true)
                 .setOutputMarkupPlaceholderTag(true));
 
@@ -102,7 +103,7 @@ public class ProgressPage extends HeaderPage {
     private void updateLabels(TaskHandle th) {
         title.setObject("Processing: " + th.getTitle());
         progress.setObject("Running since " + runningTime(th) + " ...");
-        status.setObject("Status: " + th.getStatus());
+        status.setObject(th.getStatus());
     }
 
     private String runningTime(TaskHandle th) {

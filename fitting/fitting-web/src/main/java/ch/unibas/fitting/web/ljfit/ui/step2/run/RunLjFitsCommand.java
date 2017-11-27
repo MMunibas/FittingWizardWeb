@@ -26,6 +26,7 @@ import ch.unibas.fitting.web.ljfit.ui.step2.LjSessionPage;
 import ch.unibas.fitting.web.web.PageNavigation;
 import io.vavr.control.Option;
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -36,6 +37,8 @@ import java.nio.charset.Charset;
  * Created by mhelmer on 24.06.2016.
  */
 public class RunLjFitsCommand {
+    private static final Logger LOGGER = Logger.getLogger(RunLjFitsCommand.class);
+
     @Inject
     private IGenerateInputWorkflow generateInputWorkflow;
 
@@ -57,32 +60,43 @@ public class RunLjFitsCommand {
     @Inject
     private JsonSerializer serializer;
 
-
     public void execute(String username, RunFromPage runs) {
 
         TaskHandle th = backgroundTasks.spawnTask(
                 username,
                 "Running LJ Fits ...",
                 (ctx) -> {
+                    StringBuilder sb = new StringBuilder();
                     for (int i = 0; i < runs.runPairs.length(); i++) {
                         RunPair pair = runs.runPairs.get(i);
 
-                        LjFitRunInput input = new LjFitRunInput(
-                                pair.lambda_epsiolon,
-                                pair.lambda_sigma,
-                                runs.lambda_spacing);
-
-                        ctx.setStatus(String.format("Executing fit lambda_epsilon %f lambda_sigma %f (%d/%s)",
+                        String status = String.format("Executing fit lambda_epsilon %f lambda_sigma %f (%d/%s)",
                                 pair.lambda_epsiolon,
                                 pair.lambda_sigma,
                                 i + 1,
-                                runs.runPairs.length()));
+                                runs.runPairs.length());
+                        sb.insert(0, status + '\n');
 
-                        runSingleFit(username,
-                                input,
-                                new ClusterParameter(runs.ncpus,runs.clusterName));
+                        ctx.setStatus(sb.toString());
+                        try {
+                            LjFitRunInput input = new LjFitRunInput(
+                                    pair.lambda_epsiolon,
+                                    pair.lambda_sigma,
+                                    runs.lambda_spacing);
+
+                            runSingleFit(username,
+                                    input,
+                                    new ClusterParameter(runs.ncpus,runs.clusterName));
+                        } catch (Exception e) {
+                            String error = String.format(
+                                    "LJ Fit run for lambda_epsilon %f lambda_sigma %d failed (%s)",
+                                    pair.lambda_epsiolon,
+                                    pair.lambda_sigma,
+                                    e.getMessage());
+                            sb.insert(0, error + '\n');
+                            LOGGER.error(error, e);
+                        }
                     }
-
                     return null;
                 },
                 (t, pageParameters) -> {

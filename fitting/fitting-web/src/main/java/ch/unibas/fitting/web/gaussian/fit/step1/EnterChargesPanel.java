@@ -25,7 +25,10 @@ public class EnterChargesPanel extends Panel {
 
     private boolean wasSuccess;
 
-    public EnterChargesPanel(String id, ModalWindow window, List<ChargesViewModel> atomTypes) {
+    public EnterChargesPanel(
+            String id,
+            ModalWindow window,
+            List<ChargesViewModel> atomTypes) {
         super(id);
         this.atomTypes = atomTypes;
         Form form = new Form("form");
