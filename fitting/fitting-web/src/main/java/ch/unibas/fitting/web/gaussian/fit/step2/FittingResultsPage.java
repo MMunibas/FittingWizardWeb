@@ -48,8 +48,6 @@ public class FittingResultsPage extends HeaderPage {
     private ColorCoder colorCoder;
     @Inject
     private FitUserRepo fitUserRepo;
-    @Inject
-    private MoleculeUserRepo moleculeUserRepo;
 
     private Integer fitId;
     private IModel<FitViewModel> selectedFit = Model.of();
@@ -129,13 +127,13 @@ public class FittingResultsPage extends HeaderPage {
 
                 item.add(createColoredLabel("Q00", mol));
                 item.add(createColoredLabel("Q10", mol));
-                item.add(createColoredLabel("Q1C", mol));
-                item.add(createColoredLabel("Q1S", mol));
+                item.add(createColoredLabel("Q11c", mol));
+                item.add(createColoredLabel("Q11s", mol));
                 item.add(createColoredLabel("Q20", mol));
-                item.add(createColoredLabel("Q21C", mol));
-                item.add(createColoredLabel("Q21S", mol));
-                item.add(createColoredLabel("Q22C", mol));
-                item.add(createColoredLabel("Q22S", mol));
+                item.add(createColoredLabel("Q21c", mol));
+                item.add(createColoredLabel("Q21s", mol));
+                item.add(createColoredLabel("Q22c", mol));
+                item.add(createColoredLabel("Q22s", mol));
 
                 // Todo: add atom indices to highlight atoms in jsmol
                 //JsMolHelper.addAtomsHighlightingMouseEvent(item, ...);

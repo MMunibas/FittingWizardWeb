@@ -21,13 +21,13 @@ public class FitResultViewModel {
     public FitResultViewModel(ColorCoder colorCoder, Fit fit, FitResult fr, int[] indices) {
         name = fr.getAtomTypeName();
         fr.getChargeValues().forEach(chargeValue -> {
-            values.put(chargeValue.getType(), new FitValue(colorCoder, fit, fr, chargeValue));
+            values.put(chargeValue.getType().toLowerCase(), new FitValue(colorCoder, fit, fr, chargeValue));
         });
         this.indices = indices;
     }
 
     public FitValue getFitValueFor(String chargeType) {
-        return values.get(chargeType);
+        return values.get(chargeType.toLowerCase());
     }
 
     public String getName() {
