@@ -71,7 +71,7 @@ public class LjFitSessionDir extends FittingDirectory {
         if (!runDir.isDirectory())
             return List.empty();
 
-        return Stream.ofAll(FileUtils.listFiles(runDir, new String[] {"inp", "out"}, true))
+        return Stream.ofAll(FileUtils.listFiles(runDir, new String[] {"inp", "out", "par"}, true))
                 .toList();
     }
 
