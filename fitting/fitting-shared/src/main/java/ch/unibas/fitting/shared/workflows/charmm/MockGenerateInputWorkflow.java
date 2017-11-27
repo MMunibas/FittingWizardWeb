@@ -82,6 +82,11 @@ public class MockGenerateInputWorkflow extends RealGenerateInputWorkflow {
     }
 
     @Override
+    protected File prepareLiquidDensityLpunFile(UploadedFiles uploaded, LjFitRunDir charmmRunDir) {
+        return uploaded.liquidFile;
+    }
+
+    @Override
     protected File scaleParFile(UploadedFiles uploadedFiles, LjFitRunDir charmmRunDir, LjFitRunInput input) {
         File scaled = scaledFileName(uploadedFiles, charmmRunDir);
         try {

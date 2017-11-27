@@ -8,14 +8,11 @@ import ch.unibas.fitting.shared.directories.LjFitRunDir;
 import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
 import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
 import ch.unibas.fitting.shared.workflows.ljfit.LjFitRunInput;
-import ch.unibas.fitting.shared.workflows.ljfit.UploadedFileNames;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -62,11 +59,13 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
             LjFitRunDir charmmRunDir) {
 
         File liquidFile = uploaded.liquidFile;
-        File lpunFile = uploaded.lpunFile;
+
         File molFile = uploaded.molFile;
         File rtfFile = uploaded.rtfFile;
         File solventFile = uploaded.solventFile;
         File parFile = scaleParFile(uploaded, charmmRunDir, input);
+        File lpunFile = uploaded.lpunFile;
+        File liquidDensityLpun = prepareLiquidDensityLpunFile(uploaded, charmmRunDir);
         double lambda_spacing = input.lambdaSpacing;
 
 
@@ -83,7 +82,7 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
                 liquidFile,
                 rtfFile,
                 parFile,
-                lpunFile,
+                liquidDensityLpun,
                 liqFile);
 
         CHARMM_Generator_DGHydr in_gas_vdw = new CHARMM_Generator_DGHydr(
@@ -148,6 +147,25 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
                 in_solv_mtp);
     }
 
+    protected File prepareLiquidDensityLpunFile(
+            UploadedFiles uploaded,
+            LjFitRunDir charmmRunDir) {
+
+        List<String> args = List.of(
+                "--lpun",
+                FilenameUtils.normalize(uploaded.lpunFile.getAbsolutePath()),
+                "--pdb",
+                FilenameUtils.normalize(uploaded.liquidFile.getAbsolutePath())
+        );
+
+        File script = new File(settings.getScriptsDir(), "prepare-lpun.py");
+        PythonScriptRunner runner = new PythonScriptRunner();
+        runner.setWorkingDir(charmmRunDir.getDensity_dir());
+        runner.exec(script, args);
+
+        return new File(charmmRunDir.getDensity_dir(), pureLiquidFileName());
+    }
+
     protected File scaleParFile(UploadedFiles uploadedFiles,
                               LjFitRunDir charmmRunDir,
                               LjFitRunInput input) {
@@ -172,6 +190,10 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
         runner.exec(script, args);
 
         return scaledFileName(uploadedFiles, charmmRunDir);
+    }
+
+    protected String pureLiquidFileName() {
+        return "pureliquid.lpun";
     }
 
     protected File scaledFileName(UploadedFiles uploadedFiles,
