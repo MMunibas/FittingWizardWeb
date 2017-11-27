@@ -6,10 +6,7 @@ import ch.unibas.fitting.web.ljfit.ui.step2.run.RunLjFitsCommand;
 import ch.unibas.fitting.web.ljfit.ui.step2.run.RunPair;
 import io.vavr.collection.Stream;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -19,21 +16,12 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.data.GridView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.util.time.Duration;
 
-
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.stream.Collectors;
-
 
 public class GridRunPanel extends Panel {
 
@@ -47,7 +35,10 @@ public class GridRunPanel extends Panel {
                         ClusterParameterViewModel clusterParameter) {
         super(id);
 
-        epsilonSigmaPairCandidates.add(new EpsilonSigmaPair(1.0, 1.0, true));
+        epsilonSigmaPairCandidates.add(new EpsilonSigmaPair(
+                1.0,
+                1.0,
+                true));
 
         Form inputForm = new Form("inputForm");
         add(inputForm);
@@ -77,13 +68,13 @@ public class GridRunPanel extends Panel {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> choiceForm) {
                 
-                io.vavr.collection.List<RunPair> pairs = Stream.ofAll(epsilonSigmaPairCandidates)
+                List<RunPair> pairs = Stream.ofAll(epsilonSigmaPairCandidates)
                         .filter(pair -> pair.getSelected())
                         .map(pair -> new RunPair(pair.getSigma(), pair.getEps()))
-                        .toList();
+                        .toJavaList();
 
                 runLjFitsCommand.execute(username, new RunFromPage(
-                        pairs,
+                        io.vavr.collection.List.ofAll(pairs),
                         lambda.getObject(),
                         clusterParameter.getNcpus(),
                         clusterParameter.getClusterName()
@@ -112,6 +103,7 @@ public class GridRunPanel extends Panel {
         choiceForm.add(lambdaField);
 
         inputForm.add(new AjaxButton("generateGrid") {
+
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> inputForm) {
                 epsilonSigmaPairCandidates = calculateSigmaEpsilon(gridPanelParameter.getNumber_eps(),
@@ -129,7 +121,6 @@ public class GridRunPanel extends Panel {
             }
         });
     }
-
 
     private List<EpsilonSigmaPair> calculateSigmaEpsilon(int n_eps, int n_sigma, Double delta_eps, Double delta_sigma){
         List<EpsilonSigmaPair> pairList = new ArrayList<>();
@@ -157,6 +148,4 @@ public class GridRunPanel extends Panel {
         }
         return pairList;
     }
-
-
-};
+}

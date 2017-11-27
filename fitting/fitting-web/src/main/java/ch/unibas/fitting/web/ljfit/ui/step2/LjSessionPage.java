@@ -8,6 +8,7 @@ import ch.unibas.fitting.web.ljfit.ui.step2.clusterparams.ClusterParameterViewMo
 import ch.unibas.fitting.web.ljfit.ui.step2.run.RunLjFitsCommand;
 import ch.unibas.fitting.web.ljfit.ui.step3.ViewFilesPage;
 import ch.unibas.fitting.web.web.HeaderPage;
+import io.vavr.collection.List;
 import io.vavr.control.Option;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -22,7 +23,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import javax.inject.Inject;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.List;
 
 public class LjSessionPage extends HeaderPage {
 
@@ -163,7 +163,7 @@ public class LjSessionPage extends HeaderPage {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        io.vavr.collection.List<LjFitRun> all = ljFitRepository.listRuns(getCurrentUsername());
+        List<LjFitRun> all = ljFitRepository.listRuns(getCurrentUsername());
 
         Option<Double> minScore = all.flatMap(r -> r.result)
                 .map(r -> r.score)
@@ -171,7 +171,7 @@ public class LjSessionPage extends HeaderPage {
 
         List<SingleRunResult> runs =  all
                 .map(run -> new SingleRunResult(run, minScore))
-                .toJavaList();
+                .toList();
 
         ljFitRepository.loadSessionForUser(getCurrentUsername())
                 .flatMap(ljFitSession -> {
@@ -180,7 +180,7 @@ public class LjSessionPage extends HeaderPage {
                    return null;
                 });
 
-        runResults.setObject(runs);
+        runResults.setObject(runs.toJavaList());
     }
 }
 

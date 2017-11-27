@@ -6,10 +6,10 @@ public class EpsilonSigmaPair implements Serializable {
     private Double eps, sigma;
     private Boolean selected;
 
-    public EpsilonSigmaPair(Double _eps, Double _sigma, Boolean _selected) {
-        this.eps = _eps;
-        this.sigma = _sigma;
-        this.selected = _selected;
+    public EpsilonSigmaPair(Double eps, Double sigma, Boolean selected) {
+        this.eps = eps;
+        this.sigma = sigma;
+        this.selected = selected;
     }
 
     @Override
