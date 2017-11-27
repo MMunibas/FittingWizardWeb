@@ -1,9 +1,6 @@
 package ch.unibas.fitting.web.ljfit.ui.step2;
 
-import ch.unibas.fitting.shared.javaextensions.Function1;
 import ch.unibas.fitting.shared.workflows.ljfit.LjFitRun;
-import ch.unibas.fitting.shared.workflows.ljfit.LjFitRunResult;
-import io.vavr.collection.List;
 import io.vavr.control.Option;
 
 public class SingleRunResult {
@@ -13,34 +10,34 @@ public class SingleRunResult {
 
     public SingleRunResult(LjFitRun result, Option<Double> minRun) {
         this.wasSuccessful = result.wasSuccessful();
-        this._eps = valueOrNan(result, p1 -> p1.lambdaEpsilon);
-        this._sigma = valueOrNan(result, p1 -> p1.lambdaSigma);
-        this._calcdeltaG = valueOrNan(result, p1 -> p1.calcdeltaG);
-        this._VDWGAS = valueOrNan(result, p1 -> p1.vdwGas);
-        this._MTPGAS = valueOrNan(result, p1 -> p1.mtpGas);
-        this._MTPSOL = valueOrNan(result, p1 -> p1.mtpSol);
-        this._VDWSOL = valueOrNan(result, p1 -> p1.mtpSol);
-        this._GASTOTAL = valueOrNan(result, p1 -> p1.totalGas);
-        this._SOLTOTAL = valueOrNan(result, p1 -> p1.totalSol);
-        this._expdeltaG = valueOrNan(result, p1 -> p1.expdeltaG);
-        this._calcdeltaH = valueOrNan(result, p1 -> p1.calcdeltaH);
-        this._expdeltaH = valueOrNan(result, p1 -> p1.expdeltaH);
-        this._calcdensity = valueOrNan(result, p1 -> p1.calcdensity);
-        this._expdensity = valueOrNan(result, p1 -> p1.expdensity);
-        this._deltaG = valueOrNan(result, p1 -> p1.deltaG);
-        this._deltaH = valueOrNan(result, p1 -> p1.deltaH);
-        this._density = valueOrNan(result, p1 -> p1.density);
-        this._Score = valueOrNan(result, p1 -> p1.score);
+        result.input.peek(in -> {
+            this._eps = in.lambdaEpsilon;
+            this._sigma = in.lambdaSigma;
+        });
+        result.result.peek(res -> {
+            this._calcdeltaG = res.calcdeltaG;
+            this._VDWGAS = res.vdwGas;
+            this._MTPGAS = res.mtpGas;
+            this._MTPSOL = res.mtpSol;
+            this._VDWSOL = res.vdwSol;
+            this._GASTOTAL = res.totalGas;
+            this._SOLTOTAL = res.totalSol;
+            this._expdeltaG = res.expdeltaG;
+            this._calcdeltaH = res.calcdeltaH;
+            this._expdeltaH = res.expdeltaH;
+            this._calcdensity = res.calcdensity;
+            this._expdensity = res.expdensity;
+            this._deltaG = res.deltaG;
+            this._deltaH = res.deltaH;
+            this._density = res.density;
+            this._Score = res.score;
+        });
+
         this.dirName = result.dirName;
 
         minRun.peek(minScore -> isLowestScore = !minScore.isNaN()
                 && !_Score.isNaN()
                 && minScore.equals(_Score));
-    }
-
-    private Double valueOrNan(LjFitRun result,
-                              Function1<LjFitRunResult, Double> callback) {
-        return result.result.map(callback::apply).getOrElse(Double.NaN);
     }
 
     public String getDirName() {
