@@ -1,5 +1,6 @@
 package ch.unibas.fitting.web.web;
 
+import ch.unibas.fitting.web.application.PageContext;
 import ch.unibas.fitting.web.application.TaskHandle;
 import ch.unibas.fitting.web.web.progress.ProgressPage;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -19,5 +20,9 @@ public class PageNavigation {
 
     public static void ToPage(Class page) {
         RequestCycle.get().setResponsePage(page);
+    }
+
+    public static void ToPage(PageContext context) {
+        RequestCycle.get().setResponsePage(context.getPage(), context.getParameter());
     }
 }

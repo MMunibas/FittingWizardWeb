@@ -1,6 +1,7 @@
 package ch.unibas.fitting.web.gaussian.addmolecule.step4;
 
 import ch.unibas.fitting.web.application.IBackgroundTasks;
+import ch.unibas.fitting.web.application.PageContext;
 import ch.unibas.fitting.web.gaussian.addmolecule.RunGaussianCommand;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -66,8 +67,14 @@ public class ParameterPage extends HeaderPage {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 target.add(fp);
 
+                PageContext pageContext = new PageContext(
+                        ParameterPage.class,
+                        pp
+                );
+
                 runGaussian.execute(getCurrentUsername(),
                         moleculeName,
+                        pageContext,
                         _netCharge.getObject(),
                         _quantum.getObject(),
                         _nCores.getObject(),

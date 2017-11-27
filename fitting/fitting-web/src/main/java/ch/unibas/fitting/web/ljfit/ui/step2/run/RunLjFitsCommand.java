@@ -18,11 +18,13 @@ import ch.unibas.fitting.shared.workflows.ljfit.LjFitRunInput;
 import ch.unibas.fitting.shared.workflows.ljfit.LjFitRunResult;
 import ch.unibas.fitting.shared.workflows.ljfit.LjFitSession;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
+import ch.unibas.fitting.web.application.PageContext;
 import ch.unibas.fitting.web.application.TaskHandle;
 import ch.unibas.fitting.web.ljfit.services.LjFitRepository;
 import ch.unibas.fitting.web.ljfit.ui.commands.OpenLjFitSessionCommand;
 import ch.unibas.fitting.web.ljfit.ui.step2.LjSessionPage;
 import ch.unibas.fitting.web.web.PageNavigation;
+import io.vavr.control.Option;
 import org.apache.commons.io.FileUtils;
 
 import javax.inject.Inject;
@@ -87,7 +89,8 @@ public class RunLjFitsCommand {
                     openLjFitSessionCommand.execute(username);
                     return null;
                 },
-                LjSessionPage.class);
+                LjSessionPage.class,
+                Option.of(new PageContext(LjSessionPage.class)));
 
         PageNavigation.ToProgressForTask(th);
     }

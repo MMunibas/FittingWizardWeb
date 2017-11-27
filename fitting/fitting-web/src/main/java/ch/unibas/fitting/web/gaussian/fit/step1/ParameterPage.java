@@ -3,6 +3,7 @@ package ch.unibas.fitting.web.gaussian.fit.step1;
 import ch.unibas.fitting.shared.charges.ChargeTypes;
 import ch.unibas.fitting.shared.fitting.ChargeValue;
 import ch.unibas.fitting.shared.molecules.*;
+import ch.unibas.fitting.web.application.PageContext;
 import ch.unibas.fitting.web.gaussian.FitUserRepo;
 import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
 import ch.unibas.fitting.web.gaussian.fit.RemoveFitCommand;
@@ -191,7 +192,10 @@ public class ParameterPage extends HeaderPage {
                 .map(a -> new ChargeValue(new AtomTypeId(a.getName()), ChargeTypes.charge, a.getUserCharge()))
                 .collect(Collectors.toCollection(() -> new LinkedHashSet<>()));
 
+        PageContext context = new PageContext(ParameterPage.class);
+
         runFit.execute(getCurrentUsername(),
+                context,
                 convergence.getObject(),
                 rank.getRank(),
                 ignoreHydrogens.getObject(),

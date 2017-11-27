@@ -22,7 +22,6 @@ public class TaskHandle<T> implements ITaskContext {
 
     private static final Logger LOGGER = Logger.getLogger(TaskHandle.class);
 
-    private final String title;
     private final Function1<ITaskContext, T> callable;
 
     private final Function2<T, PageParameters, Class> nextPageCallback;
@@ -35,13 +34,15 @@ public class TaskHandle<T> implements ITaskContext {
     private String status;
     private Future<T> future;
 
+    private final TaskContext taskContext;
+
     public TaskHandle(String username,
-                      String title,
+                      TaskContext taskContext,
                       Function1<ITaskContext, T> callable,
                       Function2<T, PageParameters, Class> nextPageCallback,
                       Class cancelPage) {
         this.username = username;
-        this.title = title;
+        this.taskContext = taskContext;
         this.callable = callable;
         this.nextPageCallback = nextPageCallback;
         this.cancelPage = cancelPage;
@@ -49,17 +50,17 @@ public class TaskHandle<T> implements ITaskContext {
 
     public void submit(ExecutorService executor) {
         future = executor.submit(() -> {
-            LOGGER.debug("Started task for user [" + username + "] title [" + title + "] id [" + id + "]");
+            LOGGER.debug("Started task for user [" + username + "] title [" + taskContext.getTitle() + "] id [" + id + "]");
 
             status = "Started";
             T result = callable.apply(this);
             status = "Succeeded";
 
-            LOGGER.debug("Succeeded task for user [" + username + "] title [" + title + "] id [" + id + "]");
+            LOGGER.debug("Succeeded task for user [" + username + "] title [" + taskContext.getTitle() + "] id [" + id + "]");
             return result;
         });
         status = "Queued for execution";
-        LOGGER.debug("Submitted task for user [" + username + "] title [" + title + "] id [" + id + "]");
+        LOGGER.debug("Submitted task for user [" + username + "] title [" + taskContext.getTitle() + "] id [" + id + "]");
     }
 
     public T getResult() {
@@ -102,11 +103,15 @@ public class TaskHandle<T> implements ITaskContext {
     }
 
     public String getTitle() {
-        return title;
+        return taskContext.getTitle();
     }
 
     public Class getCancelPage() {
         return cancelPage;
+    }
+
+    public TaskContext getTaskContext() {
+        return taskContext;
     }
 
     public Function2<T, PageParameters, Class> getNextPageCallback() {

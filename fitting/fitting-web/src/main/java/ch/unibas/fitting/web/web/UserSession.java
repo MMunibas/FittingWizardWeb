@@ -1,7 +1,8 @@
 package ch.unibas.fitting.web.web;
 
 import ch.unibas.fitting.web.application.TaskHandle;
-import ch.unibas.fitting.web.web.errors.ErrorViewModel;
+import ch.unibas.fitting.web.web.errors.ErrorDetails;
+import io.vavr.control.Option;
 import org.apache.log4j.Logger;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebSession;
@@ -22,7 +23,7 @@ public class UserSession extends WebSession {
     private String username;
     private DateTime created;
 
-    private ErrorViewModel lastError;
+    private ErrorDetails lastError;
 
     private boolean isDebuggingMode;
 
@@ -62,14 +63,14 @@ public class UserSession extends WebSession {
         isDebuggingMode = debuggingMode;
     }
 
-    public Optional<ErrorViewModel> getLastError() {
-        return Optional.ofNullable(lastError);
+    public Option<ErrorDetails> getLastError() {
+        return Option.of(lastError);
     }
 
     public void setFailedTask(TaskHandle th) {
         Throwable ex = th.getException();
         LOGGER.debug("Failed task id [" + th.getId() + "] reported for user [" + th.getUsername() + "]", ex);
-        lastError = new ErrorViewModel(th, ex);
+        lastError = new ErrorDetails(th, ex);
     }
 
     public void resetLastError() {

@@ -7,11 +7,13 @@ import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianResult;
 import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianWorkflow;
 import ch.unibas.fitting.web.application.IAmACommand;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
+import ch.unibas.fitting.web.application.PageContext;
 import ch.unibas.fitting.web.application.TaskHandle;
 import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
 import ch.unibas.fitting.web.gaussian.addmolecule.step4.ParameterPage;
 import ch.unibas.fitting.web.gaussian.addmolecule.step6.AtomTypesPage;
 import ch.unibas.fitting.web.web.PageNavigation;
+import io.vavr.control.Option;
 
 import javax.inject.Inject;
 
@@ -31,6 +33,7 @@ public class RunGaussianCommand implements IAmACommand {
 
     public void execute(String username,
                         String moleculeName,
+                        PageContext pageContext,
                         Integer netCharge,
                         String quantum,
                         Integer nCores,
@@ -57,7 +60,8 @@ public class RunGaussianCommand implements IAmACommand {
                     pageParameters.add("molecule_name", runGaussianResult.getMolecule().getId().getName());
                     return AtomTypesPage.class;
                 },
-                ParameterPage.class);
+                ParameterPage.class,
+                Option.of(pageContext));
 
         PageNavigation.ToProgressForTask(th);
     }

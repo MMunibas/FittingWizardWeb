@@ -16,7 +16,8 @@ public interface IBackgroundTasks {
                                 String title,
                                 Function1<ITaskContext, T> callable,
                                 Function2<T, PageParameters, Class> nextPageCallback,
-                                Class cancelPage);
+                                Class cancelPage,
+                                Option<PageContext> originPage);
 
     <T> Option<TaskHandle> getHandle(UUID taskId);
     <T> Option<TaskHandle> getHandleForUser(String username);

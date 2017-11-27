@@ -1,6 +1,5 @@
 package ch.unibas.fitting.web.ljfit.ui.step2;
 
-import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.shared.workflows.ljfit.LjFitRun;
 import ch.unibas.fitting.web.ljfit.services.LjFitRepository;
 import ch.unibas.fitting.web.ljfit.ui.step1.CreateNewSessionPage;
@@ -21,7 +20,6 @@ import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import javax.inject.Inject;
-import javax.swing.text.SimpleAttributeSet;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;

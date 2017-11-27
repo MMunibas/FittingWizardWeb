@@ -38,9 +38,14 @@ public class BackgroundTaskService implements IBackgroundTasks {
                                                     String title,
                                                     Function1<ITaskContext, T> callable,
                                                     Function2<T, PageParameters, Class> nextPageCallback,
-                                                    Class cancelPage) {
+                                                    Class cancelPage,
+                                                    Option<PageContext> originPage) {
 
-        TaskHandle handle = new TaskHandle<T>(username, title, callable, nextPageCallback, cancelPage);
+        TaskContext context = new TaskContext(
+                title,
+                originPage,
+                new PageContext(cancelPage));
+        TaskHandle handle = new TaskHandle<T>(username, context, callable, nextPageCallback, cancelPage);
         handle.submit(executor);
         usernames.put(handle.getUsername(), handle.getId());
         handles.put(handle.getId(), handle);

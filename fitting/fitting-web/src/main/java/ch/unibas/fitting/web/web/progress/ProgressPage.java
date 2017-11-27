@@ -3,6 +3,7 @@ package ch.unibas.fitting.web.web.progress;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.application.TaskHandle;
 import ch.unibas.fitting.web.web.HeaderPage;
+import ch.unibas.fitting.web.web.PageNavigation;
 import ch.unibas.fitting.web.web.errors.ErrorPage;
 import ch.unibas.fitting.web.welcome.WelcomePage;
 import com.google.inject.Inject;
@@ -42,7 +43,7 @@ public class ProgressPage extends HeaderPage {
             taskId = null;
 
         taskService.getHandle(taskId)
-                .forEach(th -> updateLabels(th));
+                .peek(th -> updateLabels(th));
 
         add(new Label("title", title));
 
@@ -78,16 +79,18 @@ public class ProgressPage extends HeaderPage {
                         if (th.isDone()) {
                             stop(target);
 
+                            taskService.remove(th);
+
                             if (th.wasSuccessful()) {
-                                taskService.remove(th);
                                 PageParameters pp = new PageParameters();
                                 Class page = (Class) th.getNextPageCallback().apply(th.getResult(), pp);
                                 if (page != null)
                                     setResponsePage(page, pp);
                             } else if (th.hasError()) {
                                 session().setFailedTask(th);
-                                taskService.remove(th);
                                 setResponsePage(ErrorPage.class);
+                            } else {
+                                setResponsePage(WelcomePage.class);
                             }
                         }
                     })
