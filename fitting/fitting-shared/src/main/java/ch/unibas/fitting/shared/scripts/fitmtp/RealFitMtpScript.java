@@ -43,8 +43,6 @@ public class RealFitMtpScript implements IFitMtpScript {
     public FitMtpOutput execute(FitMtpInput input) {
         File outputDir = input.getFitOutputDir().getFitMtpOutputDir();
         LOGGER.debug("Executing in " + outputDir);
-        PythonScriptRunner runner = new PythonScriptRunner();
-        runner.setWorkingDir(outputDir);
 
         List<String> args = new ArrayList<>();
         args.add("-rank");
@@ -76,6 +74,8 @@ public class RealFitMtpScript implements IFitMtpScript {
         File resultsFile = new File(outputDir, resultsFileName);
         ScriptUtilities.deleteFileIfExists(resultsFile);
 
+        PythonScriptRunner runner = new PythonScriptRunner();
+        runner.setWorkingDir(outputDir);
         runner.exec(mtpFitScriptFile, args, outputFile);
 
         ScriptUtilities.verifyFileExistence(outputFile);

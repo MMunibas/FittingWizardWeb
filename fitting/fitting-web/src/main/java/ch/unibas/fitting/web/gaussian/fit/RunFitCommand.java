@@ -65,7 +65,8 @@ public class RunFitCommand implements IAmACommand {
                     FitOutputDir fitOutputDir = userDirectory.getFitOutputDir(username);
                     fitOutputDir.removeFitResult(id);
 
-                    File generatedCharges = chargesFileGenerator.generate(fitOutputDir.getFitMtpOutputDir(),
+                    File generatedCharges = chargesFileGenerator.generate(
+                            fitOutputDir.getFitMtpOutputDir(),
                             "fit_" + id + "_generated_charges.txt",
                             chargeValues);
 

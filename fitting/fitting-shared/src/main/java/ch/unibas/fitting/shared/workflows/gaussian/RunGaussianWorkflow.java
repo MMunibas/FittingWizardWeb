@@ -88,7 +88,10 @@ public class RunGaussianWorkflow implements Workflow<MultipoleGaussInput,RunGaus
                     gaussOutput.getVdwFile(),
                     lraScriptOutput.getLPunFile()));
 
-            Molecule molecule = moleculeCreator.createMolecule(moleculesDir, input.getXyzDirectory(), input.getMoleculeName());
+            Molecule molecule = moleculeCreator.createMolecule(
+                    moleculesDir,
+                    input.getXyzDirectory(),
+                    input.getMoleculeName());
 
             result = new RunGaussianResult(molecule, gaussOutput.getLogFile());
         } else {
