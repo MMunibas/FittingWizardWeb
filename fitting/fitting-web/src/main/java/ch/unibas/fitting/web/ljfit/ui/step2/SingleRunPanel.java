@@ -50,7 +50,7 @@ public class SingleRunPanel extends Panel {
         singleForm.add(new AjaxButton("runSingle") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                RunPair pair = new RunPair(singlePair.getEps(), singlePair.getSigma());
+                RunPair pair = new RunPair(singlePair.getSigma(), singlePair.getEps());
 
                 runLjFitsCommand.execute(username, new RunFromPage(
                         pair,
