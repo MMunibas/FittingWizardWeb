@@ -11,6 +11,7 @@ package ch.unibas.fitting.shared.scripts.multipolegauss;
 import ch.unibas.fitting.shared.directories.MoleculesDir;
 import ch.unibas.fitting.shared.directories.XyzDirectory;
 import ch.unibas.fitting.shared.xyz.XyzFile;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * User: mhelmer
@@ -34,6 +35,11 @@ public class MultipoleGaussInput {
                                String quantChemDetails,
                                int nCores,
                                int state) {
+        if (StringUtils.isEmpty(moleculeName))
+            throw new IllegalArgumentException("moleculeName is empty");
+        if (StringUtils.isEmpty(quantChemDetails))
+            throw new IllegalArgumentException("quantChemDetails is empty");
+
         this.moleculesDir = moleculesDir;
         this.xyzDirectory = xyzDirectory;
         this.moleculeName = moleculeName;

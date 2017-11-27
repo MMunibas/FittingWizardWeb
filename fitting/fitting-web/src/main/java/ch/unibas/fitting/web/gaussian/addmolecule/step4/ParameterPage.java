@@ -3,7 +3,10 @@ package ch.unibas.fitting.web.gaussian.addmolecule.step4;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.application.PageContext;
 import ch.unibas.fitting.web.gaussian.addmolecule.RunGaussianCommand;
+import ch.unibas.fitting.web.gaussian.addmolecule.step1.OverviewPage;
 import ch.unibas.fitting.web.web.HeaderPage;
+import ch.unibas.fitting.web.web.PageNavigation;
+import ch.unibas.fitting.web.welcome.WelcomePage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
@@ -24,7 +27,7 @@ public class ParameterPage extends HeaderPage {
 
     private IModel<Integer> _netCharge = Model.of(0);
     private IModel<String> _quantum = Model.of("#P MP2/aug-cc-PVDZ nosymm");
-    private IModel<Integer> _nCores = Model.of(1);
+    private IModel<Integer> _nCores = Model.of(8);
     private IModel<Integer> _multiplicity = Model.of(1);
 
     private final String moleculeName;
@@ -35,6 +38,8 @@ public class ParameterPage extends HeaderPage {
     public ParameterPage(PageParameters pp) {
 
         this.moleculeName = pp.get("molecule_name").toString();
+        if (moleculeName == null)
+            PageNavigation.ToPage(OverviewPage.class);
 
         Form form = new Form("form");
         add(form);
@@ -54,7 +59,7 @@ public class ParameterPage extends HeaderPage {
 
         NumberTextField cores = new NumberTextField<>("numberOfCores", _nCores);
         cores.setRequired(true);
-        cores.add(RangeValidator.range(0, 10));
+        cores.add(RangeValidator.range(1, 128));
         form.add(cores);
 
         NumberTextField multiplicity = new NumberTextField<>("multiplicity", _multiplicity);
