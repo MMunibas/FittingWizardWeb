@@ -40,7 +40,7 @@ public class FitUserRepo {
         return getRepoFor(username).getNextFitId();
     }
 
-    public FitRepository getRepoFor(String username) {
+    public synchronized FitRepository getRepoFor(String username) {
         if (!repos.containsKey(username)) {
             repos.put(username, new FitRepository());
         }
