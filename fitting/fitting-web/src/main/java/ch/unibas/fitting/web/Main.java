@@ -34,7 +34,6 @@ public class Main {
         Injector injector = Guice.createInjector(new WebModule(settings));
 
         WebApp webApp = injector.getInstance(WebApp.class);
-        Server srv = new Server(settings.getServerPort());
 
         // https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=27848170
         ServletHolder sh = new ServletHolder();
@@ -49,26 +48,28 @@ public class Main {
         sh.setServlet(servlet);
         ServletContextHandler sch = new ServletContextHandler(ServletContextHandler.SESSIONS);
         sch.addServlet(sh, "/*");
+        sch.getSessionHandler().getSessionManager().setMaxInactiveInterval(60*60);
 
         ResourceHandler data_resource_handler = new ResourceHandler();
         data_resource_handler.setResourceBase(settings.getDataDir().getAbsolutePath());
         data_resource_handler.setDirectoriesListed(true);
+        data_resource_handler.setCacheControl("no-cache, private");
         ContextHandler data_context_handler = new ContextHandler("/data");
         data_context_handler.setHandler(data_resource_handler);
 
         ResourceHandler js_resource_handler = new ResourceHandler();
         js_resource_handler.setResourceBase(settings.getJavaScriptDir().getAbsolutePath());
         js_resource_handler.setDirectoriesListed(true);
-        ContextHandler context_handler = new ContextHandler("/javascript");
-        context_handler.setHandler(js_resource_handler);
+        ContextHandler js_context_handler = new ContextHandler("/javascript");
+        js_context_handler.setHandler(js_resource_handler);
 
         HandlerList handlers = new HandlerList();
         handlers.addHandler(data_context_handler);
-        handlers.addHandler(context_handler);
+        handlers.addHandler(js_context_handler);
         handlers.addHandler(sch);
 
+        Server srv = new Server(settings.getServerPort());
         srv.setHandler(handlers);
-
         injector.getInstance(DataLoader.class).loadExistingData();
 
         LOGGER.info("Starting jetty server");
