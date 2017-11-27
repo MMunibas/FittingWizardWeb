@@ -45,7 +45,7 @@ public class ParameterPage extends HeaderPage {
         add(fp);
 
         NumberTextField ntf = new NumberTextField<>("netcharge", _netCharge);
-        ntf.add(RangeValidator.range(0, 10));
+        ntf.add(RangeValidator.range(-10, 10));
         ntf.setRequired(true);
         form.add(ntf);
 
