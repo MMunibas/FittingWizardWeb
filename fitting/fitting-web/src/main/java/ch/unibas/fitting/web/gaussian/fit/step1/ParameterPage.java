@@ -7,7 +7,7 @@ import ch.unibas.fitting.web.application.PageContext;
 import ch.unibas.fitting.web.gaussian.FitUserRepo;
 import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
 import ch.unibas.fitting.web.gaussian.fit.RemoveFitCommand;
-import ch.unibas.fitting.web.gaussian.fit.RunFitCommand;
+import ch.unibas.fitting.web.gaussian.fit.RunMtpFitCommand;
 import ch.unibas.fitting.web.gaussian.addmolecule.step6.ChargesViewModel;
 import ch.unibas.fitting.web.gaussian.fit.step2.FittingResultsPage;
 import ch.unibas.fitting.web.web.HeaderPage;
@@ -69,7 +69,7 @@ public class ParameterPage extends HeaderPage {
     @Inject
     private FitUserRepo fitUserRepo;
     @Inject
-    private RunFitCommand runFit;
+    private RunMtpFitCommand runFit;
     @Inject
     private RemoveFitCommand removeFitCommand;
 

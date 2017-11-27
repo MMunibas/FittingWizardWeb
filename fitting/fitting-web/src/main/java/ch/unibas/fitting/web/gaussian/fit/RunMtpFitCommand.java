@@ -31,7 +31,7 @@ import java.util.UUID;
 /**
  * Created by mhelmer-mobile on 19.06.2016.
  */
-public class RunFitCommand implements IAmACommand {
+public class RunMtpFitCommand implements IAmACommand {
     @Inject
     private IBackgroundTasks tasks;
     @Inject
