@@ -36,9 +36,6 @@ public class RealExportScript implements IExportScript {
 
     private final static Logger logger = Logger.getLogger(RealExportScript.class);
 
-    public static final String ExportScriptNameKey = "scripts.export_data";
-    public static final String ConvertExportScriptNameKey = "scripts.export_data_convert";
-
     private final File exportScriptFile;
     private final File convertScriptFile;
     public final PythonScriptRunner runner;
@@ -46,8 +43,8 @@ public class RealExportScript implements IExportScript {
     @Inject
     public RealExportScript(Settings settings) {
 
-        exportScriptFile = new File(settings.getScriptsDir(), settings.getValue(ExportScriptNameKey));
-        convertScriptFile = new File(settings.getScriptsDir(), settings.getValue(ConvertExportScriptNameKey));
+        exportScriptFile = new File(settings.getScriptsDir(), "mtp_prm.to.pun.py");
+        convertScriptFile = new File(settings.getScriptsDir(), "pun2charmmlpun.py");
 
         this.runner = new PythonScriptRunner();
     }
