@@ -43,7 +43,7 @@ public class CreateNewSessionPage extends HeaderPage {
 
     private final IModel<Double> lambda = Model.of(0.1);
 
-    private final IModel<Double> temperature = Model.of(1.0);
+    private final IModel<Double> temperature = Model.of(298.0);
     private final IModel<Double> molarMass = Model.of(1.0);
     private final IModel<Integer> numberOfResidues = Model.of(1);
 

@@ -66,6 +66,8 @@ public class RunLjFitsCommand {
                 username,
                 "Running LJ Fits ...",
                 (ctx) -> {
+                    LjFitSession session = ljFitRepository.loadSessionForUser(username).get();
+
                     StringBuilder sb = new StringBuilder();
                     for (int i = 0; i < runs.runPairs.length(); i++) {
                         RunPair pair = runs.runPairs.get(i);
@@ -82,10 +84,12 @@ public class RunLjFitsCommand {
                             LjFitRunInput input = new LjFitRunInput(
                                     pair.lambda_epsiolon,
                                     pair.lambda_sigma,
-                                    runs.lambda_spacing);
+                                    runs.lambda_spacing,
+                                    session.getSessionParameter().temperature);
 
                             runSingleFit(username,
                                     input,
+                                    session,
                                     new ClusterParameter(runs.ncpus,runs.clusterName));
                         } catch (Exception e) {
                             String error = String.format(
@@ -112,8 +116,9 @@ public class RunLjFitsCommand {
     private void runSingleFit(
             String username,
             LjFitRunInput in,
+            LjFitSession session,
             ClusterParameter clusterParameter) {
-        LjFitSession session = ljFitRepository.loadSessionForUser(username).get();
+
         LjFitSessionDir sessionDir = userDirectory.getLjFitSessionDir(username).get();
         UploadedFiles files = sessionDir.lookupUploadedFiles(session.getUploadedFileNames());
         LjFitRunDir runDir = sessionDir.createRunDir(in.lambdaSigma, in.lambdaEpsilon);

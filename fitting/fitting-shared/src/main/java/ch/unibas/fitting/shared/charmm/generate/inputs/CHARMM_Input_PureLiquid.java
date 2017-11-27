@@ -20,24 +20,7 @@ import java.io.IOException;
  */
 public class CHARMM_Input_PureLiquid extends CHARMM_Input {
 
-    /**
-     * If content of the field has to be directly written to a file we use a BufferedWriter type
-     *
-     * @param _cor
-     * @param _top
-     * @param _par
-     * @param _outf
-     * @throws java.io.IOException
-     */
-    public CHARMM_Input_PureLiquid(File _cor,
-                                   File _top,
-                                   File _par,
-                                   File _outf) throws IOException {
-        super(_cor, _top, _par, _outf, "Pure Liquid");
-        
-        this.expectedFormats.clear();
-        this.expectedFormats.add(".cor");
-    }
+    private final double temperature;
 
     /**
      * If content of the field has to be directly written to a file we use a BufferedWriter type
@@ -54,9 +37,11 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
                                    File _top,
                                    File _par,
                                    File _lpun,
-                                   File _outf) {
+                                   File _outf,
+                                   double temperature) {
         super(_cor, _top, _par, _lpun, _outf, "Pure Liquid");
-        
+        this.temperature = temperature;
+
         this.expectedFormats.clear();
         this.expectedFormats.add(".cor");
     }
@@ -114,6 +99,8 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
         //print error level and print level
         writer.write("bomlev " + this.bomlev + "\n");
         writer.write("prnlev " + this.prnlev + "\n\n");
+
+        writer.write("set temp " + this.temperature + "\n\n");
     }
     
     @Override
@@ -156,14 +143,14 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
         writer.write("mini sd nstep 1000  " + "\n\n");
         writer.write("mini abnr nstep 100 " + "\n\n");
         
-        writer.write("calc tmin = 298 - 200.0" + "\n");
+        writer.write("set tmin 50" + "\n");
     }
 
     @Override
     protected void print_DynaSection() throws IOException {
         writer.write(   "dyna leap verlet start -                    ! use leap-frog verlet integrator\n" +
                         "   timestep 0.001 nstep 40000 nprint 1000 - ! run 10K steps @ 1 fs time-steps\n" +
-                        "   firstt @tmin finalt 298 tbath 298 -      ! heat from @tmin K to 298 K (200 K)\n" +
+                        "   firstt @tmin finalt @temp tbath @temp -      ! heat from @tmin K to @temp K (200 K)\n" +
                         "   ihtfrq 1000 teminc 5 ieqfrq 0 -          ! heat the system 5K every 2500 steps\n" +
                         "   iasors 1 iasvel 1 iscvel 0 ichecw 0 -    ! assign velocities via a Gaussian\n" +
                         "   ntrfrq 500 -                             ! stop rotation and translation\n" +
@@ -175,13 +162,13 @@ public class CHARMM_Input_PureLiquid extends CHARMM_Input {
                         "  iprfrq 50000 inbfrq -1 imgfrq 50 ihtfrq 0 -\n" +
                         "  ieqfrq 0 -\n" +
                         "  pint pconst pref 1 pgamma 5 pmass @pmass -\n" +
-                        "  hoover reft 298 tmass @tmass firstt 298\n\n");
+                        "  hoover reft @temp tmass @tmass firstt @temp\n\n");
         
         writer.write(   "dyna leap nstep 40000 timestep 0.001 -\n" +
                         "  nprint 100 nsavc 100 iuncrd 50 ntrfrq 200 -\n" +
                         "  iprfrq 40000 inbfrq -1 imgfrq 50 ihtfrq 0 -\n" +
                         "  ieqfrq 0 -\n" +
                         "  cpt pint pconst pref 1 pgamma 0 pmass @pmass -\n" +
-                        "  hoover reft 298 tmass @tmass\n\n");
+                        "  hoover reft @temp tmass @tmass\n\n");
     }
 }

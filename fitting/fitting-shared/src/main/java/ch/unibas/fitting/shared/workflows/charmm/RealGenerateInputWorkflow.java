@@ -83,7 +83,8 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
                 rtfFile,
                 parFile,
                 liquidDensityLpun,
-                liqFile);
+                liqFile,
+                input.temperature);
 
         CHARMM_Generator_DGHydr in_gas_vdw = new CHARMM_Generator_DGHydr(
                 molFile,
