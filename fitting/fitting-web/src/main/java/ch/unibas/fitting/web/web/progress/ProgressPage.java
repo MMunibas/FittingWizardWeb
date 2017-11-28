@@ -29,7 +29,7 @@ public class ProgressPage extends HeaderPage {
 
     private final IModel<String> title = Model.of("Processing...");
     private final IModel<String> progress = Model.of("Just started ...");
-    private final IModel<String> status = Model.of("");
+    private final IModel<String> status = Model.of("Waiting");
 
     private final UUID taskId;
 
