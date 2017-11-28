@@ -5,6 +5,7 @@ import ch.unibas.fitting.web.ljfit.ui.step2.run.RunFromPage;
 import ch.unibas.fitting.web.ljfit.ui.step2.run.RunLjFitsCommand;
 import ch.unibas.fitting.web.ljfit.ui.step2.run.RunPair;
 import io.vavr.collection.Stream;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -19,6 +20,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.validation.IValidator;
+import org.apache.wicket.validation.ValidationError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,10 +46,18 @@ public class GridRunPanel extends Panel {
         Form inputForm = new Form("inputForm");
         add(inputForm);
 
+        IValidator<Integer> validator = (IValidator<Integer>) validate -> {
+            Integer value = validate.getValue();
+            if (value > 1 && value % 2 == 0) {
+                validate.error(new ValidationError("Number must be odd"));
+            }
+        };
+
         NumberTextField numberEpsField = new NumberTextField<>("numberEps", new PropertyModel(gridPanelParameter, "number_eps"));
         numberEpsField.setStep(2);
         numberEpsField.setMinimum(1);
         numberEpsField.setRequired(true);
+        numberEpsField.add(validator);
         inputForm.add(numberEpsField);
 
         TextField deltaEpsField = new TextField("deltaEps", new PropertyModel(gridPanelParameter, "delta_eps"));
@@ -56,6 +67,7 @@ public class GridRunPanel extends Panel {
         numberSigmaField.setStep(2);
         numberSigmaField.setMinimum(1);
         numberSigmaField.setRequired(true);
+        numberSigmaField.add(validator);
         inputForm.add(numberSigmaField);
 
         TextField deltaSigmaField = new TextField("deltaSigma", new PropertyModel(gridPanelParameter, "delta_sigma"));
@@ -67,18 +79,19 @@ public class GridRunPanel extends Panel {
         choiceForm.add(new AjaxButton("runGrid") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> choiceForm) {
-                
-                List<RunPair> pairs = Stream.ofAll(epsilonSigmaPairCandidates)
-                        .filter(pair -> pair.getSelected())
-                        .map(pair -> new RunPair(pair.getSigma(), pair.getEps()))
-                        .toJavaList();
+                if (isValid()) {
+                    List<RunPair> pairs = Stream.ofAll(epsilonSigmaPairCandidates)
+                            .filter(pair -> pair.getSelected())
+                            .map(pair -> new RunPair(pair.getSigma(), pair.getEps()))
+                            .toJavaList();
 
-                runLjFitsCommand.execute(username, new RunFromPage(
-                        io.vavr.collection.List.ofAll(pairs),
-                        lambda.getObject(),
-                        clusterParameter.getNcpus(),
-                        clusterParameter.getClusterName()
-                ));
+                    runLjFitsCommand.execute(username, new RunFromPage(
+                            io.vavr.collection.List.ofAll(pairs),
+                            lambda.getObject(),
+                            clusterParameter.getNcpus(),
+                            clusterParameter.getClusterName()
+                    ));
+                }
             }
         });
 
@@ -106,17 +119,18 @@ public class GridRunPanel extends Panel {
 
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> inputForm) {
-                epsilonSigmaPairCandidates = calculateSigmaEpsilon(gridPanelParameter.getNumber_eps(),
-                        gridPanelParameter.getNumber_sigma(), gridPanelParameter.getDelta_eps(), gridPanelParameter.getDelta_sigma());
-                listContainer.replace(new ListView("gridListview", epsilonSigmaPairCandidates) {
-                    protected void populateItem(ListItem item) {
-                        EpsilonSigmaPair singleResult = (EpsilonSigmaPair) item.getModelObject();
-                        item.add(new Label("choiceEps", singleResult.getEps()));
-                        item.add(new Label("choiceSigma", singleResult.getSigma()));
-                        item.add(new CheckBox("selectedCheckbox", new PropertyModel(singleResult, "selected")));
-                    }
-                });
-
+                if (isValid()) {
+                    epsilonSigmaPairCandidates = calculateSigmaEpsilon(gridPanelParameter.getNumber_eps(),
+                            gridPanelParameter.getNumber_sigma(), gridPanelParameter.getDelta_eps(), gridPanelParameter.getDelta_sigma());
+                    listContainer.replace(new ListView("gridListview", epsilonSigmaPairCandidates) {
+                        protected void populateItem(ListItem item) {
+                            EpsilonSigmaPair singleResult = (EpsilonSigmaPair) item.getModelObject();
+                            item.add(new Label("choiceEps", singleResult.getEps()));
+                            item.add(new Label("choiceSigma", singleResult.getSigma()));
+                            item.add(new CheckBox("selectedCheckbox", new PropertyModel(singleResult, "selected")));
+                        }
+                    });
+                }
                 target.add(listContainer);
             }
         });

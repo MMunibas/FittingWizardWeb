@@ -44,12 +44,12 @@ public class CreateNewSessionPage extends HeaderPage {
     private final IModel<Double> lambda = Model.of(0.1);
 
     private final IModel<Double> temperature = Model.of(298.0);
-    private final IModel<Double> molarMass = Model.of(1.0);
-    private final IModel<Integer> numberOfResidues = Model.of(1);
+    private final IModel<Double> molarMass = Model.of();
+    private final IModel<Integer> numberOfResidues = Model.of();
 
-    private final IModel<Double> expectedDensity = Model.of(1.0);
-    private final IModel<Double> expectedDeltaH = Model.of(1.0);
-    private final IModel<Double> expectedDeltaG = Model.of(1.0);
+    private final IModel<Double> experimentalDensity = Model.of();
+    private final IModel<Double> experimentalDeltaH = Model.of();
+    private final IModel<Double> experimentalDeltaG = Model.of();
 
     public CreateNewSessionPage() {
 
@@ -79,26 +79,31 @@ public class CreateNewSessionPage extends HeaderPage {
         NumberTextField<Double> molarMassField = new NumberTextField<>("molarMass", molarMass);
         molarMassField.setRequired(true);
         molarMassField.setStep(NumberTextField.ANY);
+        molarMassField.setConvertEmptyInputStringToNull(true);
         form.add(molarMassField);
 
         NumberTextField<Integer> numberOfResiduesField = new NumberTextField<>("numberOfResidues", numberOfResidues);
         numberOfResiduesField.setRequired(true);
         numberOfResiduesField.setStep(1);
+        numberOfResiduesField.setConvertEmptyInputStringToNull(true);
         form.add(numberOfResiduesField);
 
-        NumberTextField<Double> expectedDensityField = new NumberTextField<>("expectedDensity", expectedDensity);
+        NumberTextField<Double> expectedDensityField = new NumberTextField<>("experimentalDensity", experimentalDensity);
         expectedDensityField.setRequired(true);
         expectedDensityField.setStep(NumberTextField.ANY);
+        expectedDensityField.setConvertEmptyInputStringToNull(true);
         form.add(expectedDensityField);
 
-        NumberTextField<Double> expectedDeltaHField = new NumberTextField<>("expectedDeltaH", expectedDeltaH);
+        NumberTextField<Double> expectedDeltaHField = new NumberTextField<>("experimentalDeltaH", experimentalDeltaH);
         expectedDeltaHField.setRequired(true);
         expectedDeltaHField.setStep(NumberTextField.ANY);
+        expectedDeltaHField.setConvertEmptyInputStringToNull(true);
         form.add(expectedDeltaHField);
 
-        NumberTextField<Double> expectedDeltaGField = new NumberTextField<>("expectedDeltaG", expectedDeltaG);
+        NumberTextField<Double> expectedDeltaGField = new NumberTextField<>("experimentalDeltaG", experimentalDeltaG);
         expectedDeltaGField.setRequired(true);
         expectedDeltaGField.setStep(NumberTextField.ANY);
+        expectedDeltaGField.setConvertEmptyInputStringToNull(true);
         form.add(expectedDeltaGField);
 
         form.add(new AjaxButton("start") {
@@ -112,9 +117,9 @@ public class CreateNewSessionPage extends HeaderPage {
                         temperature.getObject(),
                         molarMass.getObject(),
                         numberOfResidues.getObject(),
-                        expectedDensity.getObject(),
-                        expectedDeltaH.getObject(),
-                        expectedDeltaG.getObject());
+                        experimentalDensity.getObject(),
+                        experimentalDeltaH.getObject(),
+                        experimentalDeltaG.getObject());
 
                 createNewSession(getCurrentUsername(), parameter);
                 openLjFitSession.execute(getCurrentUsername());

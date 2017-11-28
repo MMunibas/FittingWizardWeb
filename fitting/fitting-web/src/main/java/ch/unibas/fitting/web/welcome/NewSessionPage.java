@@ -1,5 +1,6 @@
 package ch.unibas.fitting.web.welcome;
 
+import ch.unibas.fitting.web.web.UserSession;
 import ch.unibas.fitting.web.web.WizardPage;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
@@ -29,11 +30,11 @@ public class NewSessionPage extends WizardPage {
 
         RequiredTextField<String> field = new RequiredTextField<String>("username", new PropertyModel<>(this, "username"));
         field.add((IValidator<String>) validate -> {
-            Pattern pattern = Pattern.compile("\\s");
+            Pattern pattern = Pattern.compile(UserSession.UsernamePattern);
             Matcher matcher = pattern.matcher(validate.getValue());
             boolean found = matcher.find();
-            if (found) {
-                validate.error(new ValidationError("whitespaces are not allowed in username"));
+            if (!found) {
+                validate.error(new ValidationError("only A-Z a-z - _ allowed"));
             }
         });
         form.add(field);

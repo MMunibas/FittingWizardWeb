@@ -20,6 +20,8 @@ public class UserSession extends WebSession {
 
     private static final Logger LOGGER = Logger.getLogger(UserSession.class);
 
+    public static final String UsernamePattern = "^[a-zA-Z0-9_-]+$";
+
     private String username;
     private DateTime created;
 
@@ -47,7 +49,7 @@ public class UserSession extends WebSession {
     }
 
     public void setUsername(String username) {
-        Pattern pattern = Pattern.compile("^[a-zA-Z0-9_-]+$"); // only allow A-Za-z0-9_ and must not be empty
+        Pattern pattern = Pattern.compile(UsernamePattern); // only allow A-Za-z0-9_ and must not be empty
         Matcher matcher = pattern.matcher(username);
         if (!matcher.matches()) {
             throw new RuntimeException("bad username: only A-Za-z0-9_ allowed. string must not be empty");
