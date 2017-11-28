@@ -1,13 +1,14 @@
 <wicket:extend xmlns:wicket="http://www.w3.org/1999/xhtml">
-    <div>
-        <h1>MTP fit results</h1>
-        &nbsp
-        <input wicket:id="newSession" type="button" value="Start new session" class="btn btn-default"/>
+    <div style="align-content: center">
+        <h1 style="display: inline">MTP fit results</h1>
+        <input wicket:id="newSession" type="button" value="Start new session"
+               style="margin-left: 5px;"
+               class="btn btn-default"/>
     </div>
 
     <div>
         <form wicket:id="form">
-            <div>
+            <div style="margin: 5px 0px 5px 0px">
                 <input wicket:id="start" type="submit" value="Start a fit" class="btn btn-default" />
                 <input wicket:id="showResults" type="submit" value="Show results" class="btn btn-default" />
             </div>
@@ -50,7 +51,9 @@
             <td wicket:id="rmse" />
             <td wicket:id="rank" />
             <td>
-                <input wicket:id="remove" type="button" value="Remove" class="btn btn-default" />
+                <button wicket:id="remove" type="button" class="btn btn-default">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </button>
             </td>
         </tr>
     </table>

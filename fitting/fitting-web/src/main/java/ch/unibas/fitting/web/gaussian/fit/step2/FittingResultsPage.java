@@ -85,7 +85,7 @@ public class FittingResultsPage extends HeaderPage {
             }
         });
 
-        add(downloadLink = new DownloadLink("download", lpunFile));
+        form.add(downloadLink = new DownloadLink("download", lpunFile));
         downloadLink.setVisible(false);
         downloadLink.setOutputMarkupPlaceholderTag(true);
 

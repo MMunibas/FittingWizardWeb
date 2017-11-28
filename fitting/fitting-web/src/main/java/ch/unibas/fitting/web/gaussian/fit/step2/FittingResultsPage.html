@@ -1,18 +1,25 @@
 <wicket:extend xmlns:wicket="http://www.w3.org/1999/xhtml">
-    <h1>MTP fit results</h1>
+    <div style="align-content: center">
+        <h1 style="display: inline">MTP fit results</h1>
+        <input wicket:id="goToSession"
+               type="button"
+               value="Session overview"
+               style="margin-left: 5px;"
+               class="btn btn-default"/>
+    </div>
     <p>
-        <input wicket:id="goToSession" type="button" value="Session overview" class="btn btn-default"/>
+
     </p>
     <form wicket:id="selections">
-        <p>
-            Fit: <select wicket:id="fitNumbers"></select>
-        </p>
+        <div style="margin: 5px 0px 5px 0px">
+            <p style="display: inline">
+                Fit: <select wicket:id="fitNumbers"></select>
+            </p>
+            <input wicket:id="download" type="button" value="Download LPUN" class="btn btn-default"/>
+        </div>
     </form>
 
     <div>
-        <p>
-            <input wicket:id="download" type="button" value="Download LPUN" class="btn btn-default"/>
-        </p>
         <table cellspacing="0" class="table">
             <tr>
                 <th>Atom type</th>
