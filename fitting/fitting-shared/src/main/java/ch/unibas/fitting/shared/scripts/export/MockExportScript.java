@@ -21,12 +21,13 @@ import javax.inject.Inject;
  * Date: 13.12.13
  * Time: 15:12
  */
-public class MockExportScript implements IExportScript {
+public class MockExportScript extends RealExportScript {
 
     private final File testOutputDir;
 
     @Inject
     public MockExportScript(Settings settings) {
+        super(settings);
         this.testOutputDir = settings.getTestdataFitOutput();
     }
 
@@ -36,7 +37,7 @@ public class MockExportScript implements IExportScript {
 
         String testFile = "co2fit.lpun";
         File testdata = new File(testOutputDir, testFile);
-        File outputFile = new File(outputDir, testFile);
+        File outputFile = new File(outputDir, String.format("fit_%d_co2fit.lpun", input.getFitId()));
         try {
             FileUtils.copyFile(testdata, outputFile);
         } catch (IOException e) {

@@ -3,6 +3,7 @@ package ch.unibas.fitting.web.gaussian.fit;
 import ch.unibas.fitting.shared.charges.ChargesFileGenerator;
 import ch.unibas.fitting.shared.directories.FitOutputDir;
 import ch.unibas.fitting.shared.directories.IUserDirectory;
+import ch.unibas.fitting.shared.directories.MoleculesDir;
 import ch.unibas.fitting.shared.fitting.ChargeValue;
 import ch.unibas.fitting.shared.fitting.Fit;
 import ch.unibas.fitting.shared.fitting.InitialQ00;
@@ -10,6 +11,9 @@ import ch.unibas.fitting.shared.molecules.Molecule;
 import ch.unibas.fitting.shared.scripts.fitmtp.FitMtpInput;
 import ch.unibas.fitting.shared.scripts.fitmtp.FitMtpOutput;
 import ch.unibas.fitting.shared.scripts.fitmtp.IFitMtpScript;
+import ch.unibas.fitting.shared.workflows.ExportFitInput;
+import ch.unibas.fitting.shared.workflows.ExportFitWorkflow;
+import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
 import ch.unibas.fitting.shared.workflows.gaussian.fit.CreateFit;
 import ch.unibas.fitting.web.application.IAmACommand;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
@@ -44,7 +48,8 @@ public class RunMtpFitCommand implements IAmACommand {
     private FitUserRepo fitRepo;
     @Inject
     private MoleculeUserRepo moleculeUserRepo;
-
+    @Inject
+    private ExportFitWorkflow exportFit;
     @Inject
     private CreateFit createFit;
 
@@ -72,8 +77,9 @@ public class RunMtpFitCommand implements IAmACommand {
 
                     List<Molecule> molesForFit = moleculeUserRepo.loadAll(username);
 
+                    MoleculesDir moleculesDir = userDirectory.getMoleculesDir(username);
                     FitMtpInput input = new FitMtpInput(
-                            userDirectory.getMoleculesDir(username),
+                            moleculesDir,
                             fitOutputDir,
                             id,
                             convergence,
@@ -92,6 +98,13 @@ public class RunMtpFitCommand implements IAmACommand {
                             molesForFit);
 
                     fitRepo.save(username, fit);
+
+                    ExportFitInput exportInput = new ExportFitInput(
+                            fitOutputDir,
+                            moleculesDir,
+                            fit,
+                            null);
+                    exportFit.execute(WorkflowContext.withInput(exportInput));
 
                     return fit;
                 },

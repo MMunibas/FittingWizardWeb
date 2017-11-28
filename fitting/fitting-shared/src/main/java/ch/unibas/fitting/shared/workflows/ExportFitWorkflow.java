@@ -25,25 +25,22 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
+import javax.inject.Inject;
+
 /**
  * User: mhelmer Date: 13.12.13 Time: 15:39
  */
-public class ExportFitWorkflow implements Workflow<ExportFitInput, Void> {
+public class ExportFitWorkflow {
 
     private static final Logger logger = Logger.getLogger(ExportFitWorkflow.class);
 
     private final IExportScript exportScript;
 
+    @Inject
     public ExportFitWorkflow(IExportScript exportScript) {
         this.exportScript = exportScript;
     }
 
-    /**
-     *
-     * @param input
-     * @return
-     */
-    @Override
     public Void execute(WorkflowContext<ExportFitInput> input) {
         logger.info("Executing export workflow.");
         Fit fit = input.getParameter().getFit();

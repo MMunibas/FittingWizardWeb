@@ -92,7 +92,7 @@ public class RealExportScript implements IExportScript {
         return new ExportScriptOutput(lPunOutputFile);
     }
 
-    private File getLPunOutputFile(File outputDir, File exportFileName) {
+    protected File getLPunOutputFile(File outputDir, File exportFileName) {
         // for exmpale: fit_1_co2.pun  -->   fit_1_co2.lpun
         String name = FilenameUtils.removeExtension(exportFileName.getName()) + ".lpun";
         File convertedFile = new File(outputDir, name);
@@ -101,12 +101,16 @@ public class RealExportScript implements IExportScript {
 
     private File getPunOutputFile(File outputDir, int fitId, MoleculeId moleculeId) {
         // for exmpale: fit_1_co2.pun
-        String name = String.format("%s%s_%s.pun", RealFitMtpScript.FitNamePrefix, String.valueOf(fitId), moleculeId.getName());
+        String name = String.format(
+                "%s%s_%s.pun",
+                RealFitMtpScript.FitNamePrefix,
+                String.valueOf(fitId),
+                moleculeId.getName());
         File exportOutput = new File(outputDir, name);
         return exportOutput;
     }
 
-    private File getLPunFileForMolecule(MoleculesDir moleculesDir, MoleculeId moleculeId) {
+    protected File getLPunFileForMolecule(MoleculesDir moleculesDir, MoleculeId moleculeId) {
         String lPunFileName = moleculeId.getName() + RealLRAScript.LPunExtension;
         Collection<File> files = FileUtils.listFiles(moleculesDir.getDirectory(), new NameFileFilter(lPunFileName), TrueFileFilter.TRUE);
         if (files.size() != 1) {

@@ -20,7 +20,13 @@ public class FitOutputDir extends FittingDirectory {
     }
 
     public File getFitOutputFileRef(int index) {
-        return new File(getFitMtpOutputDir(), String.format("fit_%s_output.txt", index));
+
+        for (File f: getDefaultExportDir().listFiles()) {
+            if (f.getName().startsWith("fit_" + index) && f.getName().endsWith(".lpun")) {
+                return f;
+            }
+        }
+        return null;
     }
 
     public void removeFitResult(int index) {

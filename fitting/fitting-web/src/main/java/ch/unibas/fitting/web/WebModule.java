@@ -24,6 +24,7 @@ import ch.unibas.fitting.shared.scripts.lra.RealLRAScript;
 import ch.unibas.fitting.shared.scripts.multipolegauss.IMultipoleGaussScript;
 import ch.unibas.fitting.shared.scripts.multipolegauss.MockMultipoleGaussScript;
 import ch.unibas.fitting.shared.scripts.multipolegauss.RealMultipoleGaussScript;
+import ch.unibas.fitting.shared.workflows.ExportFitWorkflow;
 import ch.unibas.fitting.shared.workflows.charmm.IGenerateInputWorkflow;
 import ch.unibas.fitting.shared.workflows.charmm.MockGenerateInputWorkflow;
 import ch.unibas.fitting.shared.workflows.charmm.RealGenerateInputWorkflow;
