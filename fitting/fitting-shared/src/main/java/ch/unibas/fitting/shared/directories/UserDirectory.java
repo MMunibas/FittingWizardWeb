@@ -38,19 +38,13 @@ public class UserDirectory implements IUserDirectory {
         return new File(dataDir, username);
     }
 
-    @Override
-    public MoleculesDir getMoleculesDir(String username) {
-        return new MoleculesDir(username, userSubDir(username, "molecules"));
+    private File getMtpFitDirFile(String username) {
+        return userSubDir(username, "mtp_fit");
     }
 
     @Override
-    public FitOutputDir getFitOutputDir(String username) {
-        return new FitOutputDir(username, userSubDir(username, "fit_mtp"));
-    }
-
-    @Override
-    public XyzDirectory getXyzDir(String username) {
-        return new XyzDirectory(username, userSubDir(username, "xyz_files"));
+    public MtpFitDir getMtpFitDir(String username) {
+        return new MtpFitDir(username, getMtpFitDirFile(username));
     }
 
     @Override
@@ -89,7 +83,17 @@ public class UserDirectory implements IUserDirectory {
         }
     }
 
+    @Override
+    public void deleteMtpFitDir(String username) {
+        File f = getMtpFitDirFile(username);
+        try {
+            FileUtils.deleteDirectory(f);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not delete " + f, e);
+        }
+    }
+
     private File getLjFitSessionFile(String username) {
-        return userSubDir(username, "ljfit");
+        return userSubDir(username, "lj_fit");
     }
 }

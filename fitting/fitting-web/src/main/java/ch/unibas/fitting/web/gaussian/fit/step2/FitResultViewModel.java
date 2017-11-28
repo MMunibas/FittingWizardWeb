@@ -15,15 +15,16 @@ import java.util.HashMap;
  */
 public class FitResultViewModel {
     private final String name;
-    private final int[] indices;
     private HashMap<String, FitValue> values = new HashMap<>();
 
-    public FitResultViewModel(ColorCoder colorCoder, Fit fit, FitResult fr, int[] indices) {
-        name = fr.getAtomTypeName();
+    public FitResultViewModel(
+            ColorCoder colorCoder,
+            Fit fit,
+            FitResult fr) {
+        this.name = fr.getAtomTypeName();
         fr.getChargeValues().forEach(chargeValue -> {
             values.put(chargeValue.getType().toLowerCase(), new FitValue(colorCoder, fit, fr, chargeValue));
         });
-        this.indices = indices;
     }
 
     public FitValue getFitValueFor(String chargeType) {
@@ -32,10 +33,6 @@ public class FitResultViewModel {
 
     public String getName() {
         return name;
-    }
-
-    public int[] getIndices() {
-        return indices;
     }
 
     public class FitValue {

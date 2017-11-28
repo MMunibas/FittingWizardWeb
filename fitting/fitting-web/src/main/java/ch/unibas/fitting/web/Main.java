@@ -70,7 +70,6 @@ public class Main {
 
         Server srv = new Server(settings.getServerPort());
         srv.setHandler(handlers);
-        injector.getInstance(DataLoader.class).loadExistingData();
 
         LOGGER.info("Starting jetty server");
         srv.start();

@@ -27,6 +27,8 @@ public class LjFitRunDir extends FittingDirectory {
         created = new DateTime(time);
         deltaG_dir = new File(getDirectory(), "deltaG");
         density_dir = new File(getDirectory(), "density");
+        density_dir.mkdirs();
+        deltaG_dir.mkdirs();
 
         gas_dir = new File(deltaG_dir, "gas_" + time);
         gas_vdw_dir  = new File(gas_dir, "vdw");

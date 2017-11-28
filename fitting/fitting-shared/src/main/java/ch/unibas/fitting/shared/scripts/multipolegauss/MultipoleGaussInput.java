@@ -8,9 +8,7 @@
  */
 package ch.unibas.fitting.shared.scripts.multipolegauss;
 
-import ch.unibas.fitting.shared.directories.MoleculesDir;
-import ch.unibas.fitting.shared.directories.XyzDirectory;
-import ch.unibas.fitting.shared.xyz.XyzFile;
+import ch.unibas.fitting.shared.directories.MtpFitDir;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -19,31 +17,26 @@ import org.apache.commons.lang.StringUtils;
  * Time: 14:29
  */
 public class MultipoleGaussInput {
-    private MoleculesDir moleculesDir;
-    private XyzDirectory xyzDirectory;
-
-    private String moleculeName;
+    private final MtpFitDir mtpFitDir;
+    private final String moleculeName;
     private final int netCharge;
     private final String quantChemDetails;
     private final int nCores;
     private final int state;
 
-    public MultipoleGaussInput(MoleculesDir moleculesDir,
-                               XyzDirectory xyzDirectory,
+    public MultipoleGaussInput(MtpFitDir mtpFitDir,
                                String moleculeName,
                                int netCharge,
                                String quantChemDetails,
                                int nCores,
                                int state) {
+        this.mtpFitDir = mtpFitDir;
         if (StringUtils.isEmpty(moleculeName))
             throw new IllegalArgumentException("moleculeName is empty");
         if (StringUtils.isEmpty(quantChemDetails))
             throw new IllegalArgumentException("quantChemDetails is empty");
 
-        this.moleculesDir = moleculesDir;
-        this.xyzDirectory = xyzDirectory;
         this.moleculeName = moleculeName;
-
         this.netCharge = netCharge;
         this.quantChemDetails = quantChemDetails;
         this.nCores = nCores;
@@ -70,11 +63,7 @@ public class MultipoleGaussInput {
         return state;
     }
 
-    public MoleculesDir getMoleculesDir() {
-        return moleculesDir;
-    }
-
-    public XyzDirectory getXyzDirectory() {
-        return xyzDirectory;
+    public MtpFitDir getMtpFitDir() {
+        return mtpFitDir;
     }
 }

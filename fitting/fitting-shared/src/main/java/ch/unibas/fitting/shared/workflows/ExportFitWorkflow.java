@@ -10,12 +10,9 @@ package ch.unibas.fitting.shared.workflows;
 
 import ch.unibas.fitting.shared.directories.FitOutputDir;
 import ch.unibas.fitting.shared.fitting.Fit;
-import ch.unibas.fitting.shared.molecules.MoleculeId;
 import ch.unibas.fitting.shared.scripts.export.ExportScriptInput;
 import ch.unibas.fitting.shared.scripts.export.ExportScriptOutput;
 import ch.unibas.fitting.shared.scripts.export.IExportScript;
-import ch.unibas.fitting.shared.workflows.base.Workflow;
-import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,52 +38,22 @@ public class ExportFitWorkflow {
         this.exportScript = exportScript;
     }
 
-    public Void execute(WorkflowContext<ExportFitInput> input) {
+    public Void execute(ExportFitInput input) {
         logger.info("Executing export workflow.");
-        Fit fit = input.getParameter().getFit();
-        File destination = input.getParameter().getDestination();
-        FitOutputDir fitOutputDir = input.getParameter().getFitOutputDir();
+        Fit fit = input.getFit();
+        FitOutputDir fitOutputDir = input.getFitOutputDir();
 
-        if (destination == null) {
-            destination = fitOutputDir.getDefaultExportDir();
-            logger.info("No destination passed. Using default destination: "
-                    + FilenameUtils.normalize(destination.getAbsolutePath()));
-        }
         List<File> exportedFiles = new ArrayList<>();
-        for (MoleculeId moleculeId : fit.getAllMoleculeIds()) {
+        for (String moleculeId : fit.getAllMoleculeIds()) {
             ExportScriptOutput output = exportScript.execute(new ExportScriptInput(
-                    input.getParameter().getFitOutputDir(),
-                    input.getParameter().getMoleculesDir(),
+                    input.getFitOutputDir(),
+                    input.getMoleculesDir(),
                     fit.getId(),
                     moleculeId));
             exportedFiles.add(output.getExportFile());
         }
-        copyToDestinationIfNecessary(exportedFiles, destination);
+        copyToDestinationIfNecessary(exportedFiles, fitOutputDir.getDirectory());
         return null;
-    }
-
-    public List<File> execute(WorkflowContext<ExportFitInput> input, boolean charmm_export) {
-        logger.info("Executing export workflow with return of List<File> for CHARMM");
-        Fit fit = input.getParameter().getFit();
-        File destination = input.getParameter().getDestination();
-        FitOutputDir fitOutputDir = input.getParameter().getFitOutputDir();
-        if (destination == null) {
-            destination = fitOutputDir.getDefaultExportDir();
-            logger.info("No destination passed. Using default destination: "
-                    + FilenameUtils.normalize(destination.getAbsolutePath()));
-        }
-        List<File> exportedFiles = new ArrayList<>();
-        for (MoleculeId moleculeId : fit.getAllMoleculeIds()) {
-            ExportScriptOutput output = exportScript.execute(new ExportScriptInput(
-                    fitOutputDir,
-                    input.getParameter().getMoleculesDir(),
-                    fit.getId(),
-                    moleculeId));
-            exportedFiles.add(output.getExportFile());
-        }
-        copyToDestinationIfNecessary(exportedFiles, destination);
-        
-        return exportedFiles;
     }
 
     private void copyToDestinationIfNecessary(List<File> exportedFiles, File destination) {

@@ -8,8 +8,6 @@
  */
 package ch.unibas.fitting.shared.workflows.gaussian;
 
-import ch.unibas.fitting.shared.molecules.Molecule;
-
 import java.io.File;
 
 /**
@@ -20,27 +18,13 @@ import java.io.File;
 
 public class RunGaussianResult {
 
-    private Molecule molecule;
     private final File logFile;
 
     public RunGaussianResult(File logFile) {
         this.logFile = logFile;
     }
 
-    public RunGaussianResult(Molecule molecule, File logFile) {
-        this.molecule = molecule;
-        this.logFile = logFile;
-    }
-
     public File getLogFile() {
         return logFile;
-    }
-
-    public boolean wasSuccessful() {
-        return molecule != null;
-    }
-
-    public Molecule getMolecule() {
-        return molecule;
     }
 }

@@ -9,39 +9,27 @@
 package ch.unibas.fitting.shared.fitting;
 
 import ch.unibas.fitting.shared.charges.ChargeTypes;
-import ch.unibas.fitting.shared.molecules.MoleculeId;
+import io.vavr.collection.List;
+import io.vavr.collection.Set;
 import org.joda.time.DateTime;
 
-import java.io.File;
-import java.util.*;
-
-/**
- * User: mhelmer
- * Date: 03.12.13
- * Time: 14:48
- */
 public class Fit {
     private int id;
     private double rmse;
-    private ArrayList<FitResult> fitResults;
     private int rank;
-    private final File resultsFile;
-    private final File outputFile;
     private DateTime created;
+    private List<FitResult> fitResults;
 
     public Fit(int id,
                double rmse,
                int rank,
-               ArrayList<FitResult> fitResults,
-               File resultsFile,
-               File outputFile) {
+               List<FitResult> fitResults,
+               DateTime created) {
         this.id = id;
         this.rmse = rmse;
         this.fitResults = fitResults;
         this.rank = rank;
-        this.resultsFile = resultsFile;
-        this.outputFile = outputFile;
-        this.created = DateTime.now();
+        this.created = created;
     }
 
     public int getId() {
@@ -56,23 +44,13 @@ public class Fit {
     	return rank;
     }
 
-    public File getOutputFile() {
-        return outputFile;
+    public Set<String> getAllMoleculeIds() {
+        return fitResults.map(r -> r.getMoleculeNames())
+                .flatMap(strings -> strings)
+                .toSet();
     }
 
-    public File getResultsFile() {
-        return resultsFile;
-    }
-
-    public LinkedHashSet<MoleculeId> getAllMoleculeIds() {
-        LinkedHashSet<MoleculeId> ids = new LinkedHashSet<>();
-        for (FitResult fitResult : fitResults) {
-            ids.addAll(fitResult.getMoleculeIds());
-        }
-        return ids;
-    }
-
-    public ArrayList<FitResult> getFitResults() {
+    public List<FitResult> getFitResults() {
         return fitResults;
     }
 
@@ -126,19 +104,12 @@ public class Fit {
     }
 
     private List<Double> getAllAbsDeviationOfQ() {
-        List<Double> values = new ArrayList<>();
-        for (FitResult fitResult : fitResults) {
-            values.add(fitResult.getAbsDeviationOfQ());
-        }
-        return values;
+        return fitResults.map(r -> r.getAbsDeviationOfQ());
     }
 
     private List<Double> getAllValuesWithPrefix(String chargeType) {
-        List<Double> values = new ArrayList<>();
-        for (FitResult fitResult : fitResults) {
-            values.addAll(fitResult.findValuesByPrefix(chargeType));
-        }
-        return values;
+        return fitResults
+                .flatMap(r -> r.findValuesByPrefix(chargeType));
     }
 
     private static double findAbsoluteMinOf(List<Double> values) {

@@ -1,6 +1,7 @@
 package ch.unibas.fitting.web.gaussian.addmolecule;
 
 import ch.unibas.fitting.shared.directories.IUserDirectory;
+import ch.unibas.fitting.shared.directories.MtpFitDir;
 import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussInput;
 import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
 import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianResult;
@@ -9,9 +10,9 @@ import ch.unibas.fitting.web.application.IAmACommand;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.application.PageContext;
 import ch.unibas.fitting.web.application.TaskHandle;
-import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
 import ch.unibas.fitting.web.gaussian.addmolecule.step4.ParameterPage;
 import ch.unibas.fitting.web.gaussian.addmolecule.step6.AtomTypesPage;
+import ch.unibas.fitting.web.gaussian.services.MtpFitSessionRepository;
 import ch.unibas.fitting.web.web.PageNavigation;
 import io.vavr.control.Option;
 
@@ -27,8 +28,6 @@ public class RunGaussianCommand implements IAmACommand {
     @Inject
     private RunGaussianWorkflow workflow;
     @Inject
-    private MoleculeUserRepo moleculeUserRepo;
-    @Inject
     private IUserDirectory userDir;
 
     public void execute(String username,
@@ -39,9 +38,10 @@ public class RunGaussianCommand implements IAmACommand {
                         Integer nCores,
                         Integer multiplicity) {
 
+        MtpFitDir mtpFitDir = userDir.getMtpFitDir(username);
+
         final MultipoleGaussInput input = new MultipoleGaussInput(
-                userDir.getMoleculesDir(username),
-                userDir.getXyzDir(username),
+                mtpFitDir,
                 moleculeName,
                 netCharge,
                 quantum,
@@ -52,12 +52,11 @@ public class RunGaussianCommand implements IAmACommand {
                 username,
                 "Gaussian MEP",
                 (ctx) -> {
-                    RunGaussianResult result = workflow.execute(WorkflowContext.withInput(input));
-                    moleculeUserRepo.save(username, result.getMolecule());
-                    return result;
+                    workflow.execute(WorkflowContext.withInput(input));
+                    return null;
                 },
                 (runGaussianResult, pageParameters) -> {
-                    pageParameters.add("molecule_name", runGaussianResult.getMolecule().getId().getName());
+                    pageParameters.add("molecule_name", moleculeName);
                     return AtomTypesPage.class;
                 },
                 ParameterPage.class,

@@ -9,7 +9,6 @@
 package ch.unibas.fitting.shared.scripts.vmd;
 
 import ch.unibas.fitting.shared.config.Settings;
-import ch.unibas.fitting.shared.molecules.MoleculeId;
 import ch.unibas.fitting.shared.scripts.fitmtp.RealFitMtpScript;
 import ch.unibas.fitting.shared.scripts.lra.RealLRAScript;
 import ch.unibas.fitting.shared.scripts.multipolegauss.RealMultipoleGaussScript;
@@ -63,14 +62,14 @@ public class RealVmdDisplayScript implements IVmdDisplayScript {
     	pyRunner.setWorkingDir(outputDir);
 
         // -txt parameter
-        String fitResultFileName = RealFitMtpScript.getResultFileNameForFit(input.getFitId());
+        String fitResultFileName = RealFitMtpScript.getResultFileNameForFit();
         File fitResultFile = new File(outputDir, fitResultFileName);
 
         // -pun co2_l.pun
-        File moleculeLPunFile = getLPunFileForMolecule(input.getMoleculeId());
+        File moleculeLPunFile = getLPunFileForMolecule(input.getMoleculeName());
 
         // -out co2fit.pun
-        File punOutputFile = getPunOutputFile(input.getFitId(), input.getMoleculeId());
+        File punOutputFile = getPunOutputFile(input.getFitId(), input.getMoleculeName());
 
         ScriptUtilities.verifyFileExistence(fitResultFile);
         ScriptUtilities.verifyFileExistence(moleculeLPunFile);
@@ -86,17 +85,17 @@ public class RealVmdDisplayScript implements IVmdDisplayScript {
         
         // run fieldcomp
         
-        File currentMoleculeDir = getMoleculeDirForMolecule(input.getMoleculeId());
+        File currentMoleculeDir = getMoleculeDirForMolecule(input.getMoleculeName());
         fieldcompRunner.setWorkingDir(currentMoleculeDir);
         
         // -vdw parameter
-        File moleculeVdwFile = getVdwFileForMolecule(input.getMoleculeId());
+        File moleculeVdwFile = getVdwFileForMolecule(input.getMoleculeName());
         File modifiedVdwFile = new File(outputDir, moleculeVdwFile.getName());
         
         createModifiedVdwFile(moleculeVdwFile, modifiedVdwFile, input.getFitRank());
         
         // -cube parameter
-        File moleculeCubeFile = getCubeFileForMolecule(input.getMoleculeId());
+        File moleculeCubeFile = getCubeFileForMolecule(input.getMoleculeName());
         
         List<String> fieldcompArgs = Arrays.asList("-cube", /*moleculeCubeFile.getName()*/ moleculeCubeFile.getAbsolutePath(),
                 "-vdw", modifiedVdwFile.getAbsolutePath(),
@@ -106,8 +105,8 @@ public class RealVmdDisplayScript implements IVmdDisplayScript {
         fieldcompRunner.exec(fieldcompArgs);
         
         String systemDir = System.getProperty("user.dir");
-        File outputFile = getDefaultCubeOutputFile(input.getMoleculeId());
-        File cubeOutputFile = getCubeOutputFile(input.getMoleculeId());
+        File outputFile = getDefaultCubeOutputFile(input.getMoleculeName());
+        File cubeOutputFile = getCubeOutputFile(input.getMoleculeName());
 
         // copy output file from default location to output dir
         ScriptUtilities.verifyFileExistence(outputFile);
@@ -127,26 +126,33 @@ public class RealVmdDisplayScript implements IVmdDisplayScript {
         return null;
     }
 
-    private File getMoleculeDirForMolecule(MoleculeId moleculeId) {
-    	return new File(moleculesDir.getAbsolutePath(), moleculeId.getName());
+    private File getMoleculeDirForMolecule(String moleculeName) {
+    	return new File(moleculesDir.getAbsolutePath(), moleculeName);
     }
     
-    private File getDefaultCubeOutputFile(MoleculeId moleculeId) {
-    	String name = String.format("%s%s.cube", moleculeId.getName(), CubeOutputNamePostfix);
-    	File currentMoleculeDir = getMoleculeDirForMolecule(moleculeId);
+    private File getDefaultCubeOutputFile(String moleculeName) {
+    	String name = String.format(
+    	        "%s%s.cube",
+                moleculeName,
+                CubeOutputNamePostfix);
+    	File currentMoleculeDir = getMoleculeDirForMolecule(moleculeName);
         File cubeDefaultOutput = new File(currentMoleculeDir.getAbsolutePath(), name);
         return cubeDefaultOutput;
     }
     
-    private File getPunOutputFile(int fitId, MoleculeId moleculeId) {
+    private File getPunOutputFile(int fitId, String moleculeName) {
         // for example: fit_1_co2.pun
-        String name = String.format("%s%s_%s.pun", RealFitMtpScript.FitNamePrefix, String.valueOf(fitId), moleculeId.getName());
+        String name = String.format(
+                "%s%s_%s.pun",
+                RealFitMtpScript.FitNamePrefix,
+                String.valueOf(fitId),
+                moleculeName);
         File exportOutput = new File(outputDir, name);
         return exportOutput;
     }
 
-    private File getLPunFileForMolecule(MoleculeId moleculeId) {
-        String lPunFileName = moleculeId.getName() + RealLRAScript.LPunExtension;
+    private File getLPunFileForMolecule(String moleculeName) {
+        String lPunFileName = moleculeName + RealLRAScript.LPunExtension;
         Collection<File> files = FileUtils.listFiles(moleculesDir, new NameFileFilter(lPunFileName), TrueFileFilter.TRUE);
         if (files.size() != 1) {
             throw new RuntimeException(String.format("No or too many %s files found in %s.", lPunFileName, moleculesDir.getAbsolutePath()));
@@ -155,8 +161,8 @@ public class RealVmdDisplayScript implements IVmdDisplayScript {
         return lPunFile;
     }
     
-    private File getVdwFileForMolecule(MoleculeId moleculeId) {
-        String vdwFileName = moleculeId.getName() + RealMultipoleGaussScript.vdwExtension;
+    private File getVdwFileForMolecule(String moleculeName) {
+        String vdwFileName = moleculeName + RealMultipoleGaussScript.vdwExtension;
         Collection<File> files = FileUtils.listFiles(moleculesDir, new NameFileFilter(vdwFileName), TrueFileFilter.TRUE);
         if (files.size() != 1) {
             throw new RuntimeException(String.format("No or too many %s files found in %s.", vdwFileName, moleculesDir.getAbsolutePath()));
@@ -165,8 +171,8 @@ public class RealVmdDisplayScript implements IVmdDisplayScript {
         return vdwFile;
     }
     
-    private File getCubeFileForMolecule(MoleculeId moleculeId) {
-        String cubeFileName = moleculeId.getName() + RealMultipoleGaussScript.cubeExtension;
+    private File getCubeFileForMolecule(String moleculeName) {
+        String cubeFileName = moleculeName + RealMultipoleGaussScript.cubeExtension;
         Collection<File> files = FileUtils.listFiles(moleculesDir, new NameFileFilter(cubeFileName), TrueFileFilter.TRUE);
         if (files.size() != 1) {
             throw new RuntimeException(String.format("No or too many %s files found in %s.", cubeFileName, moleculesDir.getAbsolutePath()));
@@ -175,9 +181,9 @@ public class RealVmdDisplayScript implements IVmdDisplayScript {
         return cubeFile;
     }
     
-    private File getCubeOutputFile(MoleculeId moleculeId) {
+    private File getCubeOutputFile(String moleculeName) {
     	// *mol*_mtpcube.cube
-    	String name = String.format("%s%s.cube", moleculeId.getName(), CubeOutputNamePostfix);
+    	String name = String.format("%s%s.cube", moleculeName, CubeOutputNamePostfix);
     	File cubeOutputFile = new File(outputDir, name);
     	return cubeOutputFile;
     }

@@ -22,15 +22,12 @@ public class ExportFitInput {
     private final Fit fit;
     private FitOutputDir fitOutputDir;
     private MoleculesDir moleculesDir;
-    private final File destination;
 
     public ExportFitInput(FitOutputDir fitOutputDir,
                           MoleculesDir moleculesDir,
-                          Fit fit,
-                          File destination) {
+                          Fit fit) {
         this.fitOutputDir = fitOutputDir;
         this.moleculesDir = moleculesDir;
-        this.destination = destination;
         this.fit = fit;
     }
 
@@ -44,9 +41,5 @@ public class ExportFitInput {
 
     public Fit getFit() {
         return fit;
-    }
-
-    public File getDestination() {
-        return destination;
     }
 }

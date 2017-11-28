@@ -10,23 +10,15 @@ package ch.unibas.fitting.shared.fitting;
 
 
 import ch.unibas.fitting.shared.molecules.AtomTypeId;
+import io.vavr.collection.List;
 
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * Charge values grouped by atom type.
- * User: mhelmer
- * Date: 10.12.13
- * Time: 17:47
- */
 public class OutputAtomType {
     private final AtomTypeId id;
-    private final List<ChargeValue> chargeValues;
+    private List<ChargeValue> chargeValues;
 
     public OutputAtomType(AtomTypeId id, List<ChargeValue> chargeValues) {
         this.id = id;
-        this.chargeValues = new ArrayList<>(chargeValues);
+        this.chargeValues = chargeValues;
     }
 
     public AtomTypeId getId() {
@@ -35,5 +27,9 @@ public class OutputAtomType {
 
     public List<ChargeValue> getChargeValues() {
         return chargeValues;
+    }
+
+    public void add(ChargeValue chargeValue) {
+        chargeValues = chargeValues.append(chargeValue);
     }
 }

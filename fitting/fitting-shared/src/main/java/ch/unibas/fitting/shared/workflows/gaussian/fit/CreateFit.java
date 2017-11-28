@@ -3,19 +3,14 @@ package ch.unibas.fitting.shared.workflows.gaussian.fit;
 import ch.unibas.fitting.shared.charges.ChargesFileParser;
 import ch.unibas.fitting.shared.fitting.*;
 import ch.unibas.fitting.shared.molecules.AtomTypeId;
-import ch.unibas.fitting.shared.molecules.Molecule;
-import ch.unibas.fitting.shared.molecules.MoleculeId;
-import ch.unibas.fitting.shared.molecules.MoleculeQueryService;
 import ch.unibas.fitting.shared.tools.FitOutputParser;
+import io.vavr.collection.List;
+import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
-/**
- * Created by mhelmer on 30.06.2016.
- */
 public class CreateFit {
 
     private ChargesFileParser chargesFileParser;
@@ -32,38 +27,37 @@ public class CreateFit {
                           File resultsFile,
                           File outputFile,
                           InitialQ00 initialQ00,
-                          List<Molecule> molecules) {
+                          List<String> molecleNames) {
 
         double rmse = fitOutputParser.parseRmseValue(outputFile);
-        List<OutputAtomType> outputAtomTypes = chargesFileParser.parseOutputFile(resultsFile);
+        List<OutputAtomType> outputAtomTypes = chargesFileParser.parseOutputFile(
+                resultsFile);
 
         return new Fit(fitId,
                 rmse,
                 rank,
-                createFitResults(molecules, outputAtomTypes, initialQ00),
-                resultsFile,
-                outputFile);
+                createFitResults(molecleNames, outputAtomTypes, initialQ00),
+                DateTime.now());
     }
 
-    private ArrayList<FitResult> createFitResults(List<Molecule> molecules,
-                                                  List<OutputAtomType> outputAtomTypes,
-                                                  InitialQ00 initialValues) {
+    private List<FitResult> createFitResults(
+            List<String> moleculeNames,
+            List<OutputAtomType> outputAtomTypes,
+            InitialQ00 initialValues) {
         ArrayList<FitResult> results = new ArrayList<>();
         for (OutputAtomType outputAtomType : outputAtomTypes) {
             AtomTypeId atomTypeId = outputAtomType.getId();
 
-            List<MoleculeId> molIds = new MoleculeQueryService(molecules).findMoleculeIdsWithAtomType(atomTypeId);
-
             double initialQ = getInialQ00(initialValues, atomTypeId);
 
             FitResult fitResult = new FitResult(atomTypeId,
-                    molIds,
+                    moleculeNames,
                     initialQ,
                     outputAtomType);
             results.add(fitResult);
         }
 
-        return results;
+        return List.ofAll(results);
     }
 
     private Double getInialQ00(InitialQ00 initialValues, AtomTypeId atomTypeId) {

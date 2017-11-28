@@ -2,21 +2,23 @@ package ch.unibas.fitting.web.gaussian.fit.step1;
 
 import ch.unibas.fitting.shared.charges.ChargeTypes;
 import ch.unibas.fitting.shared.fitting.ChargeValue;
-import ch.unibas.fitting.shared.molecules.*;
-import ch.unibas.fitting.web.application.PageContext;
-import ch.unibas.fitting.web.gaussian.FitUserRepo;
-import ch.unibas.fitting.web.gaussian.MoleculeUserRepo;
+import ch.unibas.fitting.shared.molecules.AtomTypeId;
+import ch.unibas.fitting.web.gaussian.addmolecule.step2.UploadPage;
+import ch.unibas.fitting.web.gaussian.addmolecule.step6.ChargesViewModel;
 import ch.unibas.fitting.web.gaussian.fit.RemoveFitCommand;
 import ch.unibas.fitting.web.gaussian.fit.RunMtpFitCommand;
-import ch.unibas.fitting.web.gaussian.addmolecule.step6.ChargesViewModel;
 import ch.unibas.fitting.web.gaussian.fit.step2.FittingResultsPage;
+import ch.unibas.fitting.web.gaussian.services.ViewModelMapper;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -33,7 +35,7 @@ import java.util.stream.Collectors;
 /**
  * Created by mhelmer-mobile on 17.06.2016.
  */
-public class ParameterPage extends HeaderPage {
+public class MtpFitSessionPage extends HeaderPage {
 
     private static class Rank {
         private String _name;
@@ -65,34 +67,25 @@ public class ParameterPage extends HeaderPage {
     private IModel<Boolean> ignoreHydrogens = Model.of(false);
 
     @Inject
-    private MoleculeUserRepo userRepo;
-    @Inject
-    private FitUserRepo fitUserRepo;
-    @Inject
     private RunMtpFitCommand runFit;
     @Inject
     private RemoveFitCommand removeFitCommand;
 
+    @Inject
+    private ViewModelMapper viewModelMapper;
+
     private EnterChargesPanel chargesPage;
-    private List<ChargesViewModel> _atomsTypes;
+    private List<ChargesViewModel> _userCharges;
     private List<FitViewModel> _fits;
 
-    private LinkedHashSet<AtomType> getAllAtomTypeIds(List<Molecule> molecules) {
-        LinkedHashSet<AtomType> allIds = new LinkedHashSet<>();
-        for (Molecule molecule : molecules) {
-            allIds.addAll(molecule.getAtomTypes());
-        }
-        return allIds;
-    }
-
-    public ParameterPage() {
+    public MtpFitSessionPage() {
 
         ModalWindow chargesDialog = new ModalWindow("modalWindow");
 
-        _fits = loadFits();
-        _atomsTypes = loadAtomTypes();
+        _fits = viewModelMapper.loadFits(getCurrentUsername()).toJavaList();
+        _userCharges = viewModelMapper.loadUserCharges(getCurrentUsername()).toJavaList();
 
-        chargesPage = new EnterChargesPanel(chargesDialog.getContentId(), chargesDialog, _atomsTypes);
+        chargesPage = new EnterChargesPanel(chargesDialog.getContentId(), chargesDialog, _userCharges);
         chargesDialog.setContent(chargesPage);
         chargesDialog.setCloseButtonCallback(target -> {
             LOGGER.info("window closed");
@@ -103,6 +96,13 @@ public class ParameterPage extends HeaderPage {
                 startFit();
         });
         add(chargesDialog);
+
+        add(new AjaxLink("newSession") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                setResponsePage(UploadPage.class);
+            }
+        });
 
         Form form = new Form("form");
         add(form);
@@ -171,46 +171,28 @@ public class ParameterPage extends HeaderPage {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
                         removeFitCommand.remove(getCurrentUsername(), vm.getIndex());
-                        setResponsePage(ParameterPage.class);
+                        setResponsePage(MtpFitSessionPage.class);
                     }
                 });
             }
         });
     }
 
-    private List<FitViewModel> loadFits() {
-        return fitUserRepo.loadAll(getCurrentUsername())
-                .stream()
-                .map(fit -> new FitViewModel(fit))
-                .collect(Collectors.toList());
-    }
-
     private void startFit() {
         LOGGER.debug("Starting fit");
 
-        LinkedHashSet<ChargeValue> charges = _atomsTypes.stream()
-                .map(a -> new ChargeValue(new AtomTypeId(a.getName()), ChargeTypes.charge, a.getUserCharge()))
+        LinkedHashSet<ChargeValue> charges = _userCharges.stream()
+                .map(a -> new ChargeValue(new AtomTypeId(a.getAtomLabel()), ChargeTypes.charge, a.getUserCharge()))
                 .collect(Collectors.toCollection(() -> new LinkedHashSet<>()));
 
-        PageContext context = new PageContext(ParameterPage.class);
-
         runFit.execute(getCurrentUsername(),
-                context,
                 convergence.getObject(),
                 rank.getRank(),
                 ignoreHydrogens.getObject(),
                 charges);
     }
 
-    private List<ChargesViewModel> loadAtomTypes() {
-        List<Molecule> molecules = userRepo.loadAll(getCurrentUsername());
-        return getAllAtomTypeIds(molecules)
-                .stream()
-                .map(atomType -> new ChargesViewModel(atomType.getId().getName(), atomType.getIndices(), atomType.getUserQ00()))
-                .collect(Collectors.toList());
-    }
-
     public boolean allChargesFilled() {
-        return _atomsTypes.stream().allMatch(a -> a.isChargeDefined());
+        return _userCharges.stream().allMatch(a -> a.isChargeDefined());
     }
 }

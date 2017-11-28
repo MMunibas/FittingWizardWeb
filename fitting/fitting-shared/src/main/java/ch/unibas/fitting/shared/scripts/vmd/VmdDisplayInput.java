@@ -8,21 +8,20 @@
  */
 package ch.unibas.fitting.shared.scripts.vmd;
 
-import ch.unibas.fitting.shared.molecules.MoleculeId;
 
 public class VmdDisplayInput {
     private final int fitRank;
-    private final MoleculeId moleculeId;
+    private final String moleculeName;
     private final int fitId;
 
-    public VmdDisplayInput(MoleculeId moleculeId, int fitRank, int fitId) {
-        this.moleculeId = moleculeId;
+    public VmdDisplayInput(String moleculeName, int fitRank, int fitId) {
+        this.moleculeName = moleculeName;
         this.fitRank = fitRank;
         this.fitId = fitId;
     }
 
-    public MoleculeId getMoleculeId() {
-        return moleculeId;
+    public String getMoleculeName() {
+        return moleculeName;
     }
 
 	public int getFitRank() {

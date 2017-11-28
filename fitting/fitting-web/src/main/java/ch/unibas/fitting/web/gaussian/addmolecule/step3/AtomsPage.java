@@ -81,12 +81,17 @@ public class AtomsPage extends HeaderPage {
             @Override
             protected List getData() {
                 if (_atoms == null && moleculeName != null) {
-                    File f = userDirectory.getXyzDir(getCurrentUsername()).getXyzFileFor(moleculeName);
-                    XyzFile xyz = XyzFileParser.parse(f);
-                    _atoms = xyz.getAtoms()
-                            .stream()
-                            .map(a -> new AtomViewModel(a.getName(), a.getIndex(), a.getX(), a.getY(), a.getZ()))
-                            .collect(Collectors.toList());
+
+                    userDirectory
+                            .getMtpFitDir(getCurrentUsername())
+                            .getMoleculeDir()
+                            .getXyzFile(moleculeName)
+                            .peek(xyz -> {
+                                _atoms = xyz.getAtoms()
+                                        .map(a -> new AtomViewModel(a.getName(), a.getIndex(), a.getX(), a.getY(), a.getZ()))
+                                        .collect(Collectors.toList());
+                            });
+
                 }
                 return _atoms;
             }

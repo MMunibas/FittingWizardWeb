@@ -1,12 +1,10 @@
 package ch.unibas.fitting.web.gaussian.addmolecule.step4;
 
-import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.application.PageContext;
 import ch.unibas.fitting.web.gaussian.addmolecule.RunGaussianCommand;
-import ch.unibas.fitting.web.gaussian.addmolecule.step1.OverviewPage;
+import ch.unibas.fitting.web.gaussian.addmolecule.step2.UploadPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import ch.unibas.fitting.web.web.PageNavigation;
-import ch.unibas.fitting.web.welcome.WelcomePage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
@@ -39,7 +37,7 @@ public class ParameterPage extends HeaderPage {
 
         this.moleculeName = pp.get("molecule_name").toString();
         if (moleculeName == null)
-            PageNavigation.ToPage(OverviewPage.class);
+            PageNavigation.ToPage(UploadPage.class);
 
         Form form = new Form("form");
         add(form);

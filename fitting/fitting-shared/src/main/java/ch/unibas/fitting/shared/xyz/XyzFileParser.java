@@ -8,19 +8,14 @@
  */
 package ch.unibas.fitting.shared.xyz;
 
+import io.vavr.collection.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
-/**
- * User: mhelmer
- * Date: 26.11.13
- * Time: 17:46
- */
 public class XyzFileParser {
 
     private static final Logger logger = Logger.getLogger(XyzFileParser.class);
@@ -53,7 +48,7 @@ public class XyzFileParser {
     private void readLinesFromFile() {
         logger.info("Reading lines from file.");
         try {
-            content = FileUtils.readLines(file);
+            content = List.ofAll(FileUtils.readLines(file));
         } catch (IOException e) {
             throw new RuntimeException("Could not read coordinates file.");
         }
@@ -61,7 +56,7 @@ public class XyzFileParser {
 
     private List<XyzAtom> parseAtoms() {
         logger.info("Parsing atoms.");
-        ArrayList<XyzAtom> atoms = new ArrayList();
+        List<XyzAtom> atoms = List.empty();
 
         for (int lineIdx = FirstAtomLine; lineIdx < content.size(); lineIdx++) {
             String line = content.get(lineIdx);
@@ -78,7 +73,7 @@ public class XyzFileParser {
                             Double.parseDouble(parts[1]),
                             Double.parseDouble(parts[2]), Double.parseDouble(parts[3]));
             logger.debug("Found atom: " + atom);
-            atoms.add(atom);
+            atoms = atoms.append(atom);
         }
 
         return atoms;

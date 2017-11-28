@@ -37,6 +37,12 @@ abstract class FittingDirectory {
         return f;
     }
 
+    protected File createSubDir(String name) {
+        File sub = new File(directory, name);
+        sub.mkdirs();
+        return sub;
+    }
+
     public boolean exists() {
         return directory.exists();
     }

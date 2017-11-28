@@ -48,18 +48,23 @@ public class UploadPage extends HeaderPage {
                 }
                 else
                 {
+                    _userDir.deleteMtpFitDir(getCurrentUsername());
+
                     LOGGER.debug("File-Name: " + upload.getClientFileName() + " File-Size: " +
                             Bytes.bytes(upload.getSize()).toString());
-                    File f =_userDir.getXyzDir(session().getUsername())
+
+                    File destination = _userDir.getMtpFitDir(getCurrentUsername())
+                            .getMoleculeDir()
                             .getXyzFileFor(upload.getClientFileName());
+
                     try {
-                        upload.writeTo(f);
+                        upload.writeTo(destination);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
 
                     PageParameters pp = new PageParameters();
-                    String moleculeName = FilenameUtils.removeExtension(f.getName());
+                    String moleculeName = FilenameUtils.removeExtension(destination.getName());
                     pp.add("molecule_name", moleculeName);
 
                     setResponsePage(AtomsPage.class, pp);

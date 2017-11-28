@@ -33,12 +33,12 @@ public class MockFitMtpScript extends MockScriptBase implements IFitMtpScript {
 
 	@Override
     public FitMtpOutput execute(FitMtpInput input) {
-        File outputDir = input.getFitOutputDir().getFitMtpOutputDir();
+        File outputDir = input.getFitOutputDir().getDirectory();
 
-        File outputFile = new File(outputDir, RealFitMtpScript.getOutputFileNameForFit(input.getFitId()));
+        File outputFile = new File(outputDir, RealFitMtpScript.getOutputFileNameForFit());
         copyTestFile(RealFitMtpScript.ConsoleOutputFileName, outputFile);
 
-        File resultsFile = new File(outputDir, RealFitMtpScript.getResultFileNameForFit(input.getFitId()));
+        File resultsFile = new File(outputDir, RealFitMtpScript.getResultFileNameForFit());
         copyTestFile(RealFitMtpScript.FitResultFileName, resultsFile);
 
         return new FitMtpOutput(outputFile, resultsFile);

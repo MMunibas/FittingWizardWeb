@@ -14,17 +14,15 @@ import ch.unibas.fitting.shared.fitting.OutputAtomType;
 import ch.unibas.fitting.shared.molecules.AtomTypeId;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.stream.Collectors;
 
+import io.vavr.collection.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
-/**
- * User: mhelmer
- * Date: 10.12.13
- * Time: 17:42
- */
 public class ChargesFileParser {
 
     private static final Logger LOGGER = Logger.getLogger(ChargesFileParser.class);
@@ -33,7 +31,7 @@ public class ChargesFileParser {
         LOGGER.debug("parseInitalCharges chargesFile=" + chargesFile.getAbsolutePath());
         List<ChargeValue> parsedChargeLines = parseFile(chargesFile);
         LinkedHashSet<ChargeValue> initalCharges =
-                parsedChargeLines.stream()
+                parsedChargeLines
                         .filter(line -> line.getType().equalsIgnoreCase(ChargeTypes.charge))
                         .collect(Collectors.toCollection(LinkedHashSet::new));
         return new InitialQ00(initalCharges);
@@ -49,7 +47,7 @@ public class ChargesFileParser {
     private List<ChargeValue> parseFile(File chargesFile) {
         List<String> lines;
         try {
-            lines = FileUtils.readLines(chargesFile);
+            lines = List.ofAll(FileUtils.readLines(chargesFile));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -58,11 +56,7 @@ public class ChargesFileParser {
     }
 
     private List<ChargeValue> parseLines(List<String> lines) {
-        ArrayList<ChargeValue> parsedChargeLines = new ArrayList<>();
-        for (String line : lines) {
-            parsedChargeLines.add(parseLine(line));
-        }
-        return parsedChargeLines;
+        return lines.map(s -> parseLine(s));
     }
 
     private ChargeValue parseLine(String line) {
@@ -77,12 +71,13 @@ public class ChargesFileParser {
 
             ChargeValue chargeValue = new ChargeValue(chargeLine.getAtomTypeId(), chargeLine.getType(), chargeLine.getValue());
             if (atomType == null) {
-                atomType = new OutputAtomType(chargeLine.getAtomTypeId(), Arrays.asList(chargeValue));
+                atomType = new OutputAtomType(chargeLine.getAtomTypeId(),
+                        List.of(chargeValue));
                 typeValues.put(chargeLine.getAtomTypeId(), atomType);
             } else {
-                atomType.getChargeValues().add(chargeValue);
+                atomType.add(chargeValue);
             }
         }
-        return new ArrayList<>(typeValues.values());
+        return List.ofAll(typeValues.values());
     }
 }

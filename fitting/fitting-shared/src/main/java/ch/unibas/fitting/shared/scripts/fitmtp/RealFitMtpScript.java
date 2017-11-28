@@ -9,7 +9,6 @@
 package ch.unibas.fitting.shared.scripts.fitmtp;
 
 import ch.unibas.fitting.shared.config.Settings;
-import ch.unibas.fitting.shared.molecules.Molecule;
 import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
 import ch.unibas.fitting.shared.scripts.base.ResourceUtils;
 import ch.unibas.fitting.shared.scripts.base.ScriptUtilities;
@@ -41,7 +40,7 @@ public class RealFitMtpScript implements IFitMtpScript {
 
     @Override
     public FitMtpOutput execute(FitMtpInput input) {
-        File outputDir = input.getFitOutputDir().getFitMtpOutputDir();
+        File outputDir = input.getFitOutputDir().getDirectory();
         LOGGER.debug("Executing in " + outputDir);
 
         List<String> args = new ArrayList<>();
@@ -52,7 +51,7 @@ public class RealFitMtpScript implements IFitMtpScript {
         args.add("-l");
         args.add(relativeCharges);
 
-        String resultsFileName = getResultFileNameForFit(input.getFitId());
+        String resultsFileName = getResultFileNameForFit();
         args.add("-o");
         args.add(resultsFileName);
 
@@ -64,12 +63,12 @@ public class RealFitMtpScript implements IFitMtpScript {
         }
 
         // this must be at the end
-        for (Molecule mol : input.getMoleculesForFit()) {
-            String relativePath = ResourceUtils.getRelativePath(mol.getMtpFitTabFile(), outputDir);
+        for (File mol : input.getMtpFitTabFiles()) {
+            String relativePath = ResourceUtils.getRelativePath(mol, outputDir);
             args.add(relativePath);
         }
 
-        File outputFile = new File(outputDir, getOutputFileNameForFit(input.getFitId()));
+        File outputFile = new File(outputDir, getOutputFileNameForFit());
         ScriptUtilities.deleteFileIfExists(outputFile);
         File resultsFile = new File(outputDir, resultsFileName);
         ScriptUtilities.deleteFileIfExists(resultsFile);
@@ -84,15 +83,12 @@ public class RealFitMtpScript implements IFitMtpScript {
         return new FitMtpOutput(outputFile, resultsFile);
     }
 
-    public static String getResultFileNameForFit(int fitId) {
-        return getFileNameWithFitId(fitId, FitResultFileName);
+    public static String getResultFileNameForFit() {
+
+        return FitResultFileName;
     }
 
-    public static String getOutputFileNameForFit(int fitId) {
-        return getFileNameWithFitId(fitId, ConsoleOutputFileName);
-    }
-
-    public static String getFileNameWithFitId(int fitId, String baseName) {
-        return FitNamePrefix + fitId + "_" + baseName;
+    public static String getOutputFileNameForFit() {
+        return ConsoleOutputFileName;
     }
 }

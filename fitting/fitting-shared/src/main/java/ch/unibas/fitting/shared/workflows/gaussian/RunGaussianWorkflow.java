@@ -9,7 +9,6 @@
 package ch.unibas.fitting.shared.workflows.gaussian;
 
 import ch.unibas.fitting.shared.directories.MoleculesDir;
-import ch.unibas.fitting.shared.molecules.Molecule;
 import ch.unibas.fitting.shared.scripts.babel.BabelInput;
 import ch.unibas.fitting.shared.scripts.babel.BabelOutput;
 import ch.unibas.fitting.shared.scripts.babel.IBabelScript;
@@ -29,11 +28,6 @@ import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
 
-/**
- * User: mhelmer
- * Date: 16.12.13
- * Time: 09:28
- */
 public class RunGaussianWorkflow implements Workflow<MultipoleGaussInput,RunGaussianResult> {
 
     private static final Logger logger = Logger.getLogger(RunGaussianWorkflow.class);
@@ -44,7 +38,6 @@ public class RunGaussianWorkflow implements Workflow<MultipoleGaussInput,RunGaus
     private IFittabScript fittabMarkerScript;
     private GaussianLogModifier gaussianLogModifier;
     private Notifications notifications;
-    private MoleculeCreator moleculeCreator;
 
     @Inject
     public RunGaussianWorkflow(IMultipoleGaussScript gaussScript,
@@ -52,15 +45,13 @@ public class RunGaussianWorkflow implements Workflow<MultipoleGaussInput,RunGaus
                                ILRAScript lraScript,
                                IFittabScript fittabMarkerScript,
                                GaussianLogModifier gaussianLogModifier,
-                               Notifications notifications,
-                               MoleculeCreator moleculeCreator) {
+                               Notifications notifications) {
         this.gaussScript = gaussScript;
         this.babelScript = babelScript;
         this.lraScript = lraScript;
         this.fittabMarkerScript = fittabMarkerScript;
         this.gaussianLogModifier = gaussianLogModifier;
         this.notifications = notifications;
-        this.moleculeCreator = moleculeCreator;
     }
 
     public RunGaussianResult execute(WorkflowContext<MultipoleGaussInput> status) {
@@ -68,36 +59,29 @@ public class RunGaussianWorkflow implements Workflow<MultipoleGaussInput,RunGaus
 
         MultipoleGaussInput input = status.getParameter();
         MultipoleGaussOutput gaussOutput = executeGaussScript(status);
-        MoleculesDir moleculesDir = input.getMoleculesDir();
+        MoleculesDir moleculesDir = input.getMtpFitDir().getMoleculeDir();
 
-        RunGaussianResult result;
-        if (gaussOutput.isLogFileValid()) {
-            status.setCurrentStatus("Removing header and footer of cluster submission from gaussian log file.");
-            gaussianLogModifier.removeHeadersFromCluster(gaussOutput.getLogFile());
+        if (!gaussOutput.isLogFileValid())
+            throw new RuntimeException("Gaussian failed");
 
-            status.setCurrentStatus("Converting log file to sdf file with babel...");
-            BabelOutput babelOutput = babelScript.execute(new BabelInput(moleculesDir, gaussOutput.getLogFile()));
 
-            status.setCurrentStatus("Executing calc_LRA.py ...");
-            LRAScriptOutput lraScriptOutput = lraScript.execute(new LRAScriptInput(moleculesDir, babelOutput.getSdfFile()));
+        status.setCurrentStatus("Removing header and footer of cluster submission from gaussian log file.");
+        gaussianLogModifier.removeHeadersFromCluster(gaussOutput.getLogFile());
 
-            status.setCurrentStatus("Executing mtp_fittab_maker.py ...");
-            fittabMarkerScript.execute(new FittabScriptInput(
-                    moleculesDir,
-                    gaussOutput.getCubeFile(),
-                    gaussOutput.getVdwFile(),
-                    lraScriptOutput.getLPunFile()));
+        status.setCurrentStatus("Converting log file to sdf file with babel...");
+        BabelOutput babelOutput = babelScript.execute(new BabelInput(moleculesDir, gaussOutput.getLogFile()));
 
-            Molecule molecule = moleculeCreator.createMolecule(
-                    moleculesDir,
-                    input.getXyzDirectory(),
-                    input.getMoleculeName());
+        status.setCurrentStatus("Executing calc_LRA.py ...");
+        LRAScriptOutput lraScriptOutput = lraScript.execute(new LRAScriptInput(moleculesDir, babelOutput.getSdfFile()));
 
-            result = new RunGaussianResult(molecule, gaussOutput.getLogFile());
-        } else {
-            result = new RunGaussianResult(gaussOutput.getLogFile());
-        }
-        return result;
+        status.setCurrentStatus("Executing mtp_fittab_maker.py ...");
+        fittabMarkerScript.execute(new FittabScriptInput(
+                moleculesDir,
+                gaussOutput.getCubeFile(),
+                gaussOutput.getVdwFile(),
+                lraScriptOutput.getLPunFile()));
+
+        return new RunGaussianResult(gaussOutput.getLogFile());
     }
 
     private MultipoleGaussOutput executeGaussScript(WorkflowContext<MultipoleGaussInput> status) {

@@ -33,10 +33,9 @@ public class MockExportScript extends RealExportScript {
 
     @Override
     public ExportScriptOutput execute(ExportScriptInput input) {
-        File outputDir = input.getFitOutputDir().getFitMtpOutputDir();
+        File outputDir = input.getFitOutputDir().getDirectory();
 
-        String testFile = "co2fit.lpun";
-        File testdata = new File(testOutputDir, testFile);
+        File testdata = new File(testOutputDir, "co2fit.lpun");
         File outputFile = new File(outputDir, String.format("fit_%d_co2fit.lpun", input.getFitId()));
         try {
             FileUtils.copyFile(testdata, outputFile);

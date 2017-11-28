@@ -24,7 +24,6 @@ import ch.unibas.fitting.shared.scripts.lra.RealLRAScript;
 import ch.unibas.fitting.shared.scripts.multipolegauss.IMultipoleGaussScript;
 import ch.unibas.fitting.shared.scripts.multipolegauss.MockMultipoleGaussScript;
 import ch.unibas.fitting.shared.scripts.multipolegauss.RealMultipoleGaussScript;
-import ch.unibas.fitting.shared.workflows.ExportFitWorkflow;
 import ch.unibas.fitting.shared.workflows.charmm.IGenerateInputWorkflow;
 import ch.unibas.fitting.shared.workflows.charmm.MockGenerateInputWorkflow;
 import ch.unibas.fitting.shared.workflows.charmm.RealGenerateInputWorkflow;
@@ -33,9 +32,6 @@ import ch.unibas.fitting.web.application.IBackgroundTasks;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 
-/**
- * Created by mhelmer on 20.06.2016.
- */
 public class WebModule extends AbstractModule {
 
     private WebSettings settings;

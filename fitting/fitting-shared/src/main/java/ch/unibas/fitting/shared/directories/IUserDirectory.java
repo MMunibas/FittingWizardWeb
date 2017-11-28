@@ -9,16 +9,17 @@ import java.util.Optional;
  * Created by mhelmer-mobile on 15.06.2016.
  */
 public interface IUserDirectory {
-    MoleculesDir getMoleculesDir(String username);
-    FitOutputDir getFitOutputDir(String username);
-    XyzDirectory getXyzDir(String username);
+
+    List<String> listAllUserDirs();
+
+    MtpFitDir getMtpFitDir(String username);
 
     LjFitSessionDir createLjFitSessionDir(String username);
     Option<LjFitSessionDir> getLjFitSessionDir(String username);
 
-    List<String> listAllUserDirs();
-
     boolean ljFitSessionDirectoryExists(String username);
 
     void deleteLjFitSession(String username);
+
+    void deleteMtpFitDir(String username);
 }

@@ -1,7 +1,5 @@
 package ch.unibas.fitting.web.gaussian.addmolecule.step6;
 
-import org.apache.wicket.model.IModel;
-
 import java.io.Serializable;
 
 /**
@@ -9,18 +7,28 @@ import java.io.Serializable;
  */
 public class ChargesViewModel implements Serializable {
 
-    private String name;
+    private final String moleculeName;
+    private String atomLabel;
     private int[] indices;
     private Double userCharge;
 
-    public ChargesViewModel(String name, int[] indices, Double userCharge) {
-        this.name = name;
+    public ChargesViewModel(
+            String moleculeName,
+            String atomLabel,
+            int[] indices,
+            Double userCharge) {
+        this.moleculeName = moleculeName;
+        this.atomLabel = atomLabel;
         this.indices = indices;
         this.userCharge = userCharge;
     }
 
-    public String getName() {
-        return name;
+    public String getMoleculeName() {
+        return moleculeName;
+    }
+
+    public String getAtomLabel() {
+        return atomLabel;
     }
 
     public int[] getIndices() {

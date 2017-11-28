@@ -8,15 +8,15 @@
  */
 package ch.unibas.fitting.shared.tools;
 
-import ch.unibas.fitting.shared.directories.MoleculesDir;
 import ch.unibas.fitting.shared.molecules.AtomType;
+import io.vavr.collection.List;
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import org.apache.commons.io.FileUtils;
 
 /**
  * User: mhelmer
@@ -25,13 +25,13 @@ import org.apache.commons.io.FileUtils;
  */
 public class LPunParser {
 
-    public ArrayList<AtomType> parse(File lpunFile) {
+    public List<AtomType> parse(File lpunFile) {
         if (!lpunFile.isFile())
             throw new RuntimeException("Could not finde file: " + lpunFile);
 
         List<String> lines;
         try {
-            lines = FileUtils.readLines(lpunFile);
+            lines = List.ofAll(FileUtils.readLines(lpunFile));
         } catch (IOException e) {
             throw new RuntimeException("Could not read file " + lpunFile.getAbsolutePath(), e);
         }
@@ -55,20 +55,20 @@ public class LPunParser {
             idxCharge++;
         }
 
-        ArrayList<AtomType> charges = new ArrayList<>();
+        List<AtomType> charges = List.empty();
         for (Map.Entry<String, ArrayList<Integer>> entry : atomTypePositions.entrySet()) {
             ArrayList<Integer> indices = entry.getValue();
             int[] array = new int[indices.size()];
             for(int i = 0; i < indices.size(); i++) array[i] = indices.get(i);
             AtomType atomType = new AtomType(entry.getKey(), array);
-            charges.add(atomType);
+            charges = charges.append(atomType);
         }
 
         return charges;
     }
 
     private List<String> removeHeader(List<String> lines) {
-        return lines.subList(3, lines.size());
+        return lines.subSequence(3, lines.size());
     }
 
     private List<String> removeFooter(List<String> lines) {
@@ -79,6 +79,6 @@ public class LPunParser {
         }
         if (lraIndex == -1)
             throw new LPunParserException("Could not find line containing 'LRA:'.");
-        return lines.subList(0, lraIndex);
+        return lines.subSequence(0, lraIndex);
     }
 }

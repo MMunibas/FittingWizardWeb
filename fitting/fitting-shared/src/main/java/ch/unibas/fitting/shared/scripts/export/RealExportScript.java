@@ -10,7 +10,6 @@ package ch.unibas.fitting.shared.scripts.export;
 
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.directories.MoleculesDir;
-import ch.unibas.fitting.shared.molecules.MoleculeId;
 import ch.unibas.fitting.shared.scripts.fitmtp.RealFitMtpScript;
 import ch.unibas.fitting.shared.scripts.lra.RealLRAScript;
 import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
@@ -51,18 +50,23 @@ public class RealExportScript implements IExportScript {
 
     @Override
     public ExportScriptOutput execute(ExportScriptInput input) {
-        File outputDir = input.getFitOutputDir().getFitMtpOutputDir();
+        File outputDir = input.getFitOutputDir().getDirectory();
         runner.setWorkingDir(outputDir);
 
         // -txt parameter
-        String fitResultFileName = RealFitMtpScript.getResultFileNameForFit(input.getFitId());
+        String fitResultFileName = RealFitMtpScript.getResultFileNameForFit();
         File fitResultFile = new File(outputDir, fitResultFileName);
 
         // -pun co2_l.pun
-        File moleculeLPunFile = getLPunFileForMolecule(input.getMoleculesDir(), input.getMoleculeId());
+        File moleculeLPunFile = getLPunFileForMolecule(
+                input.getMoleculesDir(),
+                input.getMoleculeName());
 
         //-out co2fit.pun
-        File punOutputFile = getPunOutputFile(outputDir, input.getFitId(), input.getMoleculeId());
+        File punOutputFile = getPunOutputFile(
+                outputDir,
+                input.getFitId(),
+                input.getMoleculeName());
 
         ScriptUtilities.verifyFileExistence(fitResultFile);
         ScriptUtilities.verifyFileExistence(moleculeLPunFile);
@@ -99,19 +103,24 @@ public class RealExportScript implements IExportScript {
         return convertedFile;
     }
 
-    private File getPunOutputFile(File outputDir, int fitId, MoleculeId moleculeId) {
+    private File getPunOutputFile(
+            File outputDir,
+            int fitId,
+            String moleculeId) {
         // for exmpale: fit_1_co2.pun
         String name = String.format(
                 "%s%s_%s.pun",
                 RealFitMtpScript.FitNamePrefix,
                 String.valueOf(fitId),
-                moleculeId.getName());
+                moleculeId);
         File exportOutput = new File(outputDir, name);
         return exportOutput;
     }
 
-    protected File getLPunFileForMolecule(MoleculesDir moleculesDir, MoleculeId moleculeId) {
-        String lPunFileName = moleculeId.getName() + RealLRAScript.LPunExtension;
+    protected File getLPunFileForMolecule(
+            MoleculesDir moleculesDir,
+            String moleculeId) {
+        String lPunFileName = moleculeId + RealLRAScript.LPunExtension;
         Collection<File> files = FileUtils.listFiles(moleculesDir.getDirectory(), new NameFileFilter(lPunFileName), TrueFileFilter.TRUE);
         if (files.size() != 1) {
             throw new RuntimeException(String.format("No or too many %s files found in %s.", lPunFileName, moleculesDir.getDirectory().getAbsolutePath()));

@@ -9,14 +9,10 @@
 package ch.unibas.fitting.shared.xyz;
 
 import java.io.File;
-import java.util.List;
+
+import io.vavr.collection.List;
 import org.apache.commons.io.FilenameUtils;
 
-/**
- * User: mhelmer
- * Date: 26.11.13
- * Time: 17:47
- */
 public class XyzFile {
 
     private final String name;

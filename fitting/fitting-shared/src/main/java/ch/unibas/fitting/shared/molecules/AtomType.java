@@ -41,12 +41,9 @@ public class AtomType {
      * This is an optional value.
      * @return
      */
+    @Deprecated
     public Double getUserQ00() {
         return userQ0;
-    }
-
-    public void setUserQ0(Double userQ0) {
-        this.userQ0 = userQ0;
     }
 
     @Override

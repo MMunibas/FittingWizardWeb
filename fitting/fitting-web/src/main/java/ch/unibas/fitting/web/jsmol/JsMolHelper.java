@@ -12,7 +12,7 @@ public class JsMolHelper {
     public static String getXyzUrl(String username, String moleculeName) {
         return "/data/" +
                 username +
-                "/xyz_files/" +
+                "/mtp_fit/molecule/" +
                 moleculeName +
                 ".xyz";
     }

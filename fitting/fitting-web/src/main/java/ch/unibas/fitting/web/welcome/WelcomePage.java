@@ -1,6 +1,6 @@
 package ch.unibas.fitting.web.welcome;
 
-import ch.unibas.fitting.web.gaussian.addmolecule.step1.OverviewPage;
+import ch.unibas.fitting.web.gaussian.commands.OpenMtpFitSession;
 import ch.unibas.fitting.web.ljfit.ui.commands.OpenLjFitSessionCommand;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.markup.html.form.Form;
@@ -15,7 +15,9 @@ import java.util.List;
 public class WelcomePage extends HeaderPage {
 
     @Inject
-    private OpenLjFitSessionCommand startFitSession;
+    private OpenLjFitSessionCommand startLjFitSession;
+    @Inject
+    private OpenMtpFitSession startMtpFitSession;
 
     private String navigationSelection;
 
@@ -35,9 +37,9 @@ public class WelcomePage extends HeaderPage {
             protected void onSubmit() {
 
                 if ("MTP Fit using Gaussian".equalsIgnoreCase(navigationSelection)) {
-                    setResponsePage(OverviewPage.class);
+                    startMtpFitSession.execute(getCurrentUsername());
                 } else if ("LJ Fit using CHARMM".equalsIgnoreCase(navigationSelection)) {
-                    startFitSession.execute(getCurrentUsername());
+                    startLjFitSession.execute(getCurrentUsername());
                 }
             }
         };

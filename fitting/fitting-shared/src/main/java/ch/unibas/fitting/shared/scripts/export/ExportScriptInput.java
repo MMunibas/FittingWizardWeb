@@ -10,7 +10,6 @@ package ch.unibas.fitting.shared.scripts.export;
 
 import ch.unibas.fitting.shared.directories.FitOutputDir;
 import ch.unibas.fitting.shared.directories.MoleculesDir;
-import ch.unibas.fitting.shared.molecules.MoleculeId;
 
 /**
  * User: mhelmer
@@ -21,16 +20,16 @@ public class ExportScriptInput {
     private FitOutputDir fitOutputDir;
     private MoleculesDir moleculesDir;
     private final int fitId;
-    private final MoleculeId moleculeId;
+    private final String moleculeName;
 
     public ExportScriptInput(FitOutputDir fitOutputDir,
                              MoleculesDir moleculesDir,
                              int fitId,
-                             MoleculeId moleculeId) {
+                             String moleculeName) {
         this.fitOutputDir = fitOutputDir;
         this.moleculesDir = moleculesDir;
         this.fitId = fitId;
-        this.moleculeId = moleculeId;
+        this.moleculeName = moleculeName;
     }
 
     public FitOutputDir getFitOutputDir() {
@@ -45,7 +44,7 @@ public class ExportScriptInput {
         return fitId;
     }
 
-    public MoleculeId getMoleculeId() {
-        return moleculeId;
+    public String getMoleculeName() {
+        return moleculeName;
     }
 }

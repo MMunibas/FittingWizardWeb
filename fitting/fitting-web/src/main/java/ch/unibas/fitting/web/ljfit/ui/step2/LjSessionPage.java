@@ -126,28 +126,24 @@ public class LjSessionPage extends HeaderPage {
                 if (!singleResult.wasSuccessful)
                     item.add(new AttributeAppender("style", "background-color:red;"));
 
-                NumberFormat oneDecimal = new DecimalFormat("0.0");
-                NumberFormat twoDecimal = new DecimalFormat("0.00");
-                NumberFormat threeDecimal = new DecimalFormat("0.000");
-
-                item.add(new Label("eps", twoDecimal.format(singleResult.get_eps())));
-                item.add(new Label("sigma", twoDecimal.format(singleResult.get_sigma())));
-                item.add(new Label("score", oneDecimal.format(singleResult.get_Score())));
-                item.add(new Label("deltaG", oneDecimal.format(singleResult.get_deltaG())));
-                item.add(new Label("deltaH", oneDecimal.format(singleResult.get_deltaH())));
-                item.add(new Label("density", threeDecimal.format(singleResult.get_density())));
-                item.add(new Label("calcdeltaG", twoDecimal.format(singleResult.get_calcdeltaG())));
-                item.add(new Label("expdeltaG", twoDecimal.format(singleResult.get_expdeltaG())));
-                item.add(new Label("calcdeltaH", twoDecimal.format(singleResult.get_calcdeltaH())));
-                item.add(new Label("expdeltaH", twoDecimal.format(singleResult.get_expdeltaH())));
-                item.add(new Label("calcdensity", twoDecimal.format(singleResult.get_calcdensity())));
-                item.add(new Label("expdensity", twoDecimal.format(singleResult.get_expdensity())));
-                item.add(new Label("VDWGAS", twoDecimal.format(singleResult.get_VDWGAS())));
-                item.add(new Label("ELEGAS", twoDecimal.format(singleResult.get_MTPGAS())));
-                item.add(new Label("ELESOL", twoDecimal.format(singleResult.get_MTPSOL())));
-                item.add(new Label("VDWSOL", twoDecimal.format(singleResult.get_VDWSOL())));
-                item.add(new Label("GASTOTAL", twoDecimal.format(singleResult.get_GASTOTAL())));
-                item.add(new Label("SOLTOTAL", twoDecimal.format(singleResult.get_SOLTOTAL())));
+                item.add(new Label("eps", format(singleResult.get_eps(), 2)));
+                item.add(new Label("sigma", format(singleResult.get_sigma(), 2)));
+                item.add(new Label("score", format(singleResult.get_Score(), 1)));
+                item.add(new Label("deltaG", format(singleResult.get_deltaG(), 1)));
+                item.add(new Label("deltaH", format(singleResult.get_deltaH(), 1)));
+                item.add(new Label("density", format(singleResult.get_density(), 3)));
+                item.add(new Label("calcdeltaG", format(singleResult.get_calcdeltaG(), 2)));
+                item.add(new Label("expdeltaG", format(singleResult.get_expdeltaG(), 2)));
+                item.add(new Label("calcdeltaH", format(singleResult.get_calcdeltaH(), 2)));
+                item.add(new Label("expdeltaH", format(singleResult.get_expdeltaH(), 2)));
+                item.add(new Label("calcdensity", format(singleResult.get_calcdensity(), 2)));
+                item.add(new Label("expdensity", format(singleResult.get_expdensity(), 2)));
+                item.add(new Label("VDWGAS", format(singleResult.get_VDWGAS(), 2)));
+                item.add(new Label("ELEGAS", format(singleResult.get_MTPGAS(), 2)));
+                item.add(new Label("ELESOL", format(singleResult.get_MTPSOL(), 2)));
+                item.add(new Label("VDWSOL", format(singleResult.get_VDWSOL(), 2)));
+                item.add(new Label("GASTOTAL", format(singleResult.get_GASTOTAL(), 2)));
+                item.add(new Label("SOLTOTAL", format(singleResult.get_SOLTOTAL(), 2    )));
 
                 item.add(new AjaxLink("deleteRun") {
                     @Override
@@ -158,6 +154,14 @@ public class LjSessionPage extends HeaderPage {
                 });
             }
         });
+    }
+
+    private String format(Double value, int decimal) {
+        String text = "";
+        String formatString = "%." + decimal + "f";
+        if (value != null)
+            text = String.format(formatString, value);
+        return text;
     }
 
     @Override

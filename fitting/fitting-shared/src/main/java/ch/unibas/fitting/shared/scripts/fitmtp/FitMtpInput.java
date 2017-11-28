@@ -10,10 +10,9 @@ package ch.unibas.fitting.shared.scripts.fitmtp;
 
 import ch.unibas.fitting.shared.directories.FitOutputDir;
 import ch.unibas.fitting.shared.directories.MoleculesDir;
-import ch.unibas.fitting.shared.molecules.Molecule;
+import io.vavr.collection.List;
 
 import java.io.File;
-import java.util.List;
 
 /**
  * User: mhelmer
@@ -21,43 +20,29 @@ import java.util.List;
  * Time: 11:54
  */
 public class FitMtpInput {
-    private MoleculesDir moleculesDir;
     private FitOutputDir fitOutputDir;
-    private final int fitId;
     private final double convergence;
     private final int rank;
     private final boolean ignoreHydrongen;
     private final File generatedCharges;
-    private final List<Molecule> moleculesForFit;
+    private final List<File> mtpFitTabFiles;
 
-    public FitMtpInput(MoleculesDir moleculesDir,
-                       FitOutputDir fitOutputDir,
-                       int fitId,
+    public FitMtpInput(FitOutputDir fitOutputDir,
                        double convergence,
                        int rank,
                        boolean ignoreHydrogen,
                        File generatedCharges,
-                       List<Molecule> moleculesForFit) {
-        this.moleculesDir = moleculesDir;
+                       List<File> mtpFitTabFiles) {
         this.fitOutputDir = fitOutputDir;
-        this.fitId = fitId;
         this.convergence = convergence;
         this.rank = rank;
         this.ignoreHydrongen = ignoreHydrogen;
         this.generatedCharges = generatedCharges;
-        this.moleculesForFit = moleculesForFit;
-    }
-
-    public MoleculesDir getMoleculesDir() {
-        return moleculesDir;
+        this.mtpFitTabFiles = mtpFitTabFiles;
     }
 
     public FitOutputDir getFitOutputDir() {
         return fitOutputDir;
-    }
-
-    public int getFitId() {
-        return fitId;
     }
 
     public double getConvergence() {
@@ -76,7 +61,7 @@ public class FitMtpInput {
         return generatedCharges;
     }
 
-    public List<Molecule> getMoleculesForFit() {
-        return moleculesForFit;
+    public List<File> getMtpFitTabFiles() {
+        return mtpFitTabFiles;
     }
 }

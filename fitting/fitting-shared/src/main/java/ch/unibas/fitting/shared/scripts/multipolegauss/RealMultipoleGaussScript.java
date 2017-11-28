@@ -10,7 +10,6 @@ package ch.unibas.fitting.shared.scripts.multipolegauss;
 
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.directories.MoleculesDir;
-import ch.unibas.fitting.shared.directories.XyzDirectory;
 import ch.unibas.fitting.shared.scripts.base.ScriptExecutionException;
 import ch.unibas.fitting.shared.scripts.base.PythonScriptRunner;
 import ch.unibas.fitting.shared.scripts.base.ScriptUtilities;
@@ -42,13 +41,12 @@ public class RealMultipoleGaussScript implements IMultipoleGaussScript {
 
 	@Override
     public MultipoleGaussOutput execute(MultipoleGaussInput input) {
-        MoleculesDir molDir = input.getMoleculesDir();
-        XyzDirectory xyzDir = input.getXyzDirectory();
+        MoleculesDir molDir = input.getMtpFitDir().getMoleculeDir();
         PythonScriptRunner runner = new PythonScriptRunner();
 		runner.setWorkingDir(molDir.getDirectory());
 
 		List<String> args = new ArrayList<>();
-		File xyzFile = xyzDir.getXyzFileFor(input.getMoleculeName());
+		File xyzFile = molDir.getXyzFileFor(input.getMoleculeName());
         args.add("-xyz");
         args.add(FilenameUtils.normalize(xyzFile.getAbsolutePath()));
 
@@ -74,7 +72,7 @@ public class RealMultipoleGaussScript implements IMultipoleGaussScript {
             throw new ScriptExecutionException("MultipoleGaussian script exited with non-zero return value: " + retval);
         }
 
-        File specificMoleculeDir = molDir.getMoleculeDir(input.getMoleculeName());
+        File specificMoleculeDir = molDir.getMoleculeDirFile(input.getMoleculeName());
         File logOutfile  = new File(specificMoleculeDir,  input.getMoleculeName() + logExtension);
         File fchkOutfile = new File(specificMoleculeDir,  input.getMoleculeName() + fchkExtension);
         File punOutfile  = new File(specificMoleculeDir,  input.getMoleculeName() + punExtension);

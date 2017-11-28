@@ -2,7 +2,6 @@ package ch.unibas.fitting.web.gaussian.fit.step1;
 
 import ch.unibas.fitting.web.gaussian.addmolecule.step6.ChargesViewModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.basic.Label;
@@ -44,7 +43,7 @@ public class EnterChargesPanel extends Panel {
             protected void populateItem(ListItem<ChargesViewModel> item) {
                 ChargesViewModel mol = item.getModelObject();
 
-                item.add(new Label("type", mol.getName()));
+                item.add(new Label("type", mol.getAtomLabel()));
 
                 NumberTextField chargeField = new NumberTextField("charge", new PropertyModel<String>(mol, "userCharge"));
                 chargeField.setStep(NumberTextField.ANY);

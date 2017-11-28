@@ -1,5 +1,9 @@
 package ch.unibas.fitting.shared.directories;
 
+import io.vavr.collection.List;
+import io.vavr.collection.Stream;
+import io.vavr.control.Option;
+
 import java.io.File;
 
 /**
@@ -7,33 +11,24 @@ import java.io.File;
  */
 public class FitOutputDir extends FittingDirectory {
 
-    public FitOutputDir(String username, File directory) {
+    private final int id;
+
+    public FitOutputDir(String username, File directory, int id) {
         super(username, directory);
+        this.id = id;
     }
 
-    public File getFitMtpOutputDir() {
-        return createAndGet(getDirectory(), "output");
+    public int getId() {
+        return id;
     }
 
-    public File getDefaultExportDir() {
-        return createAndGet(getDirectory(), "export");
-    }
+    public Option<File> getLpunFile() {
 
-    public File getFitOutputFileRef(int index) {
-
-        for (File f: getDefaultExportDir().listFiles()) {
-            if (f.getName().startsWith("fit_" + index) && f.getName().endsWith(".lpun")) {
-                return f;
+        for (File f: getDirectory().listFiles()) {
+            if (f.getName().endsWith(".lpun")) {
+                return Option.of(f);
             }
         }
-        return null;
-    }
-
-    public void removeFitResult(int index) {
-        for (File f: getFitMtpOutputDir().listFiles())
-            if (f.getName().startsWith("fit_" + index)) {
-                LOGGER.debug("Removing fit result " + f.getName());
-                f.delete();
-            }
+        return Option.none();
     }
 }

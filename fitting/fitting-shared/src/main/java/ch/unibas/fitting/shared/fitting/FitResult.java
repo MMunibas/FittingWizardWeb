@@ -10,30 +10,27 @@ package ch.unibas.fitting.shared.fitting;
 
 import ch.unibas.fitting.shared.charges.ChargeTypes;
 import ch.unibas.fitting.shared.molecules.AtomTypeId;
-import ch.unibas.fitting.shared.molecules.MoleculeId;
+import io.vavr.collection.List;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 
-/**
- * This represents the fit result for on atom type.
- * User: mhelmer
- * Date: 03.12.13
- * Time: 15:21
- */
 public class FitResult {
-    private final List<MoleculeId> moleculeIds;
+    private final List<String> moleculeNames;
     private final List<ChargeValue> chargeValues;
     private final AtomTypeId atomTypeId;
     private final double initialQ;
 
-    public FitResult(AtomTypeId atomTypeId, List<MoleculeId> moleculeIds, double initialQ, OutputAtomType outputAtomType) {
+    public FitResult(
+            AtomTypeId atomTypeId,
+            List<String> moleculeNames,
+            double initialQ,
+            OutputAtomType outputAtomType) {
         if (!atomTypeId.equals(outputAtomType.getId())) {
              throw new IllegalArgumentException("output atom type's id does not match atom type id.");
         }
         this.atomTypeId = atomTypeId;
-        this.moleculeIds = moleculeIds;
+        this.moleculeNames = moleculeNames;
         this.initialQ = initialQ;
         this.chargeValues = outputAtomType.getChargeValues();
     }
@@ -42,8 +39,8 @@ public class FitResult {
      * Gets the list of molecule ids the atom type is contained in.
      * @return
      */
-    public List<MoleculeId> getMoleculeIds() {
-        return moleculeIds;
+    public List<String> getMoleculeNames() {
+        return moleculeNames;
     }
 
     public AtomTypeId getAtomTypeId() {
@@ -79,10 +76,10 @@ public class FitResult {
 
     public List<Double> findValuesByPrefix(String prefix) {
         prefix = getPrefix(prefix);
-        List<Double> result = new ArrayList<>();
+        List<Double> result = List.empty();
         for (ChargeValue chargeValue : chargeValues) {
             if (StringUtils.startsWithIgnoreCase(chargeValue.getType(), prefix)) {
-                result.add(chargeValue.getValue());
+                result = result.append(chargeValue.getValue());
             }
         }
         return result;

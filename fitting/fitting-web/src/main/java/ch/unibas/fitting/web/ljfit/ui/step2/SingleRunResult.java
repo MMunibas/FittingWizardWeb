@@ -36,6 +36,7 @@ public class SingleRunResult {
         this.dirName = result.dirName;
 
         minRun.peek(minScore -> isLowestScore = !minScore.isNaN()
+                && _Score != null
                 && !_Score.isNaN()
                 && minScore.equals(_Score));
     }

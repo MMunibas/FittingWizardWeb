@@ -10,13 +10,10 @@ package ch.unibas.fitting.shared.scripts.multipolegauss;
 
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.scripts.base.MockScriptBase;
-import ch.unibas.fitting.shared.scripts.lra.MockLRAScript;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-
-import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
 
@@ -41,7 +38,10 @@ public class MockMultipoleGaussScript extends MockScriptBase implements IMultipo
 	@Override
 	public MultipoleGaussOutput execute(MultipoleGaussInput input) {
 
-		File moleculeDestinationDir = input.getMoleculesDir().getMoleculeDir(input.getMoleculeName());
+		File moleculeDestinationDir = input
+				.getMtpFitDir()
+				.getMoleculeDir()
+				.getMoleculeDirFile(input.getMoleculeName());
 
 		File logOutfile  = new File(moleculeDestinationDir,  input.getMoleculeName() + logExtension);
 		File punOutfile  = new File(moleculeDestinationDir,  input.getMoleculeName() + punExtension);

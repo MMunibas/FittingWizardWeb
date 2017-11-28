@@ -1,50 +1,49 @@
 <wicket:extend xmlns:wicket="http://www.w3.org/1999/xhtml">
     <h1>MTP fit results</h1>
-
     <p>
-        <input wicket:id="back" type="submit" value="Back to fitting" class="btn btn-default" />
-        <input wicket:id="export" type="submit" value="Export results" class="btn btn-default" />
+        <input wicket:id="goToSession" type="button" value="Session overview" class="btn btn-default"/>
     </p>
-
     <form wicket:id="selections">
         <p>
             Fit: <select wicket:id="fitNumbers"></select>
         </p>
-        <p>
-            Molecules: <select wicket:id="molecules"></select>
-        </p>
     </form>
 
-    <table cellspacing="0" class="table">
-        <tr>
-            <th>Atom type</th>
-            <th>Q00</th>
-            <th>Q10</th>
-            <th>Q1C</th>
-            <th>Q1S</th>
-            <th>Q20</th>
-            <th>Q21C</th>
-            <th>Q21S</th>
-            <th>Q22C</th>
-            <th>Q22S</th>
-        </tr>
-        <tr wicket:id="fitResults">
-            <td><span wicket:id="type"></span></td>
-            <td wicket:id="Q00" />
-            <td wicket:id="Q10" />
-            <td wicket:id="Q11c" />
-            <td wicket:id="Q11s" />
-            <td wicket:id="Q20" />
-            <td wicket:id="Q21c" />
-            <td wicket:id="Q21s" />
-            <td wicket:id="Q22c" />
-            <td wicket:id="Q22s" />
-        </tr>
-    </table>
+    <div>
+        <p>
+            <input wicket:id="download" type="button" value="Download LPUN" class="btn btn-default"/>
+        </p>
+        <table cellspacing="0" class="table">
+            <tr>
+                <th>Atom type</th>
+                <th>Q00</th>
+                <th>Q10</th>
+                <th>Q1C</th>
+                <th>Q1S</th>
+                <th>Q20</th>
+                <th>Q21C</th>
+                <th>Q21S</th>
+                <th>Q22C</th>
+                <th>Q22S</th>
+            </tr>
+            <tr wicket:id="fitResults">
+                <td><span wicket:id="type"></span></td>
+                <td wicket:id="Q00" />
+                <td wicket:id="Q10" />
+                <td wicket:id="Q11c" />
+                <td wicket:id="Q11s" />
+                <td wicket:id="Q20" />
+                <td wicket:id="Q21c" />
+                <td wicket:id="Q21s" />
+                <td wicket:id="Q22c" />
+                <td wicket:id="Q22s" />
+            </tr>
+        </table>
 
-    <p>
-        Root Mean Square Error (RMSE): <span wicket:id="rmse"></span> kcal/mol
-    </p>
+        <p>
+            Root Mean Square Error (RMSE): <span wicket:id="rmse"></span> kcal/mol
+        </p>
+    </div>
 
     <div wicket:id="jsmol">
         <script type="text/javascript">

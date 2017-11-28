@@ -8,17 +8,16 @@
  */
 package ch.unibas.fitting.shared.directories;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import ch.unibas.fitting.shared.xyz.XyzFile;
+import ch.unibas.fitting.shared.xyz.XyzFileParser;
+import io.vavr.collection.List;
+import io.vavr.control.Option;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.filefilter.IOFileFilter;
-import org.apache.commons.io.filefilter.TrueFileFilter;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * A typed file with some extra methods.
@@ -34,10 +33,6 @@ public class MoleculesDir extends FittingDirectory {
         super(username, directory);
     }
 
-    public boolean contains(File selectedDir) {
-        return FilenameUtils.equalsNormalized(getDirectory().getAbsolutePath(), selectedDir.getParent());
-    }
-
     /**
      * Delets a molecule from the molecule directory.
      * @param name
@@ -51,53 +46,28 @@ public class MoleculesDir extends FittingDirectory {
         }
     }
 
-    public List<String> listAllMolecules() {
-        return Arrays.asList(getDirectory().listFiles(File::isDirectory))
-                .stream()
-                .map(file -> file.getName())
-                .collect(Collectors.toList());
+    public io.vavr.collection.List<File> listAllMoleculeDirs() {
+        return io.vavr.collection.List.ofAll(
+                Arrays.asList(getDirectory().listFiles(File::isDirectory))
+        );
     }
 
-    public File getMoleculeDir(String moleculeName) {
+    public File getMoleculeDirFile(String moleculeName) {
         return new File(getDirectory(), moleculeName);
     }
 
-    /**
-     * Finds all available _mtpfittab.txt files in the molecule subdirectories.
-     * @return
-     */
-    public List<File> findAllFitTabFiles() {
-        LOGGER.debug("findAllFitTabFiles");
-        List<File> files = new ArrayList<>(FileUtils.listFiles(getDirectory(), new IOFileFilter() {
-            @Override
-            public boolean accept(File file) {
-                return file.getName().endsWith(MtpFitSuffix);
-            }
-
-            @Override
-            public boolean accept(File dir, String name) {
-                return false;
-            }
-        }, TrueFileFilter.TRUE));
-
-        if (files.size() == 0) {
-            throw new DirectoryException("Could not find any fit tab results file in "
-                    + FilenameUtils.normalize(getDirectory().getAbsolutePath()));
-        }
-        for (File file : files) {
-            LOGGER.debug("Found fit tab file: " + FilenameUtils.normalize(file.getAbsolutePath()));
-        }
-        return files;
-    }
-
     public File findLPunFileFor(String moleculeName) {
-        File f = new File(getMoleculeDir(moleculeName), moleculeName + "_l.pun");
+        File f = new File(getMoleculeDirFile(moleculeName), moleculeName + "_l.pun");
         throwIfFileIsMissing(f, "Could not find LPUN file.");
         return f;
     }
 
+    public File getFitTabFileFor(String moleculeName) {
+        return new File(getMoleculeDirFile(moleculeName), moleculeName + MtpFitSuffix);
+    }
+
     public File findFitTabFileFor(String moleculeName) {
-        File f = new File(getMoleculeDir(moleculeName), moleculeName + MtpFitSuffix);
+        File f = getFitTabFileFor(moleculeName);
         throwIfFileIsMissing(f, "Could not find MTP Fit file.");
         return f;
     }
@@ -105,5 +75,44 @@ public class MoleculesDir extends FittingDirectory {
     private void throwIfFileIsMissing(File file, String msg) {
         if (!file.exists())
             throw new DirectoryException(msg + " " + FilenameUtils.normalize(file.getAbsolutePath()));
+    }
+
+    public File getXyzFileFor(String moleculeName) {
+        String withoutExt = FilenameUtils.removeExtension(moleculeName);
+        return new File(getDirectory(), withoutExt + ".xyz");
+    }
+
+
+    public Option<XyzFile> getXyzFile(String moleculeName) {
+        File f = getXyzFileFor(moleculeName);
+        if (!f.exists())
+            return Option.none();
+        XyzFile xyz = XyzFileParser.parse(f);
+        return Option.of(xyz);
+    }
+
+    public File getUserChargesFile(String moleculeName) {
+        File molDir = getMoleculeDirFile(moleculeName);
+        return new File(molDir, "user_charges.json");
+    }
+
+    public String getAnyMoleculeName() {
+        io.vavr.collection.List<File> names = listAllMoleculeDirs();
+        String anyName = null;
+        if (names.size()>0)
+            anyName = names.get(0).getName();
+        return anyName;
+    }
+
+    public List<String> listAllMoleculeNames() {
+        return listAllMoleculeDirs()
+                .map(f -> f.getName())
+                .toList();
+    }
+
+    public List<File> listAllMtpFitTabFiles() {
+        return listAllMoleculeDirs()
+                .map(f -> getFitTabFileFor(f.getName()))
+                .toList();
     }
 }

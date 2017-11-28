@@ -41,7 +41,7 @@ public class RealFittabMarkerScript implements IFittabScript {
 	public FittabScriptOutput execute(FittabScriptInput input) {
 	
 		String moleculeName = getMoleculeName(input.getCubeFile());
-		File specificMoleculeDir = input.getMoleculesDir().getMoleculeDir(moleculeName);
+		File specificMoleculeDir = input.getMoleculesDir().getMoleculeDirFile(moleculeName);
 
         runner.setWorkingDir(specificMoleculeDir);
 
