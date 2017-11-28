@@ -5,6 +5,7 @@ import ch.unibas.fitting.shared.workflows.ljfit.UploadedFileNames;
 import io.vavr.Tuple3;
 import io.vavr.collection.List;
 import io.vavr.collection.Stream;
+import io.vavr.control.Option;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -33,8 +34,20 @@ public class LjFitSessionDir extends FittingDirectory {
         String runDirName = String.format("eps%.2f_sig%.2f_%d", lambda_epsilon, lambda_sigma, unixTime);
 
         File runDir = new File(getBaseRunDir(), runDirName);
+        long time = Instant.now().getEpochSecond();
+        return new LjFitRunDir(username, runDir, time);
+    }
 
-        return new LjFitRunDir(username, runDir);
+    public Option<LjFitRunDir> getRunDir(String dirName) {
+        File runDir = new File(getBaseRunDir(), dirName);
+        if (!runDir.isDirectory())
+            return Option.none();
+        return Option.of(dirForFile(runDir));
+    }
+
+    private LjFitRunDir dirForFile(File file) {
+        long time = parseDirName(file.getName())._3;
+        return new LjFitRunDir(username, file, time);
     }
 
     public File getUploadDir() {
@@ -47,9 +60,7 @@ public class LjFitSessionDir extends FittingDirectory {
 
     public List<LjFitRunDir> listRunDirs() {
         return Stream.ofAll(Arrays.stream(getBaseRunDir().listFiles((dir, name) -> dir.isDirectory() && name.startsWith("eps"))))
-                .map(file -> {
-                    return new LjFitRunDir(username, file, parseDirName(file.getName())._3);
-                })
+                .map(file -> dirForFile(file))
                 .toList();
     }
 
@@ -66,12 +77,21 @@ public class LjFitSessionDir extends FittingDirectory {
         return new Tuple3<>(eps, sigma, time);
     }
 
-    public List<File> listGeneratedRunFiles(String run) {
-        File runDir = new File(getBaseRunDir(), run);
-        if (!runDir.isDirectory())
-            return List.empty();
+    public List<FileWithTag> listGeneratedRunFiles(String run) {
+        return getRunDir(run)
+            .map(dir -> {
+                return List.ofAll(listFiles("Density", dir.getDensity_dir(), new String[] {"inp", "out", "par"}))
+                    .appendAll(listFiles("Gas MTP", dir.getGasMtpDir(), new String[] {"inp", "out", "par"}))
+                        .appendAll(listFiles("Gas VWD", dir.getGasVdwDir(), new String[] {"inp", "out", "par"}))
+                        .appendAll(listFiles("Solv MTP", dir.getSolvMtpDir(), new String[] {"inp", "out", "par"}))
+                        .appendAll(listFiles("Solv VDW", dir.getSolvVdwDir(), new String[] {"inp", "out", "par"}));
+            })
+            .getOrElse(() -> List.empty());
+    }
 
-        return Stream.ofAll(FileUtils.listFiles(runDir, new String[] {"inp", "out", "par"}, true))
+    private List<FileWithTag> listFiles(String group, File dir, String[] filter) {
+        return Stream.ofAll(FileUtils.listFiles(dir, filter, true))
+                .map(f -> new FileWithTag(group, f))
                 .toList();
     }
 

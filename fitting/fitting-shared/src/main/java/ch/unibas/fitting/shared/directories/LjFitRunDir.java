@@ -22,10 +22,6 @@ public class LjFitRunDir extends FittingDirectory {
     private final File solv_mtp_dir;
     private final DateTime created;
 
-    public LjFitRunDir(String username, File directory) {
-        this(username, directory, Instant.now().getEpochSecond());
-    }
-
     public LjFitRunDir(String username, File directory, long time) {
         super(username, directory);
         created = new DateTime(time);

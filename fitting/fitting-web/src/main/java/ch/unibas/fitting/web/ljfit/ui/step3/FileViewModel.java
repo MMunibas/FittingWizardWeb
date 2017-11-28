@@ -1,14 +1,16 @@
 package ch.unibas.fitting.web.ljfit.ui.step3;
 
+import ch.unibas.fitting.shared.directories.FileWithTag;
+
 import java.io.File;
 
 public class FileViewModel {
     private final File file;
     private String groupName;
 
-    public FileViewModel(File file) {
-        this.file = file;
-        this.groupName = file.getParentFile().getName();
+    public FileViewModel(FileWithTag file) {
+        this.file = file.file;
+        this.groupName = file.group;
     }
 
     public File getFile() {
