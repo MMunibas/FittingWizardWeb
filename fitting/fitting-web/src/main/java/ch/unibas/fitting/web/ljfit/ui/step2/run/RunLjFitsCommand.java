@@ -93,7 +93,7 @@ public class RunLjFitsCommand {
                                     new ClusterParameter(runs.ncpus,runs.clusterName));
                         } catch (Exception e) {
                             String error = String.format(
-                                    "LJ Fit run for lambda_epsilon %f lambda_sigma %d failed (%s)",
+                                    "LJ Fit run for lambda_epsilon %f lambda_sigma %f failed (%s)",
                                     pair.lambda_epsiolon,
                                     pair.lambda_sigma,
                                     e.getMessage());
