@@ -69,16 +69,19 @@ public class CreateNewSessionPage extends HeaderPage {
         NumberTextField<Double> lambdaField = new NumberTextField<>("lambda", lambda);
         lambdaField.setRequired(true);
         lambdaField.setStep(NumberTextField.ANY);
+        lambdaField.setType(Double.class);
         form.add(lambdaField);
 
         NumberTextField<Double> temperatureField = new NumberTextField<>("temperature", temperature);
         temperatureField.setRequired(true);
+        temperatureField.setType(Double.class);
         temperatureField.setStep(NumberTextField.ANY);
         form.add(temperatureField);
 
         NumberTextField<Double> molarMassField = new NumberTextField<>("molarMass", molarMass);
         molarMassField.setRequired(true);
         molarMassField.setStep(NumberTextField.ANY);
+        molarMassField.setType(Double.class);
         molarMassField.setConvertEmptyInputStringToNull(true);
         form.add(molarMassField);
 
@@ -86,24 +89,28 @@ public class CreateNewSessionPage extends HeaderPage {
         numberOfResiduesField.setRequired(true);
         numberOfResiduesField.setStep(1);
         numberOfResiduesField.setConvertEmptyInputStringToNull(true);
+        numberOfResiduesField.setType(Integer.class);
         form.add(numberOfResiduesField);
 
         NumberTextField<Double> expectedDensityField = new NumberTextField<>("experimentalDensity", experimentalDensity);
         expectedDensityField.setRequired(true);
         expectedDensityField.setStep(NumberTextField.ANY);
         expectedDensityField.setConvertEmptyInputStringToNull(true);
+        expectedDensityField.setType(Double.class);
         form.add(expectedDensityField);
 
         NumberTextField<Double> expectedDeltaHField = new NumberTextField<>("experimentalDeltaH", experimentalDeltaH);
         expectedDeltaHField.setRequired(true);
         expectedDeltaHField.setStep(NumberTextField.ANY);
         expectedDeltaHField.setConvertEmptyInputStringToNull(true);
+        expectedDeltaHField.setType(Double.class);
         form.add(expectedDeltaHField);
 
         NumberTextField<Double> expectedDeltaGField = new NumberTextField<>("experimentalDeltaG", experimentalDeltaG);
         expectedDeltaGField.setRequired(true);
         expectedDeltaGField.setStep(NumberTextField.ANY);
         expectedDeltaGField.setConvertEmptyInputStringToNull(true);
+        expectedDeltaGField.setType(Double.class);
         form.add(expectedDeltaGField);
 
         form.add(new AjaxButton("start") {
