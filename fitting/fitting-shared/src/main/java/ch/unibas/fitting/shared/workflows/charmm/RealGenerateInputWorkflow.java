@@ -161,7 +161,7 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
 
         File script = new File(settings.getScriptsDir(), "prepare-lpun.py");
         PythonScriptRunner runner = new PythonScriptRunner();
-        runner.setWorkingDir(charmmRunDir.getDensity_dir());
+        runner.setWorkingDir(charmmRunDir.getDirectory());
         runner.exec(script, args);
 
         return new File(charmmRunDir.getDensity_dir(), pureLiquidFileName());
