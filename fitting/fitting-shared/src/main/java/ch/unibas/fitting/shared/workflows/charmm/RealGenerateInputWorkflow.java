@@ -164,7 +164,7 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
         runner.setWorkingDir(charmmRunDir.getDirectory());
         runner.exec(script, args);
 
-        return new File(charmmRunDir.getDensity_dir(), pureLiquidFileName());
+        return new File(charmmRunDir.getDirectory(), pureLiquidFileName());
     }
 
     protected File scaleParFile(UploadedFiles uploadedFiles,
