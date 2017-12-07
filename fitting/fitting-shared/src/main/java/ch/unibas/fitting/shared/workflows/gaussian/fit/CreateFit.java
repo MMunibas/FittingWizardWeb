@@ -2,7 +2,7 @@ package ch.unibas.fitting.shared.workflows.gaussian.fit;
 
 import ch.unibas.fitting.shared.charges.ChargesFileParser;
 import ch.unibas.fitting.shared.fitting.*;
-import ch.unibas.fitting.shared.molecules.AtomTypeId;
+import ch.unibas.fitting.shared.tools.AtomTypeId;
 import ch.unibas.fitting.shared.tools.FitOutputParser;
 import io.vavr.collection.List;
 import org.joda.time.DateTime;

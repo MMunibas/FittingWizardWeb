@@ -2,7 +2,7 @@ package ch.unibas.fitting.web.gaussian.fit.step1;
 
 import ch.unibas.fitting.shared.charges.ChargeTypes;
 import ch.unibas.fitting.shared.fitting.ChargeValue;
-import ch.unibas.fitting.shared.molecules.AtomTypeId;
+import ch.unibas.fitting.shared.tools.AtomTypeId;
 import ch.unibas.fitting.web.gaussian.addmolecule.step2.UploadPage;
 import ch.unibas.fitting.web.gaussian.addmolecule.step6.ChargesViewModel;
 import ch.unibas.fitting.web.gaussian.fit.RemoveFitCommand;

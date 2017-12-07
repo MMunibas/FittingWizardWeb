@@ -10,16 +10,19 @@ public class ChargesViewModel implements Serializable {
     private final String moleculeName;
     private String atomLabel;
     private int[] indices;
+    private final Double chargeFromFile;
     private Double userCharge;
 
     public ChargesViewModel(
             String moleculeName,
             String atomLabel,
             int[] indices,
+            Double chargeFromFile,
             Double userCharge) {
         this.moleculeName = moleculeName;
         this.atomLabel = atomLabel;
         this.indices = indices;
+        this.chargeFromFile = chargeFromFile;
         this.userCharge = userCharge;
     }
 
@@ -36,7 +39,8 @@ public class ChargesViewModel implements Serializable {
     }
 
     public Double getUserCharge() {
-        return userCharge;
+
+        return userCharge != null ? userCharge : chargeFromFile;
     }
 
     public void setUserCharge(Double userCharge) {

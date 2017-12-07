@@ -6,7 +6,7 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.fitting.shared.molecules;
+package ch.unibas.fitting.shared.tools;
 
 /**
  * User: mhelmer

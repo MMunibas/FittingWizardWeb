@@ -1,8 +1,7 @@
 package ch.unibas.fitting.web.gaussian.services;
 
 import ch.unibas.fitting.shared.fitting.Fit;
-import ch.unibas.fitting.shared.fitting.FitResult;
-import ch.unibas.fitting.shared.molecules.AtomType;
+import ch.unibas.fitting.shared.tools.LPunAtomType;
 import ch.unibas.fitting.shared.presentation.gaussian.ColorCoder;
 import ch.unibas.fitting.web.gaussian.addmolecule.step6.ChargesViewModel;
 import ch.unibas.fitting.web.gaussian.fit.step1.FitViewModel;
@@ -39,12 +38,13 @@ public class ViewModelMapper {
                         moleculeName,
                         atomType.getId().getName(),
                         atomType.getIndices(),
+                        atomType.getCharge(),
                         findUserCharge(userCharges, atomType)));
     }
 
-    private Double findUserCharge(List<AtomCharge> userCharges, AtomType atomType) {
+    private Double findUserCharge(List<AtomCharge> userCharges, LPunAtomType lPunAtomType) {
         return userCharges
-                .find(atomCharge -> atomCharge.atomLabel.equals(atomType.getId().getName()))
+                .find(atomCharge -> atomCharge.atomLabel.equals(lPunAtomType.getId().getName()))
                 .map(atomCharge -> atomCharge.charge)
                 .getOrElse((Double) null);
     }

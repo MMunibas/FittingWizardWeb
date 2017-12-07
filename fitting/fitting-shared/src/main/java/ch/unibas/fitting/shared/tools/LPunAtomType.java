@@ -6,25 +6,28 @@
  * see LICENSE.txt
  *
  */
-package ch.unibas.fitting.shared.molecules;
+package ch.unibas.fitting.shared.tools;
 
-/**
- * User: mhelmer
- * Date: 05.12.13
- * Time: 17:40
- */
-public class AtomType {
+public class LPunAtomType {
     private final AtomTypeId id;
+    private final double charge;
     private final int[] indices;
     private Double userQ0 = null;
 
-    public AtomType(String atomType, int[] indices) {
+    public LPunAtomType(String atomType,
+                        double charge,
+                        int[] indices) {
         this.id = new AtomTypeId(atomType);
+        this.charge = charge;
         this.indices = indices;
     }
 
     public AtomTypeId getId() {
         return id;
+    }
+
+    public double getCharge() {
+        return charge;
     }
 
     /**
@@ -51,9 +54,9 @@ public class AtomType {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AtomType atomType = (AtomType) o;
+        LPunAtomType lPunAtomType = (LPunAtomType) o;
 
-        if (!id.equals(atomType.id)) return false;
+        if (!id.equals(lPunAtomType.id)) return false;
 
         return true;
     }

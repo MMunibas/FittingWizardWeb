@@ -9,11 +9,9 @@
 package ch.unibas.fitting.shared.fitting;
 
 import ch.unibas.fitting.shared.charges.ChargeTypes;
-import ch.unibas.fitting.shared.molecules.AtomTypeId;
+import ch.unibas.fitting.shared.tools.AtomTypeId;
 import io.vavr.collection.List;
 import org.apache.commons.lang.StringUtils;
-
-import java.util.ArrayList;
 
 public class FitResult {
     private final List<String> moleculeNames;

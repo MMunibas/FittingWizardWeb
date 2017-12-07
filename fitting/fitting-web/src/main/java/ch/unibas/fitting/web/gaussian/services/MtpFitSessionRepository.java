@@ -4,7 +4,7 @@ import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.shared.directories.MoleculesDir;
 import ch.unibas.fitting.shared.fitting.Fit;
 import ch.unibas.fitting.shared.infrastructure.JsonSerializer;
-import ch.unibas.fitting.shared.molecules.AtomType;
+import ch.unibas.fitting.shared.tools.LPunAtomType;
 import ch.unibas.fitting.shared.tools.LPunParser;
 import io.vavr.collection.List;
 import io.vavr.control.Option;
@@ -22,13 +22,13 @@ public class MtpFitSessionRepository {
     @Inject
     private LPunParser lPunParser;
 
-    public synchronized List<AtomType> loadLpunAtomTypes(
+    public synchronized List<LPunAtomType> loadLpunAtomTypes(
             String username,
             String moleculeName){
         MoleculesDir moleculesDir = userDirectory.getMtpFitDir(username)
                 .getMoleculeDir();
         File lpun = moleculesDir.findLPunFileFor(moleculeName);
-        List<AtomType> atomTypes = lPunParser.parse(lpun);
+        List<LPunAtomType> atomTypes = lPunParser.parse(lpun);
         return atomTypes;
     }
 

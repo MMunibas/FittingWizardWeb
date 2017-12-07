@@ -1,7 +1,5 @@
 package ch.unibas.fitting.web.gaussian.addmolecule.step6;
 
-import ch.unibas.fitting.shared.molecules.AtomType;
-import ch.unibas.fitting.web.gaussian.addmolecule.step2.UploadPage;
 import ch.unibas.fitting.web.gaussian.fit.step1.MtpFitSessionPage;
 import ch.unibas.fitting.web.gaussian.services.AtomCharge;
 import ch.unibas.fitting.web.gaussian.services.MtpFitSessionRepository;

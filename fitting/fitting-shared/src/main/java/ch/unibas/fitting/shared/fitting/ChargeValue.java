@@ -9,7 +9,7 @@
 package ch.unibas.fitting.shared.fitting;
 
 
-import ch.unibas.fitting.shared.molecules.AtomTypeId;
+import ch.unibas.fitting.shared.tools.AtomTypeId;
 
 /**
 * User: mhelmer
