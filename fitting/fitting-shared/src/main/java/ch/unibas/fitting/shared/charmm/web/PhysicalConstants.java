@@ -6,5 +6,5 @@ public class PhysicalConstants {
     /**
      * https://en.wikipedia.org/wiki/Avogadro_constant
      */
-    final static double AvogadroConstant = 0.6;
+    final static double AvogadroConstant = 0.6022;
 }
