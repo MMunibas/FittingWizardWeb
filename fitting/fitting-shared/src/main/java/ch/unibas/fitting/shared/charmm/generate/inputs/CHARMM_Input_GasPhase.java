@@ -22,22 +22,6 @@ public class CHARMM_Input_GasPhase extends CHARMM_Input {
 
     /**
      * If content of the field has to be directly written to a file we use a BufferedWriter type
-     *
-     * @param _cor
-     * @param _top
-     * @param _par
-     * @param _outf
-     * @throws java.io.IOException
-     */
-    public CHARMM_Input_GasPhase(File _cor,
-                                 File _top,
-                                 File _par,
-                                 File _outf) throws IOException {
-        super(_cor, _top, _par, _outf, "Gas Phase");
-    }
-
-    /**
-     * If content of the field has to be directly written to a file we use a BufferedWriter type
      * Requires also a lpun file when MTP module is used
      *
      * @param _cor
@@ -79,7 +63,7 @@ public class CHARMM_Input_GasPhase extends CHARMM_Input {
         this.print_nbondsSection();
 
         this.print_ShakeSection();
-
+        this.print_lpunfile();
         this.print_MiniSection();
         this.print_DynaSection();
         this.print_StopSection();
@@ -113,8 +97,7 @@ public class CHARMM_Input_GasPhase extends CHARMM_Input {
     
     @Override
     protected void print_lpunfile() throws IOException {
-        writer.write("OPEN UNIT 40 CARD READ NAME -" + "\n");
-        writer.write(lpun.getName() + "\n");
+        writer.write("OPEN UNIT 40 CARD READ NAME " + lpun.getName() +"\n");
         writer.write("MTPL MTPUNIT 40" + "\n");
         writer.write("CLOSE UNIT 40" + "\n\n");
     }

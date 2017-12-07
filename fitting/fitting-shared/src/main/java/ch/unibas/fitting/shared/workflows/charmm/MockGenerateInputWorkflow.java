@@ -44,27 +44,12 @@ public class MockGenerateInputWorkflow extends RealGenerateInputWorkflow {
         LOGGER.info("dirs " + gasTestdataDir.getAbsolutePath());
 
         Collection<File> gasSourceFiles = FileUtils.listFiles(gasTestdataDir.getAbsoluteFile(), new String[]{"inp"}, false);
-        LOGGER.debug("gasTestdataDir " + gasTestdataDir);
-        for (File f : gasSourceFiles) {
-            LOGGER.debug("gas Source file " + f.getAbsolutePath());
-        }
-
         copyTestFiles(gasSourceFiles, charmmRunDir.getGasDir());
 
         Collection<File> solvSourceFiles = FileUtils.listFiles(solvTestdataDir, new String[]{"inp"}, false);
-        LOGGER.debug("solvTestdataDir " + solvTestdataDir);
-        for (File f : solvSourceFiles) {
-            LOGGER.debug("solv Source file " + f.getAbsolutePath());
-        }
-
         copyTestFiles(solvSourceFiles, charmmRunDir.getSolvDir());
 
         Collection<File> gasVdwSourceFiles = FileUtils.listFiles(gasVdwTestdataDir, new String[]{"inp"}, false);
-        LOGGER.debug("gasVdwTestdataDir " + gasVdwTestdataDir);
-        for (File f : gasVdwSourceFiles) {
-            LOGGER.debug("gas vdw Source file " + f.getAbsolutePath());
-        }
-
         copyTestFiles(gasVdwSourceFiles, charmmRunDir.getGasVdwDir());
         Collection<File> gasMtpSourceFiles = FileUtils.listFiles(gasMtpTestdataDir, new String[]{"inp"}, false);
         copyTestFiles(gasMtpSourceFiles, charmmRunDir.getGasMtpDir());
@@ -77,6 +62,9 @@ public class MockGenerateInputWorkflow extends RealGenerateInputWorkflow {
                 context.getParameter().uploadedFiles,
                 context.getParameter().runInput,
                 charmmRunDir);
+
+        output.getGasInput().generate();
+        output.getLiquidInput().generate();
 
         return output;
     }
