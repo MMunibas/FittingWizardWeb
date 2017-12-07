@@ -1,5 +1,6 @@
 package ch.unibas.fitting.web.ljfit.ui.step2;
 
+import ch.unibas.fitting.web.ljfit.ui.UiElementFactory;
 import ch.unibas.fitting.web.ljfit.ui.step2.clusterparams.ClusterParameterViewModel;
 import ch.unibas.fitting.web.ljfit.ui.step2.run.RunFromPage;
 import ch.unibas.fitting.web.ljfit.ui.step2.run.RunLjFitsCommand;
@@ -110,10 +111,7 @@ public class GridRunPanel extends Panel {
         listContainer.add(gridListView);
         choiceForm.add(listContainer);
 
-        NumberTextField lambdaField = new NumberTextField("lambda", lambda);
-        lambdaField.setRequired(true);
-        lambdaField.setStep(NumberTextField.ANY);
-        choiceForm.add(lambdaField);
+        choiceForm.add(UiElementFactory.createLambdaValueField("lambda", lambda));
 
         inputForm.add(new AjaxButton("generateGrid") {
 

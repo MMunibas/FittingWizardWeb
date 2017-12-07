@@ -6,6 +6,7 @@ import ch.unibas.fitting.shared.workflows.ljfit.LjFitSession;
 import ch.unibas.fitting.shared.workflows.ljfit.SessionParameter;
 import ch.unibas.fitting.shared.workflows.ljfit.UploadedFileNames;
 import ch.unibas.fitting.web.ljfit.services.LjFitRepository;
+import ch.unibas.fitting.web.ljfit.ui.UiElementFactory;
 import ch.unibas.fitting.web.ljfit.ui.commands.OpenLjFitSessionCommand;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -66,11 +67,7 @@ public class CreateNewSessionPage extends HeaderPage {
         form.add(solventUploadFile = createFileUploadField("solventUploadFile"));
         form.add(lpunUploadFile = createFileUploadField("lpunUploadFile"));
 
-        NumberTextField<Double> lambdaField = new NumberTextField<>("lambda", lambda);
-        lambdaField.setRequired(true);
-        lambdaField.setStep(NumberTextField.ANY);
-        lambdaField.setType(Double.class);
-        form.add(lambdaField);
+        form.add(UiElementFactory.createLambdaValueField("lambda", lambda));
 
         NumberTextField<Double> temperatureField = new NumberTextField<>("temperature", temperature);
         temperatureField.setRequired(true);

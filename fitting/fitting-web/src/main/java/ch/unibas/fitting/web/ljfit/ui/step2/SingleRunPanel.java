@@ -1,15 +1,13 @@
 package ch.unibas.fitting.web.ljfit.ui.step2;
 
+import ch.unibas.fitting.web.ljfit.ui.UiElementFactory;
 import ch.unibas.fitting.web.ljfit.ui.step2.clusterparams.ClusterParameterViewModel;
 import ch.unibas.fitting.web.ljfit.ui.step2.run.RunFromPage;
 import ch.unibas.fitting.web.ljfit.ui.step2.run.RunLjFitsCommand;
 import ch.unibas.fitting.web.ljfit.ui.step2.run.RunPair;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -42,10 +40,7 @@ public class SingleRunPanel extends Panel {
         sigmaField.setRequired(true);
         singleForm.add(sigmaField);
 
-        NumberTextField lambdaField = new NumberTextField("lambda", lambda);
-        lambdaField.setRequired(true);
-        lambdaField.setStep(NumberTextField.ANY);
-        singleForm.add(lambdaField);
+        singleForm.add(UiElementFactory.createLambdaValueField("lambda", lambda));
 
         singleForm.add(new AjaxButton("runSingle") {
             @Override
