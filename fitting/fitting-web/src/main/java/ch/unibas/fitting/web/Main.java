@@ -27,48 +27,48 @@ public class Main {
     private static final Logger LOGGER = Logger.getLogger(Main.class);
 
     public static void main(String[] args) throws Exception {
-        WebSettings settings = WebSettings.load();
+        var settings = WebSettings.load();
         setupConsoleLogger(settings);
         LOGGER.info("Starting fitting web " + Version.getManifestVersion());
 
         Injector injector = Guice.createInjector(new WebModule(settings));
 
-        WebApp webApp = injector.getInstance(WebApp.class);
+        var webApp = injector.getInstance(WebApp.class);
 
         // https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=27848170
-        ServletHolder sh = new ServletHolder();
+        var sh = new ServletHolder();
         sh.setInitParameter(WicketFilter.FILTER_MAPPING_PARAM, "/*");
 
-        WicketServlet servlet = new WicketServlet() {
+        var servlet = new WicketServlet() {
             @Override
             protected WicketFilter newWicketFilter() {
                 return new WicketFilter(webApp);
             }
         };
         sh.setServlet(servlet);
-        ServletContextHandler sch = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        var sch = new ServletContextHandler(ServletContextHandler.SESSIONS);
         sch.addServlet(sh, "/*");
         sch.getSessionHandler().getSessionManager().setMaxInactiveInterval(60*60);
 
-        ResourceHandler data_resource_handler = new ResourceHandler();
+        var data_resource_handler = new ResourceHandler();
         data_resource_handler.setResourceBase(settings.getDataDir().getAbsolutePath());
         data_resource_handler.setDirectoriesListed(true);
         data_resource_handler.setCacheControl("no-cache, private");
         ContextHandler data_context_handler = new ContextHandler("/data");
         data_context_handler.setHandler(data_resource_handler);
 
-        ResourceHandler js_resource_handler = new ResourceHandler();
+        var js_resource_handler = new ResourceHandler();
         js_resource_handler.setResourceBase(settings.getJavaScriptDir().getAbsolutePath());
         js_resource_handler.setDirectoriesListed(true);
         ContextHandler js_context_handler = new ContextHandler("/javascript");
         js_context_handler.setHandler(js_resource_handler);
 
-        HandlerList handlers = new HandlerList();
+        var handlers = new HandlerList();
         handlers.addHandler(data_context_handler);
         handlers.addHandler(js_context_handler);
         handlers.addHandler(sch);
 
-        Server srv = new Server(settings.getServerPort());
+        var srv = new Server(settings.getServerPort());
         srv.setHandler(handlers);
 
         LOGGER.info("Starting jetty server");
@@ -83,7 +83,7 @@ public class Main {
 
         RollingFileAppender app = null;
         settings.getLogDir().mkdir();
-        File log = new File(settings.getLogDir(), "web.log");
+        var log = new File(settings.getLogDir(), "web.log");
         try {
             app = new RollingFileAppender(new PatternLayout(TTCC_CONVERSION_PATTERN), log.getAbsolutePath(), true);
             app.setMaxBackupIndex(20);
