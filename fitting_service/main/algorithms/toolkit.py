@@ -86,7 +86,17 @@ class IDirectory(metaclass=ABCMeta):
 
     @abstractmethod
     def list_files(self):
-        """ list the content of the directory """
+        """ list files inside the directory """
+        pass
+
+    @abstractmethod
+    def list_subdirs(self):
+        """ list subdirectories """
+        pass
+
+    @abstractmethod
+    def list_files_recursively(self):
+        """ list all files recursively """
         pass
 
     @abstractmethod

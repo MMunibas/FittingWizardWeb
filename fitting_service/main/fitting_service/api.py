@@ -166,7 +166,7 @@ class CalculationList(Resource):
         return CalculationService().list_all_calculations()
 
     @api.expect(model_calculation)
-    @api.response(200, 'list of calculations', model=model_calc_id)
+    @api.response(200, 'create new calculation', model=model_calc_id)
     def post(self):
         """
         Creates new calculation
@@ -189,6 +189,7 @@ class CalculationResource(Resource):
 
     @api.response(200, 'parameters successfully updated', model=model_calculation_status)
     @api.response(405, 'parameters update failed')
+    @api.expect(model_calculation)
     def post(self, calculation_id):
         """
         Update parameters
@@ -308,10 +309,8 @@ class InputFileDownloadResource(Resource):
         if not CalculationService().calculation_exists(calculation_id):
             return redirect(request.url, 404)
 
-        if CalculationService().get_calculation_status(calculation_id)[CalculationStatus.LAST_RUN]:
-            return send_file(CalculationService().get_input_file_absolute_path(calculation_id, relative_path))
+        return send_file(CalculationService().get_input_file_absolute_path(calculation_id, relative_path))
 
-        return redirect(request.url, 405)
 
     @api.response(200, 'File deleted')
     def delete(self, calculation_id, relative_path):
@@ -321,10 +320,8 @@ class InputFileDownloadResource(Resource):
         if not CalculationService().calculation_exists(calculation_id):
             return redirect(request.url, 404)
 
-        if CalculationService().get_calculation_status(calculation_id)[CalculationStatus.LAST_RUN]:
-            return CalculationService().delete_input_file(calculation_id, relative_path)
+        return CalculationService().delete_input_file(calculation_id, relative_path)
 
-        return redirect(request.url, 405)
 
 
 @ns_calculation.route('/<string:calculation_id>/output')

@@ -64,7 +64,7 @@ class CalculationService(metaclass=Singleton):
         return {"calculations": list({
                         "id": calculation,
                         "status": self.get_calculation_status(calculation)
-                    } for calculation in Storage().root.list_files())}
+                    } for calculation in Storage().root.list_subdirs())}
 
     def upload_file(self, calculation_id, request):
         if not Storage().contains_calculation(calculation_id):
@@ -114,7 +114,7 @@ class CalculationService(metaclass=Singleton):
         return os.path.join(self._get_output_dir_of_last_run(calculation_id).full_path, relative_path)
 
     def delete_input_file(self, calculation_id, relative_path):
-        path = os.path.join(self._get_output_dir_of_last_run(calculation_id).full_path, relative_path)
+        path = os.path.join(self.get_by_id(calculation_id).subdir("input").full_path, relative_path)
         return Storage().delete(path)
 
     def delete_output_file(self, calculation_id, relative_path):
@@ -277,7 +277,7 @@ class CalculationDirectory(Directory):
 
             status.set_calculation_parameters(calculation_prams)
             status.set_run_parameters(run_params)
-            status.set_input_files(self.subdir("input").list_files())
+            status.set_input_files(self.subdir("input").list_files_recursively())
             return status
         except:
             self._logger.error("Unable to get calculation status")

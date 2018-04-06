@@ -91,7 +91,7 @@ class Storage(metaclass=Singleton):
         return self.root.has_subdir(calculation_id)
 
     def list_all_calculations(self):
-        return self.root.list_files()
+        return self.root.list_subdirs()
 
     def get_calculation_by_job(self, job_id):
         for calc in self.list_all_calculations():
@@ -134,6 +134,8 @@ class Storage(metaclass=Singleton):
 class Directory(IDirectory):
     def __init__(self, path=""):
         self._path = path
+        if os.path.isfile(os.path.abspath(path)):
+            raise Exception("can not create directory from file path")
 
     @property
     def full_path(self):
@@ -145,11 +147,15 @@ class Directory(IDirectory):
 
     def subdir(self, name):
         fullpath = os.path.join(self._path, name)
-        os.makedirs(fullpath, 0o777, True)
+        if not os.path.exists(fullpath):
+            os.mkdir(fullpath, 0o777)
         return Directory(fullpath)
 
     def list_files(self):
-        return os.listdir(self.full_path)
+        return [item for item in os.listdir(self.full_path) if os.path.isfile(os.path.join(self.full_path, item))]
+
+    def list_subdirs(self):
+        return [item for item in os.listdir(self.full_path) if not os.path.isfile(os.path.join(self.full_path, item))]
 
     def list_files_recursively(self):
         files = []

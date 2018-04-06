@@ -84,10 +84,15 @@ class JobStatusUpdater(metaclass=Singleton):
         del self.job_calculation_mapping[job_id]
 
     def _poll(self):
+        #print("polling...")
         running_jobs = self.job_management.list_running_jobs()
+        #print("    running {}".format(running_jobs))
+        #print("    calculations: {}".format(Storage().list_all_calculations()))
         for calc in Storage().list_all_calculations():
-            for job in Storage().get_jobs_file(calc).list():
+            queued_jobs = Storage().get_jobs_file(calc).list()
+            #print("    queued  {}".format(queued_jobs))
+            for job in queued_jobs:
                 if job not in running_jobs:
                     if job in self.job_id_event_dict:
                         self.job_id_event_dict[job].set()
-                        time.sleep(0)
+                        time.sleep(1)

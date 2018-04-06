@@ -17,7 +17,7 @@ class CalculationTest(object):
         self.run_dir = None
         self.logger = logging.getLogger(self.__class__.__name__)
         Storage().initialize()
-        Storage().set_root("../data")
+        Storage().set_root("..\\data")
 
     def execute(self):
         self._validate_input()
@@ -37,7 +37,8 @@ class CalculationTest(object):
                 self.parameters[k] = v
 
     def set_calculation_params(self, params):
-        self.calc_id = CalculationService().create_new_calculation({"parameters":params})
+        self.calc_id = CalculationService().create_new_calculation({"parameters": params})["calculation"]
+        print(self.calc_id)
         self.calc_dir = CalculationService().get_by_id(self.calc_id)
         for k,v in params.items():
             self.parameters[k] = v
