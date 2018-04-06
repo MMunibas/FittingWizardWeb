@@ -1,24 +1,10 @@
 # Implement new job scheduler
 
-# Implementation
-Implement this interface:
-class IJobManagement(metaclass=ABCMeta):
-    @abstractmethod
-    def list_running_jobs(self):
-        pass
+## Implementation
+Implement the interface defined in [Interface Definition](../main/fitting_service/job_managers/i_job_management.py).
 
-    @abstractmethod
-    def schedule_new_job(self, job_id, command):
-        pass
-
-    @abstractmethod
-    def job_status(self, job_id):
-        pass
-
-    @abstractmethod
-    def cancel_job(self, job_id):
-        pass
+See [SingleNodeJobManagement](../main/fitting_service/job_managers/single_node_job_management.py) or [GridEngineJobManagement](../main/fitting_service/job_managers/grid_engine_job_management.py) for reference implementations.
 
 ## Registration
-
-Inside the constructor of the JobsService defined in the main/fitting_service/jobs module, replace "self.job_management_impl = SingleNodeJobManagement()"
+- Implement the interface 
+- Inside the [settings](../main/fitting_service/settings.py) set the ```JOB_MANAGEMENT_TYPE``` to your JobManager type

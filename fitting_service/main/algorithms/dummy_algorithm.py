@@ -1,10 +1,11 @@
-from algorithms.toolkit import register_algorithm
+from .toolkit import *
 
 
-@register_algorithm
+@register
 def dummy_algorithm(ctx):
+    ctx.log.info("starting dummy algo")
     try:
-        with ctx.input_dir.open_file("input_data.txt", "r") as input_data:
+        with ctx.input_dir.open_file("somefile.json", "r") as input_data:
             input_data = "\n".join(input_data.readlines())
             ctx.log.info("input: {}".format(input_data))
     except:
@@ -20,19 +21,22 @@ def dummy_algorithm(ctx):
         running_job_id = ctx.schedule_job("sleep 4")
         waiting_job_id = ctx.schedule_job("sleep 3")
 
-        _get_and_log_job_status(ctx, running_job_id, "waiting")
-        _get_and_log_job_status(ctx, waiting_job_id, "waiting")
+        _get_and_log_job_status(ctx, "asdf", "not found")
+        ctx.wait_for_finished_jobs("asdf")
         _get_and_log_job_status(ctx, "asdf", "not found")
 
-        ctx.wait_for_finished_jobs(running_job_id, waiting_job_id, "qwert")
+        _get_and_log_job_status(ctx, running_job_id, "waiting")
+        _get_and_log_job_status(ctx, waiting_job_id, "waiting")
+
+        ctx.wait_for_all_jobs()
 
         _get_and_log_job_status(ctx, running_job_id, "not found")
         _get_and_log_job_status(ctx, waiting_job_id, "not found")
-        _get_and_log_job_status(ctx, "asdf", "not found")
         ctx.log.info("==============================")
 
     with ctx.output_dir.open_file("somedata.log", "w") as somedata:
         somedata.write("success")
+    ctx.log.info("dummy algo finished")
 
 
 def _get_and_log_job_status(ctx, job_id, expected_status):

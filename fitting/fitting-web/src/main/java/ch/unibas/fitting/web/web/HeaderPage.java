@@ -2,6 +2,7 @@ package ch.unibas.fitting.web.web;
 
 import ch.unibas.fitting.web.application.Version;
 import ch.unibas.fitting.web.WebApp;
+import ch.unibas.fitting.web.calculation.OverviewPage;
 import ch.unibas.fitting.web.welcome.WelcomePage;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.ImmutableNavbarComponent;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.Navbar;
@@ -35,6 +36,8 @@ public abstract class HeaderPage extends WizardPage {
                 new NavbarButton<WelcomePage>(WelcomePage.class, Model.of("Home")), Navbar.ComponentPosition.LEFT));
         navbar.addComponents(new ImmutableNavbarComponent(
                 new NavbarButton<AdminPage>(AdminPage.class, Model.of("Sessions")), Navbar.ComponentPosition.LEFT));
+        navbar.addComponents(new ImmutableNavbarComponent(
+                new NavbarButton<AdminPage>(OverviewPage.class, Model.of("Calculations")), Navbar.ComponentPosition.LEFT));
 
         Label lbl = new Label(Navbar.componentId(), new Model() {
             @Override

@@ -1,4 +1,5 @@
 rootProject.name = 'fitting'
+include 'calculation-client'
 include 'fitting-web'
 include 'fitting-shared'
 

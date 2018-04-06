@@ -1,67 +1,56 @@
 # Implement Algorithms
-## Calculation
-## Run
-## Job
-## Decorator
-To register a algorithm decorate a function with the @register_algorithm decorator and import the containing module inside the __init__.py file of the algorithms package.
+## Context
+For a algorithm to communicate to the outside world the calculation context should be used.
+
+see interface documentation in [Interface Definition](../main/algorithms/toolkit.py#IContext)
+
+## Decorators
+To register a algorithm decorate a function with the ```@register``` decorator.
 The decorated function should take one parameter that contains the calculation context.
 
 example:
-@register_algorithm
+
+```python
+@register
 def somealgo(context):
     pass
-    
-If the algorithm input files should be validated a input validator function can be registered using a decorator (usage same as python property decorator).
+```
+
+If needed, you can define input validators.
+
 example:
  
-@somealgo.input_validator
-def input_validator(context):
-    pass
-   
-## Context
-For a algorithm to communicate to the outside world the calculation context should be used.
-### Properties
-#### ctx.log
+```python
+@input_validator("somealgo")
+def input_validator1(context):
+    return context.input_dir.contains("somefile.csv")
+    
+@input_validator("somealgo")
+@input_validator("anotheralgo")
+def input_validator2(context):
+    return context.input_dir.has_subdir("more_data")
+```
 
-#### ctx.base_path
+## Testing
 
-#### ctx.work_dir
+To test the implementation of a algorithm locally use CalculationTest.
 
-#### ctx.input_dir
+```CalculationTest.execute()``` starts the calculation. 
+```CalculationTest.shutdown()``` is used to clean up the environment after running the calculation (stops polling threads...)
 
-#### ctx.output_dir
+[Example](../main/fitting_test.py)
 
-#### ctx.calculation_parameters
+### New calculation
 
-#### ctx.run_parameters
+To create a new calculation, use:
+- ```CalculationTest.set_algorithm("algo_name")``` to set the algorithm you want to run
+- ```CalculationTest.set_calculation_params({"parameter":"dict"})``` to set the calculation parameters
+- ```CalculationTest.set_run_params({"parameter":"dict"})``` to set the run parameters (will override calculation parameters if key is duplicated)
+- ```CalculationTest.add_input_file("absolute/or/relative/path/to.file")```to add input files (will create copy of original)
 
-#### ctx.status
+### Existing calculation
 
-#### ctx.jobs(self)
-
-### Methods
-
-#### ctx.sleep(self, delay_in_s)
-
-#### ctx.update_status(status, message)
-
-#### ctx.set_canceled(message="")
-
-#### ctx.set_finished(message="")
-
-#### ctx.set_failed(exception)
-
-#### ctx.handle_exception(message, exception)
-
-#### ctx.terminate_if_canceled()
-
-#### ctx.request_cancel()
-
-#### ctx.cancel_all_jobs()
-
-#### ctx.schedule_job(command)
-
-#### ctx.job_status(job_id)
-
-#### ctx.wait_for_finished_jobs(*jobs)
-
+To create a existing calculation, use:
+- ```CalculationTest.use_calculation_data("calculation_id")``` to set the calculation parameters
+- ```CalculationTest.use_last_run_params()``` to set the run parameters (will override calculation parameters if key is duplicated)
+- All ```CalculationTest.set_...``` and ```CalculationTest.add_...``` described above to override previous values

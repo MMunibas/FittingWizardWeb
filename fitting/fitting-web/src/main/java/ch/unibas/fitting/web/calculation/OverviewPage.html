@@ -1,0 +1,37 @@
+<wicket:extend xmlns:wicket="http://www.w3.org/1999/xhtml">
+    <h1>Calculation Service</h1>
+    <h2>Service Info</h2>
+    <span>Version:</span> <span wicket:id="version" style="padding: 0;">[user data]</span> <br />
+    <span>Status:</span> <span wicket:id="service_status" style="padding: 0;">[user data]</span>
+    <h2>Algorithms</h2>
+    <ul>
+        <li wicket:id="algorithmList"><span wicket:id="algorithmName"></span></li>
+    </ul>
+
+    <h2>Calculations</h2>
+
+    <button wicket:id="createNewCalculation" type="button" class="btn btn-default">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true" style="color: green"></span>
+        <span> Create new calculation</span>
+    </button>
+    <br />
+    <table style="border: 1px solid; " class="table table-striped">
+        <tr>
+            <td align="center" style="border: 1px solid; width: 40px">Calculation id</td>
+            <td align="center" style="border: 1px solid; width: 40px">Status</td>
+            <td align="center" style="border: 1px solid; width: 40px">Message</td>
+            <td align="center" style="border: 1px solid; width: 40px">Action</td>
+        </tr>
+        <tr wicket:id="calculationList" >
+            <td align="center" style="border: 1px solid; width: 40px"><span wicket:id="calcId"></span></td>
+            <td align="center" style="border-right-style: double; border-bottom-style: solid; border-bottom-width: 1px; width: 40px"><span wicket:id="calcStatus"></span></td>
+            <td align="center" style="border-top: 1px solid black;border-right-style: double;border-bottom: 1px solid;width: 40px"><span wicket:id="calcMsg"></span></td>
+            <td align="center" style="border: 1px solid; width: 60px">
+                <button wicket:id="calcOpen" type="button" class="btn btn-default">
+                    <span class="glyphicon glyphicon-open" aria-hidden="true"></span>
+                </button>
+            </td>
+        </tr>
+    </table>
+
+</wicket:extend>

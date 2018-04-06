@@ -1,11 +1,13 @@
 import os
 import random
+import json
 from datetime import datetime
-from contextlib import contextmanager
 from hashlib import sha256
 from base64 import urlsafe_b64encode
+from contextlib import contextmanager
+from algorithms.toolkit import IDirectory
 from toolkit import *
-import json
+from .settings import STORAGE_ROOT, STATUS_FILE_NAME, JOBS_FILE_NAME, CANCEL_FILE_NAME
 
 status_lock = threading.Lock()
 jobs_lock = threading.Lock()
@@ -72,7 +74,7 @@ class Filename(object):
 
 class Storage(metaclass=Singleton):
     def __init__(self):
-        self._storage_root = Directory()
+        self._storage_root = Directory(STORAGE_ROOT)
 
     def set_root(self, path):
         if not os.path.exists(path):
@@ -106,12 +108,30 @@ class Storage(metaclass=Singleton):
     def get_cancel_file(self, calculation_id):
         return CancelFile(self.get_calculation_directory(calculation_id))
 
+    def get_output_dir(self, calculation, run):
+        return self.get_calculation_directory(calculation).subdir(run).subdir("output")
+
     @property
     def root(self):
         return self._storage_root
 
+    def initialize(self):
+        self.set_root(STORAGE_ROOT)
+        pass
 
-class Directory(object):
+    def delete(self, path):
+        if not os.path.exists(path):
+            return False
+        if os.path.isfile(path):
+            os.remove(path)
+            return True
+        elif os.path.isdir(path):
+            os.rmdir(path)
+            return True
+        return False
+
+
+class Directory(IDirectory):
     def __init__(self, path=""):
         self._path = path
 
@@ -130,6 +150,13 @@ class Directory(object):
 
     def list_files(self):
         return os.listdir(self.full_path)
+
+    def list_files_recursively(self):
+        files = []
+        for path, _, file_names in os.walk(self.full_path):
+            for file_name in file_names:
+                files.append(os.path.join(path, file_name).replace(self.full_path, "").replace("\\", "/").lstrip("/"))
+        return files
 
     def delete(self):
         for path, directory_names, file_names in os.walk(self.full_path, topdown=False):
@@ -169,21 +196,22 @@ class Status:
 
 
 class CalculationStatus(object):
-    STATUS_FILE_NAME = ".status"
     LAST_RUN = "last_run"
     STATUS = "status"
     MESSAGE = "message"
-    JOB_IDS = "job_ids"
+    INPUT_FILES = "input_files"
+    CALCULATION_PARAMETERS = "calculation_parameters"
+    RUN_PARAMETERS = "run_parameters"
 
     def __init__(self, calculation_directory):
         self.calculation_directory = calculation_directory
-        if not calculation_directory.contains(CalculationStatus.STATUS_FILE_NAME):
+        if not calculation_directory.contains(STATUS_FILE_NAME):
             self._save(self._load())
 
     @synchronize_with(status_lock)
     def _load(self):
-        if self.calculation_directory.contains(CalculationStatus.STATUS_FILE_NAME):
-            with self.calculation_directory.open_file(CalculationStatus.STATUS_FILE_NAME, "r") as status_file:
+        if self.calculation_directory.contains(STATUS_FILE_NAME):
+            with self.calculation_directory.open_file(STATUS_FILE_NAME, "r") as status_file:
                 return json.load(status_file)
         else:
             return {
@@ -194,7 +222,7 @@ class CalculationStatus(object):
 
     @synchronize_with(status_lock)
     def _save(self, status):
-        with self.calculation_directory.open_file(self.STATUS_FILE_NAME, "w") as status_file:
+        with self.calculation_directory.open_file(STATUS_FILE_NAME, "w") as status_file:
             json.dump(status, status_file)
 
     def __str__(self):
@@ -202,12 +230,6 @@ class CalculationStatus(object):
 
     def to_dict(self):
         return self._load()
-
-    def set_running_job_ids(self, ids):
-        def update(dic):
-            dic[self.JOB_IDS] = ids
-
-        self._update_file(update)
 
     def set_last_run(self, run_id):
         def update(dic):
@@ -238,6 +260,26 @@ class CalculationStatus(object):
     def is_ready(self):
         return not self.is_running
 
+    def set_calculation_parameters(self, calculation_prams):
+        def update(d):
+            calculation_prams["parameters"] = json.dumps(calculation_prams["parameters"])
+            d[self.CALCULATION_PARAMETERS] = calculation_prams
+        self._update_file(update)
+
+    def set_run_parameters(self, run_params):
+        def update(d):
+            if run_params is not None:
+                run_params["parameters"] = json.dumps(run_params["parameters"])
+                pass
+            d[self.RUN_PARAMETERS] = run_params
+
+        self._update_file(update)
+
+    def set_input_files(self, input_files):
+        def update(d):
+            d[self.INPUT_FILES] = input_files
+        self._update_file(update)
+
 
 class JobStatus:
     WAITING = "waiting"
@@ -246,7 +288,6 @@ class JobStatus:
 
 
 class JobFile:
-    JOBS_FILE_NAME = ".jobs"
 
     def clear(self):
         def update(l):
@@ -268,7 +309,7 @@ class JobFile:
 
     def __init__(self, calculation_directory):
         self.calculation_directory = calculation_directory
-        if not self.calculation_directory.contains(JobFile.JOBS_FILE_NAME):
+        if not self.calculation_directory.contains(JOBS_FILE_NAME):
             self._save(self._load())
 
     def _update_file(self, func):
@@ -278,15 +319,15 @@ class JobFile:
 
     @synchronize_with(jobs_lock)
     def _load(self):
-        if self.calculation_directory.contains(JobFile.JOBS_FILE_NAME):
-            with self.calculation_directory.open_file(JobFile.JOBS_FILE_NAME, "r") as jobs_file:
+        if self.calculation_directory.contains(JOBS_FILE_NAME):
+            with self.calculation_directory.open_file(JOBS_FILE_NAME, "r") as jobs_file:
                 return json.load(jobs_file)
         else:
             return []
 
     @synchronize_with(jobs_lock)
     def _save(self, jobs):
-        with self.calculation_directory.open_file(self.JOBS_FILE_NAME, "w") as jobs_file:
+        with self.calculation_directory.open_file(JOBS_FILE_NAME, "w") as jobs_file:
             json.dump(jobs, jobs_file)
 
     def __str__(self):
@@ -294,27 +335,26 @@ class JobFile:
 
 
 class CancelFile:
-    CANCEL_FILE_NAME = ".cancel"
 
     def __init__(self, calculation_directory):
         self.calculation_directory = calculation_directory
 
     @synchronize_with(cancel_lock)
     def _get(self):
-        return self.calculation_directory.contains(self.CANCEL_FILE_NAME)
+        return self.calculation_directory.contains(CANCEL_FILE_NAME)
 
     @synchronize_with(cancel_lock)
     def _set(self, value):
         if value:
-            with self.calculation_directory.open_file(self.CANCEL_FILE_NAME, "w") as cancel_file:
+            with self.calculation_directory.open_file(CANCEL_FILE_NAME, "w") as cancel_file:
                 cancel_file.write("")
         else:
             self._del()
 
     @synchronize_with(cancel_lock)
     def _del(self):
-        if self.calculation_directory.contains(self.CANCEL_FILE_NAME):
-            self.calculation_directory.delete_file(self.CANCEL_FILE_NAME)
+        if self.calculation_directory.contains(CANCEL_FILE_NAME):
+            self.calculation_directory.delete_file(CANCEL_FILE_NAME)
 
     @property
     def is_set(self):

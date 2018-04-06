@@ -3,9 +3,10 @@ import sys
 
 import os
 
-from fitting_service import app
-from fitting_service.file_acces import Storage
+from fitting_service import app, Storage
 import algorithms
+
+import fitting_service.settings as settings
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -19,14 +20,14 @@ def app_name():
 
 
 if __name__ == '__main__':
-    Storage().set_root("../data")
-
+    Storage().initialize()
     if len(sys.argv) > 1 and sys.argv[1] == '--mock':
         mock_mode = True
 
     logger.info(app_name() + 'Starting')
 
-    port = int(os.getenv('FITTING_SERVICE_PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    host = os.getenv('FITTING_SERVICE_HOST', settings.FITTING_SERVICE_HOST)
+    port = int(os.getenv('FITTING_SERVICE_PORT', settings.FITTING_SERVICE_PORT))
+    app.run(host=host, port=port)
 
     logger.info(app_name() + 'Stopped')

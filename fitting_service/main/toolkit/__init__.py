@@ -1,6 +1,7 @@
 
 import sys
 import trace
+import queue
 
 from threading import Timer, Lock
 import types
@@ -83,12 +84,19 @@ class RepeatingTimer(object):
     def stop(self):
         self.running = False
         self.timer.cancel()
+        self.timer.join()
 
     def handle_tick(self, *a, **kw):
         self.handler(*a, **kw)
         if self.running:
             self.timer = Timer(self.delay, self.handle_tick)
             self.timer.start()
+
+
+class TransparentQueue(queue.Queue):
+    def list(self):
+        with self.mutex:
+            return list(self.queue)
 
 
 class CalculationCanceledException(Exception):

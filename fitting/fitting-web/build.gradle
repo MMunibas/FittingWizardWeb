@@ -29,9 +29,13 @@ applicationDistribution.from('../javascript') {
 }
 
 dependencies {
+    compile project(':calculation-client')
     compile project(':fitting-shared')
 
     compile group: 'log4j', name: 'log4j', version: '1.2.17'
+
+    testCompile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
+
 
     // http://mvnrepository.com/artifact/com.google.inject/guice
     compile group: 'com.google.inject', name: 'guice', version: '4.0'
