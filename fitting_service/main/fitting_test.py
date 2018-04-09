@@ -6,10 +6,25 @@ def run_new_dummy_algorithm():
 
     test_setup.set_algorithm("dummy_algorithm")
     test_setup.logger.info("run_new_dummy_algorithm")
-    test_setup.set_calculation_params({"calc_param1": "value1", "calc_param2": "value2"})
+    test_setup.set_calculation_params({"calc_param1": "value1", "calc_param2": "value2", "y": 42.})
     test_setup.add_input_file("../data/somefile.json")
 
     test_setup.set_run_params({"run_param1": "value1", "run_param2": "value2"})
+
+    test_setup.execute()
+    test_setup.logger.info("run_new_dummy_algorithm - done")
+
+
+def run_another_new_dummy_algorithm():
+    test_setup = CalculationTest()
+
+    test_setup.set_algorithm("dummy_algorithm")
+    test_setup.logger.info("run_another_new_dummy_algorithm")
+    test_setup.set_calculation_params({"calc_param1": "value1", "calc_param2": "value2"})
+    test_setup.add_input_file("../data/somefile.json")
+    test_setup.add_input_file("../data/anotherfile.json")
+
+    test_setup.set_run_params({"input_file_name": "anotherfile.json", "run_param2": "value3"})
 
     test_setup.execute()
     test_setup.logger.info("run_new_dummy_algorithm - done")
