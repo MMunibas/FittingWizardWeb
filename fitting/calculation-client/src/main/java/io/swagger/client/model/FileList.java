@@ -28,32 +28,32 @@ import java.util.List;
 /**
  * FileList
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2018-04-06T13:27:24.634Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2018-04-13T10:04:30.475Z")
 public class FileList {
-  @SerializedName("algorithms")
-  private List<String> algorithms = new ArrayList<String>();
+  @SerializedName("files")
+  private List<String> files = new ArrayList<String>();
 
-  public FileList algorithms(List<String> algorithms) {
-    this.algorithms = algorithms;
+  public FileList files(List<String> files) {
+    this.files = files;
     return this;
   }
 
-  public FileList addAlgorithmsItem(String algorithmsItem) {
-    this.algorithms.add(algorithmsItem);
+  public FileList addFilesItem(String filesItem) {
+    this.files.add(filesItem);
     return this;
   }
 
    /**
    * List of files
-   * @return algorithms
+   * @return files
   **/
   @ApiModelProperty(example = "[\"somefile.json\"]", required = true, value = "List of files")
-  public List<String> getAlgorithms() {
-    return algorithms;
+  public List<String> getFiles() {
+    return files;
   }
 
-  public void setAlgorithms(List<String> algorithms) {
-    this.algorithms = algorithms;
+  public void setFiles(List<String> files) {
+    this.files = files;
   }
 
 
@@ -66,12 +66,12 @@ public class FileList {
       return false;
     }
     FileList fileList = (FileList) o;
-    return Objects.equals(this.algorithms, fileList.algorithms);
+    return Objects.equals(this.files, fileList.files);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(algorithms);
+    return Objects.hash(files);
   }
 
 
@@ -80,7 +80,7 @@ public class FileList {
     StringBuilder sb = new StringBuilder();
     sb.append("class FileList {\n");
     
-    sb.append("    algorithms: ").append(toIndentedString(algorithms)).append("\n");
+    sb.append("    files: ").append(toIndentedString(files)).append("\n");
     sb.append("}");
     return sb.toString();
   }

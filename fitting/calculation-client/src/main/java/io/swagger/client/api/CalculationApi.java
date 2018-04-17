@@ -13,6 +13,7 @@
 
 package io.swagger.client.api;
 
+import com.squareup.okhttp.Response;
 import io.swagger.client.ApiCallback;
 import io.swagger.client.ApiClient;
 import io.swagger.client.ApiException;
@@ -29,7 +30,6 @@ import java.io.IOException;
 
 import io.swagger.client.model.Calculation;
 import io.swagger.client.model.CalculationId;
-import io.swagger.client.model.CalculationStatus;
 import io.swagger.client.model.CalculationStatusList;
 import java.io.File;
 import io.swagger.client.model.FileList;
@@ -754,8 +754,8 @@ public class CalculationApi {
      * @param relativePath  (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public void getInputFileDownloadResource(String calculationId, String relativePath) throws ApiException {
-        getInputFileDownloadResourceWithHttpInfo(calculationId, relativePath);
+    public File getInputFileDownloadResource(String calculationId, String relativePath) throws ApiException {
+        return getInputFileDownloadResourceWithHttpInfo(calculationId, relativePath).getData();
     }
 
     /**
@@ -766,9 +766,9 @@ public class CalculationApi {
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Void> getInputFileDownloadResourceWithHttpInfo(String calculationId, String relativePath) throws ApiException {
+    public ApiResponse<File> getInputFileDownloadResourceWithHttpInfo(String calculationId, String relativePath) throws ApiException {
         com.squareup.okhttp.Call call = getInputFileDownloadResourceValidateBeforeCall(calculationId, relativePath, null, null);
-        return apiClient.execute(call);
+        return downloadResponse(call);
     }
 
     /**
@@ -1129,8 +1129,8 @@ public class CalculationApi {
      * @param relativePath  (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public void getOutputFileDownloadResource(String calculationId, String relativePath) throws ApiException {
-        getOutputFileDownloadResourceWithHttpInfo(calculationId, relativePath);
+    public File getOutputFileDownloadResource(String calculationId, String relativePath) throws ApiException {
+        return getOutputFileDownloadResourceWithHttpInfo(calculationId, relativePath).getData();
     }
 
     /**
@@ -1141,9 +1141,9 @@ public class CalculationApi {
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Void> getOutputFileDownloadResourceWithHttpInfo(String calculationId, String relativePath) throws ApiException {
+    public ApiResponse<File> getOutputFileDownloadResourceWithHttpInfo(String calculationId, String relativePath) throws ApiException {
         com.squareup.okhttp.Call call = getOutputFileDownloadResourceValidateBeforeCall(calculationId, relativePath, null, null);
-        return apiClient.execute(call);
+        return downloadResponse(call);
     }
 
     /**
@@ -1428,13 +1428,14 @@ public class CalculationApi {
     /**
      * Build call for postCalculationResource
      * @param calculationId  (required)
+     * @param payload  (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call postCalculationResourceCall(String calculationId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        Object localVarPostBody = null;
+    public com.squareup.okhttp.Call postCalculationResourceCall(String calculationId, Calculation payload, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = payload;
 
         // create path and map variables
         String localVarPath = "/calculation/{calculation_id}"
@@ -1476,15 +1477,20 @@ public class CalculationApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call postCalculationResourceValidateBeforeCall(String calculationId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call postCalculationResourceValidateBeforeCall(String calculationId, Calculation payload, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         // verify the required parameter 'calculationId' is set
         if (calculationId == null) {
             throw new ApiException("Missing the required parameter 'calculationId' when calling postCalculationResource(Async)");
         }
         
+        // verify the required parameter 'payload' is set
+        if (payload == null) {
+            throw new ApiException("Missing the required parameter 'payload' when calling postCalculationResource(Async)");
+        }
+        
 
-        com.squareup.okhttp.Call call = postCalculationResourceCall(calculationId, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = postCalculationResourceCall(calculationId, payload, progressListener, progressRequestListener);
         return call;
 
     }
@@ -1493,11 +1499,12 @@ public class CalculationApi {
      * Update parameters
      * 
      * @param calculationId  (required)
-     * @return CalculationStatus
+     * @param payload  (required)
+     * @return Status
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public CalculationStatus postCalculationResource(String calculationId) throws ApiException {
-        ApiResponse<CalculationStatus> resp = postCalculationResourceWithHttpInfo(calculationId);
+    public Status postCalculationResource(String calculationId, Calculation payload) throws ApiException {
+        ApiResponse<Status> resp = postCalculationResourceWithHttpInfo(calculationId, payload);
         return resp.getData();
     }
 
@@ -1505,12 +1512,13 @@ public class CalculationApi {
      * Update parameters
      * 
      * @param calculationId  (required)
-     * @return ApiResponse&lt;CalculationStatus&gt;
+     * @param payload  (required)
+     * @return ApiResponse&lt;Status&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<CalculationStatus> postCalculationResourceWithHttpInfo(String calculationId) throws ApiException {
-        com.squareup.okhttp.Call call = postCalculationResourceValidateBeforeCall(calculationId, null, null);
-        Type localVarReturnType = new TypeToken<CalculationStatus>(){}.getType();
+    public ApiResponse<Status> postCalculationResourceWithHttpInfo(String calculationId, Calculation payload) throws ApiException {
+        com.squareup.okhttp.Call call = postCalculationResourceValidateBeforeCall(calculationId, payload, null, null);
+        Type localVarReturnType = new TypeToken<Status>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -1518,11 +1526,12 @@ public class CalculationApi {
      * Update parameters (asynchronously)
      * 
      * @param calculationId  (required)
+     * @param payload  (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call postCalculationResourceAsync(String calculationId, final ApiCallback<CalculationStatus> callback) throws ApiException {
+    public com.squareup.okhttp.Call postCalculationResourceAsync(String calculationId, Calculation payload, final ApiCallback<Status> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -1543,8 +1552,8 @@ public class CalculationApi {
             };
         }
 
-        com.squareup.okhttp.Call call = postCalculationResourceValidateBeforeCall(calculationId, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<CalculationStatus>(){}.getType();
+        com.squareup.okhttp.Call call = postCalculationResourceValidateBeforeCall(calculationId, payload, progressListener, progressRequestListener);
+        Type localVarReturnType = new TypeToken<Status>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
@@ -1929,4 +1938,15 @@ public class CalculationApi {
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
+
+    ApiResponse<File> downloadResponse(com.squareup.okhttp.Call call) {
+        try {
+            Response response = call.execute();
+            File file = apiClient.downloadFileFromResponse(response);
+            return new ApiResponse<File>(response.code(), response.headers().toMultimap(), file);
+        } catch (Exception e) {
+            throw new RuntimeException("failed to download file");
+        }
+    }
+
 }

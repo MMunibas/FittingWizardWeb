@@ -495,7 +495,7 @@ No authorization required
 
 <a name="postCalculationResource"></a>
 # **postCalculationResource**
-> CalculationStatus postCalculationResource(calculationId)
+> Status postCalculationResource(calculationId, payload)
 
 Update parameters
 
@@ -508,8 +508,9 @@ Update parameters
 
 CalculationApi apiInstance = new CalculationApi();
 String calculationId = "calculationId_example"; // String | 
+Calculation payload = new Calculation(); // Calculation | 
 try {
-    CalculationStatus result = apiInstance.postCalculationResource(calculationId);
+    Status result = apiInstance.postCalculationResource(calculationId, payload);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling CalculationApi#postCalculationResource");
@@ -522,10 +523,11 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **calculationId** | **String**|  |
+ **payload** | [**Calculation**](Calculation.md)|  |
 
 ### Return type
 
-[**CalculationStatus**](CalculationStatus.md)
+[**Status**](Status.md)
 
 ### Authorization
 

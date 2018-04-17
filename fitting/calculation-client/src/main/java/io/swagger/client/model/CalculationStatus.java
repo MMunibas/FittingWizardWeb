@@ -13,7 +13,6 @@
 
 package io.swagger.client.model;
 
-import java.io.Serializable;
 import java.util.Objects;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
@@ -28,8 +27,8 @@ import java.io.IOException;
 /**
  * CalculationStatus
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2018-04-06T13:27:24.634Z")
-public class CalculationStatus implements Serializable {
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2018-04-13T10:04:30.475Z")
+public class CalculationStatus {
   @SerializedName("id")
   private String id = null;
 

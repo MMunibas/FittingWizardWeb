@@ -77,16 +77,17 @@ def dummy_algorithm(context):
         context.log.info("==============================")
 
     # schedule as many jobs an needed, store ids in a list, wait for all jobs in list
+    jobs_to_schedule = 10
     context.log.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
     job_ids = []
-    for i in range(20):
+    for i in range(jobs_to_schedule):
         job_id = context.schedule_job("sleep 1")
         job_ids.append(job_id)
     context.wait_for_finished_jobs(*job_ids)
     context.log.info("==============================")
     # or
     # schedule as many jobs an needed, wait for all jobs
-    for i in range(20):
+    for i in range(jobs_to_schedule):
         context.schedule_job("sleep 1")
     context.wait_for_all_jobs()
 

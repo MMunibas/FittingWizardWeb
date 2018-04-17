@@ -27,7 +27,7 @@ import java.math.BigDecimal;
 /**
  * ServiceInfo
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2018-04-06T13:27:24.634Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2018-04-13T10:04:30.475Z")
 public class ServiceInfo {
   @SerializedName("version")
   private BigDecimal version = null;

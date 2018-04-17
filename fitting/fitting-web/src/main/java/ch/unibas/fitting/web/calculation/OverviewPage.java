@@ -36,7 +36,7 @@ public class OverviewPage extends HeaderPage {
         add(new Label("service_status", serviceStatus));
 
         //algo list
-        add(new ListView("algorithmList", algorithmsModel) {
+        add(new ListView<>("algorithmList", algorithmsModel) {
             @Override
             protected void populateItem(ListItem item) {
                 item.add(new Label("algorithmName", (String)item.getModelObject()));
@@ -47,16 +47,17 @@ public class OverviewPage extends HeaderPage {
         add(new AjaxLink("createNewCalculation") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                System.out.println("TODO: <create new calculation clicked>");
-                System.out.println("TODO: <redirect to detail page>");
+                var calc_id = calculationService.createCalculation();
+                var pp = new PageParameters();
+                pp.add("calc_id", calc_id);
+                setResponsePage(DetailPage.class, pp);
             }
         });
 
-        add(new ListView("calculationList", calculationsModel) {
+        add(new ListView<>("calculationList", calculationsModel) {
             @Override
             protected void populateItem(ListItem item) {
                 var calc = (CalculationStatus)item.getModelObject();
-                System.out.println(calc);
                 item.add(new Label("calcId", calc.getId()));
                 item.add(new Label("calcStatus", calc.getStatus().getStatus()));
                 item.add(new Label("calcMsg", calc.getStatus().getMessage()));
@@ -66,7 +67,6 @@ public class OverviewPage extends HeaderPage {
                         var pp = new PageParameters();
                         pp.add("calc_id", calc.getId());
                         setResponsePage(DetailPage.class, pp);
-                        System.out.println("TODO: <redirect to detail page>");
                     }
                 });
             }

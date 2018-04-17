@@ -4,7 +4,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**calculation** | **List&lt;String&gt;** | Id of new calculation | 
+**calculation** | **String** | Id of new calculation | 
 
 
 

@@ -65,7 +65,7 @@ class Algorithm:
         for validator in self.validators:
             if not validator(ctx):
                 raise InvalidInputException(validator.__name__)
-        return self.func(ctx)
+
 
 
 if __name__ == "__main__":

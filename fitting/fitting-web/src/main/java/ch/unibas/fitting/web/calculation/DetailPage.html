@@ -1,14 +1,150 @@
 <wicket:extend xmlns:wicket="http://www.w3.org/1999/xhtml">
     <h1>Calculation <span wicket:id="calc_id"></span></h1>
+    <ul class="nav nav-pills">
+        <li wicket:id="action_buttons"><button wicket:id="button"><span wicket:id="button_label"></span></button></li>
+    </ul>
+    <h2>Status: <span wicket:id="calculationStatus"></span></h2>
     <!-- Input/output files -->
     <div class="row">
-        <div class="col-lg-12 col-md-6"><div class="jumbotron">Start Run</div></div>
-        <div class="col-lg-12 col-md-6"><div class="jumbotron">Change parameters</div></div>
+        <div class="col-lg-6 col-md-12">
+            <div class="jumbotron">
+                <h2>Start new run</h2>
+                <form wicket:id="algorithm_selection" class="form-group form-inline">
+                    <select wicket:id="algo_selector" class="form-control">
+                        <option selected>dummy_algorithm</option>
+                    </select>
+                    <input wicket:id="start_algo_btn" type="submit" value="Run" class="form-control"/>
+                </form>
+                <h2>Run parameters</h2>
+                <form wicket:id="run_parameter_form">
+                    <div class="form-group form-inline">
+                        <div class="inline" style="display:inline-block;">
+                            <select style="width: 110px" wicket:id="run_parameter_type_selector" class="form-control">
+                                <option>Boolean</option>
+                                <option>Text</option>
+                                <option selected>Number</option>
+                            </select>
+                        </div>
+                        <div class="inline" style="display:inline-block;">
+                            <input style="width: 120px" wicket:id="run_parameter_input_key" placeholder="Key" type="text" class="form-control"/>
+                        </div>
+                        <div class="inline" style="display:inline-block;">
+                            <input style="width: 140px" wicket:id="run_parameter_input_value" placeholder="Value" type="text" class="form-control"/>
+                        </div>
+                        <div class="inline" style="display:inline-block;">
+                            <button style="width: 50px" type="submit" class="form-control btn btn-default ">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <table wicket:id="run_parameter_container" style="border: 1px solid; " class="table table-striped">
+                        <tr>
+                            <td align="center" style="border: 1px solid; width: 40px">Type</td>
+                            <td align="center" style="border: 1px solid; width: 40px">Key</td>
+                            <td align="center" style="border: 1px solid; width: 40px">Value</td>
+                            <td align="center" style="border: 1px solid; width: 40px">Actions</td>
+                        </tr>
+                        <tr wicket:id="run_parameters">
+                            <td align="center" style="border: 1px solid; width: 40px">
+                                <span wicket:id="run_param_type"></span></td>
+                            <td align="center"
+                                style="border-right-style: double; border-bottom-style: solid; border-bottom-width: 1px; width: 40px">
+                                <span wicket:id="run_param_key"></span></td>
+                            <td align="center"
+                                style="border-top: 1px solid black;border-right-style: double;border-bottom: 1px solid;width: 40px">
+                                <span wicket:id="run_param_value"></span></td>
+                            <td align="center" style="border: 1px solid; width: 60px">
+                                <button wicket:id="run_param_delete" type="button" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12">
+            <div class="jumbotron">
+                <h2>Calculation parameters</h2>
+
+                <form wicket:id="calculation_parameter_form">
+                    <!-- add new param-->
+                    <div class="form-group form-inline">
+                        <div class="inline" style="display:inline-block;">
+                            <select style="width: 110px" wicket:id="calculation_parameter_type_selector" class="form-control">
+                                <option>Boolean</option>
+                                <option>Text</option>
+                                <option selected>Number</option>
+                            </select>
+                        </div>
+                        <div class="inline" style="display:inline-block;">
+                            <input style="width: 120px" wicket:id="calculation_parameter_input_key" placeholder="Key" type="text"  class="form-control"/>
+                        </div>
+                        <div class="inline" style="display:inline-block;">
+                            <input style="width: 140px" wicket:id="calculation_parameter_input_value" placeholder="Value" type="text"  class="form-control"/>
+                        </div>
+                        <div class="inline" style="display:inline-block;">
+                            <button style="width: 50px" type="submit" class="form-control btn btn-default ">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- show and remove existing params-->
+                    <table wicket:id="calc_parameter_container" style="border: 1px solid; " class="table table-striped">
+                        <tr>
+                            <td align="center" style="border: 1px solid; width: 40px">Type</td>
+                            <td align="center" style="border: 1px solid; width: 40px">Key</td>
+                            <td align="center" style="border: 1px solid; width: 40px">Value</td>
+                            <td align="center" style="border: 1px solid; width: 40px">Actions</td>
+                        </tr>
+                        <tr wicket:id="calculation_parameters">
+                            <td align="center" style="border: 1px solid; width: 40px">
+                                <span wicket:id="calc_param_type"></span></td>
+                            <td align="center"
+                                style="border-right-style: double; border-bottom-style: solid; border-bottom-width: 1px; width: 40px">
+                                <span wicket:id="calc_param_key"></span></td>
+                            <td align="center"
+                                style="border-top: 1px solid black;border-right-style: double;border-bottom: 1px solid;width: 40px">
+                                <span wicket:id="calc_param_value"></span></td>
+                            <td align="center" style="border: 1px solid; width: 60px">
+                                <button wicket:id="calc_param_delete" type="button" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                    <br/>
+                    <button wicket:id="calc_param_save" type="button" class="btn btn-default">
+                        <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
     <!-- Input/output files -->
     <div class="row">
-        <div class="col-lg-12 col-md-6"><div class="jumbotron">Input files</div></div>
-        <div class="col-lg-12 col-md-6"><div class="jumbotron">Output files</div></div>
+        <div class="col-lg-6 col-md-12">
+            <div class="jumbotron">
+                <h2>Input files</h2>
+                <form class="form-inline" wicket:id="file_upload_form">
+                    <input wicket:id="upload_input_file" type="file" class="btn btn-default form-control" />
+                    <button type="submit" class="btn btn-default form-control">
+                        <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+                    </button>
+                </form>
+                <ul wicket:id="input_file_container">
+                    <li wicket:id="input_file_path"><a wicket:id="download_input_file"><span wicket:id="download_input_file_link"></span></a> <button wicket:id="delete_input_file"><span class="glyphicon glyphicon-trash"></span></button> </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12">
+            <div class="jumbotron">
+                <h2>Output files</h2>
+                <ul wicket:id="output_file_container">
+                    <li wicket:id="output_file_path"><a wicket:id="download_output_file"><span wicket:id="download_output_file_link"></span></a> <button wicket:id="delete_output_file"><span class="glyphicon glyphicon-trash"></span></button></li>
+                </ul>
+            </div>
+        </div>
     </div>
 
 </wicket:extend>

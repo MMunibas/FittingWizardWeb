@@ -22,24 +22,17 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * CalculationId
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2018-04-06T13:27:24.634Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2018-04-13T10:04:30.475Z")
 public class CalculationId {
   @SerializedName("calculation")
-  private List<String> calculation = new ArrayList<String>();
+  private String calculation = null;
 
-  public CalculationId calculation(List<String> calculation) {
+  public CalculationId calculation(String calculation) {
     this.calculation = calculation;
-    return this;
-  }
-
-  public CalculationId addCalculationItem(String calculationItem) {
-    this.calculation.add(calculationItem);
     return this;
   }
 
@@ -47,12 +40,12 @@ public class CalculationId {
    * Id of new calculation
    * @return calculation
   **/
-  @ApiModelProperty(example = "\"2018-04-05_10-03-41-054461_OEW1L\"", required = true, value = "Id of new calculation")
-  public List<String> getCalculation() {
+  @ApiModelProperty(example = "2018-04-05_10-03-41-054461_OEW1L", required = true, value = "Id of new calculation")
+  public String getCalculation() {
     return calculation;
   }
 
-  public void setCalculation(List<String> calculation) {
+  public void setCalculation(String calculation) {
     this.calculation = calculation;
   }
 

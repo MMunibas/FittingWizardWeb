@@ -16,7 +16,6 @@ package io.swagger.client.api;
 import io.swagger.client.ApiException;
 import io.swagger.client.model.Calculation;
 import io.swagger.client.model.CalculationId;
-import io.swagger.client.model.CalculationStatus;
 import io.swagger.client.model.CalculationStatusList;
 import java.io.File;
 import io.swagger.client.model.FileList;
@@ -231,7 +230,8 @@ public class CalculationApiTest {
     @Test
     public void postCalculationResourceTest() throws ApiException {
         String calculationId = null;
-        CalculationStatus response = api.postCalculationResource(calculationId);
+        Calculation payload = null;
+        Status response = api.postCalculationResource(calculationId, payload);
 
         // TODO: test validations
     }

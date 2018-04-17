@@ -26,7 +26,7 @@ import java.io.IOException;
 /**
  * Run
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2018-04-06T13:27:24.634Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2018-04-13T10:04:30.475Z")
 public class Run {
   @SerializedName("algorithm")
   private String algorithm = null;

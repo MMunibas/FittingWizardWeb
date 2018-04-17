@@ -114,11 +114,11 @@ class CalculationService(metaclass=Singleton):
         return os.path.join(self._get_output_dir_of_last_run(calculation_id).full_path, relative_path)
 
     def delete_input_file(self, calculation_id, relative_path):
-        path = os.path.join(self.get_by_id(calculation_id).subdir("input").full_path, relative_path)
+        path = self.get_input_file_absolute_path(calculation_id, relative_path)
         return Storage().delete(path)
 
     def delete_output_file(self, calculation_id, relative_path):
-        path = os.path.join(self.get_by_id(calculation_id).subdir("input").full_path, relative_path)
+        path = self.get_output_file_absolute_path(calculation_id, relative_path)
         return Storage().delete(path)
 
     def get_input_file_absolute_path(self, calculation_id, relative_path):
@@ -126,16 +126,19 @@ class CalculationService(metaclass=Singleton):
 
     def set_calculation_parameters(self, calculation_id, parameters):
         calc = self.get_by_id(calculation_id)
-        with calc.open_file(CALCULATION_METADATA_FILE_NAME, "w+") as meta_file:
+
+        with calc.open_file(CALCULATION_METADATA_FILE_NAME, "r") as meta_file:
             meta = json.load(meta_file)
-            params = meta["parameters"]
-            if isinstance(params, str):
-                params = json.loads(params)
-            for k, v in parameters.items():
-                params[k] = v
-            meta["parameters"] = params
+        if isinstance(parameters["parameters"], str):
+            newparams = json.loads(parameters["parameters"])
+        else:
+            newparams = parameters["parameters"]
+
+        meta["parameters"] = newparams
+
+        with calc.open_file(CALCULATION_METADATA_FILE_NAME, "w") as meta_file:
             json.dump(meta, meta_file)
-        return calc.status.to_dict()
+
 
 @synchronized
 class CalculationManagement(metaclass=Singleton):

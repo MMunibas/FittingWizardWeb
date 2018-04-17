@@ -26,7 +26,7 @@ model_svc_info = ns_global.model('ServiceInfo',
                                  })
 
 model_file_list = ns_calculation.model('FileList', {
-    "algorithms": fields.List(fields.String, required=True,
+    "files": fields.List(fields.String, required=True,
                               description='List of files',
                               example=["somefile.json"])})
 
@@ -42,9 +42,9 @@ model_job_id_list = ns_calculation.model('JobIdList', {
                                  "Sykfq", "pUZLN", "Nwfz0", "a6XFG"])})
 
 model_calc_id = ns_calculation.model('CalculationId', {
-    "calculation": fields.List(fields.String, required=True,
-                               description='Id of new calculation',
-                               example="2018-04-05_10-03-41-054461_OEW1L")})
+    "calculation": fields.String(required=True,
+                                 description='Id of new calculation',
+                                 example="2018-04-05_10-03-41-054461_OEW1L")})
 
 model_calculation = ns_calculation.model('Calculation', {
     'parameters': fields.String(required=True,
@@ -187,7 +187,7 @@ class CalculationResource(Resource):
             return redirect(request.url, 404)
         return CalculationService().get_calculation_status(calculation_id)
 
-    @api.response(200, 'parameters successfully updated', model=model_calculation_status)
+    @api.response(200, 'parameters successfully updated', model=model_status)
     @api.response(405, 'parameters update failed')
     @api.expect(model_calculation)
     def post(self, calculation_id):
@@ -197,8 +197,11 @@ class CalculationResource(Resource):
         if not CalculationService().calculation_exists(calculation_id):
             return redirect(request.url, 404)
         try:
-            return CalculationService().set_calculation_parameters(calculation_id, api.payload)
-        except Exception:
+            CalculationService().set_calculation_parameters(calculation_id, api.payload)
+            return CalculationService().get_calculation_status(calculation_id)
+
+        except Exception as ex:
+            print(ex)
             return redirect(request.url, 405)
 
     @api.response(200, 'calculation deleted successfully')
@@ -244,11 +247,11 @@ class RunCalculationAction(Resource):
         """
         Start a run of this calculation
         """
-
         if not CalculationService().calculation_exists(calculation_id):
             return redirect(request.url, 404)
         try:
-            return {"run_id": CalculationService().run_calculation(calculation_id, self.api.payload)}
+            runid = CalculationService().run_calculation(calculation_id, self.api.payload, False)
+            return {"run_id": runid}
         except CalculationRunningException:
             return redirect(request.url, 405)
         except InvalidInputException:
@@ -337,7 +340,7 @@ class OutputFileListResource(Resource):
             return redirect(request.url, 404)
         if CalculationService().get_calculation_status(calculation_id)[CalculationStatus.LAST_RUN]:
             return CalculationService().list_output_files(calculation_id)
-        return redirect(request.url, 405)
+        return {"files": []}
 
 
 @ns_calculation.route('/<string:calculation_id>/output/<path:relative_path>')
