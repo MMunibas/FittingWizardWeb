@@ -17,7 +17,7 @@ class CalculationTest(object):
         self.run_dir = None
         self.logger = logging.getLogger(self.__class__.__name__)
         Storage().initialize()
-        Storage().set_root("..\\data")
+        Storage().set_root("../data")
 
     def execute(self):
         self._validate_input()
