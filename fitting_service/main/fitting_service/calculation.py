@@ -9,6 +9,8 @@ from toolkit import Singleton, synchronized, CalculationCanceledException, Repea
 from .file_acces import Storage, Filename, Directory, Status, CalculationStatus
 from .job import JobsService
 from .settings import CALCULATION_METADATA_FILE_NAME, RUN_METADATA_FILE_NAME, STATUS_FILE_NAME
+from .settings import charmm_executable, mpi_executable, mpi_flags, scratch_dir_name, ld_path, env_path, number_of_cpu_cores 
+from .charmm import *
 
 VERSION = 0.1
 
@@ -194,11 +196,15 @@ class CalculationRun(Thread):
             self.algorithm(self.context)
             self.context.set_finished()
         except CalculationCanceledException:
+            print("cancel called")
             self.context.set_canceled()
         except Exception as e:
+            print("exception occured {}".format(e))
             self.context.set_failed(e)
         finally:
             for job in self.context.jobs.list():
+                if isinstance(job, list):
+                    job = job[0]
                 JobsService().cancel_job(job)
 
     def cancel(self):
@@ -392,7 +398,13 @@ class CalculationContext(IContext):
     def wait_for_all_jobs(self):
         for job in self.jobs.list():
             JobsService().wait_for_finished(job)
-
+    def create_charmm_submission_script(self, filename, charmm_input_file_name, charmm_output_file_name, workdir_name, number_of_cores=None):
+        
+        number_of_cores = number_of_cores  if number_of_cores is not None else number_of_cpu_cores
+	
+        with self.input_dir.subdir(workdir_name).open_file(filename, "w") as script_file:
+            script_file.write(generate_charmm_setup_script(charmm_input_file_name, charmm_output_file_name, self.output_dir.subdir(workdir_name).full_path, charmm_executable, number_of_cores, self._calculation_id, ld_path, env_path, mpi_executable, mpi_flags, scratch_dir_name))
+        pass
     @property
     def jobs(self):
         return Storage().get_jobs_file(self._calculation_id)

@@ -29,7 +29,7 @@ class JobsService(metaclass=Singleton):
         return Storage().get_jobs_file(calculation_id).list()
 
     def schedule_new_job(self, calculation_id, command):
-        job_name = "{}".format(IdGenerator.base64_id(5))
+        job_name = "WFIT{}".format(IdGenerator.base64_id(5))
         job_id = self.job_management_impl.schedule_new_job(job_name, command)
         Storage().get_jobs_file(calculation_id).add(job_id)
         JobStatusUpdater().watch(calculation_id, job_id)
@@ -76,6 +76,9 @@ class JobStatusUpdater(metaclass=Singleton):
         self.polling_thread.stop()
 
     def wait_for_finished(self, job_id):
+        print("waiting for job id: ", job_id)
+        if isinstance(job_id, list):
+            job_id = job_id[0]
         if job_id not in self.job_id_event_dict:
             return
         self.job_id_event_dict[job_id].wait()

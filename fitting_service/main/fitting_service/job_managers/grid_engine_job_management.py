@@ -20,7 +20,11 @@ class GridEngineJobManagement(IJobManagement):
         return queue
 
     def list_running_jobs(self):
-        return [job["JB_job_number"] for job in self._parse()]
+        q = self._parse()
+        print("queued jobs: ", q)
+        j = [job["JB_job_number"] for job in q]
+        print("list of job ids: ", j)
+        return j
 
     def schedule_new_job(self, job_name, command):
         regex = re.compile('(?:.*\n)*Your job (\d*) \("(.*)"\).*')
@@ -29,7 +33,7 @@ class GridEngineJobManagement(IJobManagement):
         if match:
             job_id = match.group(1)
             job_name = match.group(2)
-            return job_id, job_name
+            return job_id # , job_name
         return None
 
     def job_status(self, job_id):
