@@ -403,7 +403,7 @@ class CalculationContext(IContext):
         number_of_cores = number_of_cores  if number_of_cores is not None else number_of_cpu_cores
 	
         with self.input_dir.subdir(workdir_name).open_file(filename, "w") as script_file:
-            script_file.write(generate_charmm_setup_script(charmm_input_file_name, charmm_output_file_name, self.output_dir.subdir(workdir_name).full_path, charmm_executable, number_of_cores, self._calculation_id, ld_path, env_path, mpi_executable, mpi_flags, scratch_dir_name))
+            script_file.write(generate_charmm_setup_script(charmm_input_file_name, charmm_output_file_name, self.output_dir.subdir(workdir_name).full_path, charmm_executable, number_of_cores, self._calculation_id, ld_path, env_path, mpi_executable, mpi_flags, scratch_dir_name, self.input_dir.name))
         pass
     @property
     def jobs(self):
