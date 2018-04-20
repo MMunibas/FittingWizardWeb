@@ -33,5 +33,30 @@
             </td>
         </tr>
     </table>
+    <br />
+    <br />
+    <button wicket:id="createNewExecution" type="button" class="btn btn-default">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true" style="color: green"></span>
+        <span> Create new execution</span>
+    </button>
+    <br />
+    <table wicket:id="execution_container" style="border: 1px solid; " class="table table-striped">
+        <tr>
+            <td align="center" style="border: 1px solid; width: 40px">Calculation id</td>
+            <td align="center" style="border: 1px solid; width: 40px">Status</td>
+            <td align="center" style="border: 1px solid; width: 40px">Message</td>
+            <td align="center" style="border: 1px solid; width: 40px">Cancel</td>
+        </tr>
+        <tr wicket:id="executionList" >
+            <td align="center" style="border: 1px solid; width: 40px"><span wicket:id="execId"></span></td>
+            <td align="center" style="border-right-style: double; border-bottom-style: solid; border-bottom-width: 1px; width: 40px"><span wicket:id="execStatus"></span></td>
+            <td align="center" style="border-top: 1px solid black;border-right-style: double;border-bottom: 1px solid;width: 40px"><span wicket:id="execMessage"></span></td>
+            <td align="center" style="border: 1px solid; width: 60px">
+                <button wicket:id="execCancel" type="button" class="btn btn-default">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </button>
+            </td>
+        </tr>
+    </table>
 
 </wicket:extend>

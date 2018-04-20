@@ -1,35 +1,49 @@
 package ch.unibas.fitting.web.calculation;
 
+import akka.actor.ActorRef;
 import ch.unibas.fitting.web.application.calculation.CalculationService;
+import ch.unibas.fitting.web.calculation.management.CalculationManagementClient;
+import ch.unibas.fitting.web.calculation.management.messages.ExecutionProgress;
+import ch.unibas.fitting.web.calculation.management.messages.ListExecutionsResponse;
+import ch.unibas.fitting.web.calculation.management.messages.StartDefinition;
 import ch.unibas.fitting.web.web.HeaderPage;
 import io.swagger.client.model.CalculationStatus;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import scala.collection.concurrent.Debug;
 
 import javax.inject.Inject;
+import java.io.File;
+import java.util.Map;
+import java.util.HashMap;
 
 public class OverviewPage extends HeaderPage {
 
     @Inject
     private CalculationService calculationService;
 
+    @Inject
+    private CalculationManagementClient calculationManagement;
+
     private Model<String> serviceVersion;
     private Model<String> serviceStatus;
     private ListModel<String> algorithmsModel;
     private ListModel<CalculationStatus> calculationsModel;
+    private ListModel<ExecutionProgress> executionModel;
 
     public OverviewPage() {
-
         serviceVersion = new Model<>();
         serviceStatus = new Model<>();
         algorithmsModel = new ListModel<>();
         calculationsModel = new ListModel<>();
+        executionModel = new ListModel<>();
 
         //service status
         add(new Label("version", serviceVersion));
@@ -71,15 +85,59 @@ public class OverviewPage extends HeaderPage {
                 });
             }
         });
+        // executions
+        add(new AjaxLink("createNewExecution") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                calculationManagement.Start(createDummyAlgorithmStartDefinition());
+            }
+        });
+
+        var execContainer = new WebMarkupContainer("execution_container");
+        execContainer.add(new ListView<>("executionList", executionModel) {
+            @Override
+            protected void populateItem(ListItem item) {
+                var calc = ((ExecutionProgress)item.getModelObject());
+                item.add(new Label("execId", calc.id));
+                item.add(new Label("execStatus", calc.state.getStatus()));
+                item.add(new Label("execMessage", calc.state.getMessage()));
+                item.add(new AjaxLink("execCancel") {
+                    @Override
+                    public void onClick(AjaxRequestTarget target) {
+                        var l = executionModel.getObject();
+                        l.remove(calc);
+                        executionModel.setObject(l);
+                        target.add(execContainer);
+                    }
+                });
+            }
+        });
+        add(execContainer);
     }
 
     @Override
     protected void onInitialize() {
-        super.onInitialize();
-        var info = calculationService.getServiceInfo();
-        serviceVersion.setObject(info.getVersion().toString());
-        serviceStatus.setObject(info.getServerStatus());
-        algorithmsModel.setObject(calculationService.listAlgorithms().toJavaList());
-        calculationsModel.setObject(calculationService.listCalculations().toJavaList());
+
+        try {
+            super.onInitialize();
+            var info = calculationService.getServiceInfo();
+            serviceVersion.setObject(info.getVersion().toString());
+            serviceStatus.setObject(info.getServerStatus());
+            algorithmsModel.setObject(calculationService.listAlgorithms().toJavaList());
+            calculationsModel.setObject(calculationService.listCalculations().toJavaList());
+            executionModel.setObject(calculationManagement.ListExecutions().responses);
+        }
+        catch (Exception ex){
+            Debug.log("Failed to load api");
+        }
+    }
+
+    private StartDefinition createDummyAlgorithmStartDefinition(){
+        var algorithmName = "dummy_algorithm";
+        Map<String, Object> params = new HashMap<>();
+        var fileArray = new File[] {
+                new File("C:\\Users\\eknecht\\Desktop\\somefile.json")
+        };
+        return new StartDefinition(algorithmName, params, fileArray);
     }
 }

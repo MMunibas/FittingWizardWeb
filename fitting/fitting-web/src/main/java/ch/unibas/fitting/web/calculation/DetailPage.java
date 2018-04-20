@@ -7,8 +7,8 @@ import ch.unibas.fitting.web.web.HeaderPage;
 import io.swagger.client.model.Status;
 import io.vavr.Tuple2;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -22,8 +22,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.file.File;
-import org.apache.wicket.util.time.Duration;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -48,19 +46,11 @@ public class DetailPage extends HeaderPage {
     private Model<String> selectedCalcParameterType;
     private Model<SerializedParameter> newRunParameter;
     private Model<SerializedParameter> newCalcParameter;
-    private Model<String> newRunParameterKey;
-    private Model<String> newCalcParameterKey;
-    private Model<String> newRunParameterValue;
-    private Model<String> newCalcParameterValue;
     private Model<String> selectedAlgoModel;
     private Model<String> calc_id;
 
-    FileUploadField fu = null;
+    private FileUploadField fu;
     private List<String> supportedParameterTypes = new ArrayList<>();
-    private TextField run_parameter_input_key;
-    private TextField run_parameter_input_value;
-    private TextField calculation_parameter_input_key;
-    private TextField calculation_parameter_input_value;
 
     public DetailPage(PageParameters pp) {
         supportedParameterTypes.add(Boolean.class.getSimpleName());
@@ -74,10 +64,6 @@ public class DetailPage extends HeaderPage {
         selectedCalcParameterType = new Model<>();
         newRunParameter = new Model<>();
         newCalcParameter = new Model<>();
-        newRunParameterKey = new Model<>();
-        newCalcParameterKey = new Model<>();
-        newRunParameterValue = new Model<>();
-        newCalcParameterValue = new Model<>();
         supportedParameterTypesModel = new ListModel<>();
         calculationParameters = new ListModel<>();
         inputFiles = new ListModel<>();
@@ -94,8 +80,8 @@ public class DetailPage extends HeaderPage {
 
         add(new ListView<>("action_buttons", actions) {
             @Override
-            protected void populateItem(ListItem item) {
-                final Tuple2<String, Action> tuple = (Tuple2<String, Action>)item.getModelObject();
+            protected void populateItem(ListItem<Tuple2<String, Action>> item) {
+                final Tuple2<String, Action> tuple = item.getModelObject();
                 var btn = new AjaxLink("button") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
@@ -118,14 +104,16 @@ public class DetailPage extends HeaderPage {
                 var algo = getModelObject();
                 var params = runParameters.getObject();
                 calculationService.startRun(calculationId, algo, io.vavr.collection.List.ofAll(params));
-                reloadPage();
+
+                var pp = new PageParameters();
+                pp.add("calc_id", calculationId);
+                setResponsePage(DetailPage.class, pp);
             }
         });
 
         //  EditParameters
         var runParameterContainer = new WebMarkupContainer("run_parameter_container");
         runParameterContainer.setOutputMarkupId(true);
-        runParameterContainer.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(5)));
         runParameterContainer.add(new ListView<>("run_parameters", runParameters){
             @Override
             protected void populateItem(ListItem item) {
@@ -137,16 +125,18 @@ public class DetailPage extends HeaderPage {
                 item.add(new AjaxLink("run_param_delete") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        runParameters.setObject(runParameters.getObject().stream().filter(x->x.key!= param.key).collect(Collectors.toList()));
+                        runParameters.setObject(runParameters.getObject().stream().filter(x-> !x.key.equals(param.key)).collect(Collectors.toList()));
+                        target.add(runParameterContainer);
                     }
                 });
             }
 
         });
-        Form runParameterForm = new Form<>("run_parameter_form", newRunParameter){
+        Form runParameterForm = new Form<>("run_parameter_form", newRunParameter);
+        runParameterForm.add(new AjaxSubmitLink("run_parameter_add_submit") {
             @Override
-            protected void onSubmit() {
-                super.onSubmit();
+            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+                super.onSubmit(target, form);
                 var currentParams = runParameters.getObject();
                 var model = newRunParameter.getObject();
                 switch (model.type) {
@@ -161,9 +151,9 @@ public class DetailPage extends HeaderPage {
                         break;
                 }
                 runParameters.setObject(currentParams);
+                target.add(runParameterContainer);
             }
-        };
-
+        });
         runParameterForm.add(new DropDownChoice<>("run_parameter_type_selector",
                 new PropertyModel<>(newRunParameter, "type"), supportedParameterTypesModel));
         runParameterForm.add(new TextField<>("run_parameter_input_key", new PropertyModel<String>(newRunParameter, "key")));
@@ -175,7 +165,6 @@ public class DetailPage extends HeaderPage {
         /// Calculation section
         var calculationParameterContainer = new WebMarkupContainer("calc_parameter_container");
         calculationParameterContainer.setOutputMarkupId(true);
-        calculationParameterContainer.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(5)));
         calculationParameterContainer.add(new ListView<>("calculation_parameters", calculationParameters){
             @Override
             protected void populateItem(ListItem item) {
@@ -187,16 +176,18 @@ public class DetailPage extends HeaderPage {
                 item.add(new AjaxLink("calc_param_delete") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        calculationParameters.setObject(calculationParameters.getObject().stream().filter(x->x.key!= param.key).collect(Collectors.toList()));
+                        calculationParameters.setObject(calculationParameters.getObject().stream().filter(x-> !x.key.equals(param.key)).collect(Collectors.toList()));
+                        target.add(calculationParameterContainer);
                     }
                 });
             }
 
         });
-        Form calculationParameterForm = new Form<>("calculation_parameter_form", newCalcParameter){
+        Form calculationParameterForm = new Form<>("calculation_parameter_form", newCalcParameter);
+        calculationParameterForm.add(new AjaxSubmitLink("calculation_parameter_add_submit") {
             @Override
-            protected void onSubmit() {
-                super.onSubmit();
+            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+                super.onSubmit(target, form);
                 var currentParams = calculationParameters.getObject();
                 var model = newCalcParameter.getObject();
                 switch (model.type) {
@@ -211,8 +202,9 @@ public class DetailPage extends HeaderPage {
                         break;
                 }
                 calculationParameters.setObject(currentParams);
+                target.add(calculationParameterContainer);
             }
-        };
+        });
         add(calculationParameterForm);
         calculationParameterForm.add(new DropDownChoice<>("calculation_parameter_type_selector",
                 new PropertyModel<>(newCalcParameter, "type"), supportedParameterTypesModel));
@@ -228,22 +220,8 @@ public class DetailPage extends HeaderPage {
         });
 
         /// Input section
-        Form fileUploadForm = new Form("file_upload_form"){
-            @Override
-            protected void onSubmit() {
-                try {
-                    calculationService.uploadInputFile(calculationId, fu.getFileUpload());
-                    reloadPage();
-                } catch (Exception e) {
-                    throw new RuntimeException("failed to upload file");
-                }
-            }
-        };
-        fileUploadForm.setMultiPart(true);
-        fileUploadForm.add(fu = new FileUploadField("upload_input_file"));
-        add(fileUploadForm);
-
         var inputFileContainer = new WebMarkupContainer("input_file_container");
+        inputFileContainer.setOutputMarkupId(true);
         inputFileContainer.add(new ListView<>("input_file_path", inputFiles) {
             @Override
             protected void populateItem(ListItem item) {
@@ -259,16 +237,33 @@ public class DetailPage extends HeaderPage {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
                         calculationService.deleteInputFiles(calculationId, link);
-
-                        reloadPage();
+                        target.add(inputFileContainer);
                     }
                 });
             }
         });
         add(inputFileContainer);
 
+        Form fileUploadForm = new Form("file_upload_form");
+        fileUploadForm.setMultiPart(true);
+        fileUploadForm.add(fu = new FileUploadField("upload_input_file"));
+        fileUploadForm.add(new AjaxSubmitLink("upload_input_file_submit") {
+            @Override
+            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+                super.onSubmit(target, form);
+                try {
+                    calculationService.uploadInputFile(calculationId, fu.getFileUpload());
+                    target.add(inputFileContainer);
+                } catch (Exception e) {
+                    throw new RuntimeException("failed to upload file");
+                }
+            }
+        });
+        add(fileUploadForm);
+
         /// Output section
         var outputFileContainer = new WebMarkupContainer("output_file_container");
+        outputFileContainer.setOutputMarkupId(true);
         outputFileContainer.add(new ListView<>("output_file_path", outputFiles) {
             @Override
             protected void populateItem(ListItem item) {
@@ -283,7 +278,7 @@ public class DetailPage extends HeaderPage {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
                         calculationService.deleteOutputFiles(calculationId, link);
-                        reloadPage();
+                        target.add(outputFileContainer);
                     }
                 });
             }
@@ -320,10 +315,6 @@ public class DetailPage extends HeaderPage {
         }
         newRunParameter.setObject(new SerializedParameter());
         newCalcParameter.setObject(new SerializedParameter());
-        newRunParameterKey.setObject("");
-        newCalcParameterKey.setObject("");
-        newRunParameterValue.setObject("");
-        newCalcParameterValue.setObject("");
 
         actions.setObject(actionList);
         calculationStatus.setObject(status);
@@ -333,12 +324,5 @@ public class DetailPage extends HeaderPage {
 
         inputFiles.setObject(calculationService.listInputFiles(calculationId).toJavaList());
         outputFiles.setObject(calculationService.listOutputFiles(calculationId).toJavaList());
-        System.out.println("");
-    }
-
-    void reloadPage(){
-        var pp = new PageParameters();
-        pp.add("calc_id", calculationId);
-        setResponsePage(DetailPage.class, pp);
     }
 }

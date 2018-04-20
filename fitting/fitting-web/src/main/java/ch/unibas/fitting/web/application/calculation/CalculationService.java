@@ -1,27 +1,40 @@
 package ch.unibas.fitting.web.application.calculation;
 
+import com.google.inject.Provides;
 import de.agilecoders.wicket.jquery.util.Json;
-import io.swagger.client.ApiCallback;
 import io.swagger.client.ApiClient;
-import io.swagger.client.ApiException;
 import io.swagger.client.api.CalculationApi;
 import io.swagger.client.api.DefaultApi;
 import io.swagger.client.model.*;
 
-import io.vavr.Value;
 import io.vavr.collection.List;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 
+import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+@Singleton
 public class CalculationService {
 
     DefaultApi defaultApi;
     CalculationApi calculationApi;
+
+    private static CalculationService instance = null;
+
+    @Provides
+    public static synchronized CalculationService getInstance(){
+        if(instance == null){
+            instance = new CalculationService();
+        }
+        return instance;
+    }
+
+
     public CalculationService() {
+        if(instance != null) return;
         ApiClient client = new ApiClient();
         client.setBasePath("http://localhost:5000");
         defaultApi = new DefaultApi(client);
@@ -73,22 +86,25 @@ public class CalculationService {
             throw new RuntimeException("failed call to api", ex);
         }
     }
-
-    public void startRun(String calc_id, String algorithm, List<SerializedParameter> parameters){
+    public void startRun(String calc_id, String algorithm, String parameters){
         try {
             Run run = new Run();
             run.setAlgorithm(algorithm);
-            run.setParameters(toJsonString(parameters));
-            calculationApi.postRunCalculationActionAsync(calc_id, run, new ApiCallback<>() {
-                @Override public void onFailure(ApiException e, int statusCode, Map<String, java.util.List<String>> responseHeaders) { }
-                @Override public void onSuccess(RunId result, int statusCode, Map<String, java.util.List<String>> responseHeaders) { }
-                @Override public void onUploadProgress(long bytesWritten, long contentLength, boolean done) { }
-                @Override public void onDownloadProgress(long bytesRead, long contentLength, boolean done) { }
-            });
+            run.setParameters(parameters);
+            calculationApi.postRunCalculationAction(calc_id, run);
         }
         catch (Exception ex) {
             throw new RuntimeException("failed call to api", ex);
         }
+    }
+
+
+    public void startRun(String calc_id, String algorithm, List<SerializedParameter> parameters){
+        startRun(calc_id, algorithm, toJsonString(parameters));
+    }
+
+    public void startRun(String calc_id, String algorithm, Map<String, Object> parameters){
+        startRun(calc_id, algorithm, toJsonString(parameters));
     }
 
     private HashMap<String, Object> getJsonParametersAsMap(String calc_id, Function<Status, String> mapping){
@@ -140,6 +156,12 @@ public class CalculationService {
             throw new RuntimeException("failed call to api", ex);
         }
     }
+
+    private String toJsonString(Map<String, Object> map){
+        return Json.stringify(map);
+    }
+
+
     public List<SerializedParameter> getCalculationParameters(String calc_id){
         try {
             var parameterMap = getJsonParametersAsMap(calc_id, status -> status.getCalculationParameters().getParameters());
@@ -151,16 +173,24 @@ public class CalculationService {
             throw new RuntimeException("failed call to api", ex);
         }
     }
-
-    public void setCalculationParameters(String calc_id,List<SerializedParameter> parameters){
+    private void updateCalculationParameters(String calc_id, String jsonParams){
         try {
             var calc = new Calculation();
-            calc.setParameters(toJsonString(parameters));
+            calc.setParameters(jsonParams);
             calculationApi.postCalculationResource(calc_id, calc);
         }
         catch (Exception ex) {
             throw new RuntimeException("failed call to api", ex);
         }
+
+    }
+    public void setCalculationParameters(String calc_id, List<SerializedParameter> parameters){
+        updateCalculationParameters(calc_id, toJsonString(parameters));
+    }
+
+
+    public void setCalculationParameters(String calc_id, Map<String, Object> parameters){
+        updateCalculationParameters(calc_id, toJsonString(parameters));
     }
 
     public List<SerializedParameter> getRunParameters(String calc_id){
@@ -208,9 +238,17 @@ public class CalculationService {
     public void uploadInputFile(String calculationId, FileUpload fileUpload) {
         try {
             var file = File.createTempFile("___","___");
-            file = new File(file.getParentFile(), fileUpload.getClientFileName());
+            file = new java.io.File(file.getParentFile(), fileUpload.getClientFileName());
             System.out.println(fileUpload.getClientFileName());
             fileUpload.writeTo(file);
+            uploadInputFile(calculationId, file);
+        }
+            catch (Exception ex) {
+            throw new RuntimeException("failed call to api", ex);
+        }
+    }
+    public void uploadInputFile(String calculationId, java.io.File file) {
+        try {
             calculationApi.postInputFileListResource(calculationId, file);
         }
         catch (Exception ex) {
