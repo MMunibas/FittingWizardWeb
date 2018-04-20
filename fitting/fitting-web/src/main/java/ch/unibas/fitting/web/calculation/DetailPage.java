@@ -22,6 +22,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import scala.collection.concurrent.Debug;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -237,6 +238,7 @@ public class DetailPage extends HeaderPage {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
                         calculationService.deleteInputFiles(calculationId, link);
+                        inputFiles.setObject(calculationService.listInputFiles(calculationId).toJavaList());
                         target.add(inputFileContainer);
                     }
                 });
@@ -253,6 +255,7 @@ public class DetailPage extends HeaderPage {
                 super.onSubmit(target, form);
                 try {
                     calculationService.uploadInputFile(calculationId, fu.getFileUpload());
+                    inputFiles.setObject(calculationService.listInputFiles(calculationId).toJavaList());
                     target.add(inputFileContainer);
                 } catch (Exception e) {
                     throw new RuntimeException("failed to upload file");
@@ -278,6 +281,7 @@ public class DetailPage extends HeaderPage {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
                         calculationService.deleteOutputFiles(calculationId, link);
+                        outputFiles.setObject(calculationService.listOutputFiles(calculationId).toJavaList());
                         target.add(outputFileContainer);
                     }
                 });
@@ -288,41 +292,46 @@ public class DetailPage extends HeaderPage {
 
     @Override
     protected void onInitialize() {
-        super.onInitialize();
-        supportedParameterTypesModel.setObject(supportedParameterTypes);
-        selectedRunParameterType.setObject(supportedParameterTypes.get(2));
-        selectedCalcParameterType.setObject(supportedParameterTypes.get(2));
-        calc_id.setObject(calculationId);
-        var algos = calculationService.listAlgorithms();
-        var algo = calculationService.getAlgorithm(calculationId);
-        if(algo == null) algo = algos.get(0);
-        selectedAlgoModel.setObject(algo);
-        algoListModel.setObject(algos.toJavaList());
-        var status = calculationService.getCalculationStatus(calculationId);
-        var actionList = new ArrayList<Tuple2<String, Action>>();
-        if (status.getStatus().equals("Running")){
-            actionList.add(new Tuple2<>("Cancel", ()->
-            {
-                calculationService.cancelCalculation(calculationId);
-                setResponsePage(OverviewPage.class);
-            }));
-        } else {
-            actionList.add(new Tuple2<>("Delete", ()->
-            {
-                calculationService.deleteCalculation(calculationId);
-                setResponsePage(OverviewPage.class);
-            }));
+        try {
+            super.onInitialize();
+            supportedParameterTypesModel.setObject(supportedParameterTypes);
+            selectedRunParameterType.setObject(supportedParameterTypes.get(2));
+            selectedCalcParameterType.setObject(supportedParameterTypes.get(2));
+            calc_id.setObject(calculationId);
+            var algos = calculationService.listAlgorithms();
+            var algo = calculationService.getAlgorithm(calculationId);
+            if(algo == null) algo = algos.get(0);
+            selectedAlgoModel.setObject(algo);
+            algoListModel.setObject(algos.toJavaList());
+            var status = calculationService.getCalculationStatus(calculationId);
+            var actionList = new ArrayList<Tuple2<String, Action>>();
+            if (status.getStatus().equals("Running")){
+                actionList.add(new Tuple2<>("Cancel", ()->
+                {
+                    calculationService.cancelCalculation(calculationId);
+                    setResponsePage(OverviewPage.class);
+                }));
+            } else {
+                actionList.add(new Tuple2<>("Delete", ()->
+                {
+                    calculationService.deleteCalculation(calculationId);
+                    setResponsePage(OverviewPage.class);
+                }));
+            }
+            newRunParameter.setObject(new SerializedParameter());
+            newCalcParameter.setObject(new SerializedParameter());
+
+            actions.setObject(actionList);
+            calculationStatus.setObject(status);
+
+            calculationParameters.setObject(calculationService.getCalculationParameters(calculationId).toJavaList());
+            runParameters.setObject(calculationService.getRunParameters(calculationId).toJavaList());
+
+            inputFiles.setObject(calculationService.listInputFiles(calculationId).toJavaList());
+            outputFiles.setObject(calculationService.listOutputFiles(calculationId).toJavaList());
         }
-        newRunParameter.setObject(new SerializedParameter());
-        newCalcParameter.setObject(new SerializedParameter());
-
-        actions.setObject(actionList);
-        calculationStatus.setObject(status);
-
-        calculationParameters.setObject(calculationService.getCalculationParameters(calculationId).toJavaList());
-        runParameters.setObject(calculationService.getRunParameters(calculationId).toJavaList());
-
-        inputFiles.setObject(calculationService.listInputFiles(calculationId).toJavaList());
-        outputFiles.setObject(calculationService.listOutputFiles(calculationId).toJavaList());
+        catch (Exception ex){
+            Debug.log("api communication failed");
+        }
     }
 }

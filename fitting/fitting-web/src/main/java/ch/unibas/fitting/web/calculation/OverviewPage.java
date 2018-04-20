@@ -67,8 +67,9 @@ public class OverviewPage extends HeaderPage {
                 setResponsePage(DetailPage.class, pp);
             }
         });
-
-        add(new ListView<>("calculationList", calculationsModel) {
+        var calculationListContainer = new WebMarkupContainer("calculation_list_container");
+        calculationListContainer.setOutputMarkupId(true);
+        calculationListContainer.add(new ListView<>("calculationList", calculationsModel) {
             @Override
             protected void populateItem(ListItem item) {
                 var calc = (CalculationStatus)item.getModelObject();
@@ -83,17 +84,25 @@ public class OverviewPage extends HeaderPage {
                         setResponsePage(DetailPage.class, pp);
                     }
                 });
+                item.add(new AjaxLink("calcDelete") {
+                    @Override
+                    public void onClick(AjaxRequestTarget target) {
+                        if (!calc.getStatus().getStatus().equals("Running")) {
+                            var l = calculationsModel.getObject();
+                            l.remove(calc);
+                            calculationService.deleteCalculation(calc.getId());
+                            calculationsModel.setObject(l);
+                            target.add(calculationListContainer);
+                        }
+                    }
+                });
             }
         });
-        // executions
-        add(new AjaxLink("createNewExecution") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                calculationManagement.Start(createDummyAlgorithmStartDefinition());
-            }
-        });
+        add(calculationListContainer);
 
+        // executions
         var execContainer = new WebMarkupContainer("execution_container");
+        execContainer.setOutputMarkupId(true);
         execContainer.add(new ListView<>("executionList", executionModel) {
             @Override
             protected void populateItem(ListItem item) {
@@ -112,6 +121,14 @@ public class OverviewPage extends HeaderPage {
                 });
             }
         });
+        add(new AjaxLink("createNewExecution") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                calculationManagement.Start(createDummyAlgorithmStartDefinition());
+                target.add(execContainer);
+            }
+        });
+
         add(execContainer);
     }
 
@@ -128,7 +145,7 @@ public class OverviewPage extends HeaderPage {
             executionModel.setObject(calculationManagement.ListExecutions().responses);
         }
         catch (Exception ex){
-            Debug.log("Failed to load api");
+            Debug.log("api communication failed");
         }
     }
 
