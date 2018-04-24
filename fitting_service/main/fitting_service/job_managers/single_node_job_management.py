@@ -41,7 +41,7 @@ class SingleNodeJobManagement(IJobManagement):
             return JobStatus.WAITING
         return JobStatus.NOT_FOUND
 
-    def list_running_jobs(self):
+    def list_running_job_ids(self):
         return self.running_jobs + [job.job_id for job in self.queue.list()]
 
 

@@ -93,12 +93,6 @@ class Storage(metaclass=Singleton):
     def list_all_calculations(self):
         return self.root.list_subdirs()
 
-    def get_calculation_by_job(self, job_id):
-        for calc in self.list_all_calculations():
-            for job in self.get_jobs_file(calc).list():
-                if job == job_id:
-                    return calc
-
     def get_status_file(self, calculation_id):
         return CalculationStatus(self.get_calculation_directory(calculation_id))
 
@@ -210,26 +204,27 @@ class CalculationStatus(object):
     RUN_PARAMETERS = "run_parameters"
 
     def __init__(self, calculation_directory):
+        self._status_file_lock = threading.Lock()
         self.calculation_directory = calculation_directory
         if not calculation_directory.contains(STATUS_FILE_NAME):
             self._save(self._load())
 
-    @synchronize_with(status_lock)
     def _load(self):
-        if self.calculation_directory.contains(STATUS_FILE_NAME):
-            with self.calculation_directory.open_file(STATUS_FILE_NAME, "r") as status_file:
-                return json.load(status_file)
-        else:
-            return {
-                self.LAST_RUN: None,
-                self.STATUS: Status.CREATED,
-                self.MESSAGE: ""
-            }
+        with self._status_file_lock:
+            if self.calculation_directory.contains(STATUS_FILE_NAME):
+                with self.calculation_directory.open_file(STATUS_FILE_NAME, "r") as status_file:
+                    return json.load(status_file)
+            else:
+                return {
+                    self.LAST_RUN: None,
+                    self.STATUS: Status.CREATED,
+                    self.MESSAGE: ""
+                }
 
-    @synchronize_with(status_lock)
     def _save(self, status):
-        with self.calculation_directory.open_file(STATUS_FILE_NAME, "w") as status_file:
-            json.dump(status, status_file)
+        with self._status_file_lock:
+            with self.calculation_directory.open_file(STATUS_FILE_NAME, "w") as status_file:
+                json.dump(status, status_file)
 
     def __str__(self):
         return str(self._load())
@@ -246,7 +241,7 @@ class CalculationStatus(object):
     def last_run(self):
         return self._load()[self.LAST_RUN]
 
-    def update_status(self, status, message):
+    def update_status(self, status, message: str):
         def update(d):
             d[self.STATUS] = status
             d[self.MESSAGE] = message
@@ -310,7 +305,8 @@ class JobFile:
 
     def remove(self, job_id):
         def remove_job(jobs):
-            jobs.remove(job_id)
+            if job_id in jobs:
+                jobs.remove(job_id)
         self._update_file(remove_job)
 
     def __init__(self, calculation_directory):

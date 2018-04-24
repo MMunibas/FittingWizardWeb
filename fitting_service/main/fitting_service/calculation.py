@@ -202,10 +202,8 @@ class CalculationRun(Thread):
             print("exception occured {}".format(e))
             self.context.set_failed(e)
         finally:
-            for job in self.context.jobs.list():
-                if isinstance(job, list):
-                    job = job[0]
-                JobsService().cancel_job(job)
+            for job_id in self.context.job_ids:
+                JobsService().cancel_job(job_id)
 
     def cancel(self):
         self.context.request_cancel()
@@ -368,12 +366,8 @@ class CalculationContext(IContext):
     def set_finished(self, message=""):
         self.status.update_status(Status.FINISHED, message)
 
-    def set_failed(self, exception):
-        self.status.update_status(Status.FAILED, exception)
-
-    def handle_exception(self, message, exception):
-        self.log.error(message)
-        self.log.error(exception)
+    def set_failed(self, exception: Exception):
+        self.status.update_status(Status.FAILED, str(exception))
 
     def terminate_if_canceled(self):
         if Storage().get_cancel_file(self._calculation_id).is_set:
@@ -392,19 +386,28 @@ class CalculationContext(IContext):
     def job_status(self, job_id):
         return JobsService().job_status(job_id)
 
-    def wait_for_finished_jobs(self, *jobs):
-        JobsService().wait_for_finished(*jobs)
+    def wait_for_finished_jobs(self, *job_ids):
+        JobsService().wait_for_finished(self._calculation_id, list(job_ids))
 
     def wait_for_all_jobs(self):
-        for job in self.jobs.list():
-            JobsService().wait_for_finished(job)
+        JobsService().wait_for_finished(self._calculation_id, self.job_ids)
+
     def create_charmm_submission_script(self, filename, charmm_input_file_name, charmm_output_file_name, workdir_name, number_of_cores=None):
-        
-        number_of_cores = number_of_cores  if number_of_cores is not None else number_of_cpu_cores
-	
+        number_of_cores = number_of_cores if number_of_cores is not None else number_of_cpu_cores
         with self.input_dir.subdir(workdir_name).open_file(filename, "w") as script_file:
-            script_file.write(generate_charmm_setup_script(charmm_input_file_name, charmm_output_file_name, self.output_dir.subdir(workdir_name).full_path, charmm_executable, number_of_cores, self._calculation_id, ld_path, env_path, mpi_executable, mpi_flags, scratch_dir_name, self.input_dir.name))
-        pass
+            script_file.write(generate_charmm_setup_script(charmm_input_file_name,
+                                                           charmm_output_file_name,
+                                                           self.output_dir.subdir(workdir_name).full_path,
+                                                           charmm_executable,
+                                                           number_of_cores,
+                                                           self._calculation_id,
+                                                           ld_path,
+                                                           env_path,
+                                                           mpi_executable,
+                                                           mpi_flags,
+                                                           scratch_dir_name,
+                                                           self.input_dir.name))
+
     @property
-    def jobs(self):
-        return Storage().get_jobs_file(self._calculation_id)
+    def job_ids(self):
+        return Storage().get_jobs_file(self._calculation_id).list()

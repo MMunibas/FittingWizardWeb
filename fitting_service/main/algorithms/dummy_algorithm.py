@@ -87,7 +87,7 @@ def dummy_algorithm(context):
         context.update_status("Running", "Step 2 | Part {i} of {n}".format(i=i, n=jobs_to_schedule))
         job_id = context.schedule_job("sleep 1")
         job_ids.append(job_id)
-    context.wait_for_finished_jobs(*job_ids)
+    context.wait_for_all_jobs(*job_ids)
     context.log.info("==============================")
     # or
     # schedule as many jobs an needed, wait for all jobs

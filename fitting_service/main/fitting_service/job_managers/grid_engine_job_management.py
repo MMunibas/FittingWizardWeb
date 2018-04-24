@@ -20,7 +20,7 @@ class GridEngineJobManagement(IJobManagement):
                 queue.append(job)
         return queue, raw_xml
 
-    def list_running_jobs(self):
+    def list_running_job_ids(self):
         q, r = self._parse()
         try:
             print("queued jobs: ", q)
@@ -36,6 +36,7 @@ class GridEngineJobManagement(IJobManagement):
                 debug_dump_file.write(type(xmltodict.OrderedDict))
                 debug_dump_file.write("\n---------------------------------------------------\n")
                 debug_dump_file.write(e)
+            raise e
 
     def schedule_new_job(self, job_name, command):
         regex = re.compile('(?:.*\n)*Your job (\d*) \("(.*)"\).*')

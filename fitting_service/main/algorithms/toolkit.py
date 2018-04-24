@@ -59,12 +59,6 @@ class IContext(metaclass=ABCMeta):
         """ wait for all running jobs to finish """
         pass
 
-    @property
-    @abstractmethod
-    def jobs(self):
-        """ list all running job ids """
-        pass
-
 
 class IDirectory(metaclass=ABCMeta):
     @property

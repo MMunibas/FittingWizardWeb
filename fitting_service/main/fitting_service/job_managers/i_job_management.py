@@ -3,7 +3,7 @@ from abc import ABCMeta, abstractmethod
 
 class IJobManagement(metaclass=ABCMeta):
     @abstractmethod
-    def list_running_jobs(self):
+    def list_running_job_ids(self):
         pass
 
     @abstractmethod
