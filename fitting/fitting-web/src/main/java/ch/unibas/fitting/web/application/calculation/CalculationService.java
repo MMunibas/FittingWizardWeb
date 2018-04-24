@@ -22,19 +22,7 @@ public class CalculationService {
     DefaultApi defaultApi;
     CalculationApi calculationApi;
 
-    private static CalculationService instance = null;
-
-    @Provides
-    public static synchronized CalculationService getInstance(){
-        if(instance == null){
-            instance = new CalculationService();
-        }
-        return instance;
-    }
-
-
     public CalculationService() {
-        if(instance != null) return;
         ApiClient client = new ApiClient();
         client.setBasePath("http://localhost:5000");
         defaultApi = new DefaultApi(client);

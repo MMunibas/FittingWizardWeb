@@ -4,6 +4,7 @@ import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.web.application.Version;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Stage;
 import org.apache.log4j.*;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.http.WicketServlet;

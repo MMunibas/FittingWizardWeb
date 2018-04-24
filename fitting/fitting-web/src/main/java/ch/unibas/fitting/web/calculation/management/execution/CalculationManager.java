@@ -1,21 +1,28 @@
 
-package ch.unibas.fitting.web.calculation.management;
+package ch.unibas.fitting.web.calculation.management.execution;
 
 import akka.actor.AbstractActor;
 import akka.actor.Props;
 import akka.dispatch.Futures;
 import akka.pattern.Patterns;
-import ch.unibas.fitting.web.calculation.management.messages.*;
+import ch.unibas.fitting.web.application.calculation.CalculationService;
+import ch.unibas.fitting.web.calculation.management.execution.messages.*;
+import ch.unibas.fitting.web.calculation.management.task.Task;
 
 
 public class CalculationManager extends AbstractActor {
 
     public static final long AsyncOpTimeoutInMs = 1000 * 60 * 5;
+    private final CalculationService calculationService;
 
-    public static Props props(){
+    public CalculationManager(CalculationService calculationService) {
+        this.calculationService = calculationService;
+    }
+
+    public static Props props(CalculationService calculationService){
 
         return Props.create(CalculationManager.class, ()->{
-            var mgr = new CalculationManager();
+            var mgr = new CalculationManager(calculationService);
             return mgr;
         });
     }
@@ -31,9 +38,7 @@ public class CalculationManager extends AbstractActor {
     }
 
     private void handleStart(Start msg) {
-        for (var startDef : msg.starts){
-            context().actorOf(CalculationExecution.props(startDef));
-        }
+        context().actorOf(Task.props(msg, calculationService, msg.title));
     }
 
 

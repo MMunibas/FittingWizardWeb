@@ -1,4 +1,4 @@
-package ch.unibas.fitting.web.calculation.management.messages;
+package ch.unibas.fitting.web.calculation.management.execution.messages;
 
 import io.swagger.client.model.Status;
 

@@ -1,1 +1,0 @@
-{"last_run": "2018-04-06_16-55-44-530932_vCbbC", "status": "Finished", "message": "", "calculation_parameters": {"parameters": "{\"calc_param1\": \"value1\", \"calc_param2\": \"value2\"}"}, "run_parameters": {"algorithm": "dummy_algorithm", "parameters": "{\"x\": 1234, \"y\": 5678}"}, "input_files": ["somefile.json"]}

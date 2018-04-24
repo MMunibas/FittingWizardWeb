@@ -34,7 +34,7 @@ def run_existing_dummy_algorithm():
     test_setup = CalculationTest()
     test_setup.logger.info("run_existing_dummy_algorithm")
 
-    test_setup.use_calculation_data("2018-04-06_16-34-23-682637_fzeys")
+    test_setup.use_calculation_data("2018-04-23_16-51-04-163794_RfBCT")
     test_setup.use_last_run_params()
     
     test_setup.set_run_params({"run_param1": "value42"})

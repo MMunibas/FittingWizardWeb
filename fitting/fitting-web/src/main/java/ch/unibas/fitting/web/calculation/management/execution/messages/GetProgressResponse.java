@@ -1,4 +1,4 @@
-package ch.unibas.fitting.web.calculation.management.messages;
+package ch.unibas.fitting.web.calculation.management.execution.messages;
 
 public class GetProgressResponse {
     public GetProgressResponse(Iterable<Object> response) {

@@ -2,7 +2,7 @@ import threading
 import time
 from toolkit import RepeatingTimer, Singleton, synchronized
 from .file_acces import IdGenerator, Storage, JobStatus
-from .settings import JOB_MANAGEMENT_TYPE
+from .settings import JOB_MANAGEMENT_TYPE, QSTAT_PATH, QSUB_PATH, QDEL_PATH
 from .job_managers import SingleNodeJobManagement, GridEngineJobManagement
 
 
@@ -12,14 +12,14 @@ class JobsService(metaclass=Singleton):
             self.job_management_impl = SingleNodeJobManagement()
 
         elif JOB_MANAGEMENT_TYPE == "GridEngineJobManagement":
-            self.job_management_impl = GridEngineJobManagement()
+            self.job_management_impl = GridEngineJobManagement(QSTAT_PATH, QSUB_PATH, QDEL_PATH)
 
     def start_status_updater(self):
         JobStatusUpdater(self.job_management_impl)
 
     def start_cluster_simulation(self):
         if JOB_MANAGEMENT_TYPE == "SingleNodeJobManagement":
-            self.simulated_cluster = self.job_management_impl.start_cluster_simulator()
+            self.simulated_cluster = self.job_management_impl.start_cluster_simulator(7)
 
     def stop_cluster_simulation(self):
         if JOB_MANAGEMENT_TYPE == "SingleNodeJobManagement":

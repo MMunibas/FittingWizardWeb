@@ -11,20 +11,31 @@ class GridEngineJobManagement(IJobManagement):
         self.qdel_path = qdel_path
 
     def _parse(self):
-        xml = sp.check_output([self.qstat_path, "-xml"])
-        xml = xmltodict.parse(xml)
+        raw_xml = sp.check_output([self.qstat_path, "-xml"])
+        xml = xmltodict.parse(raw_xml)
         queue = []
         if xml['job_info']['queue_info'] is not None:
-            for job in xml['job_info']['queue_info']['job_list']:
+            d = [dict(j) for j in xml['job_info']['queue_info']['job_list']]
+            for job in d:
                 queue.append(job)
-        return queue
+        return queue, raw_xml
 
     def list_running_jobs(self):
-        q = self._parse()
-        print("queued jobs: ", q)
-        j = [job["JB_job_number"] for job in q]
-        print("list of job ids: ", j)
-        return j
+        q, r = self._parse()
+        try:
+            print("queued jobs: ", q)
+            j = [job["JB_job_number"] for job in q]
+            print("list of job ids: ", j)
+            return j
+        except Exception as e:
+            with open("qstat-xml.txt", "w") as debug_dump_file:
+                debug_dump_file.write(r)
+                debug_dump_file.write("\n---------------------------------------------------\n")
+                debug_dump_file.write(q)
+                debug_dump_file.write("\n---------------------------------------------------\n")
+                debug_dump_file.write(type(xmltodict.OrderedDict))
+                debug_dump_file.write("\n---------------------------------------------------\n")
+                debug_dump_file.write(e)
 
     def schedule_new_job(self, job_name, command):
         regex = re.compile('(?:.*\n)*Your job (\d*) \("(.*)"\).*')
@@ -33,11 +44,17 @@ class GridEngineJobManagement(IJobManagement):
         if match:
             job_id = match.group(1)
             job_name = match.group(2)
-            return job_id # , job_name
+            print("Scheduled job with name '{}' got id '{}'".format(job_name, job_id))
+            return job_id
         return None
 
     def job_status(self, job_id):
-        return [job["@state"] for job in self._parse() if job["JB_job_number"] == job_id][0]
+        parsed = self._parse()[0]
+        filtered = [job for job in parsed if job["JB_job_number"] == job_id]
+        if len(filtered)>0:
+            matches = [job["@state"] for job in filtered]
+            return matches[0]
+        return None
 
     def cancel_job(self, job_id):
         sp.check_call([self.qdel_path, job_id])

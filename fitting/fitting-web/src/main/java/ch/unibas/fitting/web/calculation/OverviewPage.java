@@ -1,14 +1,13 @@
 package ch.unibas.fitting.web.calculation;
 
-import akka.actor.ActorRef;
 import ch.unibas.fitting.web.application.calculation.CalculationService;
 import ch.unibas.fitting.web.calculation.management.CalculationManagementClient;
-import ch.unibas.fitting.web.calculation.management.messages.ExecutionProgress;
-import ch.unibas.fitting.web.calculation.management.messages.ListExecutionsResponse;
-import ch.unibas.fitting.web.calculation.management.messages.StartDefinition;
+import ch.unibas.fitting.web.calculation.management.execution.messages.ExecutionProgress;
+import ch.unibas.fitting.web.calculation.management.execution.messages.StartDefinition;
 import ch.unibas.fitting.web.web.HeaderPage;
 import io.swagger.client.model.CalculationStatus;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -17,12 +16,13 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.time.Duration;
 import scala.collection.concurrent.Debug;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 public class OverviewPage extends HeaderPage {
 
@@ -45,12 +45,24 @@ public class OverviewPage extends HeaderPage {
         calculationsModel = new ListModel<>();
         executionModel = new ListModel<>();
 
+        var overview_page_content = new WebMarkupContainer("overview_page_content");
+        overview_page_content.setOutputMarkupId(true);
+        overview_page_content.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(1)){
+            @Override
+            protected void onPostProcessTarget(final AjaxRequestTarget target)
+            {
+                updateModels();
+                target.add(overview_page_content);
+            }
+        });
+
+        add(overview_page_content);
         //service status
-        add(new Label("version", serviceVersion));
-        add(new Label("service_status", serviceStatus));
+        overview_page_content.add(new Label("version", serviceVersion));
+        overview_page_content.add(new Label("service_status", serviceStatus));
 
         //algo list
-        add(new ListView<>("algorithmList", algorithmsModel) {
+        overview_page_content.add(new ListView<>("algorithmList", algorithmsModel) {
             @Override
             protected void populateItem(ListItem item) {
                 item.add(new Label("algorithmName", (String)item.getModelObject()));
@@ -58,7 +70,7 @@ public class OverviewPage extends HeaderPage {
         });
 
         //calculations
-        add(new AjaxLink("createNewCalculation") {
+        overview_page_content.add(new AjaxLink("createNewCalculation") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 var calc_id = calculationService.createCalculation();
@@ -98,7 +110,7 @@ public class OverviewPage extends HeaderPage {
                 });
             }
         });
-        add(calculationListContainer);
+        overview_page_content.add(calculationListContainer);
 
         // executions
         var execContainer = new WebMarkupContainer("execution_container");
@@ -113,48 +125,58 @@ public class OverviewPage extends HeaderPage {
                 item.add(new AjaxLink("execCancel") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        var l = executionModel.getObject();
-                        l.remove(calc);
-                        executionModel.setObject(l);
+                        var executions = executionModel.getObject();
+                        executions.remove(calc);
+                        calculationManagement.Cancel(calc.id);
                         target.add(execContainer);
                     }
                 });
             }
         });
-        add(new AjaxLink("createNewExecution") {
+        overview_page_content.add(new AjaxLink("createNewExecution") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                calculationManagement.Start(createDummyAlgorithmStartDefinition());
+                calculationManagement.Start(
+                        "testTask",
+                        createDummyAlgorithmStartDefinition(40, "calc1"),
+                        createDummyAlgorithmStartDefinition(41, "calc2"),
+                        createDummyAlgorithmStartDefinition(42, "calc3"),
+                        createDummyAlgorithmStartDefinition(43, "calc4"),
+                        createDummyAlgorithmStartDefinition(44, "calc5")
+                );
                 target.add(execContainer);
             }
         });
 
-        add(execContainer);
+        overview_page_content.add(execContainer);
     }
 
     @Override
     protected void onInitialize() {
+        super.onInitialize();
+        updateModels();
+    }
 
+    private void updateModels() {
         try {
-            super.onInitialize();
             var info = calculationService.getServiceInfo();
             serviceVersion.setObject(info.getVersion().toString());
             serviceStatus.setObject(info.getServerStatus());
             algorithmsModel.setObject(calculationService.listAlgorithms().toJavaList());
             calculationsModel.setObject(calculationService.listCalculations().toJavaList());
             executionModel.setObject(calculationManagement.ListExecutions().responses);
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             Debug.log("api communication failed");
         }
     }
 
-    private StartDefinition createDummyAlgorithmStartDefinition(){
+    private StartDefinition createDummyAlgorithmStartDefinition(double param, String title){
         var algorithmName = "dummy_algorithm";
         Map<String, Object> params = new HashMap<>();
+        params.put("someparam", param);
         var fileArray = new File[] {
                 new File("C:\\Users\\eknecht\\Desktop\\somefile.json")
         };
-        return new StartDefinition(algorithmName, params, fileArray);
+        return new StartDefinition(algorithmName, params, title, fileArray);
     }
 }
