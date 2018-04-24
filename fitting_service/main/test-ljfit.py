@@ -5,7 +5,7 @@ from fitting_service.calculation_test import CalculationTest
 
 def run_new_dummy_algorithm():
 
-    job_path = "/home/wfit/FittingWizardWeb/fitting_service/data/mike-test/"
+    job_path = "/home/wfit/FittingWizardWeb/fitting_service/data/mike-test-lj/"
 
     test_setup = CalculationTest()
     test_setup.set_algorithm("ljfit")
