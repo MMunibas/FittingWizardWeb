@@ -13,6 +13,7 @@ class GridEngineJobManagement(IJobManagement):
     def _parse(self):
         raw_xml = sp.check_output([self.qstat_path, "-xml"])
         xml = xmltodict.parse(raw_xml)
+        xml = xmltodict.parse(raw_xml, force_list={'job_list': 'job_list'})
         queue = []
         if 'queue_info' in xml['job_info'] and xml['job_info']['queue_info'] is not None:
             d = [j for j in xml['job_info']['queue_info']['job_list']]
@@ -27,6 +28,7 @@ class GridEngineJobManagement(IJobManagement):
     def list_running_job_ids(self):
         q, r = self._parse()
         try:
+            print("raw xml: ", r)
             print("queued jobs: ", q)
             j = [job["JB_job_number"] for job in q if not isinstance(job, str)]
             print("list of job ids: ", j)
@@ -56,7 +58,7 @@ class GridEngineJobManagement(IJobManagement):
     def job_status(self, job_id):
         parsed = self._parse()[0]
         filtered = [job for job in parsed if job["JB_job_number"] == job_id]
-        if len(filtered)>0:
+        if len(filtered) > 0:
             matches = [job["@state"] for job in filtered]
             return matches[0]
         return None
