@@ -15,11 +15,11 @@ class GridEngineJobManagement(IJobManagement):
         xml = xmltodict.parse(raw_xml)
         queue = []
         if xml['job_info']['queue_info'] is not None:
-            d = [dict(j) for j in xml['job_info']['queue_info']['job_list']]
+            d = [j for j in xml['job_info']['queue_info']['job_list']]
             for job in d:
                 queue.append(job)
         if xml['job_info']['job_info'] is not None:
-            d = [dict(j) for j in xml['job_info']['job_info']['job_list']]
+            d = [j for j in xml['job_info']['job_info']['job_list']]
             for job in d:
                 queue.append(job)
         return queue, raw_xml
