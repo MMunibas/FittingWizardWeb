@@ -14,11 +14,11 @@ class GridEngineJobManagement(IJobManagement):
         raw_xml = sp.check_output([self.qstat_path, "-xml"])
         xml = xmltodict.parse(raw_xml)
         queue = []
-        if xml['job_info']['queue_info'] is not None:
+        if 'queue_info' in xml['job_info'] and xml['job_info']['queue_info'] is not None:
             d = [j for j in xml['job_info']['queue_info']['job_list']]
             for job in d:
                 queue.append(job)
-        if xml['job_info']['job_info'] is not None:
+        if 'job_info' in xml['job_info'] and xml['job_info']['job_info'] is not None:
             d = [j for j in xml['job_info']['job_info']['job_list']]
             for job in d:
                 queue.append(job)
@@ -28,12 +28,12 @@ class GridEngineJobManagement(IJobManagement):
         q, r = self._parse()
         try:
             print("queued jobs: ", q)
-            j = [job["JB_job_number"] for job in q]
+            j = [job["JB_job_number"] for job in q if not isinstance(job, str)]
             print("list of job ids: ", j)
             return j
         except Exception as e:
             with open("qstat-xml.txt", "w") as debug_dump_file:
-                debug_dump_file.write(r)
+                debug_dump_file.write(r.decode("utf-8"))
                 debug_dump_file.write("\n---------------------------------------------------\n")
                 debug_dump_file.write(q)
                 debug_dump_file.write("\n---------------------------------------------------\n")

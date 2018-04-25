@@ -20,8 +20,10 @@ class SingleNodeJobManagement(IJobManagement):
         return ClusterSimulation(num_workers)
 
     def cancel_job(self, job_id):
-        calc = Storage().get_calculation_by_job(job_id)
-        Storage().get_cancel_file(calc).is_set = True
+        calcs = Storage().list_all_calculations()
+        for calc in calcs:
+            if job_id in Storage().get_jobs_file(calc).list():
+                Storage().get_cancel_file(calc).is_set = True
 
     def schedule_new_job(self, job_name, command):
         job = SimulatedJob(job_name, command)
