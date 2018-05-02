@@ -1,6 +1,10 @@
 <wicket:extend xmlns:wicket="http://www.w3.org/1999/xhtml">
     <div wicket:id="overview_page_content">
     <h1>Calculation Service</h1>
+    <div wicket:id="errormessage_container">
+        <div class="alert alert-danger" wicket:id="errormessage"></div>
+    </div>
+    <br />
     <h2>Service Info</h2>
     <span>Version:</span> <span wicket:id="version" style="padding: 0;">[user data]</span> <br />
     <span>Status:</span> <span wicket:id="service_status" style="padding: 0;">[user data]</span>
@@ -39,10 +43,16 @@
     </table>
     <br />
     <br />
-    <button wicket:id="createNewExecution" type="button" class="btn btn-default">
-        <span class="glyphicon glyphicon-plus" aria-hidden="true" style="color: green"></span>
-        <span> Create dummy algorithm execution</span>
-    </button>
+    <div>
+        <button wicket:id="createNewExecution" type="button" class="btn btn-default">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true" style="color: green"></span>
+            <span> Create dummy algorithm execution</span>
+        </button>
+        <button wicket:id="createNewDummyLjFit" type="button" class="btn btn-default">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true" style="color: green"></span>
+            <span> Create dummy lj fit execution</span>
+        </button>
+    </div>
     <br />
     <table wicket:id="execution_container" style="border: 1px solid; " class="table table-striped">
         <tr>

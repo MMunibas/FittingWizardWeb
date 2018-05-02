@@ -1,9 +1,10 @@
 package ch.unibas.fitting.web.calculation;
 
 import ch.unibas.fitting.web.application.calculation.CalculationService;
+import ch.unibas.fitting.web.calculation.commands.StartDummyAlgoCommand;
+import ch.unibas.fitting.web.calculation.commands.StartDummyLjFitCommand;
 import ch.unibas.fitting.web.calculation.management.CalculationManagementClient;
 import ch.unibas.fitting.web.calculation.management.execution.messages.ExecutionProgress;
-import ch.unibas.fitting.web.calculation.management.execution.messages.StartDefinition;
 import ch.unibas.fitting.web.web.HeaderPage;
 import io.swagger.client.model.CalculationStatus;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -17,12 +18,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.time.Duration;
-import scala.collection.concurrent.Debug;
 
 import javax.inject.Inject;
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 public class OverviewPage extends HeaderPage {
 
@@ -32,19 +29,25 @@ public class OverviewPage extends HeaderPage {
     @Inject
     private CalculationManagementClient calculationManagement;
 
+    @Inject
+    private StartDummyAlgoCommand startDummyAlgoCommand;
+    @Inject
+    private StartDummyLjFitCommand startDummyLjFitCommand;
+
     private Model<String> serviceVersion;
     private Model<String> serviceStatus;
+    private Model<String> errorMessageModel;
     private ListModel<String> algorithmsModel;
     private ListModel<CalculationStatus> calculationsModel;
     private ListModel<ExecutionProgress> executionModel;
-
+    private WebMarkupContainer errorMessageContainer;
     public OverviewPage() {
         serviceVersion = new Model<>();
         serviceStatus = new Model<>();
         algorithmsModel = new ListModel<>();
         calculationsModel = new ListModel<>();
         executionModel = new ListModel<>();
-
+        errorMessageModel = new Model<>();
         var overview_page_content = new WebMarkupContainer("overview_page_content");
         overview_page_content.setOutputMarkupId(true);
         overview_page_content.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(1)){
@@ -57,6 +60,11 @@ public class OverviewPage extends HeaderPage {
         });
 
         add(overview_page_content);
+
+        errorMessageContainer = new WebMarkupContainer("errormessage_container");
+        errorMessageContainer.add(new Label("errormessage", errorMessageModel));
+        overview_page_content.add(errorMessageContainer);
+
         //service status
         overview_page_content.add(new Label("version", serviceVersion));
         overview_page_content.add(new Label("service_status", serviceStatus));
@@ -119,7 +127,7 @@ public class OverviewPage extends HeaderPage {
             @Override
             protected void populateItem(ListItem item) {
                 var calc = ((ExecutionProgress)item.getModelObject());
-                item.add(new Label("execId", calc.id));
+                item.add(new Label("execId", calc.executionId));
                 item.add(new Label("execStatus", calc.state.getStatus()));
                 item.add(new Label("execMessage", calc.state.getMessage()));
                 item.add(new AjaxLink("execCancel") {
@@ -127,7 +135,7 @@ public class OverviewPage extends HeaderPage {
                     public void onClick(AjaxRequestTarget target) {
                         var executions = executionModel.getObject();
                         executions.remove(calc);
-                        calculationManagement.Cancel(calc.id);
+                        calculationManagement.cancelExecution(calc.taskId, calc.executionId);
                         target.add(execContainer);
                     }
                 });
@@ -136,15 +144,13 @@ public class OverviewPage extends HeaderPage {
         overview_page_content.add(new AjaxLink("createNewExecution") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                calculationManagement.Start(
-                        "testTask",
-                        createDummyAlgorithmStartDefinition(40, "calc1"),
-                        createDummyAlgorithmStartDefinition(41, "calc2"),
-                        createDummyAlgorithmStartDefinition(42, "calc3"),
-                        createDummyAlgorithmStartDefinition(43, "calc4"),
-                        createDummyAlgorithmStartDefinition(44, "calc5")
-                );
-                target.add(execContainer);
+                startDummyAlgoCommand.execute("someone");
+            }
+        });
+        overview_page_content.add(new AjaxLink("createNewDummyLjFit") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                startDummyLjFitCommand.execute("someone");
             }
         });
 
@@ -164,19 +170,14 @@ public class OverviewPage extends HeaderPage {
             serviceStatus.setObject(info.getServerStatus());
             algorithmsModel.setObject(calculationService.listAlgorithms().toJavaList());
             calculationsModel.setObject(calculationService.listCalculations().toJavaList());
-            executionModel.setObject(calculationManagement.ListExecutions().responses);
+            executionModel.setObject(calculationManagement.listExecutions().responses);
         } catch (Exception ex) {
-            Debug.log("api communication failed");
+            errorMessageModel.setObject(ex.getMessage());
+            System.out.println("api communication failed");
         }
+
+        errorMessageContainer.setVisible(!(errorMessageModel.getObject()==null || errorMessageModel.getObject().equals("") || errorMessageModel.getObject().equals("")));
+
     }
 
-    private StartDefinition createDummyAlgorithmStartDefinition(double param, String title){
-        var algorithmName = "dummy_algorithm";
-        Map<String, Object> params = new HashMap<>();
-        params.put("someparam", param);
-        var fileArray = new File[] {
-                new File("C:\\Users\\eknecht\\Desktop\\somefile.json")
-        };
-        return new StartDefinition(algorithmName, params, title, fileArray);
-    }
 }
