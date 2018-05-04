@@ -71,7 +71,8 @@ def mtpfit_part1(ctx):
 
     # now run the prepared inputs from a single submission script
     ctx.log.info("submitting gaussian and gdma calculations:")
-    create_gau_submission_script("run-gau.sh", gau_inp_file, gau_out_name, "mtp", chk_name, fchk_name, gdma_inp_name,
+    create_gau_submission_script(ctx,
+                                 "run-gau.sh", gau_inp_file, gau_out_name, "mtp", chk_name, fchk_name, gdma_inp_name,
                                  gdma_out_name, grid_pars, cube_file, pun_name, vdw_file_name, xyz_file_name,
                                  sdf_file_name, ncore)
 
@@ -210,16 +211,29 @@ def write_vdw_file(ctx, gau_inp_file, vdw_file_name, sub, mtp_order):
     vdw_file.close()
 
 
-def create_gau_submission_script(self, filename, gau_input_file_name, gau_output_file_name, workdir_name, chk_file,
-                                 fchk_file, gdma_inp_name, gdma_out_name, grid_spec, cube_file, gdma_pun_file,
-                                 vdw_file_name, xyz_file_name, sdf_file_name, number_of_cores=None):
+def create_gau_submission_script(ctx,
+                                 filename,
+                                 gau_input_file_name,
+                                 gau_output_file_name,
+                                 workdir_name,
+                                 chk_file,
+                                 fchk_file,
+                                 gdma_inp_name,
+                                 gdma_out_name,
+                                 grid_spec,
+                                 cube_file,
+                                 gdma_pun_file,
+                                 vdw_file_name,
+                                 xyz_file_name,
+                                 sdf_file_name,
+                                 number_of_cores=None):
     number_of_cores = number_of_cores if number_of_cores is not None else number_of_cpu_cores
-    with self.input_dir.subdir(workdir_name).open_file(filename, "w") as script_file:
+    with ctx.input_dir.subdir(workdir_name).open_file(filename, "w") as script_file:
         script_file.write(generate_gau_setup_script(gau_input_file_name,
                                                     gau_output_file_name,
-                                                    self.output_dir.subdir(workdir_name).full_path,
+                                                    ctx.output_dir.subdir(workdir_name).full_path,
                                                     number_of_cores,
-                                                    self._calculation_id,
+                                                    ctx._calculation_id,
                                                     gau_login_script,
                                                     scratch_dir_name,
                                                     gau_formchk,

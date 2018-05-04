@@ -60,7 +60,7 @@ def ljfit(ctx):
     gas_inp_file = write_gas_inp(ctx, gas_inp_name, top, slu, lpun).name
 
     ctx.log.info("submitting gas-phase calculation:")
-    create_charmm_submission_script("run-gas.sh", gas_inp_file, gas_out_name, "dens")
+    create_charmm_submission_script(ctx, "run-gas.sh", gas_inp_file, gas_out_name, "dens")
     #####    gas_out_name="/home/wfit/FittingWizardWeb/fitting_service/data/mike-test-lj/gas.out" #######
     job_id = ctx.schedule_job(ctx.input_dir.full_path + "/dens/run-gas.sh")
 
@@ -73,7 +73,7 @@ def ljfit(ctx):
     dens_inp_file = write_dens_inp(ctx, dens_inp_name, top, pureliq, lpun, T).name
 
     ctx.log.info("submitting density calculation:")
-    create_charmm_submission_script("run.sh", dens_inp_file, dens_out_name, "dens")
+    create_charmm_submission_script(ctx, "run.sh", dens_inp_file, dens_out_name, "dens")
 
     #####    dens_out_name="/home/wfit/FittingWizardWeb/fitting_service/data/mike-test-lj/density.out" #######
     job_id = ctx.schedule_job(ctx.input_dir.full_path + "/dens/run.sh")
@@ -203,19 +203,23 @@ def parse_dens_out(ctx, slu, top, results, T, gas_out_name, dens_out_name):
     results["delta_H_vap"] = delta_H_vap
 
 
-def create_charmm_submission_script(self, filename, charmm_input_file_name, charmm_output_file_name, workdir_name,
+def create_charmm_submission_script(ctx,
+                                    filename,
+                                    charmm_input_file_name,
+                                    charmm_output_file_name,
+                                    workdir_name,
                                     number_of_cores=None):
     number_of_cores = number_of_cores if number_of_cores is not None else number_of_cpu_cores
-    with self.input_dir.subdir(workdir_name).open_file(filename, "w") as script_file:
+    with ctx.input_dir.subdir(workdir_name).open_file(filename, "w") as script_file:
         script_file.write(generate_charmm_setup_script(charmm_input_file_name,
                                                        charmm_output_file_name,
-                                                       self.output_dir.subdir(workdir_name).full_path,
+                                                       ctx.output_dir.subdir(workdir_name).full_path,
                                                        charmm_executable,
                                                        number_of_cores,
-                                                       self._calculation_id,
+                                                       ctx._calculation_id,
                                                        ld_path,
                                                        env_path,
                                                        mpi_executable,
                                                        mpi_flags,
                                                        scratch_dir_name,
-                                                       self.input_dir.name))
+                                                       ctx.input_dir.name))
