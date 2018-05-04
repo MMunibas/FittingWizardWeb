@@ -41,3 +41,4 @@ fitting/build
 fitting/logs
 fitting/data/
 out/
+*.orig
