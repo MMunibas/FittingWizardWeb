@@ -21,7 +21,7 @@ export PATH={env_path}:$PATH
 # Creation of the working directory
 ######################################################
 
-mkdir /{scratch_dir_name}/$USER.$JOB_ID
+mkdir -p /{scratch_dir_name}/$USER.$JOB_ID
 
 cp {input_file_name} /{scratch_dir_name}/$USER.$JOB_ID/.
 

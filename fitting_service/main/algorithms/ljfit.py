@@ -2,6 +2,7 @@ from .toolkit import *
 from subprocess import call
 from .charmm_input import *
 from .scripts.run_scale_vdw import *
+import subprocess
 import json
 
 @register

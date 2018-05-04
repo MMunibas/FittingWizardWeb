@@ -17,7 +17,7 @@ def write_gaussian_inp(ctx,xyz,gau_inp_name,chk_name,cmd,charge,multiplicity,nco
              coords.append([words[1],words[2],words[3]])
           nline += 1
              
-    charmmContent = """%nproc={ncore}
+    gauContent = """%nproc={ncore}
 %chk={chk}
 %mem=1000MB
 
@@ -30,11 +30,36 @@ Single point energy evaluation
            inp_name=gau_inp_name)
 
     for i in range (0,natm):
-       charmmContent=charmmContent+"{typ}  {x}  {y}  {z}\n".format(typ=types[i],x=coords[i][0],y=coords[i][1],z=coords[i][2])
-    charmmContent=charmmContent+"\n"
+       gauContent=gauContent+"{typ}  {x}  {y}  {z}\n".format(typ=types[i],x=coords[i][0],y=coords[i][1],z=coords[i][2])
+    gauContent=gauContent+"\n"
 
     with ctx.input_dir.open_file(gau_inp_name, "w") as gau_inp_file:
-       gau_inp_file.write(charmmContent)
+       gau_inp_file.write(gauContent)
     gau_inp_file.close()
 
     return gau_inp_file
+
+
+##########################################################################
+# Routine to write GDMA analysis input file to generate starting charges for ESP fitting
+
+def write_gdma_inp(ctx,workdir,gdma_inp_name,gdma_out_name,fchk_name,pun_name,mtp_order):
+
+    gdmaContent = """Title GDMA charge analysis
+ File {fchk}
+
+ Angstrom
+ Multipoles
+ Limit {mtp_order}
+ Punch {pun_name}
+ Start
+
+ Finish
+""".format(fchk=fchk_name,mtp_order=str(mtp_order),pun_name=pun_name)
+
+    with ctx.output_dir.subdir("mtp").open_file(gdma_inp_name,"w") as gdma_inp_file:
+       gdma_inp_file.write(gdmaContent)
+    gdma_inp_file.close()
+
+    return gdma_inp_file
+
