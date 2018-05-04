@@ -11,8 +11,8 @@ def run_mtp_fit_part1():
     mtp_setup1.set_algorithm("mtpfit_part1")
     mtp_setup1.logger.info("run mtpfit algorithm")
 
-    mtp_setup1.set_calculation_params({"xyz": "nma.xyz", "charge": "0", "multiplicity": "1",
-           "cmd" : "MP2/aug-cc-PVDZ nosymm", "ncore" : "8"})
+    mtp_setup1.set_calculation_params({"filename_xyz": "nma.xyz", "molecule_charge": "0", "molecule_multiplicity": "1",
+           "gaussian_input_commandline" : "MP2/aug-cc-PVDZ nosymm", "gaussian_num_cores" : "8"})
 
     mtp_setup1.add_input_file(job_path + "nma.xyz")
 
@@ -21,7 +21,7 @@ def run_mtp_fit_part1():
     mtp_setup1.execute()
 
     mtp_setup1.logger.info("run_mtp_fit_part1 - done")
-    return(mtp_setup.calc_id)
+    return(mtp_setup1.calc_id)
 
 def run_mtp_fit_part2():
 
@@ -51,8 +51,8 @@ def run_existing_dummy_algorithm(calc):
 
 
 if __name__ == '__main__':
-#    calc_id = run_mtp_fit_part1()
-    run_mtp_fit_part2()
+    calc_id = run_mtp_fit_part1()
+#    run_mtp_fit_part2()
 
 CalculationTest.shutdown()
 

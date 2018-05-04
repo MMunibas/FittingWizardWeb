@@ -11,19 +11,18 @@ def run_new_ljfit():
     ljfit_setup.set_algorithm("ljfit")
     ljfit_setup.logger.info("run ljfit algorithm")
 
-    ljfit_setup.set_calculation_params({"top": "tot.top", "slu": "mol.pdb", "slv": "solv.pdb",
-           "par" : "param.par", "lpun" : "mol.lpun", "pureliq" : "pureliquid.pdb", "lmb0" : 0.0, "lmb1" : 1.0,
-           "T" : 298.3})
+    ljfit_setup.set_calculation_params({"filename_charmm_topology": "tot.top", "filename_solute_pdb": "mol.pdb", "filename_solvent_pdb": "solv.pdb",
+           "filename_charmm_parameter" : "param.par", "filename_mtpl_lpun" : "mol.lpun", "filename_pureliquid_pdb" : "pureliquid.pdb", "ti_lambda_0" : 0.0, "ti_lambda_1" : 1.0,
+           "charmm_simulation_temperature" : 298.3})
 
     ljfit_setup.add_input_file(job_path + "param.par")
-    ljfit_setup.add_input_file(job_path + "liq.pdb")
     ljfit_setup.add_input_file(job_path + "mol.lpun")
     ljfit_setup.add_input_file(job_path + "mol.pdb")
     ljfit_setup.add_input_file(job_path + "tot.top")
     ljfit_setup.add_input_file(job_path + "solv.pdb")
     ljfit_setup.add_input_file(job_path + "pureliquid.pdb")
 
-    ljfit_setup.set_run_params({"dlmb": 0.1, "epsfac": 1.0, "sigfac": 1.0})
+    ljfit_setup.set_run_params({"ti_lambda_window_electrostatic": 0.1, "ti_lambda_window_vdw": 0.1, "lj_scaling_factor_eps": 1.0, "lj_scaling_factor_sig": 1.0})
     ljfit_setup.logger.info("created new calculation with id "+ljfit_setup.calc_id)
 
     ljfit_setup.execute()

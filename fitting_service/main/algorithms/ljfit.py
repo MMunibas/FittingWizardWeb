@@ -30,18 +30,19 @@ def ljfit(ctx):
         ctx.log.debug("input parameter {} is set to {}".format(parameter, value))
 
     try:
-        par = ctx.parameters["par"]
-        top = ctx.parameters["top"]
-        slu = ctx.parameters["slu"]
-        slv = ctx.parameters["slv"]
-        lpun = ctx.parameters["lpun"]
-        pureliq = ctx.parameters["pureliq"]
-        lmb0 = float(ctx.parameters["lmb0"])
-        lmb1 = float(ctx.parameters["lmb1"])
-        dlmb = float(ctx.parameters["dlmb"])
-        T = float(ctx.parameters["T"])
-        epsfac = float(ctx.parameters["epsfac"])
-        sigfac = float(ctx.parameters["sigfac"])
+        par = ctx.parameters["filename_charmm_parameter"]
+        top = ctx.parameters["filename_charmm_topology"]
+        slu = ctx.parameters["filename_solute_pdb"]
+        slv = ctx.parameters["filename_solvent_pdb"]
+        lpun = ctx.parameters["filename_mtpl_lpun"]
+        pureliq = ctx.parameters["filename_pureliquid_pdb"]
+        lmb0 = float(ctx.parameters["ti_lambda_0"])
+        lmb1 = float(ctx.parameters["ti_lambda_1"])
+        dlmbElec = float(ctx.parameters["ti_lambda_window_electrostatic"])
+        dlmbVDW = float(ctx.parameters["ti_lambda_window_vdw"])
+        T = float(ctx.parameters["charmm_simulation_temperature"])
+        epsfac = float(ctx.parameters["lj_scaling_factor_eps"])
+        sigfac = float(ctx.parameters["lj_scaling_factor_sig"])
     except ValueError:
         pass
 
@@ -82,8 +83,8 @@ def ljfit(ctx):
     # gather results for vaporization enthalpy
     parse_dens_out(ctx, slu, top, results, T, gas_out_name, dens_out_name)
 
-    ctx.log.info("Density read from file " + dens_out_name + ": " + str(results["density"]) + " g/cm^3\n")
-    ctx.log.info("Vaporization Enthalpy: " + str(results["delta_H_vap"]) + " kcal/mol\n")
+    ctx.log.info("Density read from file " + dens_out_name + ": " + str(results["pure_liquid_density"]) + " g/cm^3\n")
+    ctx.log.info("Vaporization Enthalpy: " + str(results["vaporization_enthalpy"]) + " kcal/mol\n")
 
     with ctx.run_out_dir.open_file("results.json", "w") as json_file:
         json.dump(results, json_file)
@@ -199,8 +200,8 @@ def parse_dens_out(ctx, slu, top, results, T, gas_out_name, dens_out_name):
 
     # gather results
     results["molar_mass"] = mmass
-    results["density"] = density
-    results["delta_H_vap"] = delta_H_vap
+    results["pure_liquid_density"] = density
+    results["vaporization_enthalpy"] = delta_H_vap
 
 
 def create_charmm_submission_script(ctx,
