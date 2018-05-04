@@ -329,7 +329,7 @@ class CalculationContext(IContext):
         return self.base_path.subdir("input")
 
     @property
-    def output_dir(self):
+    def run_out_dir(self):
         return self.work_dir.subdir("output")
 
     @property
