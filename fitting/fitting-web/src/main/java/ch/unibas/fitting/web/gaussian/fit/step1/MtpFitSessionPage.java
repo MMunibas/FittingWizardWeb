@@ -143,9 +143,9 @@ public class MtpFitSessionPage extends HeaderPage {
             }
         });
 
-        form.add(new AjaxLink("showResults") {
+        form.add(new AjaxButton("showResults") {
             @Override
-            public void onClick(AjaxRequestTarget target) {
+            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 setResponsePage(FittingResultsPage.class);
             }
 
