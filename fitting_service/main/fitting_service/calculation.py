@@ -392,6 +392,8 @@ class CalculationContext(IContext):
 
     def request_cancel(self):
         Storage().get_cancel_file(self._calculation_id).is_set = True
+        for job_id in self.job_ids:
+            JobsService().cancel_job(job_id)
 
     def cancel_all_calculations(self):
         for calc in Storage().list_all_calculations():
@@ -403,11 +405,12 @@ class CalculationContext(IContext):
     def job_status(self, job_id):
         return JobsService().job_status(job_id)
 
+    def wait_for_all_jobs(self):
+        self.wait_for_finished_jobs(*self.job_ids)
+
     def wait_for_finished_jobs(self, *job_ids):
         JobsService().wait_for_finished(self._calculation_id, list(job_ids))
-
-    def wait_for_all_jobs(self):
-        JobsService().wait_for_finished(self._calculation_id, self.job_ids)
+        self.terminate_if_canceled()
 
     def create_charmm_submission_script(self, filename, charmm_input_file_name, charmm_output_file_name, workdir_name, number_of_cores=None):
         number_of_cores = number_of_cores if number_of_cores is not None else number_of_cpu_cores
