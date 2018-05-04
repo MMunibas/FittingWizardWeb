@@ -9,8 +9,7 @@ from toolkit import Singleton, synchronized, CalculationCanceledException, Repea
 from .file_acces import Storage, Filename, Directory, Status, CalculationStatus
 from .job import JobsService
 from .settings import CALCULATION_METADATA_FILE_NAME, RUN_METADATA_FILE_NAME, STATUS_FILE_NAME
-from .settings import charmm_executable, mpi_executable, mpi_flags, scratch_dir_name, ld_path, env_path, number_of_cpu_cores 
-from .charmm import *
+
 
 VERSION = 0.1
 
@@ -411,22 +410,6 @@ class CalculationContext(IContext):
     def wait_for_finished_jobs(self, *job_ids):
         JobsService().wait_for_finished(self._calculation_id, list(job_ids))
         self.terminate_if_canceled()
-
-    def create_charmm_submission_script(self, filename, charmm_input_file_name, charmm_output_file_name, workdir_name, number_of_cores=None):
-        number_of_cores = number_of_cores if number_of_cores is not None else number_of_cpu_cores
-        with self.input_dir.subdir(workdir_name).open_file(filename, "w") as script_file:
-            script_file.write(generate_charmm_setup_script(charmm_input_file_name,
-                                                           charmm_output_file_name,
-                                                           self.output_dir.subdir(workdir_name).full_path,
-                                                           charmm_executable,
-                                                           number_of_cores,
-                                                           self._calculation_id,
-                                                           ld_path,
-                                                           env_path,
-                                                           mpi_executable,
-                                                           mpi_flags,
-                                                           scratch_dir_name,
-                                                           self.input_dir.name))
 
     @property
     def job_ids(self):
