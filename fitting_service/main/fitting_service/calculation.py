@@ -172,7 +172,6 @@ class CalculationManagement(metaclass=Singleton):
         return run
 
     def request_cancel(self, calculation_id):
-
         if calculation_id in self.running_calculations:
             self.running_calculations[calculation_id].cancel()
             del self.running_calculations[calculation_id]
@@ -202,8 +201,7 @@ class CalculationRun(Thread):
             self._logger.exception("failure in calculation run")
             self.context.set_failed(e)
         finally:
-            for job_id in self.context.job_ids:
-                JobsService().cancel_job(job_id)
+            self.context.cancel_all_jobs()
 
     def cancel(self):
         self.context.request_cancel()
@@ -383,8 +381,7 @@ class CalculationContext(IContext):
 
     def request_cancel(self):
         Storage().get_cancel_file(self._calculation_id).is_set = True
-        for job_id in self.job_ids:
-            JobsService().cancel_job(job_id)
+        self.cancel_all_calculations()
 
     def cancel_all_calculations(self):
         for calc in Storage().list_all_calculations():
@@ -402,6 +399,10 @@ class CalculationContext(IContext):
     def wait_for_finished_jobs(self, *job_ids):
         JobsService().wait_for_finished(self._calculation_id, list(job_ids))
         self.terminate_if_canceled()
+
+    def cancel_all_jobs(self):
+        for job_id in self.job_ids:
+            JobsService().cancel_job(job_id)
 
     @property
     def job_ids(self):
