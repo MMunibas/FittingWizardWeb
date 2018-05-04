@@ -8,7 +8,7 @@ DEMO_DATA_DIR = "D:\\_projects\\unibas\\FittingWizardWeb\\fitting\\data\\debuggi
 @register
 
 def dummy_ljfit(ctx):
-    with ctx.output_dir.open_file("parameters_dump.json", "w") as input_param_dump_file:
+    with ctx.run_out_dir.open_file("parameters_dump.json", "w") as input_param_dump_file:
         json.dump(ctx.parameters, input_param_dump_file)
-    copy_tree(DEMO_DATA_DIR, ctx.output_dir.full_path)
+    copy_tree(DEMO_DATA_DIR, ctx.run_out_dir.full_path)
     time.sleep(5)

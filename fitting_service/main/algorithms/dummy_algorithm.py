@@ -42,7 +42,7 @@ def dummy_algorithm(context):
 
     """ Write files: """
     # writing output files is
-    with context.output_dir.open_file("somedata.log", "w") as somedata:
+    with context.run_out_dir.open_file("somedata.log", "w") as somedata:
         somedata.write("success")
     """ Job scheduling """
     totalSteps = 4
@@ -53,7 +53,7 @@ def dummy_algorithm(context):
         context.terminate_if_canceled()
 
         # this is used to test error handling, not used in real algorithms
-        if context.output_dir.contains(".exception"):
+        if context.run_out_dir.contains(".exception"):
             raise Exception("Simulated crash due to '.exception' file in output directory")
 
         # scheduling a job is as easy as context.schedule_job(command).

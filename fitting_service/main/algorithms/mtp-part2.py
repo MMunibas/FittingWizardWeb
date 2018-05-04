@@ -33,7 +33,7 @@ def mtpfit_part2(ctx):
        pass
     
     chgfile = ctx.input_dir.full_path + "/" + chgfile
-    outfile = ctx.output_dir.full_path + "/" + outfile
+    outfile = ctx.run_out_dir.full_path + "/" + outfile
 
     ctx.log.info("Input files:\n\t{}".format("\n\t".join(ctx.input_dir.list_files_recursively())))
 
@@ -45,7 +45,7 @@ def mtpfit_part2(ctx):
 
 #    ctx.log.info("Density read from file "+dens_out_name+": "+str(results["density"])+" g/cm^3\n")
 
-    with ctx.output_dir.open_file("results.json","w") as json_file:
+    with ctx.run_out_dir.open_file("results.json", "w") as json_file:
        json.dump(results,json_file)
 
 

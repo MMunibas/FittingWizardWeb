@@ -19,8 +19,18 @@ class IContext(metaclass=ABCMeta):
 
     @property
     @abstractmethod
-    def output_dir(self):
+    def run_out_dir(self):
         """ get output directory: See IDirectory for available methods. """
+        pass
+
+    @property
+    @abstractmethod
+    def run_tmp_dir(self):
+        pass
+
+    @property
+    @abstractmethod
+    def calc_out_dir(self):
         pass
 
     @property

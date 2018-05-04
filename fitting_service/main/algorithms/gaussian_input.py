@@ -57,7 +57,7 @@ def write_gdma_inp(ctx,workdir,gdma_inp_name,gdma_out_name,fchk_name,pun_name,mt
  Finish
 """.format(fchk=fchk_name,mtp_order=str(mtp_order),pun_name=pun_name)
 
-    with ctx.output_dir.subdir("mtp").open_file(gdma_inp_name,"w") as gdma_inp_file:
+    with ctx.run_out_dir.subdir("mtp").open_file(gdma_inp_name, "w") as gdma_inp_file:
        gdma_inp_file.write(gdmaContent)
     gdma_inp_file.close()
 

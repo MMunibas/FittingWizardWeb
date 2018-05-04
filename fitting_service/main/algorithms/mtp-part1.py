@@ -44,7 +44,7 @@ def mtpfit_part1(ctx):
     ctx.log.info("Setting up Gaussian input file\n")
     mtp_inp_dir = ctx.input_dir.subdir("mtp").full_path + "/"
     gau_inp_name = mtp_inp_dir + basename + ".com"
-    mtp_out_dir = ctx.output_dir.subdir("mtp").full_path + "/"
+    mtp_out_dir = ctx.run_out_dir.subdir("mtp").full_path + "/"
     gau_out_name = mtp_out_dir + basename + ".out"
     chk_name = mtp_out_dir + basename + ".chk"
     fchk_name = mtp_out_dir + basename + ".fchk"
@@ -95,7 +95,7 @@ def mtpfit_part1(ctx):
     # gather files for subsequent fitting steps
     ctx.log.info("Gathering results")
 
-    with ctx.output_dir.open_file("results.json", "w") as json_file:
+    with ctx.run_out_dir.open_file("results.json", "w") as json_file:
         json.dump(results, json_file)
 
 
@@ -202,7 +202,7 @@ def write_vdw_file(ctx, gau_inp_file, vdw_file_name, sub, mtp_order):
 
     gau_inp.close()
 
-    with ctx.output_dir.subdir(sub).open_file(vdw_file_name, 'w') as vdw_file:
+    with ctx.run_out_dir.subdir(sub).open_file(vdw_file_name, 'w') as vdw_file:
         vdw_file.write('\n')
         for i in range(len(atm)):
             vdw_file.write(str(vdw_radii[atm[i]]) + '\n')
@@ -231,7 +231,7 @@ def create_gau_submission_script(ctx,
     with ctx.input_dir.subdir(workdir_name).open_file(filename, "w") as script_file:
         script_file.write(generate_gau_setup_script(gau_input_file_name,
                                                     gau_output_file_name,
-                                                    ctx.output_dir.subdir(workdir_name).full_path,
+                                                    ctx.run_out_dir.subdir(workdir_name).full_path,
                                                     number_of_cores,
                                                     ctx._calculation_id,
                                                     gau_login_script,

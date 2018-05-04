@@ -335,6 +335,14 @@ class CalculationContext(IContext):
         return self.work_dir.subdir("output")
 
     @property
+    def run_tmp_dir(self):
+        return self.work_dir.subdir("tmp")
+
+    @property
+    def calc_out_dir(self):
+        return self.base_path.subdir("output")
+
+    @property
     def parameters(self):
         params = {}
 

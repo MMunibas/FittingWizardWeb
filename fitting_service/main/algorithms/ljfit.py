@@ -55,7 +55,7 @@ def ljfit(ctx):
     ctx.log.info("writing input for gas phase calculation:")
     gas_inp_dir = ctx.input_dir.subdir("dens").full_path
     gas_inp_name = gas_inp_dir + "/gas.inp"
-    gas_out_dir = ctx.output_dir.subdir("dens").full_path
+    gas_out_dir = ctx.run_out_dir.subdir("dens").full_path
     gas_out_name = gas_out_dir + "/gas.out"
     gas_inp_file = write_gas_inp(ctx, gas_inp_name, top, slu, lpun).name
 
@@ -68,7 +68,7 @@ def ljfit(ctx):
     ctx.log.info("writing input for pure liquid calculation:")
     dens_inp_dir = ctx.input_dir.subdir("dens").full_path
     dens_inp_name = dens_inp_dir + "/density.inp"
-    dens_out_dir = ctx.output_dir.subdir("dens").full_path
+    dens_out_dir = ctx.run_out_dir.subdir("dens").full_path
     dens_out_name = dens_out_dir + "/density.out"
     dens_inp_file = write_dens_inp(ctx, dens_inp_name, top, pureliq, lpun, T).name
 
@@ -85,7 +85,7 @@ def ljfit(ctx):
     ctx.log.info("Density read from file " + dens_out_name + ": " + str(results["density"]) + " g/cm^3\n")
     ctx.log.info("Vaporization Enthalpy: " + str(results["delta_H_vap"]) + " kcal/mol\n")
 
-    with ctx.output_dir.open_file("results.json", "w") as json_file:
+    with ctx.run_out_dir.open_file("results.json", "w") as json_file:
         json.dump(results, json_file)
 
 
@@ -156,7 +156,7 @@ def parse_dens_out(ctx, slu, top, results, T, gas_out_name, dens_out_name):
     ctx.log.info("Molecular mass for " + res + " is " + str(mmass))
 
     # parse CHARMM gas phase output file to extract simulation output
-    with ctx.output_dir.open_file(gas_out_name, "r") as gas_output:
+    with ctx.run_out_dir.open_file(gas_out_name, "r") as gas_output:
         for line in gas_output:
             words = line.split()
             if len(words) > 3:
@@ -173,7 +173,7 @@ def parse_dens_out(ctx, slu, top, results, T, gas_out_name, dens_out_name):
         status = 0
 
     # parse CHARMM pure liquid output file to extract simulation output
-    with ctx.output_dir.open_file(dens_out_name, "r") as liq_output:
+    with ctx.run_out_dir.open_file(dens_out_name, "r") as liq_output:
         for line in liq_output:
             words = line.split()
             if len(words) > 0:
@@ -213,7 +213,7 @@ def create_charmm_submission_script(ctx,
     with ctx.input_dir.subdir(workdir_name).open_file(filename, "w") as script_file:
         script_file.write(generate_charmm_setup_script(charmm_input_file_name,
                                                        charmm_output_file_name,
-                                                       ctx.output_dir.subdir(workdir_name).full_path,
+                                                       ctx.run_out_dir.subdir(workdir_name).full_path,
                                                        charmm_executable,
                                                        number_of_cores,
                                                        ctx._calculation_id,
