@@ -1,5 +1,7 @@
 import re
 import subprocess as sp
+from logging import getLogger
+
 import xmltodict
 from .i_job_management import IJobManagement
 
@@ -12,7 +14,6 @@ class GridEngineJobManagement(IJobManagement):
 
     def _parse(self):
         raw_xml = sp.check_output([self.qstat_path, "-xml"])
-        xml = xmltodict.parse(raw_xml)
         xml = xmltodict.parse(raw_xml, force_list={'job_list': 'job_list'})
         queue = []
         if 'queue_info' in xml['job_info'] and xml['job_info']['queue_info'] is not None:
@@ -27,22 +28,8 @@ class GridEngineJobManagement(IJobManagement):
 
     def list_running_job_ids(self):
         q, r = self._parse()
-        try:
-            print("raw xml: ", r)
-            print("queued jobs: ", q)
-            j = [job["JB_job_number"] for job in q if not isinstance(job, str)]
-            print("list of job ids: ", j)
-            return j
-        except Exception as e:
-            with open("qstat-xml.txt", "w") as debug_dump_file:
-                debug_dump_file.write(r.decode("utf-8"))
-                debug_dump_file.write("\n---------------------------------------------------\n")
-                debug_dump_file.write(q)
-                debug_dump_file.write("\n---------------------------------------------------\n")
-                debug_dump_file.write(type(xmltodict.OrderedDict))
-                debug_dump_file.write("\n---------------------------------------------------\n")
-                debug_dump_file.write(e)
-            raise e
+        j = [job["JB_job_number"] for job in q if not isinstance(job, str)]
+        return j
 
     def schedule_new_job(self, job_name, command):
         regex = re.compile('(?:.*\n)*Your job (\d*) \("(.*)"\).*')

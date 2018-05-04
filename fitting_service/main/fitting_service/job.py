@@ -1,5 +1,7 @@
 import threading
 import time
+from logging import getLogger
+
 from toolkit import RepeatingTimer, Singleton, synchronized
 from .file_acces import IdGenerator, Storage, JobStatus
 from .settings import JOB_MANAGEMENT_TYPE, QSTAT_PATH, QSUB_PATH, QDEL_PATH
@@ -52,6 +54,7 @@ class JobStatusUpdater(metaclass=Singleton):
 
     def __init__(self, job_management=None):
         self.lock = threading.Lock()
+        self._logger = getLogger(self.__class__.__name__)
         if job_management is None:
             raise Exception("job_management has to be initialized with a valid implementation")
         self.job_management = job_management
@@ -91,8 +94,11 @@ class JobStatusUpdater(metaclass=Singleton):
         print("Wait finished for job id: ", job_id)
 
     def _update_event_trigger(self):
-        running_jobs = self.job_management.list_running_job_ids()
-        job_event_items = self._access_events(lambda d: d.copy())
-        for job_id, event_trigger in job_event_items.items():
-            if job_id not in running_jobs:
-                event_trigger.set()
+        try:
+            running_jobs = self.job_management.list_running_job_ids()
+            job_event_items = self._access_events(lambda d: d.copy())
+            for job_id, event_trigger in job_event_items.items():
+                if job_id not in running_jobs:
+                    event_trigger.set()
+        except Exception:
+            self._logger.exception("_update_event_trigger failed")
