@@ -184,8 +184,24 @@ class CalculationManagement(metaclass=Singleton):
             del self.running_calculations[i]
 
 
+class ExceptionTracer:
+    @staticmethod
+    def print_exception_info(logger, exception):
+        traceback = exception.__traceback__
+        ExceptionTracer.print_traceback(logger, traceback)
+
+    @staticmethod
+    def print_traceback(logger, traceback):
+        logger.info("file name:   {}".format(traceback.tb_frame.f_code.co_filename))
+        logger.info("line number: {}".format(traceback.tb_frame.f_lineno))
+        if traceback.tb_next:
+            logger.info("---------------------------------------")
+            ExceptionTracer.print_traceback(logger, traceback.tb_next)
+
+
 class CalculationRun(Thread):
     def __init__(self, algorithm, context):
+        self._logger = getLogger(self.__class__.__name__)
         Thread.__init__(self)
         self.algorithm = algorithm
         self.context = context
@@ -196,10 +212,11 @@ class CalculationRun(Thread):
             self.algorithm(self.context)
             self.context.set_finished()
         except CalculationCanceledException:
-            print("cancel called")
+            self._logger.info("cancel called")
             self.context.set_canceled()
         except Exception as e:
-            print("exception occured {}".format(e))
+            self._logger.error("exception occured {}".format(e))
+            ExceptionTracer.print_exception_info(self._logger, e)
             self.context.set_failed(e)
         finally:
             for job_id in self.context.job_ids:

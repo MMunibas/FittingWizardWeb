@@ -202,6 +202,11 @@ class CalculationStatus(object):
     INPUT_FILES = "input_files"
     CALCULATION_PARAMETERS = "calculation_parameters"
     RUN_PARAMETERS = "run_parameters"
+    DEFAULT = {
+                    LAST_RUN: None,
+                    STATUS: Status.CREATED,
+                    MESSAGE: ""
+                }
 
     def __init__(self, calculation_directory):
         self._status_file_lock = threading.Lock()
@@ -213,13 +218,16 @@ class CalculationStatus(object):
         with self._status_file_lock:
             if self.calculation_directory.contains(STATUS_FILE_NAME):
                 with self.calculation_directory.open_file(STATUS_FILE_NAME, "r") as status_file:
-                    return json.load(status_file)
+                    lines = status_file.readlines()
+                    try:
+                        return json.loads("\n".join(lines))
+                    except Exception as ex:
+                        print("unable to parse status file")
+                        print(lines)
+                        print(ex)
+                        return self.DEFAULT
             else:
-                return {
-                    self.LAST_RUN: None,
-                    self.STATUS: Status.CREATED,
-                    self.MESSAGE: ""
-                }
+                return self.DEFAULT
 
     def _save(self, status):
         with self._status_file_lock:
@@ -239,7 +247,10 @@ class CalculationStatus(object):
         self._update_file(update)
 
     def last_run(self):
-        return self._load()[self.LAST_RUN]
+        try:
+            return self._load()[self.LAST_RUN]
+        except:
+            return None
 
     def update_status(self, status, message: str):
         def update(d):
@@ -249,9 +260,12 @@ class CalculationStatus(object):
         self._update_file(update)
 
     def _update_file(self, update_callback):
-        status = self._load()
-        update_callback(status)
-        self._save(status)
+        try:
+            status = self._load()
+            update_callback(status)
+            self._save(status)
+        except Exception as ex:
+            print(ex)
 
     @property
     def is_running(self):

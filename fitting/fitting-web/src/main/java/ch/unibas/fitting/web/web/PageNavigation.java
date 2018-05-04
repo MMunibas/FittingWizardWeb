@@ -2,6 +2,8 @@ package ch.unibas.fitting.web.web;
 
 import ch.unibas.fitting.web.application.PageContext;
 import ch.unibas.fitting.web.application.TaskHandle;
+import ch.unibas.fitting.web.calculation.ActorBasedProgressPage;
+import ch.unibas.fitting.web.calculation.management.execution.messages.Start;
 import ch.unibas.fitting.web.web.progress.ProgressPage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -10,6 +12,9 @@ public class PageNavigation {
 
     public static void ToProgressForTask(TaskHandle handle) {
         ToPageWithParameter(ProgressPage.class, "task_id", String.valueOf(handle.getId()));
+    }
+    public static void ToProgressForTask(String taskId) {
+        ToPageWithParameter(ActorBasedProgressPage.class, "task_id", String.valueOf(taskId));
     }
 
     public static void ToPageWithParameter(Class page, String key, String value){

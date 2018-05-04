@@ -41,7 +41,7 @@ public class ErrorPage extends HeaderPage {
 
         add(new Label("errorMessage", errorMessage));
         add(new Label("errorDate", errorDate));
-        add(new Label("taskTitle", taskTitle));
+        add(new Label("title", taskTitle));
         add(new Label("errorDetails", errorDetails));
     }
 }

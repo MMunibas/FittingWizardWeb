@@ -6,4 +6,7 @@ public class Cancel {
     public Cancel(String calcId){
         this.calcId = calcId;
     }
+    public Cancel(){
+        this.calcId = null;
+    }
 }
