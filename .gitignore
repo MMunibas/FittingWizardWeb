@@ -42,3 +42,4 @@ fitting/logs
 fitting/data/
 out/
 *.orig
+*.swp
