@@ -20,10 +20,14 @@ import ch.unibas.fitting.shared.workflows.ljfit.LjFitSession;
 import ch.unibas.fitting.web.application.IBackgroundTasks;
 import ch.unibas.fitting.web.application.PageContext;
 import ch.unibas.fitting.web.application.TaskHandle;
+import ch.unibas.fitting.web.calculation.NavigationInfo;
+import ch.unibas.fitting.web.calculation.management.CalculationManagementClient;
+import ch.unibas.fitting.web.calculation.management.execution.messages.StartDefinition;
 import ch.unibas.fitting.web.ljfit.services.LjFitRepository;
 import ch.unibas.fitting.web.ljfit.ui.commands.OpenLjFitSessionCommand;
 import ch.unibas.fitting.web.ljfit.ui.step2.LjSessionPage;
 import ch.unibas.fitting.web.web.PageNavigation;
+import io.vavr.collection.List;
 import io.vavr.control.Option;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -32,6 +36,8 @@ import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by mhelmer on 24.06.2016.
@@ -60,6 +66,50 @@ public class RunLjFitsCommand {
     @Inject
     private JsonSerializer serializer;
 
+    @Inject
+    private CalculationManagementClient calculationClient;
+
+    public void executeNew(String username, RunFromPage runs) {
+
+       var definitions = prepare(username, runs);
+
+        var response = calculationClient.spawnTask("Running LJ Fits",
+                username,
+                // TODO create navigation callbacks instead of types
+                // succeeded callback should also perform result parsing
+                // create and write LjFitRUnResult to json
+                new NavigationInfo(Option.of(LjSessionPage.class)),
+                definitions.toJavaArray(StartDefinition.class));
+
+        PageNavigation.ToProgressForTask(response.taskId);
+    }
+
+    private List<StartDefinition> prepare(String username, RunFromPage run) {
+        var list = List.<StartDefinition>empty();
+        for (var pair : run.runPairs) {
+
+            LjFitSession session = ljFitRepository.loadSessionForUser(username).get();
+            LjFitSessionDir sessionDir = userDirectory.getLjFitSessionDir(username).get();
+            UploadedFiles files = sessionDir.lookupUploadedFiles(session.getUploadedFileNames());
+            LjFitRunDir runDir = sessionDir.createRunDir(pair.lambda_sigma, pair.lambda_epsiolon);
+            writeToJson(runDir.getRunInputJson(), pair);
+
+            var map = new HashMap<String, Object>();
+            map.put("lambda-sigma", pair.lambda_sigma);
+            // TODO fill all parameters
+
+            list = list.append(new StartDefinition(
+                    "ljfit",
+                    map,
+                    "Running LJ Fit",
+                    runDir.getDirectory(),
+                    files.listFiles()
+                    ));
+        }
+        return list;
+    }
+
+    @Deprecated
     public void execute(String username, RunFromPage runs) {
 
         TaskHandle th = backgroundTasks.spawnTask(
@@ -187,3 +237,4 @@ public class RunLjFitsCommand {
                 );
     }
 }
+
