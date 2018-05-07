@@ -19,7 +19,7 @@
 #  multipoles. All values are used in atomic units unless stated otherwise
 #
 
-def mk_fittab_mtp(cubefile, vdwfile, punfile, bondincr=False, si=1.66, so=2.2, no_sym=False):
+def mk_fittab_mtp(cubefile, vdwfile, punfile, outdir, bondincr=False, si=1.66, so=2.2, no_sym=False):
     import sys,math
     from .mtp_tools import molecule, Get_local_XYZ  # MD
     import numpy as np
@@ -304,7 +304,7 @@ def mk_fittab_mtp(cubefile, vdwfile, punfile, bondincr=False, si=1.66, so=2.2, n
     for atom in mol.atoms: atype_count[atypes.index(atom.atype)] += 1
     
     suffix = ['_Q00 ','_Q10 ','_Q11c ','_Q11s ','_Q20 ','_Q21c ','_Q21s ','_Q22c ','_Q22s ']
-    f = open(cubefile[:-5]+'_mtpfittab.txt','w')
+    f = open(outdir+'mtpfittab.txt','w')
     header = 'PtID '
     if bondincr == True:
       if tot_chrg == 0:

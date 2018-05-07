@@ -38,6 +38,10 @@ def mtpfit_part1(ctx):
     ctx.log.info("Input files:\n\t{}".format("\n\t".join(ctx.input_dir.list_files_recursively())))
 
     ctx.log.info("Writing Gaussian and GDMA input files\n")
+
+    # set global calculation directory
+    calc_out_dir=ctx.input_dir.subdir("../output/").full_path + "/"
+
     # set up Gaussian single point calculation to generate checkpoint file
     basename = os.path.splitext(xyz)[0]
     xyz_file_name = ctx.input_dir.full_path + '/' + xyz
@@ -51,7 +55,7 @@ def mtpfit_part1(ctx):
     gau_inp_file = write_gaussian_inp(ctx, xyz, gau_inp_name, chk_name, cmd, charge, multiplicity, ncore).name
 
     # set up GDMA calculation on Gaussian fchk file
-    pun_name = basename + ".gdma.pun"
+    pun_name = calc_out_dir + "gdma_ref.pun"
     gdma_inp_name = basename + ".gdma.inp"
     gdma_out_name = basename + ".gdma.log"
     gdma_sh = mtp_out_dir + basename + ".gdma.sh"
@@ -76,13 +80,13 @@ def mtpfit_part1(ctx):
                                  gdma_out_name, grid_pars, cube_file, pun_name, vdw_file_name, xyz_file_name,
                                  sdf_file_name, ncore)
 
-    job_id = ctx.schedule_job(ctx.input_dir.full_path + "/mtp/run-gau.sh")
-    ctx.wait_for_all_jobs()
+###    job_id = ctx.schedule_job(ctx.input_dir.full_path + "/mtp/run-gau.sh")
+###    ctx.wait_for_all_jobs()
 
     ctx.log.info("jobs completed")
 
-    ##    mtp_out_dir="/home/wfit/FittingWizardWeb/fitting_service/data/2018-04-30_12-29-56-773298_PXy2d/2018-04-30_12-29-56-779055_6_c02/output/mtp/"
-    ##    sdf_file_name="/home/wfit/FittingWizardWeb/fitting_service/data/2018-04-30_12-29-56-773298_PXy2d/2018-04-30_12-29-56-779055_6_c02/output/mtp/nma.sdf"
+    mtp_out_dir="/home/wfit/FittingWizardWeb/fitting_service/data/mike-test-mtp/output/" #######
+    sdf_file_name="/home/wfit/FittingWizardWeb/fitting_service/data/mike-test-mtp/output/nma.sdf" ####
     # now calculate local reference axes
     ctx.log.info("Calculating local reference axes for " + sdf_file_name)
     calculate_LRA(sdf_file_name)
@@ -90,7 +94,8 @@ def mtpfit_part1(ctx):
     # and generate fitting table
     local_pun_name = basename + "_l.pun"
     ctx.log.info("Generating fitting table for " + cube_file + ", " + vdw_file_name + ", " + local_pun_name)
-    mk_fittab_mtp(mtp_out_dir + cube_file, mtp_out_dir + vdw_file_name, mtp_out_dir + local_pun_name)
+    mk_fittab_mtp(mtp_out_dir + cube_file, mtp_out_dir + vdw_file_name, mtp_out_dir + local_pun_name, 
+                  calc_out_dir)
 
     # gather files for subsequent fitting steps
     ctx.log.info("Gathering results")

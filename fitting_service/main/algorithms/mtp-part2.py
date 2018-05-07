@@ -1,6 +1,7 @@
 from .toolkit import *
 from subprocess import call
 from .scripts.fit_mtp import fit_mtp
+from .scripts.mtp_prm_to_pun import mtp_prm_to_pun
 import os.path
 import json
 
@@ -23,22 +24,34 @@ def mtpfit_part2(ctx):
        ctx.log.debug("input parameter {} is set to {}".format(parameter, value))
 
     try:
-       tabfile = ctx.parameters["tabfile"]
-       threshold = ctx.parameters["threshold"]
-       rank = ctx.parameters["rank"]
-       ignore_H = ctx.parameters["ignore_H"]
-       chgfile = ctx.parameters["chgfile"]
-       outfile = ctx.parameters["outfile"]
+       tabfile = ctx.parameters["mtp_fitting_table_filename"]
+       threshold = ctx.parameters["mtp_fitting_threshold"]
+       rank = ctx.parameters["mtp_fitting_rank"]
+       ignore_H = ctx.parameters["mtp_fitting_flag_ignore_H"]
+       chgfile = ctx.parameters["mtp_fitting_charge_filename"]
+       fit_number = ctx.parameters["mtp_fit_number"]
     except ValueError:
        pass
     
+    # set global calculation directory
+    calc_out_dir=ctx.input_dir.subdir("../output/").full_path + "/" 
+
+    tabfile = calc_out_dir+"mtpfittab.txt"
     chgfile = ctx.input_dir.full_path + "/" + chgfile
-    outfile = ctx.run_out_dir.full_path + "/" + outfile
+    fit_outfile = ctx.run_out_dir.full_path + "/fit_" + str(fit_number) + ".txt"
 
     ctx.log.info("Input files:\n\t{}".format("\n\t".join(ctx.input_dir.list_files_recursively())))
 
-    fit_mtp(rank, chgfile, outfile, threshold, ignore_H, tabfile)
+    # run fit
+    fit_mtp(rank, chgfile, fit_outfile, threshold, ignore_H, tabfile)
+    ctx.log.info("Finished fit")
 
+    # convert fit output to pun file
+    new_pun = ctx.output_dir.full_path + "/fit_" + str(fit_number) + ".pun"
+    ref_lpun = calc_out_dir + "gdma_ref.pun"
+    ref_lpun = "/home/wfit/FittingWizardWeb/fitting_service/data/mike-test-mtp/output/nma.gdma.pun" ####
+    ctx.log.info("Creating fitted punch file "+new_pun)
+    mtp_prm_to_pun(fit_outfile, ref_lpun, new_pun)
 
     # gather results for vaporization enthalpy
 #    parse_mtp_out(ctx,mtp_out_name)
