@@ -86,7 +86,7 @@ public class GridRunPanel extends Panel {
                             .map(pair -> new RunPair(pair.getSigma(), pair.getEps()))
                             .toJavaList();
 
-                    runLjFitsCommand.execute(username, new RunFromPage(
+                    runLjFitsCommand.executeNew(username, new RunFromPage(
                             io.vavr.collection.List.ofAll(pairs),
                             lambda.getObject(),
                             clusterParameter.getNcpus(),

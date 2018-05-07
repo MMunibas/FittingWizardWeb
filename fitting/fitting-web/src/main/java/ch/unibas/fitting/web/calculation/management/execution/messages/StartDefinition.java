@@ -12,7 +12,11 @@ public class StartDefinition {
     public File outputDir;
     public String taskId = null;
 
-    public StartDefinition(String algorithmName, Map<String, Object> parameters, String title, File outputDir, File... inputFiles){
+    public StartDefinition(String algorithmName,
+                           Map<String, Object> parameters,
+                           String title,
+                           File outputDir,
+                           File... inputFiles){
 
         this.algorithmName = algorithmName;
         this.parameters = parameters;

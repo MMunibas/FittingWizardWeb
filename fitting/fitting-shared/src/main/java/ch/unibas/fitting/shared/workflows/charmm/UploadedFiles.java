@@ -3,6 +3,7 @@ package ch.unibas.fitting.shared.workflows.charmm;
 import ch.unibas.fitting.shared.workflows.ljfit.UploadedFileNames;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class UploadedFiles {
     public final File parFile;
@@ -25,5 +26,21 @@ public class UploadedFiles {
         if (name == null || "".equals(name))
             return null;
         return new File(baseDir, name);
+    }
+
+    public File[] listFiles() {
+        var array = new ArrayList<>();
+        safeAdd(parFile, array);
+        safeAdd(rtfFile, array);
+        safeAdd(molFile, array);
+        safeAdd(liquidFile, array);
+        safeAdd(solventFile, array);
+        safeAdd(lpunFile, array);
+        return array.toArray(new File[0]);
+    }
+
+    private void safeAdd(File parFile, ArrayList<Object> array) {
+        if (parFile != null || parFile.exists())
+            array.add(parFile);
     }
 }
