@@ -1,10 +1,10 @@
-from .toolkit import *
+from algorithms.toolkit import *
 
 
 @register
 def dummy_algorithm(context):
     context.log.info("starting dummy algo")
-    context.update_status("Running", "Step 0 | Preparing")
+    context.set_running_status("Step 0 | Preparing")
 
     """ Parameter input """
     # ctx.parameters is a python dictionary containing all parameters the calculation and run are initialized with.
@@ -47,7 +47,7 @@ def dummy_algorithm(context):
     """ Job scheduling """
     totalSteps = 4
     for i in range(totalSteps):
-        context.update_status("Running", "Step 1 | Part {i} of {n}".format(i=i, n=totalSteps))
+        context.set_running_status("Step 1 | Part {i} of {n}".format(i=i, n=totalSteps))
         context.log.info("------------------------------")
         # use this command where it's safe to cancel the calculation.
         context.terminate_if_canceled()
@@ -84,7 +84,7 @@ def dummy_algorithm(context):
     context.log.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
     job_ids = []
     for i in range(jobs_to_schedule):
-        context.update_status("Running", "Step 2 | Part {i} of {n}".format(i=i, n=jobs_to_schedule))
+        context.set_running_status("Step 2 | Part {i} of {n}".format(i=i, n=jobs_to_schedule))
         job_id = context.schedule_job("sleep 1")
         job_ids.append(job_id)
     context.wait_for_finished_jobs(*job_ids)
@@ -92,12 +92,12 @@ def dummy_algorithm(context):
     # or
     # schedule as many jobs an needed, wait for all jobs
     for i in range(jobs_to_schedule):
-        context.update_status("Running", "Step 3 | Part {i} of {n}".format(i=i, n=jobs_to_schedule))
+        context.set_running_status("Step 3 | Part {i} of {n}".format(i=i, n=jobs_to_schedule))
         context.schedule_job("sleep 1")
     context.wait_for_all_jobs()
 
     context.log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-    context.update_status("Running", "Step 4 | Finished")
+    context.set_running_status("Step 4 | Finished")
     context.log.info("dummy algo finished")
 
 

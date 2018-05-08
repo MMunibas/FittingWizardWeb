@@ -4,7 +4,7 @@ For a algorithm to be as maintainable and portable as possible it should only us
 The context offers a variety of functions to read/write files, schedule and wait for jobs, print log messages and many more.
 
 Consult the [interface definition](../main/algorithms/toolkit.py#IContext) for a full list of features and their documentation. 
-Sample usage: [dummy algorithm](../main/algorithms/dummy_algorithm.py)
+Sample usage: [dummy algorithm](../main/algorithms_dummies/dummy_algorithm.py)
 
 ## Decorators
 ### Register algorithms
@@ -21,7 +21,7 @@ examples:
 def somealgo(context):
     pass
 ```
-[dummy algorithm](../main/algorithms/dummy_algorithm.py)
+[dummy algorithm](../main/algorithms_dummies/dummy_algorithm.py)
 
 
 ### Input validation
@@ -53,7 +53,7 @@ def input_validator3(context):
     """ checks if there is a parameter called 'y' """
     return "y" in context.parameters
 ```
-[dummy input validators](../main/algorithms/dummy_input_validators.py)
+[dummy input validators](../main/algorithms_dummies/dummy_input_validators.py)
 
 
 ## Testing

@@ -140,6 +140,9 @@ class CalculationService(metaclass=Singleton):
         with calc.open_file(CALCULATION_METADATA_FILE_NAME, "w") as meta_file:
             json.dump(meta, meta_file)
 
+    def is_algorithm_supported(self, algo_name):
+        return Scanner().has_algorithm(algo_name)
+
 
 @synchronized
 class CalculationManagement(metaclass=Singleton):
@@ -190,7 +193,7 @@ class CalculationRun(Thread):
         self.context = context
 
     def run(self):
-        self.context.update_status(Status.RUNNING, "")
+        self.context.set_running_status("")
         try:
             self.algorithm(self.context)
             self.context.set_finished()
@@ -364,16 +367,19 @@ class CalculationContext(IContext):
         return Storage().get_status_file(self._calculation_id)
 
     def update_status(self, status, message):
-        return self.status.update_status(status, message)
+        self.status.update_status(status, message)
+
+    def set_running_status(self, message):
+        self.update_status(Status.RUNNING, message)
 
     def set_canceled(self, message=""):
-        self.status.update_status(Status.CANCELED, message)
+        self.update_status(Status.CANCELED, message)
 
     def set_finished(self, message=""):
-        self.status.update_status(Status.FINISHED, message)
+        self.update_status(Status.FINISHED, message)
 
     def set_failed(self, exception: Exception):
-        self.status.update_status(Status.FAILED, str(exception))
+        self.update_status(Status.FAILED, str(exception))
 
     def terminate_if_canceled(self):
         if Storage().get_cancel_file(self._calculation_id).is_set:

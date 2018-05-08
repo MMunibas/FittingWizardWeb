@@ -1,4 +1,4 @@
-from .toolkit import *
+from algorithms.toolkit import *
 
 
 @register

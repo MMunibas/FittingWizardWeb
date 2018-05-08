@@ -1,6 +1,10 @@
+import logging
 import pkgutil
 import algorithms
 
+ALGORITHM_PACKAGE = algorithms
+
+LOGGER = logging.getLogger(__name__)
 
 class Scanner:
     def _analyze(self, package):
@@ -9,9 +13,9 @@ class Scanner:
             submodules.append([importer, modname, is_package, __import__(modname, fromlist="dummy")])
         return submodules
 
-    def _scan(self, p=algorithms, meta_tag="__is_algorithm__"):
+    def _scan(self, package, meta_tag="__is_algorithm__"):
         algos = {}
-        packages_to_analyze = [p]
+        packages_to_analyze = [package]
         while len(packages_to_analyze) > 0:
             package = packages_to_analyze[0]
             del packages_to_analyze[0]
@@ -29,7 +33,7 @@ class Scanner:
 
     @staticmethod
     def find_algorithms():
-        algos = Scanner()._scan(algorithms)
+        algos = Scanner()._scan(ALGORITHM_PACKAGE)
         algos = {k: Algorithm(v) for k, v in algos.items()}
         validators = Scanner()._scan(algorithms, "__input_validator_for__")
 
@@ -39,11 +43,24 @@ class Scanner:
         return algos
 
     @staticmethod
+    def has_algorithm(name):
+        algos = Scanner.find_algorithms()
+        return name in algos
+
+    @staticmethod
     def find_algorithm(name):
         algos = Scanner.find_algorithms()
         if name not in algos:
             raise Exception("Algorithm '{}' not found".format(name))
         return algos[name]
+
+    @staticmethod
+    def load_algorithms():
+        LOGGER.info('load_algorithms')
+        algos = Scanner.find_algorithms()
+        for name in algos:
+            LOGGER.info('found: ' + name)
+        LOGGER.info('load_algorithms DONE')
 
 
 class InvalidInputException(Exception):
@@ -65,7 +82,6 @@ class Algorithm:
         for validator in self.validators:
             if not validator(ctx):
                 raise InvalidInputException(validator.__name__)
-
 
 
 if __name__ == "__main__":

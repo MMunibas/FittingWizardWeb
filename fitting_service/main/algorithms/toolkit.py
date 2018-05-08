@@ -40,8 +40,8 @@ class IContext(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def update_status(self, status, message):
-        """ update calculation status """
+    def set_running_status(self, message):
+        """ update the running status """
         pass
 
     @abstractmethod

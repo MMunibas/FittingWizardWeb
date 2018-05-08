@@ -8,8 +8,8 @@ from .job import JobsService
 app = Flask(__name__)
 api = Api(app,
           version='0.1',
-          title='Fitting service API',
-          description='Provides operations for fitting algorithms',
+          title='Calculation Service API',
+          description='Provides operations for running different kind of calculations',
           validate=True)
 
 ns_global = api.namespace('/', description='Global Operations')
@@ -240,7 +240,7 @@ class CancelCalculationAction(Resource):
 class RunCalculationAction(Resource):
     @api.response(200, 'calculation successfully started', model=model_run_id)
     @api.response(404, 'no calculation with id {calculation_id} found')
-    @api.response(405, 'calculation running')
+    @api.response(405, 'calculation already running or algorithm not supported')
     @api.response(412, 'input validation failed')
     @api.expect(model_calculation_run)
     def post(self, calculation_id):
@@ -248,14 +248,18 @@ class RunCalculationAction(Resource):
         Start a run of this calculation
         """
         if not CalculationService().calculation_exists(calculation_id):
-            return redirect(request.url, 404)
+            return {'message': 'calculation not found'}, 404
+        algo = self.api.payload['algorithm']
+        if not CalculationService().is_algorithm_supported(algo):
+            return {'message': 'algorithm not supported'}, 405
+
         try:
             runid = CalculationService().run_calculation(calculation_id, self.api.payload, False)
             return {"run_id": runid}
         except CalculationRunningException:
-            return redirect(request.url, 405)
+            return {'message': 'calculation already running'}, 405
         except InvalidInputException:
-            return redirect(request.url, 412)
+            return {'message': 'invalid input'}, 412
 
 
 @ns_calculation.route('/<string:calculation_id>/jobs')

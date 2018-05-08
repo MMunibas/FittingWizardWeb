@@ -3,10 +3,11 @@ import sys
 
 import os
 
-from fitting_service import app, Storage
-import algorithms
+import algorithms_dummies
+from fitting_service import app, Storage, Scanner
 
 import fitting_service.settings as settings
+from fitting_service.algorithms import scanner
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -22,9 +23,12 @@ def app_name():
 if __name__ == '__main__':
     Storage().initialize()
     if len(sys.argv) > 1 and sys.argv[1] == '--mock':
+        scanner.ALGORITHM_PACKAGE = algorithms_dummies
         mock_mode = True
 
     logger.info(app_name() + 'Starting')
+
+    Scanner.load_algorithms()
 
     host = os.getenv('FITTING_SERVICE_HOST', settings.FITTING_SERVICE_HOST)
     port = int(os.getenv('FITTING_SERVICE_PORT', settings.FITTING_SERVICE_PORT))

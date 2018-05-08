@@ -1,0 +1,14 @@
+co2.log
+ OpenBabel09171317243D
+Gaussian opt/cluster/additional/g03_64/g03 #P MP2/aug-cc-PVDZ nosymm
+  3  2  0  0  0  0  0  0  0  0999 V2000
+    1.0947    0.0222    0.0007 O   0  0  0  0  0  0  0  0  0  0  0  0
+    2.2915    0.0222    0.0007 C   0  0  0  0  0  0  0  0  0  0  0  0
+    3.4884    0.0222    0.0007 O   0  0  0  0  0  0  0  0  0  0  0  0
+  1  2  2  0  0  0  0
+  2  3  2  0  0  0  0
+M  END
+>  <File Format>
+g03
+
+$$$$
