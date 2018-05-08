@@ -41,7 +41,7 @@ public class StartDummyLjFitCommand {
                         "benzonitrile.rtf", "benzonitrile.pdb", "benzonitrile.par", "fit_4_benzonitrile.lpun", "solvent.pdb","pureliquid.pdb", 0.0, 1.0, 298.3,
                         0.5, 5.0, 5.0)
         );
-        PageNavigation.ToProgressForTask(startResponse.taskId);
+        PageNavigation.ToProgressForCalculation(startResponse);
     }
 
     private StartDefinition createDummyLjFitStartDefinition(
@@ -78,6 +78,6 @@ public class StartDummyLjFitCommand {
                 new File(demoDataBaseDir+"benzonitrile.rtf"),
         };
 
-        return new StartDefinition(algorithmName, params, title, new File("d:\\temp\\downloadData\\"), fileArray);
+        return new StartDefinition(algorithmName, params, new File("d:\\temp\\downloadData\\"), fileArray);
     }
 }

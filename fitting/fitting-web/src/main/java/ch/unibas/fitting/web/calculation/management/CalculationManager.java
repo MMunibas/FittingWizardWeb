@@ -24,11 +24,8 @@ public class CalculationManager extends AbstractActor {
         this.calculationService = calculationService;
     }
 
-    public static Props props(CalculationService calculationService){
-        return Props.create(CalculationManager.class, ()->{
-            var mgr = new CalculationManager(calculationService);
-            return mgr;
-        });
+    public static Props props(CalculationService calculationService) {
+        return Props.create(CalculationManager.class, () -> new CalculationManager(calculationService));
     }
 
     @Override
@@ -46,8 +43,8 @@ public class CalculationManager extends AbstractActor {
     // region Message handlers
 
     private void handleStart(Start msg) {
-        var taskId = msg.title + "_" + msg.username + "_"+ generateUniqueId();
-        context().actorOf(Task.props(msg, calculationService),taskId);
+        var taskId = ActorUtils.nameWithUniqueSuffix("task_" + msg.username);
+        context().actorOf(Task.props(msg, calculationService), taskId);
         sender().tell(new StartResponse(taskId), self());
     }
 
@@ -64,7 +61,6 @@ public class CalculationManager extends AbstractActor {
         forwardIfTaskExists(msg.taskId, msg, new CancelTaskResponse());
     }
     private void handleListTaskExecutions(ListTaskExecutions msg) {
-
         var children = JavaConversions.asJavaCollection(context().children());
         var answers = traverse(
                     children.stream()
@@ -89,12 +85,4 @@ public class CalculationManager extends AbstractActor {
             actor.get().forward(msg, context());
         }
     }
-
-    private String generateUniqueId(){
-        return UUID.randomUUID().toString().substring(0, 8);
-    }
-
-    // endregion
-
-
 }

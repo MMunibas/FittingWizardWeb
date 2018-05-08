@@ -18,13 +18,13 @@ public class ExecutionProgress {
     public ExecutionProgress(String taskId, String executionId, Status state, ActorRef ref) {
         this.executionId = executionId;
         this.taskId = taskId;
-        actorRef = ref;
+        this.actorRef = ref;
         if(state == null) {
             this.state = new Status();
-            isEmpty = true;
+            this.isEmpty = true;
         } else {
             this.state = state;
-            isEmpty = false;
+            this.isEmpty = false;
         }
     }
 

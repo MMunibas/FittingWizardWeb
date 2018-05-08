@@ -81,7 +81,7 @@ public class RunLjFitsCommand {
                 new NavigationInfo(Option.of(LjSessionPage.class)),
                 definitions.toJavaArray(StartDefinition.class));
 
-        PageNavigation.ToProgressForTask(response.taskId);
+        PageNavigation.ToProgressForCalculation(response);
     }
 
     private List<StartDefinition> prepare(String username, RunFromPage run) {
@@ -101,7 +101,6 @@ public class RunLjFitsCommand {
             list = list.append(new StartDefinition(
                     "ljfit",
                     map,
-                    "Running LJ Fit",
                     runDir.getDirectory(),
                     files.listFiles()
                     ));

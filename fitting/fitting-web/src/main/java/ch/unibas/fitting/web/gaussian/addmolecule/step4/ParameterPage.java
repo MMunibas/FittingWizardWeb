@@ -1,7 +1,7 @@
 package ch.unibas.fitting.web.gaussian.addmolecule.step4;
 
 import ch.unibas.fitting.web.application.PageContext;
-import ch.unibas.fitting.web.gaussian.addmolecule.RunGaussianCommand;
+import ch.unibas.fitting.web.gaussian.addmolecule.RunMtpGenerateFilesCommand;
 import ch.unibas.fitting.web.gaussian.addmolecule.step2.UploadPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import ch.unibas.fitting.web.web.PageNavigation;
@@ -31,7 +31,7 @@ public class ParameterPage extends HeaderPage {
     private final String moleculeName;
 
     @Inject
-    private RunGaussianCommand runGaussian;
+    private RunMtpGenerateFilesCommand runGaussian;
 
     public ParameterPage(PageParameters pp) {
 

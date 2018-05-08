@@ -30,7 +30,7 @@ public class StartDummyAlgoCommand {
                 createDummyAlgorithmStartDefinition(43, "calc4"),
                 createDummyAlgorithmStartDefinition(44, "calc5")
         );
-        PageNavigation.ToProgressForTask(startResponse.taskId);
+        PageNavigation.ToProgressForCalculation(startResponse);
     }
 
     private StartDefinition createDummyAlgorithmStartDefinition(double param, String title){
@@ -41,6 +41,6 @@ public class StartDummyAlgoCommand {
                 new File("C:\\Users\\eknecht\\Desktop\\somefile.json")
         };
 
-        return new StartDefinition(algorithmName, params, title, new File("d:\\temp\\downloadData\\"), fileArray);
+        return new StartDefinition(algorithmName, params, new File("d:\\temp\\downloadData\\"), fileArray);
     }
 }

@@ -9,39 +9,39 @@ import scala.concurrent.duration.Duration;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
-import static java.util.concurrent.CompletableFuture.supplyAsync;
 import static java.util.concurrent.CompletableFuture.runAsync;
+import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 public class CalculationExecution extends AbstractActor {
     private static final long statusUpdatePollingIntervalInMs = 5000;
-    private CalculationService service;
-    private StartDefinition params;
-    private Status status = null;
-    private boolean isDownloadComplete = false;
+    private final CalculationService service;
+    private final StartDefinition definition;
+
+    private String calculationId;
+    private Status status;
 
     private final static String INITIALIZING = "Initializing";
-    private final static String CREATED = "Created";
     private final static String FINISHED = "Finished";
     private final static String CANCELED = "Canceled";
     private final static String FAILED = "Failed";
     private final static String DOWNLOADING = "Downloading";
 
-    public static Props props(StartDefinition params, CalculationService calculationService){
-        return Props.create(CalculationExecution.class,() -> {
-            var run = new CalculationExecution();
-            run.params = params;
-            run.service = calculationService;
-            run.self().tell(INITIALIZING, run.self());
-            return run;
-        });
+    public CalculationExecution(StartDefinition definition,
+                                CalculationService calculationService) {
+        this.definition = definition;
+        this.service = calculationService;
+    }
+
+    public static Props props(StartDefinition definition, CalculationService calculationService){
+        return Props.create(CalculationExecution.class,() -> new CalculationExecution(definition, calculationService));
+    }
+
+    @Override
+    public void preStart() {
+        self().tell(INITIALIZING, self());
     }
 
     @Override
@@ -65,8 +65,8 @@ public class CalculationExecution extends AbstractActor {
     }
 
     private void handleStatusUpdate(UpdateStatus msg) {
-        if(params.calculationId != null) {
-            status = service.getCalculationStatus(params.calculationId);
+        if(calculationId != null) {
+            status = service.getCalculationStatus(calculationId);
             if (terminated(status.getStatus())){
                 self().tell(new DownloadResults(), self());
                 status.setStatus(DOWNLOADING);
@@ -84,15 +84,15 @@ public class CalculationExecution extends AbstractActor {
     }
 
     private void handleDeleteCalculation(DeleteCalculation msg) {
-        service.deleteCalculation(params.calculationId);
+        service.deleteCalculation(calculationId);
         sender().tell(new DeleteCalculationResponse(), self());
     }
 
     private void handleStartDownload(DownloadResults msg) {
-        runAsync(()-> service.listOutputFiles(params.calculationId)
+        runAsync(()-> service.listOutputFiles(calculationId)
                 .forEach(relativePath->{
-                    var tempFile = service.downloadOutputFiles(params.calculationId, relativePath);
-                    var targetFile = new File(params.outputDir, params.calculationId+File.separator+relativePath);
+                    var tempFile = service.downloadOutputFiles(calculationId, relativePath);
+                    var targetFile = new File(definition.outputDir, calculationId+File.separator+relativePath);
                     if(!targetFile.getParentFile().exists())
                         targetFile.getParentFile().mkdirs();
                     try {
@@ -104,13 +104,15 @@ public class CalculationExecution extends AbstractActor {
                 })).thenRun(()->status.setStatus(FINISHED));
     }
     private void handleListExecutions(ListExecutions msg) {
-        if(params.calculationId != null)
-            sender().tell(new ExecutionProgress(params.taskId, params.calculationId, status, self()), self());
+        if(calculationId != null) {
+            var taskId = context().parent().path().name();
+            sender().tell(new ExecutionProgress(taskId, calculationId, status, self()), self());
+        }
         else
             sender().tell(new ExecutionProgress(null, null, null, self()), self());
     }
     private void handleCancelExecution(CancelExecution msg) {
-        service.cancelCalculation(params.calculationId);
+        service.cancelCalculation(calculationId);
         sender().tell(new CancelExecutionResponse(), self());
     }
 
@@ -131,20 +133,20 @@ public class CalculationExecution extends AbstractActor {
 
     private String createCalculation(){
         var id =  service.createCalculation();
-        params.calculationId = id;
+        calculationId = id;
         return id;
     }
 
     private String uploadFiles(String calcId){
 
-        for(var file : params.inputFiles){
+        for(var file : definition.inputFiles){
             service.uploadInputFile(calcId, file);
         }
         return calcId;
     }
 
     private String startRun(String calcId){
-        service.startRun(calcId, params.algorithmName, params.parameters);
+        service.startRun(calcId, definition.algorithmName, definition.parameters);
         return calcId;
     }
 

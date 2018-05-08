@@ -7,10 +7,13 @@ import org.apache.wicket.request.component.IRequestablePage;
 import java.util.List;
 
 public class TaskInfoResponse {
-    public String title;
+    public final String title;
     public final NavigationInfo navigationInfo;
-    public List<ExecutionProgress> executions;
-    public TaskInfoResponse(String title, NavigationInfo navigationInfo, List<ExecutionProgress> executions){
+    public final List<ExecutionProgress> executions;
+
+    public TaskInfoResponse(String title,
+                            NavigationInfo navigationInfo,
+                            List<ExecutionProgress> executions){
         this.title = title;
         this.navigationInfo = navigationInfo;
         this.executions = executions;
