@@ -11,11 +11,11 @@ def run_mtp_fit_part1():
     mtp_setup1.set_algorithm("mtpfit_part1")
     mtp_setup1.logger.info("run mtpfit algorithm")
 
-    mtp_setup1.set_calculation_params({"filename_xyz": "nma.xyz", "molecule_charge": "0"})
+    mtp_setup1.set_calculation_params({"mtp_gen_filename_xyz": "nma.xyz", "mtp_gen_molecule_charge": "0"})
 
     mtp_setup1.add_input_file(job_path + "nma.xyz")
-    mtp_setup1.set_run_params({"molecule_multiplicity": "1",
-              "gaussian_input_commandline" : "MP2/aug-cc-PVDZ nosymm", "gaussian_num_cores" : "8"})
+    mtp_setup1.set_run_params({"mtp_gen_molecule_multiplicity": "1",
+              "mtp_gen_gaussian_input_commandline" : "MP2/aug-cc-PVDZ nosymm", "mtp_gen_gaussian_num_cores" : "8"})
     mtp_setup1.logger.info("created new calculation with id "+mtp_setup1.calc_id)
 
     mtp_setup1.execute()

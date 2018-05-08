@@ -27,11 +27,11 @@ def mtpfit_part1(ctx):
         ctx.log.debug("input parameter {} is set to {}".format(parameter, value))
 
     try:
-        xyz = ctx.parameters["filename_xyz"]
-        charge = ctx.parameters["molecule_charge"]
-        multiplicity = ctx.parameters["molecule_multiplicity"]
-        cmd = ctx.parameters["gaussian_input_commandline"]
-        ncore = ctx.parameters["gaussian_num_cores"]
+        xyz = ctx.parameters["mtp_gen_filename_xyz"]
+        charge = ctx.parameters["mtp_gen_molecule_charge"]
+        multiplicity = ctx.parameters["mtp_gen_molecule_multiplicity"]
+        cmd = ctx.parameters["mtp_gen_gaussian_input_commandline"]
+        ncore = ctx.parameters["mtp_gen_gaussian_num_cores"]
     except ValueError:
         pass
 

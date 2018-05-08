@@ -30,17 +30,17 @@ def ljfit(ctx):
         ctx.log.debug("input parameter {} is set to {}".format(parameter, value))
 
     try:
-        par = ctx.parameters["filename_charmm_parameter"]
-        top = ctx.parameters["filename_charmm_topology"]
-        slu = ctx.parameters["filename_solute_pdb"]
-        slv = ctx.parameters["filename_solvent_pdb"]
-        lpun = ctx.parameters["filename_mtpl_lpun"]
-        pureliq = ctx.parameters["filename_pureliquid_pdb"]
-        lmb0 = float(ctx.parameters["ti_lambda_0"])
-        lmb1 = float(ctx.parameters["ti_lambda_1"])
-        dlmbElec = float(ctx.parameters["ti_lambda_window_electrostatic"])
-        dlmbVDW = float(ctx.parameters["ti_lambda_window_vdw"])
-        T = float(ctx.parameters["charmm_simulation_temperature"])
+        par = ctx.parameters["lj_filename_charmm_parameter"]
+        top = ctx.parameters["lj_filename_charmm_topology"]
+        slu = ctx.parameters["lj_filename_solute_pdb"]
+        slv = ctx.parameters["lj_filename_solvent_pdb"]
+        lpun = ctx.parameters["lj_filename_mtpl_lpun"]
+        pureliq = ctx.parameters["lj_filename_pureliquid_pdb"]
+        lmb0 = float(ctx.parameters["lj_ti_lambda_0"])
+        lmb1 = float(ctx.parameters["lj_ti_lambda_1"])
+        dlmbElec = float(ctx.parameters["lj_ti_lambda_window_size_electrostatic"])
+        dlmbVDW = float(ctx.parameters["lj_ti_lambda_window_isize_vdw"])
+        T = float(ctx.parameters["lj_charmm_simulation_temperature"])
         epsfac = float(ctx.parameters["lj_scaling_factor_eps"])
         sigfac = float(ctx.parameters["lj_scaling_factor_sig"])
     except ValueError:

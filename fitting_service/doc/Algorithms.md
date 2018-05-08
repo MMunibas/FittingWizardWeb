@@ -17,15 +17,19 @@ Following document describes all algorithms supported by the API.
  * [name].top CHARMM topology file
 
 **Required parameters**
- * filename_charmm_topology (.top topology file for CHARMM)
- * filename_solute_pdb (.pdb structure file for solute molecule)
- * filename_solvent_pdb (.pdb file for solvent box)
- * filename_charmm_parameter (.par file for CHARMM)
- * filename_mtpl_lpun (.lpun file for CHARMM MTPL routine)
- * filename_pureliquid_pdb (.pdb file for pure liquid made of solute molecules)
- * ti_lambda_0 (initial lambda value for thermodynamic integration (usually 0.0))
- * ti_lambda_1 (final lambda value for thermodynamic integration (usually 1.0))
- * charmm_simulation_temperature (temperature for molecular dynamics simulations)
+ * lj_filename_charmm_topology (.top topology file for CHARMM)
+ * lj_filename_solute_pdb (.pdb structure file for solute molecule)
+ * lj_filename_solvent_pdb (.pdb file for solvent box)
+ * lj_filename_charmm_parameter (.par file for CHARMM)
+ * lj_filename_mtpl_lpun (.lpun file for CHARMM MTPL routine)
+ * lj_filename_pureliquid_pdb (.pdb file for pure liquid made of solute molecules)
+ * lj_ti_lambda_0 (initial lambda value for thermodynamic integration (usually 0.0))
+ * lj_ti_lambda_1 (final lambda value for thermodynamic integration (usually 1.0))
+ * lj_charmm_simulation_temperature (temperature for molecular dynamics simulations)
+ * lj_scaling_factor_eps (LJ epsilon scaling factor for current grid point)
+ * lj_scaling_factor_sig (LJ sigma scaling factor for current grid point)
+ * lj_ti_lambda_window_size_electrostatic (window size for electrostatic part of TI calculation)
+ * lj_ti_lambda_window_size_vdw (window size for vdw part of TI calculation)
 
 **Generated output**
  * molar_mass (solute molar mass)
@@ -43,11 +47,11 @@ Following document describes all algorithms supported by the API.
  * [name].xyz coordinate file
 
 **Required parameters**
- * filename_xyz name of uploaded xyz file
- * molecule_charge total charge of uploaded molecule
- * molecule_multiplicity spin multiplicity of molecule
- * gaussian_input_commandline e.g. MP2/aug-cc-PVDZ nosymm
- * gaussian_num_cores number of cores to use for Gaussian job
+ * mtp_gen_filename_xyz name of uploaded xyz file
+ * mtp_gen_molecule_charge total charge of uploaded molecule
+ * mtp_gen_molecule_multiplicity spin multiplicity of molecule
+ * mtp_gen_gaussian_input_commandline e.g. MP2/aug-cc-PVDZ nosymm
+ * mtp_gen_gaussian_num_cores number of cores to use for Gaussian job
 
 **Generated output**
  * mtpfittab.txt fitting table file
