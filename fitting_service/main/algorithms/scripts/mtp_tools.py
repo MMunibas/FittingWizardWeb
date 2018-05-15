@@ -77,8 +77,8 @@ class atom(object):
           at = at + self.atype[i+1]
       self.mass = atomic_mass[at]
     except:
-      print ("Cannot determine element of atom ",self.idx," with atomtype ",self.atype)
-      print ("Please define manually")
+      print("Cannot determine element of atom ",self.idx," with atomtype ",self.atype)
+      print("Please define manually")
 
 class molecule(object):
   def __init__(self, name='', natoms=0, atoms=[], filename=''):
@@ -107,7 +107,7 @@ class molecule(object):
     lines = f.readlines()
     f.close()
     if 'Local Multipole file' in lines[1]:
-      print (filename,' is a local multipole file.')
+      print(Filename,' is a local multipole file.')
       return
     self.name = lines[0].rstrip()[1:]
     if self.name == '': self.name = filename[:filename.rindex('.')]
@@ -170,7 +170,7 @@ class molecule(object):
         refatms = [int(l) for l in line[1:]]
         self.atoms[k].refatms = refatms
 
-    print ("Total charge of the molecule:", float(self.totcharge))
+    print("Total charge of the molecule:", float(self.totcharge))
     self.check_consistency_dip_quad()
     
 
@@ -183,7 +183,7 @@ class molecule(object):
     lines = f.readlines()
     f.close()
     if 'Local Multipole file' in lines[1]:
-      print (Filename,' is a local multipole file.')
+      print(Filename,' is a local multipole file.')
       return
     self.name = lines[0].rstrip()[1:]
     if self.name == '': self.name = filename[:filename.index('.')]
@@ -245,16 +245,17 @@ class molecule(object):
     self.filename = filename[:filename.index('.')]
     i = 0
     while True:
-      if lines[i][0][0] == '!' or lines[i][0][0] == '#' or len(lines[i]) == 0: 
+      if lines[i][0] == '!' or len(lines[i]) == 0: 
         i+= 1
       else:
+        i+= 1
         break
     
     while True:
       if i == len(lines): break
       line = lines[i].split()
-      idx = int(line[0])
-      atype = line[1]
+      atype = line[0]
+      idx = int(line[1])
       coords = numpy.array([float(line[2]),float(line[3]),float(line[4])])
       rnk = int(line[6])
       a = atom(atype,coords,idx,rnk)
@@ -321,11 +322,11 @@ class molecule(object):
     Check that rank of these particles is 0.
     """
     if len(self.q_dip) % 2 != 0:
-      print ("Error. Odd number of dipole-generating "\
+      print("Error. Odd number of dipole-generating "\
           "point charges.")
       exit(1)
     if len(self.q_quad) % 4 != 0:
-      print ("Error. Number of quadrupole-generating point " \
+      print("Error. Number of quadrupole-generating point " \
           "charges is not a multiple of 4.")
       exit(1)
     for i in self.q_dip:
@@ -345,13 +346,13 @@ class molecule(object):
                 (num_i == 2 and num_j == 1): 
             identified_terms[num_j-1] += 1
             if j.chrg * (-1.) != i.chrg:
-              print ("Error. charges between atoms", \
+              print("Error. charges between atoms", \
                   i.atype,"and",j.atype,"do not match.")
               exit(1)
 
       # Check that both elements of the list are populated
       if identified_terms[0] == 0 or identified_terms[1] == 0:
-        print ("Error. Non-matching dummy atoms for dipole" \
+        print("Error. Non-matching dummy atoms for dipole" \
             " interaction.")
         exit(1)
 
@@ -417,13 +418,13 @@ class molecule(object):
         # Check that all elements of the list are populated
         if identified_terms[0] == 0 or identified_terms[1] == 0 \
               or identified_terms[2] == 0 or identified_terms[3] == 0:
-          print ("Error. Non-matching dummy atoms for quadrupole" \
+          print("Error. Non-matching dummy atoms for quadrupole" \
             " interaction.")
           exit(1)
           
         # Check that there are two negative and two positive charges
         if num_pos_chrgs != 2 or num_pos_chrgs != 2:
-          print ("Error. Arrangement of charges does not match " \
+          print("Error. Arrangement of charges does not match " \
               "for atoms", i.atype, ",", j.atype,",", k.atype, \
               "and", l.atype)
           exit(1)
@@ -454,14 +455,10 @@ class molecule(object):
     """
     Rotate MTP parameters from local to global frame
     """
-
-    print ("Calculating atomic MTPs in global frame for:")
     for i in self.atoms:
-      print ("Atom ",i.atype,", ref frame: ",i.refkind,i.refatms)
       AC = i.coords      # AC are the atomic coordinates
       RC = []        # RC are the reference coordinates of the reference atoms
-      for j in i.refatms: 
-        if j != 0 : RC.append(self.atoms[j-1].coords)
+      for j in i.refatms: RC.append(self.atoms[j-1].coords)
       TM = Get_local_XYZ(i.coords,i.refkind,RC)    # TM is the Transformation Matrix. Maybe directly generate the inverse here
             
       temp = SpH2C_D(i.dloc)
@@ -559,7 +556,7 @@ class molecule(object):
         atom.Qloc[3] = 0.
         atom.Qloc[4] = 0.
       else:
-        print ("Do not understand the atom kind",atom.refkind)
+        print("Do not understand the atom kind",atom.refkind)
         exit(1)
             
 
@@ -631,13 +628,13 @@ class molecule(object):
   def Calc_molMTP(self):
     """ Calculate molecular quadrupole moment on the center of gravity """
 # First determine center of gravity(cog) for molecule
-#    if self.cog == '': self.get_cog()
+    if self.cog == '': self.get_cog()
     self.Qmol = numpy.array([0.0,0.0,0.0,0.0,0.0])
 # Then calculate molecular quadrupole at cog
     for atom in self.atoms:
-      rx = a2b*(atom.coords[0])
-      ry = a2b*(atom.coords[1])
-      rz = a2b*(atom.coords[2])
+      rx = a2b*(atom.coords[0]-self.cog[0])
+      ry = a2b*(atom.coords[1]-self.cog[1])
+      rz = a2b*(atom.coords[2]-self.cog[2])
       r2 = rx**2+ry**2+rz**2
 # Q20
       self.Qmol[0] = self.Qmol[0] + atom.Qglo[0] + 2*rz*atom.dglo[0] - rx*atom.dglo[1] - ry*atom.dglo[2] + 0.5*(3*rz**2-r2)*atom.chrg
@@ -735,13 +732,18 @@ def Get_local_XYZ(AC,refkind,RC):
 #    for which one can't define x and y axes.
   
   nrefA = len(RC)
+  
+  print(nrefA)
+  
+  print(RC)
+
   if nrefA not in [1,2,3,4]: 
-    print ('Number of reference atoms for the current atom is wrong')
+    print('Number of reference atoms for the current atom is wrong')
     exit(0)
 
   if refkind == 'c3v':
     if nrefA not in [3,4]:
-      print ('Number of reference atoms for the current atom is wrong')
+      print('Number of reference atoms for the current atom is wrong')
       exit(0)
 
     # Z for both nrefA 3&4 points outwards or towards RC[3]
@@ -795,7 +797,7 @@ def Get_local_XYZ(AC,refkind,RC):
       X = norm(numpy.cross(Y,Z))
    
     else:
-      print ("Error: Inappropriate number of reference atoms for 'ter' ("+ \
+      print("Error: Inappropriate number of reference atoms for 'ter' ("+ \
         nrefA+")")
       exit(1)
 
@@ -833,7 +835,7 @@ def Get_local_XYZ(AC,refkind,RC):
       X = numpy.cross(Y,Z)
 
     else:
-      print ("Error: Inappropriate number of reference atoms for 'int' ("+ \
+      print("Error: Inappropriate number of reference atoms for 'int' ("+ \
         str(nrefA)+")")
       exit(1)
   
@@ -850,7 +852,7 @@ def Get_local_XYZ(AC,refkind,RC):
       # Z is between the two neighbors, pointing towards the first one
       Z = norm(RC[0]-RC[1])
     else:
-      print ("Error: Inappropriate number of reference atoms for 'lin' ("+ \
+      print("Error: Inappropriate number of reference atoms for 'lin' ("+ \
         nrefA+")")
       exit(1)
     # Choose X and Y. They are arbitrarily chosen.
@@ -864,13 +866,13 @@ def Get_local_XYZ(AC,refkind,RC):
     return numpy.transpose(loc_xyz)
 
   else:
-    print ("Reference axis system not properly defined for current atom")
+    print("Reference axis system not properly defined for current atom")
     exit(0)
 
 def compare_abs_charges(atom_i,atom_j):
   """Compare two partial atomic charges for identity"""
   if abs(float(atom_i.chrg)) != abs(float(atom_j.chrg)):
-    print ("Error. charges between atoms", \
+    print("Error. charges between atoms", \
         i.atype,"and",j.atype,"do not match.")
     exit(1)            
     

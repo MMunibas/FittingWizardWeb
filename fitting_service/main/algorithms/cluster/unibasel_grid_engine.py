@@ -51,32 +51,38 @@ export GAUSS_SCRDIR=/{scratch_dir_name}/$USER.$JOB_ID
 #  Run
 ######################################################
 
+echo "Starting Gaussian"
 $GAUSSIAN_EXE {input_file_name} {output_file_name}
 
 ######################################################
 #  Create Formatted Checkpoint File
 ######################################################
 
+echo "Starting formchk"
 {formchk} {chk_file} {fchk_file}
 
 ######################################################
 #  Run GDMA Calculation
 ######################################################
+echo "Starting GDMA"
 {gdma} < {gdma_inp_name} > {gdma_out_name}
 
 ######################################################
 #  Run Cubegen for ESP grid
 ######################################################
+echo "Starting CubeGen"
 echo -e {grid_spec} | {cubegen} 0 potential {fchk_file} {cube_file} -1
 
 ######################################################
 #  Run FieldComp ESP fitting code
 ######################################################
+echo "Starting fieldcomp"
 {fieldcomp} -cube {cube_file} -vdw {vdw_file} -pun {pun_file} > fieldcomp.log
 
 ######################################################
 #  Convert xyz file to sdf for connectivity
 ######################################################
+echo "Starting Babel"
 {babel} -ixyz {xyz_file} -osdf > {sdf_file}
 
 """.format(input_file_name=input_file, output_file_name=output_file, data_folder=working_directory,

@@ -2,6 +2,7 @@ from .toolkit import *
 from subprocess import call
 from .scripts.fit_mtp import fit_mtp
 from .scripts.mtp_prm_to_pun import mtp_prm_to_pun
+from .scripts.pun2charmmlpun import pun_2_charmm_lpun
 import os.path
 import json
 
@@ -36,27 +37,34 @@ def mtpfit_part2(ctx):
     # set global calculation directory
     calc_out_dir=ctx.input_dir.subdir("../output/").full_path + "/" 
 
-    tabfile = calc_out_dir+"mtpfittab.txt"
-    chgfile = ctx.input_dir.full_path + "/" + chgfile
+    tabfile = calc_out_dir + tabfile
+    chgfile = calc_out_dir + chgfile
     fit_outfile = ctx.run_out_dir.full_path + "/fit_" + str(fit_number) + ".txt"
 
     ctx.log.info("Input files:\n\t{}".format("\n\t".join(ctx.input_dir.list_files_recursively())))
 
     # run fit
-    fit_mtp(rank, chgfile, fit_outfile, threshold, ignore_H, tabfile)
+    fit_rmse = -1.0
+    fit_mtp(rank, chgfile, fit_outfile, fit_rmse, threshold, ignore_H, tabfile)
     ctx.log.info("Finished fit")
 
     # convert fit output to pun file
-    new_pun = ctx.output_dir.full_path + "/fit_" + str(fit_number) + ".pun"
-    ref_lpun = calc_out_dir + "gdma_ref.pun"
-    ref_lpun = "/home/wfit/FittingWizardWeb/fitting_service/data/mike-test-mtp/output/nma.gdma.pun" ####
-    ctx.log.info("Creating fitted punch file "+new_pun)
-    mtp_prm_to_pun(fit_outfile, ref_lpun, new_pun)
+    fitted_pun = ctx.run_out_dir.full_path + "/fit_" + str(fit_number) + ".pun"
+    ref_pun = calc_out_dir + "gdma_ref.pun"
+##    ref_pun = "/home/wfit/FittingWizardWeb/fitting_service/data/mike-test-mtp/output/nma_l.pun" ###
+    ctx.log.info("Creating fitted punch file "+fitted_pun+" from reference pun file "+ref_pun)
+    mtp_prm_to_pun(fit_outfile, ref_pun, fitted_pun)
+  
+    # convert fitted pun file to CHARMM lpun format
+    fitted_lpun = ctx.run_out_dir.full_path + "/fit_" + str(fit_number) + ".lpun"
+    ctx.log.info("Converting fitted punch file "+fitted_pun+" to charmm lpun format")
+    pun_2_charmm_lpun(fitted_pun, fitted_lpun)
 
     # gather results for vaporization enthalpy
-#    parse_mtp_out(ctx,mtp_out_name)
-
-#    ctx.log.info("Density read from file "+dens_out_name+": "+str(results["density"])+" g/cm^3\n")
+    ctx.log.info("Gathering results to results.json")
+    results["mtp_fit_number"] = fit_number
+    results["mtp_fit_RMSE"] = fit_rmse
+    results["mtp_fit_rank"] = rank
 
     with ctx.run_out_dir.open_file("results.json", "w") as json_file:
        json.dump(results,json_file)
@@ -68,4 +76,26 @@ def mtpfit_part2(ctx):
 def _get_and_log_job_status(ctx, job_id, expected_status):
         job_status = ctx.job_status(job_id)
         ctx.log.info("expected: {} \t actual: {}".format(expected_status, job_status))
+
+
+#################################################################################################33
+
+def parse_fieldcomp(ctx, fieldcomp_log):
+
+    kj_to_kcal = 0.239006
+    flag=0
+    with ctx.run_out_dir.open_file(fieldcomp_log, "r") as f_log:
+        for line in f_log:
+            words = line.split()
+            if len(words) == 4:
+                if words[2] == "total" and words[3] == "space":
+                    flag = 1
+            if len(words) == 4 and flag == 1:
+                if words[0] == "difference" and words[1] == "average:":
+                    flag = 0
+                    rmse = float(words[2]) * kj_to_kcal
+                    
+        ctx.log.info("RMSE of fit is " + str(rmse))
+    f_log.close()
+    return rmse
 

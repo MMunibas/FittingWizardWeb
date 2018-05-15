@@ -33,7 +33,7 @@ def mtp_prm_to_pun(fit_output, ref_lpun, new_pun):
     # output file
     out = new_pun
     # Net charge of the system
-    chg = charge
+    chg = ''
     
     def usage():
         """Print Command line usage information"""

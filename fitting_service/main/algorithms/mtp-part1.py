@@ -32,6 +32,7 @@ def mtpfit_part1(ctx):
         multiplicity = ctx.parameters["mtp_gen_molecule_multiplicity"]
         cmd = ctx.parameters["mtp_gen_gaussian_input_commandline"]
         ncore = ctx.parameters["mtp_gen_gaussian_num_cores"]
+        json_chg_file = ctx.parameters["mtp_gen_charge_filename"]
     except ValueError:
         pass
 
@@ -55,7 +56,7 @@ def mtpfit_part1(ctx):
     gau_inp_file = write_gaussian_inp(ctx, xyz, gau_inp_name, chk_name, cmd, charge, multiplicity, ncore).name
 
     # set up GDMA calculation on Gaussian fchk file
-    pun_name = calc_out_dir + "gdma_ref.pun"
+    pun_name = "gdma_original.pun"
     gdma_inp_name = basename + ".gdma.inp"
     gdma_out_name = basename + ".gdma.log"
     gdma_sh = mtp_out_dir + basename + ".gdma.sh"
@@ -80,21 +81,22 @@ def mtpfit_part1(ctx):
                                  gdma_out_name, grid_pars, cube_file, pun_name, vdw_file_name, xyz_file_name,
                                  sdf_file_name, ncore)
 
-###    job_id = ctx.schedule_job(ctx.input_dir.full_path + "/mtp/run-gau.sh")
-###    ctx.wait_for_all_jobs()
+    job_id = ctx.schedule_job(ctx.input_dir.full_path + "/mtp/run-gau.sh") ###
+    ctx.wait_for_all_jobs()  ###
 
     ctx.log.info("jobs completed")
 
-    mtp_out_dir="/home/wfit/FittingWizardWeb/fitting_service/data/mike-test-mtp/output/" #######
-    sdf_file_name="/home/wfit/FittingWizardWeb/fitting_service/data/mike-test-mtp/output/nma.sdf" ####
+##    mtp_out_dir="/home/wfit/FittingWizardWeb/fitting_service/data/mike-test-mtp/output/" #######
+##    sdf_file_name="/home/wfit/FittingWizardWeb/fitting_service/data/mike-test-mtp/output/nma.sdf" ####
     # now calculate local reference axes
     ctx.log.info("Calculating local reference axes for " + sdf_file_name)
-    calculate_LRA(sdf_file_name)
+    local_pun_name = calc_out_dir + "gdma_ref.pun"
+##    local_pun_name = "/home/wfit/FittingWizardWeb/fitting_service/data/mike-test-mtp/output/gdma_ref.pun" #####
+    calculate_LRA(sdf_file_name, mtp_out_dir + pun_name, local_pun_name, calc_out_dir+json_chg_file)
 
     # and generate fitting table
-    local_pun_name = basename + "_l.pun"
     ctx.log.info("Generating fitting table for " + cube_file + ", " + vdw_file_name + ", " + local_pun_name)
-    mk_fittab_mtp(mtp_out_dir + cube_file, mtp_out_dir + vdw_file_name, mtp_out_dir + local_pun_name, 
+    mk_fittab_mtp(mtp_out_dir + cube_file, mtp_out_dir + vdw_file_name, local_pun_name, 
                   calc_out_dir)
 
     # gather files for subsequent fitting steps

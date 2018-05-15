@@ -17,6 +17,7 @@
 #
 # This program generates a .pun file with the local reference axis system assigned for each atom
 import sys
+import json
 
 def distribute_charge(atom,chrg):
   """Identifies groups of atoms connected by pi systems 
@@ -42,7 +43,7 @@ def print_traceback(traceback):
         print("---------------------------------------")
         print_traceback(traceback.tb_next)
 
-def calculate_LRA(basename, pun=True, boxp=False, boundcheck=True, punxyz=False):
+def calculate_LRA(basename, punchfile, lpunfile, jsonfile, pun=True, boxp=False, boundcheck=True, punxyz=False):
 
   try:
     
@@ -87,7 +88,7 @@ def calculate_LRA(basename, pun=True, boxp=False, boundcheck=True, punxyz=False)
     if punxyz == True:
       import mtp_tools, numpy
       mo = mtp_tools.molecule()
-      mo.readfromrawpunfile(basename+'.pun')
+      mo.readfromrawpunfile(punchfile)
       xyzblock = []
       for atom in mo.atoms: xyzblock.append([atom.atype, float(atom.coords[0]), float(atom.coords[1]), float(atom.coords[2])])
     else:
@@ -573,6 +574,7 @@ def calculate_LRA(basename, pun=True, boxp=False, boundcheck=True, punxyz=False)
     ############
     # Assemble Composite atomtype Names
     
+    results = {} # to write charges to json file
     com_atypes = []
     cc=1
     for i in range(len(atypes)):
@@ -583,14 +585,14 @@ def calculate_LRA(basename, pun=True, boxp=False, boundcheck=True, punxyz=False)
         com_atype = com_atype + atypes[SP_name_atoms[i][0]] + atypes[SP_name_atoms[i][1]] + "-" + str(cc)
       com_atypes.append(com_atype)
       cc += 1
-    
+
     ###########
     # Write output file
     if pun == True:
-      f = open(basename+'.gdma.pun','r')
+      f = open(punchfile,'r')
       ol_punf = f.readlines()
       f.close()
-      f = open(basename+'_l.pun','w')
+      f = open(lpunfile,'w')
       k=0
       header = True
       while k <= len(ol_punf) and header:
@@ -599,14 +601,17 @@ def calculate_LRA(basename, pun=True, boxp=False, boundcheck=True, punxyz=False)
           and line[0] not in ['#','!']:
           header = False
         k += 1
-    
-      for i in range(k-1): f.write(ol_punf[i])
+
+      count=0
+      for i in range(k-1):
+          f.write(ol_punf[i])
     
       for i in range(len(atoms)):
         line = ol_punf[k-1][2:]
         line = com_atypes[i]+line
         f.write(line)
         line = line.split()
+        results[line[0]+"_Q00"] = ol_punf[k].strip()
         rnk = line[-1]
         if rnk == '0':
           for j in range(1): f.write(ol_punf[k+j])
@@ -637,7 +642,7 @@ def calculate_LRA(basename, pun=True, boxp=False, boundcheck=True, punxyz=False)
     if pun == False:
       import mtp_tools, math, numpy
       mo = mtp_tools.molecule()
-      mo.readfromrawpunfile(basename+'.pun')
+      mo.readfromrawpunfile(punchfile)
       for i in range(natoms):
         mo.atoms[i].refkind = 'int'
         if terminal[i] == True: mo.atoms[i].refkind = 'ter'
@@ -659,7 +664,7 @@ def calculate_LRA(basename, pun=True, boxp=False, boundcheck=True, punxyz=False)
       f = open(basename+'.lpun','w')    
       f.write("! "+basename+"; Distributed multipoles rotated to local reference axis system.\n")
       f.write("! Multipoles were obtained from "+basename+".pun. File was written by calc_lra.py.\n")
-      g = open(basename+'.pun','r')  
+      g = open(punchfile,'r')  
       for i in range(2): wrd = g.readline()
       g.close()
       f.write(wrd+'\n')
@@ -690,6 +695,14 @@ def calculate_LRA(basename, pun=True, boxp=False, boundcheck=True, punxyz=False)
         for j in mo.atoms[i].Qloc: f.write(str(j)+'  ')
         f.write('\n\n')
       f.close()
+
+    ###########
+    # write charges to json file in calculation shared ouput directory
+
+    jf = open(jsonfile, "w")
+    json.dump(results,jf)
+    jf.close()
+   
 
   except Exception as ex:
      print_exception_info(ex)

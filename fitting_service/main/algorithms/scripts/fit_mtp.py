@@ -64,13 +64,14 @@ coeffs_names_mol = []
 x_i = ""
 
 
-def fit_mtp(rank, chgfile, outfile, penalty, off_hyd, tabfile): 
+def fit_mtp(rank, chgfile, outfile, rmse, penalty, off_hyd, tabfile): 
   try:
 
     import sys
     import scipy.sparse as sps
     import scipy.linalg as spl
     import numpy as np
+    import json
     
     #######################
     # Set variable defaults
@@ -293,9 +294,13 @@ def fit_mtp(rank, chgfile, outfile, penalty, off_hyd, tabfile):
         # Penalties are encoded in row_chg[], col_chg[], dat_chg[], esp_chg[]. 
         # This routine expects one row (indexed in row_chg) per molecule.
     
+        print("hi1")
         cc = sps.coo_matrix((dat_chg,(row_chg,col_chg)),shape=(max(row_chg)+1,len(x_i))).todense()
+        print("hi2")
         tot_chg = np.dot(np.array(cc),x_i)
+        print("hi3")
         chg_dev = tot_chg - esp_chg
+        print("hi4"+str(max(abs(chg_dev))))
         return max(abs(chg_dev))
     
     
@@ -306,7 +311,7 @@ def fit_mtp(rank, chgfile, outfile, penalty, off_hyd, tabfile):
         return solver(AtA, Atb)
     
     
-    def optimization(penalize):
+    def optimization(penalize, rmse):
         """Run optimization of charge penalties and find final parameters """
         global x_i, prefactor, pref_cc, row, col, dat, esp
         pref_cc = float(pref_cc_ini)
@@ -337,13 +342,20 @@ def fit_mtp(rank, chgfile, outfile, penalty, off_hyd, tabfile):
         A = sps.coo_matrix((dat,(row,col)),shape=(row_i+npenalties,len(coeffs_names))).tocsr()
         print (row_i,npenalties,coeffs_names)
         b = np.array(esp)
+        print ("hello 1")
         x_i = iterative(A, b)
+        print ("hello 2")
         del_penalties(False)
+        print ("hello 3")
         max_chg_dev = measure_chg_control()
+        print ("hello 4")
         residuals = calc_residuals(A_ref,b_ref,x_i)
+        rmse = residuals[2]
+        print ("hello 5")
         
     # Next rounds with gradual increase of charge control until max charge deviation is less than 1e-12
         while max_chg_dev > 1e-10 and pref_cc < 1e+12:                        
+            print ("hello 6")
             pref_cc *= 10
             if verb: print ("    charge-control penalty: %7.1e" % pref_cc)
     
@@ -354,6 +366,7 @@ def fit_mtp(rank, chgfile, outfile, penalty, off_hyd, tabfile):
             del_penalties()
             new_max_chg_dev = measure_chg_control()
             residuals = calc_residuals(A_ref,b_ref,x_i)
+            rmse = residuals[2]
             
             if new_max_chg_dev > max_chg_dev:
                  pref_cc /= 10
@@ -369,6 +382,7 @@ def fit_mtp(rank, chgfile, outfile, penalty, off_hyd, tabfile):
     
     # 2nd: increase penalty until PCs are within desired range or coefficients don't vary too much any more.
         while prefactor < 1e2:
+            print ("hello 7")
             # Output results from previous run
             for i in range(len(coeffs_names)):
                 if coeffs_names[i][0:2] == "BI":
@@ -386,6 +400,7 @@ def fit_mtp(rank, chgfile, outfile, penalty, off_hyd, tabfile):
             largest_Q0 = max(abs(value) for i,value in enumerate(x_i) if coeffs_names[i][-4:] == "_Q00")
             if num_bi: largest_bi = max(abs(value) for i,value in enumerate(x_i) if coeffs_names[i][0:2] == "BI")
             residuals = calc_residuals(A_ref,b_ref,x_i,perconf=perconf)
+            rmse = residuals[2]
     
     # Write summary
             print ()
@@ -399,7 +414,7 @@ def fit_mtp(rank, chgfile, outfile, penalty, off_hyd, tabfile):
             print ("  Max charge deviation:                 %7.4e" % max_chg_dev)
     
             if penalty_swt and penalize and pref_ini < 0.0:
-    
+
     # Check whether monopoles are close enough to ESP-only monopoles
                 max_offshoot = max([abs(x_i[i] - x_comb_init[i]) for i,name in enumerate(coeffs_names) if "Q00" in name])
                 
@@ -433,6 +448,7 @@ def fit_mtp(rank, chgfile, outfile, penalty, off_hyd, tabfile):
         print ("  R^2 predicted ESP:          %7.5f " %residuals[0])
         print ("  Max charge deviation:      %7.4e e" % max_chg_dev)
         calc_residuals(A_ref,b_ref,x_i,perconf=perconf)
+        rmse = residuals[2]
     
     
     def printMTPNorms(coeffs_names,x_i):
@@ -470,7 +486,7 @@ def fit_mtp(rank, chgfile, outfile, penalty, off_hyd, tabfile):
         return
     
     
-    def opt_esp(list_files,penalize,rnk):
+    def opt_esp(list_files,penalize,rnk, rmse):
         """Run optimization within"""
         global x_i, coeffs_names, x_comb_init
     
@@ -494,7 +510,7 @@ def fit_mtp(rank, chgfile, outfile, penalty, off_hyd, tabfile):
         
         # Initial guess
         x_i = np.zeros(len(coeffs_names))
-        optimization(penalize)
+        optimization(penalize, rmse)
         if penalize:
             # Only run the routine for the fit with penalties.
             printMTPNorms(coeffs_names,x_i)
@@ -582,18 +598,24 @@ def fit_mtp(rank, chgfile, outfile, penalty, off_hyd, tabfile):
         except:
             print ("Error: Could not find",load_pc+". Exiting.")
             exit(1)
-        readf = f.readlines()
-        f.close()
-        if len(readf) != len(coeffs_names_all):
-            print ("Warning: length of",load_pc,"and number of coefficients not compatible.")
         print ("Loading PCs from file", load_pc)
-        for j in range(0,len(readf)):
-            readf[j] = readf[j].split()
-            x_comb_init[coeffs_names_all.index(readf[j][0])] = float(readf[j][1])
+        json_data = json.load(f)
+        for key, value in json_data.items():
+            x_comb_init[coeffs_names_all.index(key)] = value
+#        readf = f.readlines() ##
+        f.close()
+#        if len(readf) != len(coeffs_names_all):
+        if len(x_comb_init) != len(coeffs_names_all):
+            print ("Warning: length of",load_pc,"and number of coefficients not compatible.")
+#        for j in range(0,len(readf)): ##
+#            readf[j] = readf[j].split() ##
+#        x_comb_init[coeffs_names_all.index(readf[j][0])] = float(readf[j][1]) ##
+        print ("test "+str(x_comb_init))
+ 
     else:
         print (" Fitting PC-only model to obtain PC restraints.")
         print ()
-        opt_esp(tabf,False,0)
+        opt_esp(tabf,False,0,rmse)
         x_comb_init = np.zeros(len(coeffs_names_all))
         for i,name in enumerate(coeffs_names):
             if name in coeffs_names_all:
@@ -610,7 +632,7 @@ def fit_mtp(rank, chgfile, outfile, penalty, off_hyd, tabfile):
     # Combined fit 
     print (" Fitting full model with all MTP parameters given.")
     print ()
-    opt_esp(tabf,True,rank)
+    opt_esp(tabf,True,rank,rmse)
     
     #############
     # Output
@@ -621,7 +643,6 @@ def fit_mtp(rank, chgfile, outfile, penalty, off_hyd, tabfile):
             f.write("%s %18.15f\n" % (coeffs_names[i],x_i[i]))
         f.close()
         
-    exit(0)
 
   except Exception as ex:
      print_exception_info(ex)
