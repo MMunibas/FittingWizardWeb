@@ -330,6 +330,25 @@ class InputFileDownloadResource(Resource):
         return CalculationService().delete_input_file(calculation_id, relative_path)
 
 
+@ns_calculation.route('/<string:calculation_id>/result')
+@api.response(404, 'no calculation with id {calculation_id} found')
+@api.response(405, 'no result available')
+class OutputFileListResource(Resource):
+    @api.response(200, 'calculation output structure')
+    def get(self, calculation_id):
+        """
+        Returns the result of the last run.
+        """
+        if not CalculationService().calculation_exists(calculation_id):
+            return redirect(request.url, 404)
+
+        result = CalculationService().read_last_run_result(calculation_id)
+
+        if result is None:
+            return redirect(request.url, 405)
+
+        return result
+
 
 @ns_calculation.route('/<string:calculation_id>/output')
 @api.response(404, 'no calculation with id {calculation_id} found')

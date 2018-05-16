@@ -143,6 +143,9 @@ class CalculationService(metaclass=Singleton):
     def is_algorithm_supported(self, algo_name):
         return Scanner().has_algorithm(algo_name)
 
+    def read_last_run_result(self, calculation_id):
+        return CalculationDirectory(calculation_id).read_last_run_result()
+
 
 @synchronized
 class CalculationManagement(metaclass=Singleton):
@@ -155,10 +158,7 @@ class CalculationManagement(metaclass=Singleton):
         return calculation_id in self.running_calculations and self.running_calculations[calculation_id].is_alive()
 
     def start(self, calculation_id, parameters, blocking=False):
-
         calc_dir = CalculationDirectory(calculation_id)
-        if calc_dir.status.is_running:
-            raise CalculationRunningException
 
         run = calc_dir.prepare_run(parameters)
 
@@ -211,6 +211,9 @@ class CalculationRun(Thread):
 
 
 class CalculationDirectory(Directory):
+
+    RESULTS_FILE_NAME = 'results.json'
+
     def __init__(self, parameter):
         self.calculation_id = None
         self._dir = None
@@ -253,7 +256,8 @@ class CalculationDirectory(Directory):
 
     def prepare_run(self, parameters):
         if self.status.is_running:
-            return None
+            raise CalculationRunningException
+
         del Storage().get_cancel_file(self.calculation_id).is_set
         Storage().get_jobs_file(self.calculation_id).clear()
         run_id = Filename.new_run_filename()
@@ -290,6 +294,26 @@ class CalculationDirectory(Directory):
         except:
             self._logger.error("Unable to get calculation status")
             raise
+
+    def read_last_run_result(self):
+        last_run = self.status.last_run()
+        if last_run is None:
+            return None
+        return self.read_run_result(last_run)
+
+    def read_run_result(self, run_id):
+        run_dir = self.subdir(run_id)
+        run_out_dir = run_dir.subdir('output')
+        if not run_out_dir.contains(self.RESULTS_FILE_NAME):
+            return None
+
+        with run_out_dir.open_file(self.RESULTS_FILE_NAME, 'r') as json_file:
+            return json.load(json_file)
+
+    def write_run_results(self, run_id, json_object):
+        run_output = self.subdir(run_id).subdir('output')
+        with run_output.open_file(self.RESULTS_FILE_NAME, 'w') as json_file:
+            json.dump(json_object, json_file)
 
 
 class CalculationRunningException(Exception):
@@ -401,6 +425,9 @@ class CalculationContext(IContext):
 
     def wait_for_all_jobs(self):
         self.wait_for_finished_jobs(*self.job_ids)
+
+    def write_results(self, json_object):
+        CalculationDirectory(self._calculation_id).write_run_results(self._run_id, json)
 
     def wait_for_finished_jobs(self, *job_ids):
         JobsService().wait_for_finished(self._calculation_id, list(job_ids))

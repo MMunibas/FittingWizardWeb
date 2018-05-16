@@ -20,7 +20,6 @@ class CalculationTest(object):
         Storage().set_root("../data")
 
     def execute(self):
-        self._validate_input()
         self.calc_dir.status.update_status("created", "")
         CalculationService().run_calculation(self.calc_id,
                                              {
@@ -69,8 +68,11 @@ class CalculationTest(object):
             for k, v in meta["parameters"].items():
                 self.parameters[k] = v
 
-    def _validate_input(self):
-        pass
+    def read_last_run_results(self):
+        if self.calc_id is None:
+            raise Exception('calc_id not set')
+
+        return CalculationService().read_last_run_result(self.calc_id)
 
     @staticmethod
     def shutdown():

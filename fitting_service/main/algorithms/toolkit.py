@@ -69,6 +69,11 @@ class IContext(metaclass=ABCMeta):
         """ wait for all running jobs to finish """
         pass
 
+    @abstractmethod
+    def write_results(self, json_object):
+        """ writes the given json object to the results file """
+        pass
+
 
 class IDirectory(metaclass=ABCMeta):
     @property
