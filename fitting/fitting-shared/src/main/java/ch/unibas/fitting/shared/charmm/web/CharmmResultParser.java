@@ -3,8 +3,12 @@ package ch.unibas.fitting.shared.charmm.web;
 import ch.unibas.fitting.shared.charmm.generate.inputs.CHARMM_Generator_DGHydr;
 import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output_GasPhase;
 import ch.unibas.fitting.shared.charmm.generate.outputs.CHARMM_Output_PureLiquid;
+import ch.unibas.fitting.shared.directories.LjFitRunDir;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,19 +24,49 @@ public class CharmmResultParser {
 
     private static Logger LOGGER = Logger.getLogger(CharmmResultParser.class);
 
-    public static CharmmResultParserOutput parseOutput(CHARMM_Output_GasPhase gasOutput,
-                                                       CHARMM_Output_PureLiquid pureLiquid,
-                                                       CHARMM_Generator_DGHydr gasVdw,
-                                                       CHARMM_Generator_DGHydr gasMtp,
-                                                       CHARMM_Generator_DGHydr solvVdw,
-                                                       CHARMM_Generator_DGHydr solvMtp) {
+    public static CharmmResultParserOutput parseOutput(LjFitRunDir dir) {
+        return parseOutput(
+                dir.getGasOutputFile(),
+                dir.getSolventOutputFile(),
+                dir.getGasVdwOutputFile(),
+                dir.getGasMtpOutputFile(),
+                dir.getSolvVdwOutputFile(),
+                dir.getSolvMtpOutputFile()
+        );
+    }
 
-        CharmmResultParserOutput output = parseCharmmResult(gasOutput, pureLiquid);
+    public static CharmmResultParserOutput parseOutput(
+            File gasOutput,
+            File solventOutput,
+            File gasVdw,
+            File gasMtp,
+            File solvVdw,
+            File solvMtp) {
 
-        output.setGas_vdw(parseDeltaG(gasVdw));
-        output.setGas_mtp(parseDeltaG(gasMtp));
-        output.setSolvent_vdw(parseDeltaG(solvVdw));
-        output.setSolvent_mtp(parseDeltaG(solvMtp));
+        String gasText;
+        String solventText;
+        String gasVdwText;
+        String gasMtpText;
+        String solvVdwText;
+        String solvMtpText;
+        try {
+            gasText = FileUtils.readFileToString(gasOutput);
+            solventText = FileUtils.readFileToString(solventOutput);
+
+            gasVdwText = FileUtils.readFileToString(gasVdw);
+            gasMtpText = FileUtils.readFileToString(gasMtp);
+            solvVdwText = FileUtils.readFileToString(solvVdw);
+            solvMtpText = FileUtils.readFileToString(solvMtp);
+        } catch (IOException e) {
+            throw new RuntimeException("failed to load files", e);
+        }
+
+        CharmmResultParserOutput output = parseCharmmResult(gasText, solventText);
+
+        output.setGas_vdw(parseDeltaG(gasVdwText));
+        output.setGas_mtp(parseDeltaG(gasMtpText));
+        output.setSolvent_vdw(parseDeltaG(solvVdwText));
+        output.setSolvent_mtp(parseDeltaG(solvMtpText));
 
         LOGGER.debug("Parsed value: " +
                 " nres: " + output.getNres() +
@@ -51,22 +85,22 @@ public class CharmmResultParser {
         return output;
     }
 
-    private static CharmmResultParserOutput parseCharmmResult(CHARMM_Output_GasPhase gasOutput,
-                                                              CHARMM_Output_PureLiquid pureLiquid) {
-        CharmmResultParserOutput output = new CharmmResultParserOutput();
+    private static CharmmResultParserOutput parseCharmmResult(String gasOutput,
+                                                              String solventOutput) {
+        var output = new CharmmResultParserOutput();
 
-        List<String> pureLiqOut = splitOutFile(pureLiquid.getText().split("\n"));
-        List<String> gasPhaseOut = splitOutFile(gasOutput.getText().split("\n"));
+        List<String> solventLines = splitOutFile(solventOutput.split("\n"));
+        List<String> gasPhaseOut = splitOutFile(gasOutput.split("\n"));
 
         List<String> nat = findInArray(gasPhaseOut, find_natom);
         String[] n = nat.get(nat.size() - 1).split("\\s+");
         output.setNatom(Integer.valueOf(n[5]));
 
-        List<String> Temptxt = findInArray(pureLiqOut, find_temp);
+        List<String> Temptxt = findInArray(solventLines, find_temp);
         String[] T = Temptxt.get(Temptxt.size() - 1).split("\\s+");
         output.setTemp(Double.valueOf(T[3]));
 
-        List<String> Restxt = findInArray(pureLiqOut, find_nres);
+        List<String> Restxt = findInArray(solventLines, find_nres);
         String[] NR = Restxt.get(Restxt.size() - 1).split("\\s+");
         output.setNres(Integer.valueOf(NR[10]));
 
@@ -82,12 +116,12 @@ public class CharmmResultParser {
                 (3.0 * output.getNatom() - 6 - output.getNconstr()));
 
         //energy from liquid phase
-        List<String> averlist2 = findInArray(pureLiqOut, "AVER>");
+        List<String> averlist2 = findInArray(solventLines, "AVER>");
         String[] avL2 = averlist2.get(averlist2.size() - 1).split("\\s+");
         output.setEliq(Double.valueOf(avL2[5]) / output.getNres());
 
         // get all lines containing "AVER PRESS>"
-        List<String> boxLen = findInArray(pureLiqOut, "AVER PRESS>");
+        List<String> boxLen = findInArray(solventLines, "AVER PRESS>");
         //keep last column containing volume in cubic angstroems
         String[] L = boxLen.get(boxLen.size() - 1).split("\\s+");
         output.setBox(Double.valueOf(L[6]));
@@ -95,8 +129,8 @@ public class CharmmResultParser {
         return output;
     }
 
-    private static Double parseDeltaG(CHARMM_Generator_DGHydr deltaGOutput) {
-        List<String> output = splitOutFile(deltaGOutput.getRunOutput().split("\n"));
+    private static Double parseDeltaG(String deltaGOutput) {
+        List<String> output = splitOutFile(deltaGOutput.split("\n"));
         String line = findInArray(output, "kcal/mol").get(0);
         String text = line.split("\\s+")[4];
         Double value = Double.valueOf(text);

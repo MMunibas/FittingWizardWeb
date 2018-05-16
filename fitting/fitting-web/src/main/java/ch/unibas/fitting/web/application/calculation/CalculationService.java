@@ -1,15 +1,15 @@
 package ch.unibas.fitting.web.application.calculation;
 
-import com.google.inject.Provides;
 import de.agilecoders.wicket.jquery.util.Json;
 import io.swagger.client.ApiClient;
+import io.swagger.client.ApiException;
 import io.swagger.client.api.CalculationApi;
 import io.swagger.client.api.DefaultApi;
 import io.swagger.client.model.*;
-
 import io.vavr.collection.List;
-import org.apache.wicket.util.file.File;
+import io.vavr.control.Option;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
+import org.apache.wicket.util.file.File;
 
 import javax.inject.Singleton;
 import java.util.HashMap;
@@ -310,6 +310,12 @@ public class CalculationService {
     public void deleteCalculation(String calculationId) {
         try {
             calculationApi.deleteCalculationResource(calculationId);
+        }
+        catch (ApiException ex) {
+            if (ex.getCode() == 404)
+                return;
+            else
+                throw new RuntimeException("failed call to api", ex);
         }
         catch (Exception ex) {
             throw new RuntimeException("failed call to api", ex);

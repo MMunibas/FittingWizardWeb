@@ -1,5 +1,6 @@
 package ch.unibas.fitting.shared.directories;
 
+import ch.unibas.fitting.shared.infrastructure.JsonSerializer;
 import ch.unibas.fitting.shared.workflows.charmm.UploadedFiles;
 import ch.unibas.fitting.shared.workflows.ljfit.UploadedFileNames;
 import org.apache.commons.io.FilenameUtils;
@@ -14,10 +15,11 @@ import java.util.List;
 abstract class FittingDirectory {
     protected final Logger LOGGER;
 
-    private final File directory;
     protected final String username;
+    private final File directory;
 
-    protected FittingDirectory(String username, File directory) {
+    protected FittingDirectory(String username,
+                               File directory) {
         this.username = username;
         LOGGER = Logger.getLogger(getClass());
         directory.mkdirs();

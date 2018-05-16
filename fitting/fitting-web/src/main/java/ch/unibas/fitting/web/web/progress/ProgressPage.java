@@ -1,13 +1,11 @@
 package ch.unibas.fitting.web.web.progress;
 
-import ch.unibas.fitting.web.application.IBackgroundTasks;
-import ch.unibas.fitting.web.application.TaskHandle;
+import ch.unibas.fitting.web.application.task.IBackgroundTasks;
+import ch.unibas.fitting.web.application.task.TaskHandle;
 import ch.unibas.fitting.web.web.HeaderPage;
-import ch.unibas.fitting.web.web.PageNavigation;
 import ch.unibas.fitting.web.web.errors.ErrorPage;
 import ch.unibas.fitting.web.welcome.WelcomePage;
 import com.google.inject.Inject;
-import io.vavr.control.Option;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -19,7 +17,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.time.Duration;
 
-import java.util.Optional;
 import java.util.UUID;
 
 /**

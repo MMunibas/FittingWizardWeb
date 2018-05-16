@@ -3,8 +3,8 @@ package ch.unibas.fitting.web.calculation;
 import ch.unibas.fitting.web.application.calculation.CalculationService;
 import ch.unibas.fitting.web.calculation.commands.StartDummyAlgoCommand;
 import ch.unibas.fitting.web.calculation.commands.StartDummyLjFitCommand;
-import ch.unibas.fitting.web.calculation.management.CalculationManagementClient;
-import ch.unibas.fitting.web.calculation.management.execution.messages.ExecutionProgress;
+import ch.unibas.fitting.web.application.calculation.CalculationManagementClient;
+import ch.unibas.fitting.web.application.calculation.execution.messages.ExecutionProgress;
 import ch.unibas.fitting.web.web.HeaderPage;
 import io.swagger.client.model.CalculationStatus;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -128,8 +128,8 @@ public class OverviewPage extends HeaderPage {
             protected void populateItem(ListItem item) {
                 var calc = ((ExecutionProgress)item.getModelObject());
                 item.add(new Label("execId", calc.executionId));
-                item.add(new Label("execStatus", calc.state.getStatus()));
-                item.add(new Label("execMessage", calc.state.getMessage()));
+                item.add(new Label("execStatus", calc.status));
+                item.add(new Label("execMessage", calc.message));
                 item.add(new AjaxLink("execCancel") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {

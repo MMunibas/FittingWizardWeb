@@ -1,6 +1,6 @@
 package ch.unibas.fitting.web.application;
 
-import ch.unibas.fitting.web.calculation.management.ActorUtils;
+import ch.unibas.fitting.web.application.calculation.ActorUtils;
 import org.junit.Assert;
 import org.junit.Test;
 

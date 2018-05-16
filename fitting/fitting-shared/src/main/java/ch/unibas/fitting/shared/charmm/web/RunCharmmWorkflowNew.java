@@ -45,13 +45,7 @@ public class RunCharmmWorkflowNew implements IRunCharmmWorkflowNew {
             script.run(clusterParameter);
         }
 
-        CharmmResultParserOutput output = CharmmResultParser.parseOutput(
-                gasOut,
-                pureLiquidOut,
-                container.getGasVdw(),
-                container.getGasMtp(),
-                container.getSolvVdw(),
-                container.getSolvMtp());
+        CharmmResultParserOutput output = CharmmResultParser.parseOutput(container.getCharmmRunDir());
 
         LOGGER.debug("Executing Charm Workflow DONE.");
         return new CharmmResult(gasOut, pureLiquidOut, output);

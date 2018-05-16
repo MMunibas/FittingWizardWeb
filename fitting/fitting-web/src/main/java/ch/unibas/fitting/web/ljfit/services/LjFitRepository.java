@@ -36,7 +36,6 @@ public class LjFitRepository {
                 .map(runDir -> new LjFitRun(
                         runDir.getUsername(),
                         runDir.getDirectory().getName(),
-                        runDir.getCreated(),
                         serializer.readJsonFile(runDir.getRunInputJson(), LjFitRunInput.class),
                         serializer.readJsonFile(runDir.getRunOutputJson(), LjFitRunResult.class)
                 ))

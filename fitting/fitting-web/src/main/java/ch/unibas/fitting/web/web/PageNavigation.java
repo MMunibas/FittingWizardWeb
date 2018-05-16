@@ -1,10 +1,9 @@
 package ch.unibas.fitting.web.web;
 
-import ch.unibas.fitting.web.application.PageContext;
-import ch.unibas.fitting.web.application.TaskHandle;
+import ch.unibas.fitting.web.application.task.PageContext;
+import ch.unibas.fitting.web.application.task.TaskHandle;
 import ch.unibas.fitting.web.calculation.ActorBasedProgressPage;
-import ch.unibas.fitting.web.calculation.management.execution.messages.Start;
-import ch.unibas.fitting.web.calculation.management.execution.messages.StartResponse;
+import ch.unibas.fitting.web.application.calculation.execution.messages.StartResponse;
 import ch.unibas.fitting.web.web.progress.ProgressPage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;

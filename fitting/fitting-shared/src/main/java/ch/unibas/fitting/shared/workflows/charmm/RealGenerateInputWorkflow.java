@@ -69,16 +69,16 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
         double lambda_spacing = input.lambdaSpacing;
 
 
-        File gasFile = new File(charmmRunDir.getDensity_dir(), "gas_phase.inp");
-        CHARMM_Input_GasPhase  gasInp = new CHARMM_Input_GasPhase(
+        var gasFile = new File(charmmRunDir.getDensity_dir(), "gas_phase.inp");
+        var  gasInp = new CHARMM_Input_GasPhase(
                 molFile,
                 rtfFile,
                 parFile,
                 lpunFile,
                 gasFile);
 
-        File liqFile = new File(charmmRunDir.getDensity_dir(), "pure_liquid.inp");
-        CHARMM_Input_PureLiquid liqInp = new CHARMM_Input_PureLiquid(
+        var liqFile = new File(charmmRunDir.getDensity_dir(), "pure_liquid.inp");
+        var liqInp = new CHARMM_Input_PureLiquid(
                 liquidFile,
                 rtfFile,
                 parFile,
@@ -86,7 +86,7 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
                 liqFile,
                 input.temperature);
 
-        CHARMM_Generator_DGHydr in_gas_vdw = new CHARMM_Generator_DGHydr(
+        var in_gas_vdw = new CHARMM_Generator_DGHydr(
                 molFile,
                 rtfFile,
                 parFile,
@@ -98,7 +98,7 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
                 charmmRunDir.getGasVdwDir(),
                 settings);
 
-        CHARMM_Generator_DGHydr in_gas_mtp = new CHARMM_Generator_DGHydr(
+        var in_gas_mtp = new CHARMM_Generator_DGHydr(
                 molFile,
                 rtfFile,
                 parFile,
@@ -111,7 +111,7 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
                 settings);
 
         // solvent
-        CHARMM_Generator_DGHydr in_solv_vdw = new CHARMM_Generator_DGHydr(
+        var in_solv_vdw = new CHARMM_Generator_DGHydr(
                 molFile,
                 solventFile,
                 rtfFile,
@@ -125,7 +125,7 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
                 charmmRunDir.getSolvVdwDir(),
                 settings);
         // solvent
-        CHARMM_Generator_DGHydr in_solv_mtp = new CHARMM_Generator_DGHydr(
+        var in_solv_mtp = new CHARMM_Generator_DGHydr(
                 molFile,
                 solventFile,
                 rtfFile,
@@ -140,6 +140,7 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
                 settings);
 
         return new CharmmInputContainer(
+                charmmRunDir,
                 gasInp,
                 liqInp,
                 in_gas_vdw,

@@ -62,14 +62,7 @@ public class MockRunCharmmWorkflowNew implements IRunCharmmWorkflowNew {
         CHARMM_Output_GasPhase gasOut = new CHARMM_Output_GasPhase(new File(gasPhase.getWorkDir(), "gas_phase.out"));
         CHARMM_Output_PureLiquid pureLiquidOut = new CHARMM_Output_PureLiquid(new File(pureLiquid.getWorkDir(), "pure_liquid.out"));
 
-        CharmmResultParserOutput out = CharmmResultParser.parseOutput(
-                gasOut,
-                pureLiquidOut,
-                container.getGasVdw(),
-                container.getGasMtp(),
-                container.getSolvVdw(),
-                container.getSolvMtp()
-        );
+        var out = CharmmResultParser.parseOutput(container.getCharmmRunDir());
 
         return new CharmmResult(gasOut, pureLiquidOut, out);
     }

@@ -1,23 +1,26 @@
 package ch.unibas.fitting.web.calculation;
 
+import ch.unibas.fitting.shared.javaextensions.Action;
+import ch.unibas.fitting.web.application.task.PageContext;
 import io.vavr.control.Option;
-import org.apache.wicket.request.component.IRequestablePage;
 
 public class NavigationInfo
 {
-    public Option<Class<? extends IRequestablePage>> previousPage = Option.none();
-    public Option<Class<? extends IRequestablePage>> returnPage = Option.none();
+    public final Action doneCallback;
+    public final Action cancelCallback;
+    public final Option<PageContext> originPage;
 
-    public NavigationInfo(Option<Class<? extends IRequestablePage>> previousPage, Option<Class<? extends IRequestablePage>> returnPage) {
-        this.previousPage = previousPage;
-        this.returnPage = returnPage;
+    public NavigationInfo(Action doneCallback, Action cancelCallback, PageContext originPage) {
+        this.doneCallback = doneCallback;
+        this.cancelCallback = cancelCallback;
+        this.originPage = Option.of(originPage);
     }
-    public NavigationInfo(Option<Class<? extends IRequestablePage>> returnPage) {
-        this.previousPage = Option.none();
-        this.returnPage = returnPage;
+
+    public NavigationInfo(Action doneCallback, Action cancelCallback) {
+        this(doneCallback, cancelCallback, null);
     }
-    public NavigationInfo() {
-        this.previousPage = Option.none();
-        this.returnPage = Option.none();
+
+    public NavigationInfo(Action doneCallback) {
+        this(doneCallback, doneCallback);
     }
 }

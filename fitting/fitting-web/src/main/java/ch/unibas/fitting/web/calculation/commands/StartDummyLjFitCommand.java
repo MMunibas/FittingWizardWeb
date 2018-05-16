@@ -2,10 +2,9 @@ package ch.unibas.fitting.web.calculation.commands;
 
 import ch.unibas.fitting.web.calculation.NavigationInfo;
 import ch.unibas.fitting.web.calculation.OverviewPage;
-import ch.unibas.fitting.web.calculation.management.CalculationManagementClient;
-import ch.unibas.fitting.web.calculation.management.execution.messages.StartDefinition;
+import ch.unibas.fitting.web.application.calculation.CalculationManagementClient;
+import ch.unibas.fitting.web.application.calculation.execution.messages.StartDefinition;
 import ch.unibas.fitting.web.web.PageNavigation;
-import io.vavr.control.Option;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -24,7 +23,7 @@ public class StartDummyLjFitCommand {
         var startResponse = calculationManagement.spawnTask(
                 taskName,
                 username,
-                new NavigationInfo(Option.of(OverviewPage.class)),
+                new NavigationInfo(() -> PageNavigation.ToPage(OverviewPage.class), () -> PageNavigation.ToPage(OverviewPage.class)),
                 createDummyLjFitStartDefinition("calc1",
                         "benzonitrile.rtf", "benzonitrile.pdb", "benzonitrile.par", "fit_4_benzonitrile.lpun", "solvent.pdb","pureliquid.pdb", 0.0, 1.0, 298.3,
                         0.1, 1.0, 1.0),

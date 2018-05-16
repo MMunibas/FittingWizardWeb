@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
 
+@Deprecated
 public class RunGaussianWorkflow implements Workflow<MultipoleGaussInput,RunGaussianResult> {
 
     private static final Logger logger = Logger.getLogger(RunGaussianWorkflow.class);

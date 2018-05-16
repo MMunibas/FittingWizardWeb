@@ -1,7 +1,7 @@
 package ch.unibas.fitting.web.web.errors;
 
-import ch.unibas.fitting.web.application.PageContext;
-import ch.unibas.fitting.web.application.TaskHandle;
+import ch.unibas.fitting.web.application.task.PageContext;
+import ch.unibas.fitting.web.application.task.TaskHandle;
 import io.vavr.control.Option;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.joda.time.DateTime;

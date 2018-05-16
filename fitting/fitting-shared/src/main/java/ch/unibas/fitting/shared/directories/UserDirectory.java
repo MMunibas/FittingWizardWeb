@@ -1,6 +1,7 @@
 package ch.unibas.fitting.shared.directories;
 
 import ch.unibas.fitting.shared.config.Settings;
+import ch.unibas.fitting.shared.infrastructure.JsonSerializer;
 import io.vavr.control.Option;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -9,9 +10,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by mhelmer-mobile on 15.06.2016.
@@ -22,10 +20,12 @@ public class UserDirectory implements IUserDirectory {
     private static final Logger LOGGER = Logger.getLogger(UserDirectory.class);
 
     private File dataDir;
+    private JsonSerializer serializer;
 
     @Inject
-    public UserDirectory(Settings config) {
+    public UserDirectory(Settings config, JsonSerializer serializer) {
         dataDir = config.getDataDir();
+        this.serializer = serializer;
         dataDir.mkdirs();
         LOGGER.info("Using root dir " + dataDir.getPath());
     }
@@ -44,28 +44,21 @@ public class UserDirectory implements IUserDirectory {
 
     @Override
     public MtpFitDir getMtpFitDir(String username) {
-        return new MtpFitDir(username, getMtpFitDirFile(username));
+        return new MtpFitDir(username, getMtpFitDirFile(username), serializer);
     }
 
     @Override
     public LjFitSessionDir createLjFitSessionDir(String username) {
         File f = getLjFitSessionFile(username);
         f.mkdirs();
-        return new LjFitSessionDir(username, f);
+        return new LjFitSessionDir(username, f, serializer);
     }
 
     @Override
     public Option<LjFitSessionDir> getLjFitSessionDir(String username) {
         if (!ljFitSessionDirectoryExists(username))
             return Option.none();
-        return Option.of(new LjFitSessionDir(username, getLjFitSessionFile(username)));
-    }
-
-    @Override
-    public List<String> listAllUserDirs() {
-        return Arrays.stream(dataDir.listFiles(File::isDirectory))
-                .map(file -> file.getName())
-                .collect(Collectors.toList());
+        return Option.of(new LjFitSessionDir(username, getLjFitSessionFile(username), serializer));
     }
 
     @Override

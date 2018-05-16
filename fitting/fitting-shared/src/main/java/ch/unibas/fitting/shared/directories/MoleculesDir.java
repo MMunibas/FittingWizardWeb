@@ -52,6 +52,12 @@ public class MoleculesDir extends FittingDirectory {
         );
     }
 
+    public File createMoleculeDir(String moleculeName) {
+        var f = getMoleculeDirFile(moleculeName);
+        f.mkdirs();
+        return f;
+    }
+
     public File getMoleculeDirFile(String moleculeName) {
         return new File(getDirectory(), moleculeName);
     }

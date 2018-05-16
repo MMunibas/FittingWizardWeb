@@ -1,5 +1,6 @@
 package ch.unibas.fitting.shared.directories;
 
+import ch.unibas.fitting.shared.infrastructure.JsonSerializer;
 import io.vavr.collection.List;
 import io.vavr.collection.Stream;
 import io.vavr.control.Option;
@@ -11,8 +12,12 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class MtpFitDir extends FittingDirectory {
-    protected MtpFitDir(String username, File directory) {
+
+    private final JsonSerializer serializer;
+
+    protected MtpFitDir(String username, File directory, JsonSerializer serializer) {
         super(username, directory);
+        this.serializer = serializer;
     }
 
     private File getFitsDirFile() {
@@ -95,5 +100,34 @@ public class MtpFitDir extends FittingDirectory {
 
         File f = getMoleculeDir().getUserChargesFile(anyName);
         return f.exists();
+    }
+
+    /**
+     * Reads the calculation ID associated with this
+     * @return
+     */
+    public Option<String> readCalculationId() {
+        return serializer
+                .readJsonFile(getSessionJsonFile(), SessionDetails.class)
+                .map(sessionDetails -> sessionDetails.calculationId);
+    }
+
+    /**
+     * Writes the calculation ID associated with the MTP fit session
+     */
+    public void writeCalculationId(String calculationId) {
+        serializer.writeJsonFile(getSessionJsonFile(), new SessionDetails(calculationId));
+    }
+
+    private File getSessionJsonFile() {
+        return new File(getDirectory(), "session.json");
+    }
+
+    private static class SessionDetails {
+        public final String calculationId;
+
+        private SessionDetails(String calculationId) {
+            this.calculationId = calculationId;
+        }
     }
 }

@@ -2,10 +2,9 @@ package ch.unibas.fitting.web.calculation.commands;
 
 import ch.unibas.fitting.web.calculation.NavigationInfo;
 import ch.unibas.fitting.web.calculation.OverviewPage;
-import ch.unibas.fitting.web.calculation.management.CalculationManagementClient;
-import ch.unibas.fitting.web.calculation.management.execution.messages.StartDefinition;
+import ch.unibas.fitting.web.application.calculation.CalculationManagementClient;
+import ch.unibas.fitting.web.application.calculation.execution.messages.StartDefinition;
 import ch.unibas.fitting.web.web.PageNavigation;
-import io.vavr.control.Option;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -23,7 +22,7 @@ public class StartDummyAlgoCommand {
         var startResponse = calculationManagement.spawnTask(
                 taskName,
                 username,
-                new NavigationInfo(Option.of(OverviewPage.class)),
+                new NavigationInfo(() -> PageNavigation.ToPage(OverviewPage.class), () -> PageNavigation.ToPage(OverviewPage.class)),
                 createDummyAlgorithmStartDefinition(40, "calc1"),
                 createDummyAlgorithmStartDefinition(41, "calc2"),
                 createDummyAlgorithmStartDefinition(42, "calc3"),

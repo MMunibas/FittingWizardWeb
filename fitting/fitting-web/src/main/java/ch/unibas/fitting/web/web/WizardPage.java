@@ -1,15 +1,12 @@
 package ch.unibas.fitting.web.web;
 
-import ch.unibas.fitting.web.application.IBackgroundTasks;
-import ch.unibas.fitting.web.application.TaskHandle;
+import ch.unibas.fitting.web.application.task.IBackgroundTasks;
 import ch.unibas.fitting.web.web.progress.ProgressPage;
 import ch.unibas.fitting.web.welcome.NewSessionPage;
 import org.apache.log4j.Logger;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import javax.inject.Inject;
-import java.util.Optional;
 
 /**
  * Created by martin on 04.06.2016.
