@@ -19,7 +19,12 @@ def ljfit(ctx):
     copy_tree(testdata, ctx.run_out_dir.full_path)
     ctx.set_running_status('Simulating LJ Fit: Copying')
 
-    interruptable_wait(ctx, 30)
+    interruptable_wait(ctx, 15)
+
+    data = {
+        "message": "ljfit_finished"
+    }
+    ctx.write_results(data)
 
 
 @register
@@ -29,7 +34,12 @@ def mtpfit_part1(ctx):
     copy_tree(testdata, ctx.run_out_dir.full_path)
     ctx.set_running_status('Simulating MTP generating files: Copying')
 
-    interruptable_wait(ctx, 30)
+    interruptable_wait(ctx, 15)
+
+    data = {
+        "message": "mtpfit_part1_finished"
+    }
+    ctx.write_results(data)
 
 
 @register
@@ -39,11 +49,16 @@ def mtpfit_part2(ctx):
     copy_tree(testdata, ctx.run_out_dir.full_path)
     ctx.set_running_status('Simulating MTP fit: Copying')
 
-    interruptable_wait(ctx, 30)
+    interruptable_wait(ctx, 15)
+
+    data = {
+        "message": "mtpfit_part2_finished"
+    }
+    ctx.write_results(data)
 
 
 def interruptable_wait(ctx, seconds):
-    iterations = abs(seconds / 5)
+    iterations = int(abs(seconds / 5))
     ctx.set_running_status("waiting total {} seconds with {} iterations".format(seconds, iterations))
 
     for i in range(0, iterations):

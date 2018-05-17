@@ -26,7 +26,7 @@ def dummy_algorithm(context):
     context.log.info("x = {}".format(x))
     context.log.info("x² = {}".format(x**2))
 
-    default_input_file_name = "somefile.json"
+    default_input_file_name = "dummy_algo_input.json"
     input_file_name = str(context.parameters.get("input_file_name", default_input_file_name))
 
     """ File IO """

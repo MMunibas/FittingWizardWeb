@@ -47,9 +47,7 @@ class CalculationService(metaclass=Singleton):
             raise CalculationNotFoundException
         calculation_management = CalculationManagement()
         if calculation_management.is_running(calculation_id):
-            return calculation_management.request_cancel(calculation_id)
-        else:
-            raise CalculationNotRunningException
+            calculation_management.request_cancel(calculation_id)
 
     def delete_calculation(self, calculation_id):
         if not Storage().contains_calculation(calculation_id):
@@ -59,7 +57,9 @@ class CalculationService(metaclass=Singleton):
         return self.get_by_id(calculation_id).delete()
 
     def create_new_calculation(self, parameters):
-        return {"calculation": CalculationDirectory(parameters).get_id()}
+        calc_dir = CalculationDirectory(parameters)
+
+        return {"calculation": calc_dir.get_id()}
 
     def list_all_calculations(self):
         return {"calculations": list({
@@ -160,9 +160,9 @@ class CalculationManagement(metaclass=Singleton):
     def start(self, calculation_id, parameters, blocking=False):
         calc_dir = CalculationDirectory(calculation_id)
 
-        run = calc_dir.prepare_run(parameters)
+        run_id = calc_dir.prepare_run(parameters)
 
-        context = CalculationContext(calc_dir, run)
+        context = CalculationContext(calc_dir, run_id)
 
         algorithm = Scanner().find_algorithm(context.algorithm)
         algorithm.validate_input(context)
@@ -172,7 +172,7 @@ class CalculationManagement(metaclass=Singleton):
         self.running_calculations[calculation_id] = run_thread
         if blocking:
             run_thread.join()
-        return run
+        return run_id
 
     def request_cancel(self, calculation_id):
         if calculation_id in self.running_calculations:
@@ -320,62 +320,52 @@ class CalculationRunningException(Exception):
     pass
 
 
-class CalculationNotRunningException(Exception):
-    pass
-
-
 class CalculationNotFoundException(Exception):
     pass
 
 
 class CalculationContext(IContext):
-    def __init__(self, calculation, run_id):
+    def __init__(self, calc_dir, run_id):
         """
         CalculationContext
         """
-        self._calculation_id = calculation.calculation_id
+        self._calculation_id = calc_dir.calculation_id
         self._run_id = run_id
-        self._data_dir = calculation
+        self._calc_dir = calc_dir
         self._logger = getLogger("calc[{}]".format(self._calculation_id))
         self._cancel_requested = False
+
+        self._run_dir = calc_dir.subdir(run_id)
 
     @property
     def log(self):
         return self._logger
 
     @property
-    def base_path(self):
-        return self._data_dir
-
-    @property
-    def work_dir(self):
-        return self.base_path.subdir(self.status.last_run())
-
-    @property
     def input_dir(self):
-        return self.base_path.subdir("input")
+        return self._calc_dir.subdir("input")
 
     @property
     def run_out_dir(self):
-        return self.work_dir.subdir("output")
+        return self._run_dir.subdir("output")
 
     @property
     def run_tmp_dir(self):
-        return self.work_dir.subdir("tmp")
+        return self._run_dir.subdir("tmp")
 
     @property
     def calc_out_dir(self):
-        return self.base_path.subdir("output")
+        return self._calc_dir.subdir("output")
 
     @property
     def parameters(self):
         params = {}
 
-        with self.base_path.open_file(CALCULATION_METADATA_FILE_NAME, "r") as calc_meta:
+        with self._calc_dir.open_file(CALCULATION_METADATA_FILE_NAME, "r") as calc_meta:
             for k, v in json.load(calc_meta)["parameters"].items():
                 params[k] = v
 
-        with self.work_dir.open_file(RUN_METADATA_FILE_NAME, "r") as run_meta:
+        with self._run_dir.open_file(RUN_METADATA_FILE_NAME, "r") as run_meta:
             for k, v in json.load(run_meta)["parameters"].items():
                 params[k] = v
 
@@ -383,7 +373,7 @@ class CalculationContext(IContext):
 
     @property
     def algorithm(self):
-        with self.work_dir.open_file(RUN_METADATA_FILE_NAME, "r") as run_meta:
+        with self._run_dir.open_file(RUN_METADATA_FILE_NAME, "r") as run_meta:
             return json.load(run_meta)["algorithm"]
 
     @property
@@ -411,11 +401,7 @@ class CalculationContext(IContext):
 
     def request_cancel(self):
         Storage().get_cancel_file(self._calculation_id).is_set = True
-        self.cancel_all_calculations()
-
-    def cancel_all_calculations(self):
-        for calc in Storage().list_all_calculations():
-            Storage().get_cancel_file(calc).is_set = True
+        self.cancel_all_jobs()
 
     def schedule_job(self, command):
         return JobsService().schedule_new_job(self._calculation_id, command)
@@ -427,7 +413,7 @@ class CalculationContext(IContext):
         self.wait_for_finished_jobs(*self.job_ids)
 
     def write_results(self, json_object):
-        CalculationDirectory(self._calculation_id).write_run_results(self._run_id, json)
+        CalculationDirectory(self._calculation_id).write_run_results(self._run_id, json_object)
 
     def wait_for_finished_jobs(self, *job_ids):
         JobsService().wait_for_finished(self._calculation_id, list(job_ids))
