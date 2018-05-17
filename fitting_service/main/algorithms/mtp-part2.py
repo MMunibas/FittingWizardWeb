@@ -29,7 +29,7 @@ def mtpfit_part2(ctx):
        threshold = ctx.parameters["mtp_fitting_threshold"]
        rank = ctx.parameters["mtp_fitting_rank"]
        ignore_H = ctx.parameters["mtp_fitting_flag_ignore_H"]
-       chgfile = ctx.parameters["mtp_fitting_charge_filename"]
+       initial_charges = ctx.parameters["mtp_fitting_initial_charges"]
        fit_number = ctx.parameters["mtp_fit_number"]
     except ValueError:
        pass
@@ -38,14 +38,12 @@ def mtpfit_part2(ctx):
     calc_out_dir=ctx.input_dir.subdir("../output/").full_path + "/" 
 
     tabfile = calc_out_dir + tabfile
-    chgfile = calc_out_dir + chgfile
     fit_outfile = ctx.run_out_dir.full_path + "/fit_" + str(fit_number) + ".txt"
 
     ctx.log.info("Input files:\n\t{}".format("\n\t".join(ctx.input_dir.list_files_recursively())))
 
     # run fit
-    fit_rmse = -1.0
-    fit_mtp(rank, chgfile, fit_outfile, fit_rmse, threshold, ignore_H, tabfile)
+    fit_rmse = fit_mtp(rank, initial_charges, fit_outfile, threshold, ignore_H, tabfile)
     ctx.log.info("Finished fit")
 
     # convert fit output to pun file

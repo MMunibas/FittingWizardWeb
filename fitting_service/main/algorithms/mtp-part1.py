@@ -47,9 +47,10 @@ def mtpfit_part1(ctx):
     basename = os.path.splitext(xyz)[0]
     xyz_file_name = ctx.input_dir.full_path + '/' + xyz
     ctx.log.info("Setting up Gaussian input file\n")
-    mtp_inp_dir = ctx.input_dir.subdir("mtp").full_path + "/"
+    mtp_inp_dir = ctx.input_dir.full_path + '/'
     gau_inp_name = mtp_inp_dir + basename + ".com"
-    mtp_out_dir = ctx.run_out_dir.subdir("mtp").full_path + "/"
+#    mtp_out_dir = ctx.run_out_dir.subdir("mtp").full_path + "/"
+    mtp_out_dir = ctx.run_out_dir.full_path + "/"
     gau_out_name = mtp_out_dir + basename + ".out"
     chk_name = mtp_out_dir + basename + ".chk"
     fchk_name = mtp_out_dir + basename + ".fchk"
@@ -69,7 +70,7 @@ def mtpfit_part1(ctx):
 
     # write vdw radius file for fitting script (used to exclude ESP inside atomic radius)
     vdw_file_name = basename + ".vdw"
-    write_vdw_file(ctx, gau_inp_file, vdw_file_name, "mtp", 0)
+    write_vdw_file(ctx, gau_inp_file, vdw_file_name, 0)
 
     # get sdf file name
     sdf_file_name = mtp_out_dir + basename + ".sdf"
@@ -77,31 +78,33 @@ def mtpfit_part1(ctx):
     # now run the prepared inputs from a single submission script
     ctx.log.info("submitting gaussian and gdma calculations:")
     create_gau_submission_script(ctx,
-                                 "run-gau.sh", gau_inp_file, gau_out_name, "mtp", chk_name, fchk_name, gdma_inp_name,
+                                 "run-gau.sh", gau_inp_file, gau_out_name, chk_name, fchk_name, gdma_inp_name,
                                  gdma_out_name, grid_pars, cube_file, pun_name, vdw_file_name, xyz_file_name,
                                  sdf_file_name, ncore)
 
-    job_id = ctx.schedule_job(ctx.input_dir.full_path + "/mtp/run-gau.sh") ###
-    ctx.wait_for_all_jobs()  ###
+    job_id = ctx.schedule_job(ctx.input_dir.full_path + "/run-gau.sh") 
+    ctx.wait_for_all_jobs() 
 
     ctx.log.info("jobs completed")
 
-##    mtp_out_dir="/home/wfit/FittingWizardWeb/fitting_service/data/mike-test-mtp/output/" #######
-##    sdf_file_name="/home/wfit/FittingWizardWeb/fitting_service/data/mike-test-mtp/output/nma.sdf" ####
     # now calculate local reference axes
     ctx.log.info("Calculating local reference axes for " + sdf_file_name)
     local_pun_name = calc_out_dir + "gdma_ref.pun"
-##    local_pun_name = "/home/wfit/FittingWizardWeb/fitting_service/data/mike-test-mtp/output/gdma_ref.pun" #####
-    calculate_LRA(sdf_file_name, mtp_out_dir + pun_name, local_pun_name, calc_out_dir+json_chg_file)
+    calculate_LRA(sdf_file_name, mtp_out_dir + pun_name, local_pun_name, results)
 
     # and generate fitting table
     ctx.log.info("Generating fitting table for " + cube_file + ", " + vdw_file_name + ", " + local_pun_name)
     mk_fittab_mtp(mtp_out_dir + cube_file, mtp_out_dir + vdw_file_name, local_pun_name, 
                   calc_out_dir)
 
-    # gather files for subsequent fitting steps
+    # clean up "cube" file (often large)
+    ctx.log.info("Cleaning up cube file " + mtp_out_dir + cube_file)
+    os.remove(mtp_out_dir + cube_file)
+
+    # gather results for subsequent fitting steps
     ctx.log.info("Gathering results")
 
+#    ctx.write_results(results)
     with ctx.run_out_dir.open_file("results.json", "w") as json_file:
         json.dump(results, json_file)
 
@@ -176,7 +179,7 @@ def calc_grid_specs(ctx, gau_inp_file):
 #################################################################################################33
 # VDW file for ESP exclusion during multipole fitting
 
-def write_vdw_file(ctx, gau_inp_file, vdw_file_name, sub, mtp_order):
+def write_vdw_file(ctx, gau_inp_file, vdw_file_name, mtp_order):
     vdw_radii = {'H': 2.268,
                  'He': 2.301,
                  'Du': 0.0,
@@ -209,7 +212,7 @@ def write_vdw_file(ctx, gau_inp_file, vdw_file_name, sub, mtp_order):
 
     gau_inp.close()
 
-    with ctx.run_out_dir.subdir(sub).open_file(vdw_file_name, 'w') as vdw_file:
+    with ctx.run_out_dir.open_file(vdw_file_name, 'w') as vdw_file:
         vdw_file.write('\n')
         for i in range(len(atm)):
             vdw_file.write(str(vdw_radii[atm[i]]) + '\n')
@@ -222,7 +225,6 @@ def create_gau_submission_script(ctx,
                                  filename,
                                  gau_input_file_name,
                                  gau_output_file_name,
-                                 workdir_name,
                                  chk_file,
                                  fchk_file,
                                  gdma_inp_name,
@@ -235,10 +237,10 @@ def create_gau_submission_script(ctx,
                                  sdf_file_name,
                                  number_of_cores=None):
     number_of_cores = number_of_cores if number_of_cores is not None else number_of_cpu_cores
-    with ctx.input_dir.subdir(workdir_name).open_file(filename, "w") as script_file:
+    with ctx.input_dir.open_file(filename, "w") as script_file:
         script_file.write(generate_gau_setup_script(gau_input_file_name,
                                                     gau_output_file_name,
-                                                    ctx.run_out_dir.subdir(workdir_name).full_path,
+                                                    ctx.run_out_dir.full_path,
                                                     number_of_cores,
                                                     ctx._calculation_id,
                                                     gau_login_script,

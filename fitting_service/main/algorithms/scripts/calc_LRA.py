@@ -43,7 +43,7 @@ def print_traceback(traceback):
         print("---------------------------------------")
         print_traceback(traceback.tb_next)
 
-def calculate_LRA(basename, punchfile, lpunfile, jsonfile, pun=True, boxp=False, boundcheck=True, punxyz=False):
+def calculate_LRA(basename, punchfile, lpunfile, results, pun=True, boxp=False, boundcheck=True, punxyz=False):
 
   try:
     
@@ -574,7 +574,7 @@ def calculate_LRA(basename, punchfile, lpunfile, jsonfile, pun=True, boxp=False,
     ############
     # Assemble Composite atomtype Names
     
-    results = {} # to write charges to json file
+#    results = {} # to write charges to json file
     com_atypes = []
     cc=1
     for i in range(len(atypes)):
@@ -699,10 +699,6 @@ def calculate_LRA(basename, punchfile, lpunfile, jsonfile, pun=True, boxp=False,
     ###########
     # write charges to json file in calculation shared ouput directory
 
-    jf = open(jsonfile, "w")
-    json.dump(results,jf)
-    jf.close()
-   
 
   except Exception as ex:
      print_exception_info(ex)
