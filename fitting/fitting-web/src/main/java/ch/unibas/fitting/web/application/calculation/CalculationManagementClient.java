@@ -1,17 +1,19 @@
 package ch.unibas.fitting.web.application.calculation;
 
+import akka.actor.Actor;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.pattern.PatternsCS;
+import ch.unibas.fitting.web.application.calculation.manager.CalculationManager;
+import ch.unibas.fitting.web.application.calculation.manager.CalculationProtocol;
+import ch.unibas.fitting.web.application.calculation.manager.StartDefinition;
+import ch.unibas.fitting.web.application.calculation.manager.GroupDetails;
 import ch.unibas.fitting.web.calculation.NavigationInfo;
-import ch.unibas.fitting.web.application.calculation.execution.messages.*;
-import ch.unibas.fitting.web.application.calculation.task.messages.*;
+import io.vavr.control.Option;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.concurrent.CompletionStage;
-
-import static java.util.concurrent.CompletableFuture.runAsync;
 
 @Singleton
 public class CalculationManagementClient {
@@ -28,44 +30,34 @@ public class CalculationManagementClient {
     /**
      * Required for wicket and guice integration
      **/
-    public CalculationManagementClient() {
+    public CalculationManagementClient() {}
+
+    public CalculationProtocol.ListAllRunsResponse listExecutions() {
+        return askSynchronously(new CalculationProtocol.ListAllRuns());
     }
 
-    public StartResponse spawnTask(String title,
-                                   String username,
-                                   NavigationInfo navigationInfo,
-                                   StartDefinition... starts) {
-        return askSynchronously(new Start(title, username, navigationInfo, starts));
+    public CalculationProtocol.StartResponse spawnTask(String title,
+                                                       String username,
+                                                       NavigationInfo navigationInfo,
+                                                       StartDefinition... starts) {
+        return askSynchronously(new CalculationProtocol.Start(title, username, navigationInfo, starts));
     }
 
-    public TaskInfoResponse getTaskInfo(String taskId) {
-        return askSynchronously(new TaskInfo(taskId));
+    public Option<GroupDetails> getGroupInfo(String groupId) {
+        var response = this.<CalculationProtocol.GetGroupDetails, CalculationProtocol.GetGroupDetailsResponse>askSynchronously(new CalculationProtocol.GetGroupDetails(groupId));
+        return response.groupDetails;
     }
 
-    public CancelExecutionResponse cancelExecution(String taskId, String executionId) {
-        return askSynchronously(new CancelExecution(taskId, executionId));
+    public void cancelRun(String groupId, String runId) {
+        calcMgr.tell(new CalculationProtocol.CancelRun(groupId, runId), Actor.noSender());
     }
 
-    public void cancelTask(String taskId) {
-        runAsync(() -> {
-            calcMgr.tell(new CancelTask(taskId), ActorRef.noSender());
-            while (!getTaskInfo(taskId).executions.stream().allMatch(e -> e.isCompleted)) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            calcMgr.tell(new DeleteTask(taskId), ActorRef.noSender());
-        });
+    public void cancelGroup(String groupId) {
+        calcMgr.tell(new CalculationProtocol.CancelGroup(groupId), ActorRef.noSender());
     }
 
-    public DeleteTaskResponse deleteTask(String taskId) {
-        return askSynchronously(new DeleteTask(taskId));
-    }
-
-    public ListTaskExecutionsResponse listExecutions() {
-        return askSynchronously(new ListTaskExecutions());
+    public void finishGroup(String groupId) {
+        calcMgr.tell(new CalculationProtocol.FinishGroup(groupId), ActorRef.noSender());
     }
 
     private <TRequest, TResponse> TResponse askSynchronously(TRequest request) {
@@ -76,5 +68,10 @@ public class CalculationManagementClient {
         } catch (Exception e) {
             throw new RuntimeException("something went wrong: " + e.toString());
         }
+    }
+
+    public Option<String> getUsersTask(String username) {
+        var response = (CalculationProtocol.GetUsersGroupsResponse)askSynchronously(new CalculationProtocol.GetUsersGroups(username));
+        return response.groupIds.headOption();
     }
 }

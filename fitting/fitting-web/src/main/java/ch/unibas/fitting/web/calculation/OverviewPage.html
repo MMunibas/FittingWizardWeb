@@ -1,5 +1,4 @@
 <wicket:extend xmlns:wicket="http://www.w3.org/1999/xhtml">
-    <div wicket:id="overview_page_content">
     <h1>Calculation Service</h1>
     <div wicket:id="errormessage_container">
         <div class="alert alert-danger" wicket:id="errormessage"></div>
@@ -48,10 +47,6 @@
             <span class="glyphicon glyphicon-plus" aria-hidden="true" style="color: green"></span>
             <span> Create dummy algorithm execution</span>
         </button>
-        <button wicket:id="createNewDummyLjFit" type="button" class="btn btn-default">
-            <span class="glyphicon glyphicon-plus" aria-hidden="true" style="color: green"></span>
-            <span> Create dummy lj fit execution</span>
-        </button>
     </div>
     <br />
     <table wicket:id="execution_container" style="border: 1px solid; " class="table table-striped">
@@ -67,10 +62,9 @@
             <td align="center" style="border-top: 1px solid black;border-right-style: double;border-bottom: 1px solid;width: 40px"><span wicket:id="execMessage"></span></td>
             <td align="center" style="border: 1px solid; width: 60px">
                 <button wicket:id="execCancel" type="button" class="btn btn-default">
-                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
                 </button>
             </td>
         </tr>
     </table>
-    </div>
 </wicket:extend>

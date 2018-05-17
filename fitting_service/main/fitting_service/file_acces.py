@@ -7,9 +7,8 @@ from base64 import urlsafe_b64encode
 from contextlib import contextmanager
 from algorithms.toolkit import IDirectory
 from toolkit import *
-from .settings import STORAGE_ROOT, STATUS_FILE_NAME, JOBS_FILE_NAME, CANCEL_FILE_NAME
+from .settings import STORAGE_ROOT
 
-status_lock = threading.Lock()
 jobs_lock = threading.Lock()
 cancel_lock = threading.Lock()
 
@@ -196,12 +195,15 @@ class Status:
 
 
 class CalculationStatus(object):
+    STATUS_FILE_NAME = ".status"
+
     LAST_RUN = "last_run"
     STATUS = "status"
     MESSAGE = "message"
     INPUT_FILES = "input_files"
     CALCULATION_PARAMETERS = "calculation_parameters"
     RUN_PARAMETERS = "run_parameters"
+
     DEFAULT = {
                     LAST_RUN: None,
                     STATUS: Status.CREATED,
@@ -211,27 +213,18 @@ class CalculationStatus(object):
     def __init__(self, calculation_directory):
         self._status_file_lock = threading.Lock()
         self.calculation_directory = calculation_directory
-        if not calculation_directory.contains(STATUS_FILE_NAME):
-            self._save(self._load())
+
+        if not calculation_directory.contains(self.STATUS_FILE_NAME):
+            self._save(self.DEFAULT)
 
     def _load(self):
         with self._status_file_lock:
-            if self.calculation_directory.contains(STATUS_FILE_NAME):
-                with self.calculation_directory.open_file(STATUS_FILE_NAME, "r") as status_file:
-                    lines = status_file.readlines()
-                    try:
-                        return json.loads("\n".join(lines))
-                    except Exception as ex:
-                        print("unable to parse status file")
-                        print(lines)
-                        print(ex)
-                        return self.DEFAULT
-            else:
-                return self.DEFAULT
+            with self.calculation_directory.open_file(self.STATUS_FILE_NAME, 'r') as status_file:
+                return json.load(status_file)
 
     def _save(self, status):
         with self._status_file_lock:
-            with self.calculation_directory.open_file(STATUS_FILE_NAME, "w") as status_file:
+            with self.calculation_directory.open_file(self.STATUS_FILE_NAME, 'w') as status_file:
                 json.dump(status, status_file)
 
     def __str__(self):
@@ -303,6 +296,7 @@ class JobStatus:
 
 
 class JobFile:
+    JOBS_FILE_NAME = ".jobs"
 
     def clear(self):
         def update(l):
@@ -325,7 +319,7 @@ class JobFile:
 
     def __init__(self, calculation_directory):
         self.calculation_directory = calculation_directory
-        if not self.calculation_directory.contains(JOBS_FILE_NAME):
+        if not self.calculation_directory.contains(self.JOBS_FILE_NAME):
             self._save(self._load())
 
     def _update_file(self, func):
@@ -335,15 +329,15 @@ class JobFile:
 
     @synchronize_with(jobs_lock)
     def _load(self):
-        if self.calculation_directory.contains(JOBS_FILE_NAME):
-            with self.calculation_directory.open_file(JOBS_FILE_NAME, "r") as jobs_file:
+        if self.calculation_directory.contains(self.JOBS_FILE_NAME):
+            with self.calculation_directory.open_file(self.JOBS_FILE_NAME, "r") as jobs_file:
                 return json.load(jobs_file)
         else:
             return []
 
     @synchronize_with(jobs_lock)
     def _save(self, jobs):
-        with self.calculation_directory.open_file(JOBS_FILE_NAME, "w") as jobs_file:
+        with self.calculation_directory.open_file(self.JOBS_FILE_NAME, "w") as jobs_file:
             json.dump(jobs, jobs_file)
 
     def __str__(self):
@@ -351,26 +345,27 @@ class JobFile:
 
 
 class CancelFile:
+    CANCEL_FILE_NAME = ".cancel"
 
     def __init__(self, calculation_directory):
         self.calculation_directory = calculation_directory
 
     @synchronize_with(cancel_lock)
     def _get(self):
-        return self.calculation_directory.contains(CANCEL_FILE_NAME)
+        return self.calculation_directory.contains(self.CANCEL_FILE_NAME)
 
     @synchronize_with(cancel_lock)
     def _set(self, value):
         if value:
-            with self.calculation_directory.open_file(CANCEL_FILE_NAME, "w") as cancel_file:
+            with self.calculation_directory.open_file(self.CANCEL_FILE_NAME, "w") as cancel_file:
                 cancel_file.write("")
         else:
             self._del()
 
     @synchronize_with(cancel_lock)
     def _del(self):
-        if self.calculation_directory.contains(CANCEL_FILE_NAME):
-            self.calculation_directory.delete_file(CANCEL_FILE_NAME)
+        if self.calculation_directory.contains(self.CANCEL_FILE_NAME):
+            self.calculation_directory.delete_file(self.CANCEL_FILE_NAME)
 
     @property
     def is_set(self):

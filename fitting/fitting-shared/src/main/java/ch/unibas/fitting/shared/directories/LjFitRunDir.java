@@ -38,13 +38,19 @@ public class LjFitRunDir extends FittingDirectory {
         solv_mtp_dir.mkdirs();
     }
 
-    public File getDeltaG_dir() {
-        return deltaG_dir;
-    }
     public File getDensity_dir() {
         return density_dir;
     }
+    public File getSolventOutputFile() {
+        return new File(density_dir, "pure_liquid.out");
+    }
+    public File getGasOutputFile() {
+        return new File(density_dir, "gas_phase.out");
+    }
 
+    public File getDeltaG_dir() {
+        return deltaG_dir;
+    }
     public File getGasDir() {return gas_dir;}
     public File getGasVdwDir() {
         return gas_vdw_dir;
@@ -52,16 +58,12 @@ public class LjFitRunDir extends FittingDirectory {
     public File getGasMtpDir() {
         return gas_mtp_dir;
     }
-    public File getGasOutputFile() {
-        return new File(gas_dir, "gas_phase.out");
-    }
     public File getGasVdwOutputFile() {
         return new File(gas_vdw_dir, "dg.out");
     }
     public File getGasMtpOutputFile() {
         return new File(gas_mtp_dir, "dg.out");
     }
-
     public File getSolvDir() {return solv_dir;}
     public File getSolvVdwDir() {
         return solv_vdw_dir;
@@ -69,16 +71,12 @@ public class LjFitRunDir extends FittingDirectory {
     public File getSolvMtpDir() {
         return solv_mtp_dir;
     }
-    public File getSolventOutputFile() {
-        return new File(solv_dir, "pure_liquid.out");
-    }
     public File getSolvVdwOutputFile() {
         return new File(solv_vdw_dir, "dg.out");
     }
     public File getSolvMtpOutputFile() {
         return new File(solv_mtp_dir, "dg.out");
     }
-
-    public File getRunInputJson() {return new File(getDirectory(), "input.json");}
-    public File getRunOutputJson() {return new File(getDirectory(),"output.json");}
+    public File getRunInputJson() {return new File(getDirectory(), "fit_input.json");}
+    public File getRunOutputJson() {return new File(getDirectory(),"fit_output.json");}
 }

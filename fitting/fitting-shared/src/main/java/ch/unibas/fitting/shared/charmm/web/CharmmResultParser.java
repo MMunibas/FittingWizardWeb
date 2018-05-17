@@ -58,7 +58,7 @@ public class CharmmResultParser {
             solvVdwText = FileUtils.readFileToString(solvVdw);
             solvMtpText = FileUtils.readFileToString(solvMtp);
         } catch (IOException e) {
-            throw new RuntimeException("failed to load files", e);
+            throw new RuntimeException("Failed to parse CHARMM output. File(s) missing", e);
         }
 
         CharmmResultParserOutput output = parseCharmmResult(gasText, solventText);

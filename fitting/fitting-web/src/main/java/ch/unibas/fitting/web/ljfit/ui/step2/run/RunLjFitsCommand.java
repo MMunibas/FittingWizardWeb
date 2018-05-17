@@ -19,7 +19,7 @@ import ch.unibas.fitting.web.application.task.PageContext;
 import ch.unibas.fitting.web.application.task.TaskHandle;
 import ch.unibas.fitting.web.calculation.NavigationInfo;
 import ch.unibas.fitting.web.application.calculation.CalculationManagementClient;
-import ch.unibas.fitting.web.application.calculation.execution.messages.StartDefinition;
+import ch.unibas.fitting.web.application.calculation.manager.StartDefinition;
 import ch.unibas.fitting.web.ljfit.services.LjFitRepository;
 import ch.unibas.fitting.web.ljfit.ui.commands.OpenLjFitSessionCommand;
 import ch.unibas.fitting.web.ljfit.ui.step2.LjSessionPage;
@@ -71,9 +71,6 @@ public class RunLjFitsCommand {
 
         var response = calculationClient.spawnTask("Running LJ Fits",
                 username,
-                // TODO create navigation callbacks instead of types
-                // succeeded callback should also perform result parsing
-                // create and write LjFitRUnResult to json
                 new NavigationInfo(() -> PageNavigation.ToPage(LjSessionPage.class), () -> PageNavigation.ToPage(LjSessionPage.class)),
                 definitions.toJavaArray(StartDefinition.class));
 
@@ -122,8 +119,8 @@ public class RunLjFitsCommand {
 
                         LjFitRunResult runResult = createResult(session, input, charmmResult);
                         writeToJson(runDir.getRunOutputJson(), runResult);
-                    })
-                    ));
+                    }),
+                    false));
         }
         return list;
     }

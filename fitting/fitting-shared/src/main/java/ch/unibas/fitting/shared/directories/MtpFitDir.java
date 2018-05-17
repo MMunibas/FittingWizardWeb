@@ -13,6 +13,7 @@ import java.util.Arrays;
 
 public class MtpFitDir extends FittingDirectory {
 
+    private final static String FitResultFileName = "fit_result.json";
     private final JsonSerializer serializer;
 
     protected MtpFitDir(String username, File directory, JsonSerializer serializer) {
@@ -78,7 +79,7 @@ public class MtpFitDir extends FittingDirectory {
 
     public List<File> listAllFitResultFiles() {
         return Stream.ofAll(listAllFitDirs())
-                .flatMap(file -> List.ofAll(Arrays.asList(file.listFiles((dir, name) -> name.equals("result.json")))))
+                .flatMap(file -> List.ofAll(Arrays.asList(file.listFiles((dir, name) -> name.equals(FitResultFileName)))))
                 .toList();
     }
 
@@ -90,7 +91,7 @@ public class MtpFitDir extends FittingDirectory {
 
     public File getFitResultFile(int index) {
         File dir = new File(getFitsDirFile(), String.valueOf(index));
-        return new File(dir, "result.json");
+        return new File(dir, FitResultFileName);
     }
 
     public boolean sessionExists() {

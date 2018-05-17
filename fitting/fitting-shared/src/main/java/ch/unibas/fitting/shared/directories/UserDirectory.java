@@ -77,6 +77,11 @@ public class UserDirectory implements IUserDirectory {
     }
 
     @Override
+    public File getUserBaseDir(String username) {
+        return userDir(username);
+    }
+
+    @Override
     public void deleteMtpFitDir(String username) {
         File f = getMtpFitDirFile(username);
         try {

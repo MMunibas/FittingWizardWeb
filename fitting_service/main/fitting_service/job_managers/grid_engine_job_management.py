@@ -1,8 +1,8 @@
 import re
 import subprocess as sp
-from logging import getLogger
 
 import xmltodict
+
 from .i_job_management import IJobManagement
 
 

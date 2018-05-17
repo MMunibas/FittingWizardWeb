@@ -10,6 +10,7 @@ import java.util.UUID;
 /**
  * Created by mhelmer-mobile on 17.06.2016.
  */
+@Deprecated
 public interface IBackgroundTasks {
     <T> TaskHandle<T> spawnTask(String username,
                                 String title,

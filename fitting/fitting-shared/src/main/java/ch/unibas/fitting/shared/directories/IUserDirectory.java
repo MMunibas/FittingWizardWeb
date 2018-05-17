@@ -2,6 +2,7 @@ package ch.unibas.fitting.shared.directories;
 
 import io.vavr.control.Option;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,4 +18,6 @@ public interface IUserDirectory {
     Option<LjFitSessionDir> getLjFitSessionDir(String username);
     boolean ljFitSessionDirectoryExists(String username);
     void deleteLjFitSession(String username);
+
+    File getUserBaseDir(String username);
 }

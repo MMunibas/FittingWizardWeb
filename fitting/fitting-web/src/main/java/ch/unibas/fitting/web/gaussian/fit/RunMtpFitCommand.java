@@ -16,13 +16,11 @@ import ch.unibas.fitting.shared.workflows.ExportFitWorkflow;
 import ch.unibas.fitting.shared.workflows.gaussian.fit.CreateFit;
 import ch.unibas.fitting.web.application.IAmACommand;
 import ch.unibas.fitting.web.application.calculation.CalculationManagementClient;
-import ch.unibas.fitting.web.application.calculation.execution.messages.StartDefinition;
+import ch.unibas.fitting.web.application.calculation.manager.StartDefinition;
 import ch.unibas.fitting.web.application.task.IBackgroundTasks;
 import ch.unibas.fitting.web.application.task.PageContext;
 import ch.unibas.fitting.web.application.task.TaskHandle;
 import ch.unibas.fitting.web.calculation.NavigationInfo;
-import ch.unibas.fitting.web.gaussian.addmolecule.step4.ParameterPage;
-import ch.unibas.fitting.web.gaussian.addmolecule.step6.AtomTypesPage;
 import ch.unibas.fitting.web.gaussian.fit.step1.MtpFitSessionPage;
 import ch.unibas.fitting.web.gaussian.fit.step2.FittingResultsPage;
 import ch.unibas.fitting.web.gaussian.services.MtpFitSessionRepository;
@@ -104,7 +102,8 @@ public class RunMtpFitCommand implements IAmACommand {
                                     molecules);
 
                             mtpFitRepo.saveFitResult(username, fit);
-                        })
+                        }),
+                        true
                 )
         );
 

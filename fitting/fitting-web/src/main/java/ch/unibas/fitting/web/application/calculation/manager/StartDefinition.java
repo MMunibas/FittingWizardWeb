@@ -1,4 +1,4 @@
-package ch.unibas.fitting.web.application.calculation.execution.messages;
+package ch.unibas.fitting.web.application.calculation.manager;
 
 import ch.unibas.fitting.shared.javaextensions.Action;
 import io.vavr.control.Option;
@@ -13,12 +13,13 @@ public class StartDefinition {
     public final File outputDir;
     public final Option<String> calculationId;
     public final Option<Action> successCallback;
+    public final boolean doNotDeleteCalculation;
 
     public StartDefinition(String algorithmName,
                            Map<String, Object> parameters,
                            File outputDir,
-                           File[] inputFiles){
-        this(algorithmName, parameters, outputDir, inputFiles, Option.none(), Option.none());
+                           File... inputFiles){
+        this(algorithmName, parameters, outputDir, inputFiles, Option.none(), Option.none(), false);
     }
 
     public StartDefinition(String algorithmName,
@@ -26,7 +27,9 @@ public class StartDefinition {
                            File outputDir,
                            File[] inputFiles,
                            Option<String> calculationId,
-                           Option<Action> successCallback){
+                           Option<Action> successCallback,
+                           boolean doNotDeleteCalculation){
+        this.doNotDeleteCalculation = doNotDeleteCalculation;
         if (!outputDir.isDirectory())
             throw new IllegalArgumentException("outputDir does not exist");
         for (var f : inputFiles)

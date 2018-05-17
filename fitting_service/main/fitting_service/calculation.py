@@ -8,17 +8,16 @@ from .algorithms.scanner import Scanner, InvalidInputException
 from toolkit import Singleton, synchronized, CalculationCanceledException, RepeatingTimer
 from .file_acces import Storage, Filename, Directory, Status, CalculationStatus
 from .job import JobsService
-from .settings import CALCULATION_METADATA_FILE_NAME, RUN_METADATA_FILE_NAME, STATUS_FILE_NAME
+from .settings import CALCULATION_METADATA_FILE_NAME, RUN_METADATA_FILE_NAME
 
 
-VERSION = 0.1
+VERSION = 0.2
 
 
 class CalculationService(metaclass=Singleton):
     def __init__(self):
         jobs_service = JobsService()
-        jobs_service.start_status_updater()
-        jobs_service.start_cluster_simulation()
+        jobs_service.start_job_synchronization()
 
     @property
     def info(self):
@@ -212,7 +211,7 @@ class CalculationRun(Thread):
 
 class CalculationDirectory(Directory):
 
-    RESULTS_FILE_NAME = 'results.json'
+    RESULTS_FILE_NAME = 'run_results.json'
 
     def __init__(self, parameter):
         self.calculation_id = None
