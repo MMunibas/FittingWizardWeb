@@ -1,10 +1,7 @@
 package ch.unibas.fitting.web.ljfit.ui.step2.run;
 
 import ch.unibas.fitting.shared.charmm.scripts.ClusterParameter;
-import ch.unibas.fitting.shared.charmm.web.CharmmResult;
-import ch.unibas.fitting.shared.charmm.web.CharmmResultCalculator;
-import ch.unibas.fitting.shared.charmm.web.IRunCharmmWorkflowNew;
-import ch.unibas.fitting.shared.charmm.web.ResultCalculatorOutput;
+import ch.unibas.fitting.shared.charmm.web.*;
 import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.shared.directories.LjFitRunDir;
 import ch.unibas.fitting.shared.directories.LjFitSessionDir;
@@ -17,12 +14,12 @@ import ch.unibas.fitting.shared.workflows.charmm.UploadedFiles;
 import ch.unibas.fitting.shared.workflows.ljfit.LjFitRunInput;
 import ch.unibas.fitting.shared.workflows.ljfit.LjFitRunResult;
 import ch.unibas.fitting.shared.workflows.ljfit.LjFitSession;
-import ch.unibas.fitting.web.application.IBackgroundTasks;
-import ch.unibas.fitting.web.application.PageContext;
-import ch.unibas.fitting.web.application.TaskHandle;
+import ch.unibas.fitting.web.application.task.IBackgroundTasks;
+import ch.unibas.fitting.web.application.task.PageContext;
+import ch.unibas.fitting.web.application.task.TaskHandle;
 import ch.unibas.fitting.web.calculation.NavigationInfo;
-import ch.unibas.fitting.web.calculation.management.CalculationManagementClient;
-import ch.unibas.fitting.web.calculation.management.execution.messages.StartDefinition;
+import ch.unibas.fitting.web.application.calculation.CalculationManagementClient;
+import ch.unibas.fitting.web.application.calculation.manager.StartDefinition;
 import ch.unibas.fitting.web.ljfit.services.LjFitRepository;
 import ch.unibas.fitting.web.ljfit.ui.commands.OpenLjFitSessionCommand;
 import ch.unibas.fitting.web.ljfit.ui.step2.LjSessionPage;
@@ -37,7 +34,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by mhelmer on 24.06.2016.
@@ -71,39 +67,60 @@ public class RunLjFitsCommand {
 
     public void executeNew(String username, RunFromPage runs) {
 
-       var definitions = prepare(username, runs);
+        var definitions = prepare(username, runs);
 
         var response = calculationClient.spawnTask("Running LJ Fits",
                 username,
-                // TODO create navigation callbacks instead of types
-                // succeeded callback should also perform result parsing
-                // create and write LjFitRUnResult to json
-                new NavigationInfo(Option.of(LjSessionPage.class)),
+                new NavigationInfo(() -> PageNavigation.ToPage(LjSessionPage.class), () -> PageNavigation.ToPage(LjSessionPage.class)),
                 definitions.toJavaArray(StartDefinition.class));
 
         PageNavigation.ToProgressForCalculation(response);
     }
 
     private List<StartDefinition> prepare(String username, RunFromPage run) {
+        LjFitSession session = ljFitRepository.loadSessionForUser(username).get();
+        LjFitSessionDir sessionDir = userDirectory.getLjFitSessionDir(username).get();
+        UploadedFiles files = sessionDir.lookupUploadedFiles(session.getUploadedFileNames());
+
         var list = List.<StartDefinition>empty();
         for (var pair : run.runPairs) {
-
-            LjFitSession session = ljFitRepository.loadSessionForUser(username).get();
-            LjFitSessionDir sessionDir = userDirectory.getLjFitSessionDir(username).get();
-            UploadedFiles files = sessionDir.lookupUploadedFiles(session.getUploadedFileNames());
             LjFitRunDir runDir = sessionDir.createRunDir(pair.lambda_sigma, pair.lambda_epsiolon);
             writeToJson(runDir.getRunInputJson(), pair);
 
             var map = new HashMap<String, Object>();
-            map.put("lambda-sigma", pair.lambda_sigma);
-            // TODO fill all parameters
+//            map.put("lj_filename_charmm_topology", );
+//            map.put("lj_filename_solute_pdb", );
+//            map.put("lj_filename_solvent_pdb", );
+//            map.put("lj_filename_charmm_parameter", );
+//            map.put("lj_filename_mtpl_lpun", );
+//            map.put("lj_filename_pureliquid_pdb", );
+//            map.put("lj_ti_lambda_0", 0.0);
+//            map.put("lj_ti_lambda_1", 1.0);
+            map.put("lj_charmm_simulation_temperature", session.getSessionParameter().temperature);
+            map.put("lj_scaling_factor_eps", pair.lambda_epsiolon);
+            map.put("lj_scaling_factor_sig", pair.lambda_sigma);
+//            map.put("lj_ti_lambda_window_size_electrostatic", );
+//            map.put("lj_ti_lambda_window_size_vdw", );
 
             list = list.append(new StartDefinition(
                     "ljfit",
                     map,
                     runDir.getDirectory(),
-                    files.listFiles()
-                    ));
+                    files.listFiles(),
+                    Option.none(),
+                    Option.of(() -> {
+                        LjFitRunInput input = new LjFitRunInput(
+                                pair.lambda_epsiolon,
+                                pair.lambda_sigma,
+                                run.lambda_spacing,
+                                session.getSessionParameter().temperature);
+
+                        var charmmResult = CharmmResultParser.parseOutput(runDir);
+
+                        LjFitRunResult runResult = createResult(session, input, charmmResult);
+                        writeToJson(runDir.getRunOutputJson(), runResult);
+                    }),
+                    false));
         }
         return list;
     }
@@ -182,7 +199,7 @@ public class RunLjFitsCommand {
         CharmmInputContainer output = generateInputWorkflow.execute(WorkflowContext.withInput(workflowInput));
 
         CharmmResult charmmResult = runCharmmWorkflowNew.executeCharmm(output, clusterParameter);
-        LjFitRunResult runResult = createResult(session, in, charmmResult);
+        LjFitRunResult runResult = createResult(session, in, charmmResult.getOutput());
         writeToJson(runDir.getRunOutputJson(), runResult);
     }
 
@@ -198,16 +215,16 @@ public class RunLjFitsCommand {
     private LjFitRunResult createResult(
             LjFitSession session,
             LjFitRunInput in,
-            CharmmResult result) {
+            CharmmResultParserOutput charmmOutput) {
 
-        double gasTotal = result.getOutput().getGas_vdw() + result.getOutput().getGas_mtp();
-        double solTotal = result.getOutput().getSolvent_mtp() + result.getOutput().getSolvent_vdw();
+        double gasTotal = charmmOutput.getGas_vdw() + charmmOutput.getGas_mtp();
+        double solTotal = charmmOutput.getSolvent_mtp() + charmmOutput.getSolvent_vdw();
 
         ResultCalculatorOutput calculatedResult = CharmmResultCalculator.calculateResult(
                 session.getSessionParameter().numberOfResidues,
                 session.getSessionParameter().molarMass,
                 session.getSessionParameter().temperature,
-                result.getOutput());
+                charmmOutput);
 
         double score_deltaG = Math.pow(calculatedResult.getDeltaG() - session.getSessionParameter().expectedDeltaG, 2);
         double score_deltaH = Math.pow(calculatedResult.getDeltaH() - session.getSessionParameter().expectedDeltaH, 2);
@@ -217,10 +234,10 @@ public class RunLjFitsCommand {
         return new LjFitRunResult(
                 in.lambdaEpsilon,
                 in.lambdaSigma,
-                result.getOutput().getGas_vdw(),
-                result.getOutput().getGas_mtp(),
-                result.getOutput().getSolvent_mtp(),
-                result.getOutput().getSolvent_vdw(),
+                charmmOutput.getGas_vdw(),
+                charmmOutput.getGas_mtp(),
+                charmmOutput.getSolvent_mtp(),
+                charmmOutput.getSolvent_vdw(),
                 gasTotal,
                 solTotal,
                 calculatedResult.getDeltaG(),

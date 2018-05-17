@@ -1,6 +1,8 @@
 package ch.unibas.fitting.shared.directories;
 
+import ch.unibas.fitting.shared.infrastructure.JsonSerializer;
 import ch.unibas.fitting.shared.workflows.charmm.UploadedFiles;
+import ch.unibas.fitting.shared.workflows.ljfit.LjFitRun;
 import ch.unibas.fitting.shared.workflows.ljfit.UploadedFileNames;
 import io.vavr.Tuple3;
 import io.vavr.collection.List;
@@ -22,8 +24,11 @@ public class LjFitSessionDir extends FittingDirectory {
 
     public static final String Regex = "eps(\\d+\\.\\d+)_sig(\\d+\\.\\d+)_(\\d+)";
 
-    public LjFitSessionDir(String username, File directory) {
+    private final JsonSerializer serializer;
+
+    public LjFitSessionDir(String username, File directory, JsonSerializer serializer) {
         super(username, directory);
+        this.serializer = serializer;
     }
 
     public File getSessionJsonFile() {return  new File(getDirectory(), "session.json");}
@@ -34,20 +39,14 @@ public class LjFitSessionDir extends FittingDirectory {
         String runDirName = String.format("eps%.2f_sig%.2f_%d", lambda_epsilon, lambda_sigma, unixTime);
 
         File runDir = new File(getBaseRunDir(), runDirName);
-        long time = Instant.now().getEpochSecond();
-        return new LjFitRunDir(username, runDir, time);
+        return new LjFitRunDir(username, runDir);
     }
 
     public Option<LjFitRunDir> getRunDir(String dirName) {
         File runDir = new File(getBaseRunDir(), dirName);
         if (!runDir.isDirectory())
             return Option.none();
-        return Option.of(dirForFile(runDir));
-    }
-
-    private LjFitRunDir dirForFile(File file) {
-        long time = parseDirName(file.getName())._3;
-        return new LjFitRunDir(username, file, time);
+        return Option.of(new LjFitRunDir(username, runDir));
     }
 
     public File getUploadDir() {
@@ -60,7 +59,7 @@ public class LjFitSessionDir extends FittingDirectory {
 
     public List<LjFitRunDir> listRunDirs() {
         return Stream.ofAll(Arrays.stream(getBaseRunDir().listFiles((dir, name) -> dir.isDirectory() && name.startsWith("eps"))))
-                .map(file -> dirForFile(file))
+                .map(file -> new LjFitRunDir(username, file))
                 .toList();
     }
 

@@ -1,6 +1,6 @@
 package ch.unibas.fitting.web.web;
 
-import ch.unibas.fitting.web.application.TaskHandle;
+import ch.unibas.fitting.web.application.task.TaskHandle;
 import ch.unibas.fitting.web.web.errors.ErrorDetails;
 import io.vavr.control.Option;
 import org.apache.log4j.Logger;
@@ -9,7 +9,6 @@ import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Request;
 import org.joda.time.DateTime;
 
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

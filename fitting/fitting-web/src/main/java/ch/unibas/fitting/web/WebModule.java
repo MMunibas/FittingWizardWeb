@@ -27,8 +27,8 @@ import ch.unibas.fitting.shared.scripts.multipolegauss.RealMultipoleGaussScript;
 import ch.unibas.fitting.shared.workflows.charmm.IGenerateInputWorkflow;
 import ch.unibas.fitting.shared.workflows.charmm.MockGenerateInputWorkflow;
 import ch.unibas.fitting.shared.workflows.charmm.RealGenerateInputWorkflow;
-import ch.unibas.fitting.web.application.BackgroundTaskService;
-import ch.unibas.fitting.web.application.IBackgroundTasks;
+import ch.unibas.fitting.web.application.task.BackgroundTaskService;
+import ch.unibas.fitting.web.application.task.IBackgroundTasks;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 

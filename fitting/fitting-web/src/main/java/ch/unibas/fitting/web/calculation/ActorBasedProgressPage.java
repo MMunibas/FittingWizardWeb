@@ -1,13 +1,11 @@
 package ch.unibas.fitting.web.calculation;
 
-import akka.actor.ActorRef;
-import ch.unibas.fitting.web.calculation.management.CalculationManagementClient;
-import ch.unibas.fitting.web.calculation.management.execution.messages.Cancel;
-import ch.unibas.fitting.web.calculation.management.execution.messages.ExecutionProgress;
-import ch.unibas.fitting.web.calculation.management.task.messages.TaskInfoResponse;
+import ch.unibas.fitting.shared.javaextensions.Action;
+import ch.unibas.fitting.web.application.calculation.CalculationManagementClient;
+import ch.unibas.fitting.web.application.calculation.execution.RunDetails;
 import ch.unibas.fitting.web.web.HeaderPage;
-import ch.unibas.fitting.web.welcome.WelcomePage;
 import com.google.inject.Inject;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -17,83 +15,88 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
-import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.time.Duration;
 
 public class ActorBasedProgressPage extends HeaderPage {
 
-    private final Model<String> taskTitle = Model.of("");
+    private final Model<String> taskTitle = Model.of("Initializing");
+    private final ListModel<RunDetails> executions = new ListModel<>();
 
-    private final ListModel<ExecutionProgress> executions = new ListModel<>();
+    private final MarkupContainer executionTable;
+    private final AjaxLink continueButton;
+    private final AjaxLink cancelAll;
 
-    private String taskId;
-    private TaskInfoResponse taskInfo;
+    private String groupId;
+    private Action continueCallback;
 
     @Inject
     private CalculationManagementClient calculationManagement;
 
-    private Class<? extends IRequestablePage> returnPage = WelcomePage.class;
-
-    private WebMarkupContainer continueButtonContainer;
-
     public ActorBasedProgressPage(PageParameters pp) {
-        taskId= pp.get("task_id").toString();
+        var id = pp.get("group_id");
+        if (id != null)
+            groupId = id.toString();
 
         add(new Label("title", taskTitle));
 
-        add(new AjaxLink("cancel_all") {
+        add(cancelAll = new AjaxLink("cancel_all") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                calculationManagement.cancelTask(taskId);
-                setResponsePage(returnPage, new PageParameters());
+                if (groupId != null) {
+                    calculationManagement.cancelGroup(groupId);
+                }
             }
         });
+        cancelAll.setOutputMarkupPlaceholderTag(true);
+        cancelAll.setOutputMarkupId(true);
 
-        var execContainer = new WebMarkupContainer("execution_container");
-        execContainer.setOutputMarkupId(true);
-
-        continueButtonContainer = new WebMarkupContainer("continue_button_container");
-        continueButtonContainer.setOutputMarkupId(true);
-
-        execContainer.add(new ListView<>("executionList", executions) {
+        add(executionTable = new WebMarkupContainer("executionTable"));
+        executionTable.setOutputMarkupId(true);
+        executionTable.add(new ListView<>("execution_row", executions) {
             @Override
             protected void populateItem(ListItem item) {
-                var calc = ((ExecutionProgress)item.getModelObject());
-                item.add(new Label("execId", calc.executionId));
-                item.add(new Label("execStatus", calc.state.getStatus()));
-                item.add(new Label("execMessage", calc.state.getMessage()));
+                var calc = ((RunDetails) item.getModelObject());
+                item.add(new Label("calculationId", calc.calculationId));
+                item.add(new Label("execStatus", calc.status));
+                item.add(new Label("execMessage", calc.message));
                 item.add(new AjaxLink("execCancel") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        var exec = executions.getObject();
-                        exec.remove(calc);
-                        calculationManagement.cancelExecution(taskId, calc.executionId);
-                        calc.actorRef.tell(new Cancel(), ActorRef.noSender());
-                        target.add(execContainer);
-                        target.add(continueButtonContainer);
+                        if (groupId != null) {
+                            calculationManagement.cancelRun(groupId, calc.executionId);
+                        }
+                    }
+
+                    @Override
+                    public boolean isVisible() {
+                        return !calc.isCompleted;
                     }
                 });
             }
         });
-        add(execContainer);
 
-        continueButtonContainer.add(new AjaxLink("continue_button") {
+        add(continueButton = new AjaxLink("continue_button") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                calculationManagement.deleteTask(taskId);
-                calculationManagement.cancelTask(taskId);
-                setResponsePage(returnPage, new PageParameters());
+                if (continueCallback != null) {
+                    calculationManagement.finishGroup(groupId);
+                    continueCallback.execute();
+                }
             }
         });
-        add(continueButtonContainer);
+        continueButton.setOutputMarkupId(true);
+        continueButton.setOutputMarkupPlaceholderTag(true);
+        continueButton.setVisible(false);
 
         add(new AbstractAjaxTimerBehavior(Duration.seconds(2)) {
             @Override
             protected void onTimer(AjaxRequestTarget target) {
                 updateModels();
-                target.add(execContainer);
-                target.add(continueButtonContainer);
+
+                target.add(executionTable);
+                target.add(continueButton);
+                target.add(cancelAll);
             }
         });
     }
@@ -105,22 +108,19 @@ public class ActorBasedProgressPage extends HeaderPage {
     }
 
     private void updateModels() {
-        var task = calculationManagement.getTaskInfo(taskId);
-        if(task.title != null)
-        taskTitle.setObject(task.title);
-        if(task.navigationInfo != null)
-            returnPage = task.navigationInfo.returnPage.getOrElse(WelcomePage.class);
-        if(task.executions != null) {
-            executions.setObject(task.executions);
-            if(task.executions.stream().allMatch(ExecutionProgress::isTerminated)){
-                continueButtonContainer.setVisible(true);
+        calculationManagement.getGroupInfo(groupId).forEach(taskInfo -> {
+            taskTitle.setObject(taskInfo.title);
+            executions.setObject(taskInfo.runs.toJavaList());
+
+            if (taskInfo.runs.forAll(e -> e.isCompleted)) {
+                continueButton.setVisible(true);
+                cancelAll.setVisible(false);
+
+                if (taskInfo.runs.forAll(e -> !e.isSucceeded))
+                    continueCallback = taskInfo.navigationInfo.cancelCallback;
+                else
+                    continueCallback = taskInfo.navigationInfo.doneCallback;
             }
-            else{
-                continueButtonContainer.setVisible(false);
-            }
-        }
-        else{
-            continueButtonContainer.setVisible(false);
-        }
+        });
     }
 }

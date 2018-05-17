@@ -7,6 +7,7 @@ from toolkit import RepeatingTimer, TransparentQueue
 
 single_node_job_manager = None
 
+
 class SingleNodeJobManagement(IJobManagement):
 
     def __init__(self):
@@ -88,4 +89,3 @@ class JobConsumer(threading.Thread):
         if job:
             job.run()
             single_node_job_manager.running_jobs.remove(job.job_id)
-

@@ -4,19 +4,19 @@ import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.shared.directories.MtpFitDir;
 import ch.unibas.fitting.shared.scripts.multipolegauss.MultipoleGaussInput;
 import ch.unibas.fitting.shared.workflows.base.WorkflowContext;
-import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianResult;
 import ch.unibas.fitting.shared.workflows.gaussian.RunGaussianWorkflow;
 import ch.unibas.fitting.web.application.IAmACommand;
-import ch.unibas.fitting.web.application.IBackgroundTasks;
-import ch.unibas.fitting.web.application.PageContext;
-import ch.unibas.fitting.web.application.TaskHandle;
+import ch.unibas.fitting.web.application.calculation.CalculationService;
+import ch.unibas.fitting.web.application.task.IBackgroundTasks;
+import ch.unibas.fitting.web.application.task.PageContext;
+import ch.unibas.fitting.web.application.task.TaskHandle;
 import ch.unibas.fitting.web.calculation.NavigationInfo;
-import ch.unibas.fitting.web.calculation.management.CalculationManagementClient;
-import ch.unibas.fitting.web.calculation.management.execution.messages.StartDefinition;
+import ch.unibas.fitting.web.application.calculation.CalculationManagementClient;
+import ch.unibas.fitting.web.application.calculation.manager.StartDefinition;
 import ch.unibas.fitting.web.gaussian.addmolecule.step4.ParameterPage;
 import ch.unibas.fitting.web.gaussian.addmolecule.step6.AtomTypesPage;
-import ch.unibas.fitting.web.gaussian.services.MtpFitSessionRepository;
 import ch.unibas.fitting.web.web.PageNavigation;
+import io.vavr.collection.Array;
 import io.vavr.control.Option;
 
 import javax.inject.Inject;
@@ -37,7 +37,10 @@ public class RunMtpGenerateFilesCommand implements IAmACommand {
 
     @Inject
     private CalculationManagementClient client;
+    @Inject
+    private CalculationService calculationService;
 
+    @Deprecated
     public void execute(String username,
                         String moleculeName,
                         PageContext pageContext,
@@ -81,17 +84,38 @@ public class RunMtpGenerateFilesCommand implements IAmACommand {
                            Integer nCores,
                            Integer multiplicity) {
 
+        MtpFitDir mtpFitDir = userDir.getMtpFitDir(username);
+        File moleculeFile = mtpFitDir.getMoleculeDir().getXyzFileFor(moleculeName);
+
+        var calculationId = calculationService.createCalculation();
+        mtpFitDir.writeCalculationId(calculationId);
+
         var params = new HashMap<String, Object>();
+        params.put("mtp_gen_filename_xyz", moleculeFile.getName());
+        params.put("mtp_gen_molecule_charge", netCharge);
+        params.put("mtp_gen_molecule_multiplicity", multiplicity);
+        params.put("mtp_gen_gaussian_input_commandline", quantum);
+        params.put("mtp_gen_gaussian_num_cores", nCores);
+
+        File moleculeDestinationDir = mtpFitDir
+                .getMoleculeDir()
+                .createMoleculeDir(moleculeName);
 
         var response = client.spawnTask(
                 "Generate MTP files",
                 username,
-                new NavigationInfo(),
+                new NavigationInfo(
+                        () -> PageNavigation.ToPageWithParameter(AtomTypesPage.class, "molecule_name", moleculeName),
+                        () -> PageNavigation.ToPage(ParameterPage.class),
+                        pageContext),
                 new StartDefinition(
-                        "mtp-part1",
+                        "mtpfit_part1",
                         params,
-                        new File("output"),
-                        new File("input")
+                        moleculeDestinationDir,
+                        Array.of(moleculeFile).toJavaArray(File.class),
+                        Option.of(calculationId),
+                        Option.none(),
+                        true
                 )
         );
 

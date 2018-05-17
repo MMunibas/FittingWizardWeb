@@ -2,7 +2,7 @@ from flask import Flask, request, redirect, send_file
 from flask_restplus import Resource, Api, fields
 from werkzeug.datastructures import FileStorage
 from .calculation import CalculationService, CalculationStatus
-from .calculation import InvalidInputException, CalculationNotRunningException, CalculationRunningException
+from .calculation import InvalidInputException, CalculationRunningException
 from .job import JobsService
 
 app = Flask(__name__)
@@ -171,7 +171,6 @@ class CalculationList(Resource):
         """
         Creates new calculation
         """
-        print(api.payload)
         return CalculationService().create_new_calculation(api.payload)
 
 
@@ -221,7 +220,6 @@ class CalculationResource(Resource):
 
 @ns_calculation.route('/<string:calculation_id>/cancel')
 @api.response(404, 'no calculation with id {calculation_id} found')
-@api.response(405, 'calculation not running, only running calculations can be canceled')
 class CancelCalculationAction(Resource):
     @api.response(200, 'Calculation canceled')
     def post(self, calculation_id):
@@ -230,10 +228,7 @@ class CancelCalculationAction(Resource):
         """
         if not CalculationService().calculation_exists(calculation_id):
             return redirect(request.url, 404)
-        try:
-            return CalculationService().cancel_calculation(calculation_id)
-        except CalculationNotRunningException:
-            return redirect(request.url, 405)
+        CalculationService().cancel_calculation(calculation_id)
 
 
 @ns_calculation.route('/<string:calculation_id>/run')

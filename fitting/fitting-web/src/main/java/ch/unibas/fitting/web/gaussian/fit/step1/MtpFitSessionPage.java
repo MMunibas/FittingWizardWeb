@@ -185,7 +185,7 @@ public class MtpFitSessionPage extends HeaderPage {
                 .map(a -> new ChargeValue(new AtomTypeId(a.getAtomLabel()), ChargeTypes.charge, a.getUserCharge()))
                 .collect(Collectors.toCollection(() -> new LinkedHashSet<>()));
 
-        runFit.execute(getCurrentUsername(),
+        runFit.executeNew(getCurrentUsername(),
                 convergence.getObject(),
                 rank.getRank(),
                 ignoreHydrogens.getObject(),

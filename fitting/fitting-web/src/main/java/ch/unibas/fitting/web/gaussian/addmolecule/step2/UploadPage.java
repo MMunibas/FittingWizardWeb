@@ -1,6 +1,8 @@
 package ch.unibas.fitting.web.gaussian.addmolecule.step2;
 
 import ch.unibas.fitting.shared.directories.IUserDirectory;
+import ch.unibas.fitting.web.application.calculation.CalculationManagementClient;
+import ch.unibas.fitting.web.application.calculation.CalculationService;
 import ch.unibas.fitting.web.gaussian.addmolecule.step3.AtomsPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import org.apache.commons.io.FilenameUtils;
@@ -27,6 +29,8 @@ public class UploadPage extends HeaderPage {
 
     @Inject
     private IUserDirectory _userDir;
+    @Inject
+    private CalculationService calculationService;
 
     private final FileUploadField file;
 
@@ -45,58 +49,57 @@ public class UploadPage extends HeaderPage {
                 if (upload == null)
                 {
                     LOGGER.debug("No file uploaded");
+                    return;
                 }
-                else
-                {
-                    _userDir.deleteMtpFitDir(getCurrentUsername());
 
-                    LOGGER.debug("File-Name: " + upload.getClientFileName() + " File-Size: " +
-                            Bytes.bytes(upload.getSize()).toString());
+                cleanupMtpSession();
 
-                    File destination = _userDir.getMtpFitDir(getCurrentUsername())
-                            .getMoleculeDir()
-                            .getXyzFileFor(upload.getClientFileName());
+                LOGGER.debug("File-Name: " + upload.getClientFileName() + " File-Size: " +
+                        Bytes.bytes(upload.getSize()).toString());
 
-                    try {
-                        upload.writeTo(destination);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
+                File destination = _userDir.getMtpFitDir(getCurrentUsername())
+                        .getMoleculeDir()
+                        .getXyzFileFor(upload.getClientFileName());
 
-                    PageParameters pp = new PageParameters();
-                    String moleculeName = FilenameUtils.removeExtension(destination.getName());
-                    pp.add("molecule_name", moleculeName);
-
-                    setResponsePage(AtomsPage.class, pp);
+                try {
+                    upload.writeTo(destination);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
+
+                PageParameters pp = new PageParameters();
+                String moleculeName = FilenameUtils.removeExtension(destination.getName());
+                pp.add("molecule_name", moleculeName);
+
+                setResponsePage(AtomsPage.class, pp);
             }
         };
         form.setMaxSize(Bytes.megabytes(2));
         add(form);
-
         form.add(file = new FileUploadField("file"));
-
         form.add(new Label("max", new Model<>(form.getMaxSize().toString())));
-
-        //form.add(new org.apache.wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar("progress", form, file));
-
         form.add(new AjaxButton("ajaxSubmit")
         {
             private static final long serialVersionUID = 1L;
 
             @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form)
-            {
+            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 LOGGER.debug("done");
                 target.add(feedback);
             }
 
             @Override
-            protected void onError(AjaxRequestTarget target, Form<?> form)
-            {
+            protected void onError(AjaxRequestTarget target, Form<?> form) {
                 target.add(feedback);
             }
-
         });
+    }
+
+    private void cleanupMtpSession() {
+        _userDir.getMtpFitDir(getCurrentUsername())
+                .readCalculationId()
+                .forEach(s -> calculationService.deleteCalculation(s));
+
+        _userDir.deleteMtpFitDir(getCurrentUsername());
     }
 }
