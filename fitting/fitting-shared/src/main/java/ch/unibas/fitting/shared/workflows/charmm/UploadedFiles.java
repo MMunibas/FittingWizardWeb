@@ -12,6 +12,7 @@ public class UploadedFiles {
     public final File liquidFile;
     public final File solventFile;
     public final File lpunFile;
+    public final File resFile;
 
     public UploadedFiles(File baseDir, UploadedFileNames uploadedFileNames) {
         this.parFile = fileOrNull(baseDir, uploadedFileNames.parFile);
@@ -20,6 +21,7 @@ public class UploadedFiles {
         this.liquidFile = fileOrNull(baseDir, uploadedFileNames.liquidFile);
         this.solventFile = fileOrNull(baseDir, uploadedFileNames.solventFile);
         this.lpunFile = fileOrNull(baseDir, uploadedFileNames.lpunFile);
+        this.resFile = fileOrNull(baseDir, uploadedFileNames.resFile);
     }
 
     private File fileOrNull(File baseDir, String name) {
@@ -36,6 +38,7 @@ public class UploadedFiles {
         safeAdd(liquidFile, array);
         safeAdd(solventFile, array);
         safeAdd(lpunFile, array);
+        safeAdd(resFile, array);
         return array.toArray(new File[0]);
     }
 

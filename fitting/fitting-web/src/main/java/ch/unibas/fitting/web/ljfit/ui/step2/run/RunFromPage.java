@@ -4,24 +4,24 @@ import io.vavr.collection.List;
 
 public class RunFromPage {
     public final List<RunPair> runPairs;
-    public final double lambda_spacing;
+    public final double lambda_size_electrostatic;
+    public final double lambda_size_vdw;
     public final int ncpus;
-    public final String clusterName;
 
     public RunFromPage(RunPair runPair,
-                       double lambda_spacing,
-                       int ncpus,
-                       String clusterName) {
-        this(List.of(runPair), lambda_spacing, ncpus, clusterName);
+                       double lambda_size_electrostatic,
+                       double lambda_size_vdw,
+                       int ncpus) {
+        this(List.of(runPair), lambda_size_electrostatic, lambda_size_vdw, ncpus);
     }
 
     public RunFromPage(List<RunPair> runPairs,
-                       double lambda_spacing,
-                       int ncpus,
-                       String clusterName) {
+                       double lambda_size_electrostatic,
+                       double lambda_size_vdw,
+                       int ncpus) {
         this.runPairs = runPairs;
-        this.lambda_spacing = lambda_spacing;
+        this.lambda_size_electrostatic = lambda_size_electrostatic;
+        this.lambda_size_vdw = lambda_size_vdw;
         this.ncpus = ncpus;
-        this.clusterName = clusterName;
     }
 }

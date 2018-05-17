@@ -149,7 +149,7 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
             args.add(FilenameUtils.normalize(settings.getCharmmScriptDir().getAbsolutePath()));
         } else {
             args.add("--rem");
-            args.add(clusterParameter.clusterName);
+            args.add("beethoven");
             args.add("--num");
             args.add(String.valueOf(clusterParameter.ncpus));
         }
@@ -189,7 +189,7 @@ public class CHARMM_Generator_DGHydr implements CHARMM_InOut {
             args.add(FilenameUtils.normalize(settings.getCharmmScriptDir().getAbsolutePath()));
         } else {
             args.add("--rem");
-            args.add(clusterParameter.clusterName); //"studix"
+            args.add("beethoven"); //"studix"
             args.add("--num");
             args.add(String.valueOf(clusterParameter.ncpus));
         }

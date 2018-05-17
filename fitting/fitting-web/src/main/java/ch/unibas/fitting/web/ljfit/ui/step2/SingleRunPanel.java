@@ -16,7 +16,8 @@ import org.apache.wicket.model.PropertyModel;
 
 public class SingleRunPanel extends Panel {
 
-    public IModel<Double> lambda = Model.of(0.0);
+    public IModel<Double> lambda_size_electrostatic = Model.of(0.0);
+    public IModel<Double> lambda_size_vdw = Model.of(0.0);
 
     public SingleRunPanel(String id,
                           String username,
@@ -24,7 +25,7 @@ public class SingleRunPanel extends Panel {
                           ClusterParameterViewModel clusterParameter) {
         super(id);
 
-        EpsilonSigmaPair singlePair = new EpsilonSigmaPair(
+        var singlePair = new EpsilonSigmaPair(
                 1.0,
                 1.0,
                 true);
@@ -40,7 +41,8 @@ public class SingleRunPanel extends Panel {
         sigmaField.setRequired(true);
         singleForm.add(sigmaField);
 
-        singleForm.add(UiElementFactory.createLambdaValueField("lambda", lambda));
+        singleForm.add(UiElementFactory.createLambdaValueField("lambda_size_electrostatic", lambda_size_electrostatic));
+        singleForm.add(UiElementFactory.createLambdaValueField("lambda_size_vdw", lambda_size_vdw));
 
         singleForm.add(new AjaxButton("runSingle") {
             @Override
@@ -49,10 +51,11 @@ public class SingleRunPanel extends Panel {
 
                 runLjFitsCommand.executeNew(username, new RunFromPage(
                         pair,
-                        lambda.getObject(),
-                        clusterParameter.getNcpus(),
-                        clusterParameter.getClusterName()
+                        lambda_size_electrostatic.getObject(),
+                        lambda_size_vdw.getObject(),
+                        clusterParameter.getNcpus()
                         ));
+
             }
         });
     }
