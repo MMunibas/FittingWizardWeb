@@ -39,7 +39,7 @@ def ljfit(ctx):
         lmb0 = float(ctx.parameters["lj_ti_lambda_0"])
         lmb1 = float(ctx.parameters["lj_ti_lambda_1"])
         dlmbElec = float(ctx.parameters["lj_ti_lambda_window_size_electrostatic"])
-        dlmbVDW = float(ctx.parameters["lj_ti_lambda_window_isize_vdw"])
+        dlmbVDW = float(ctx.parameters["lj_ti_lambda_window_size_vdw"])
         T = float(ctx.parameters["lj_charmm_simulation_temperature"])
         epsfac = float(ctx.parameters["lj_scaling_factor_eps"])
         sigfac = float(ctx.parameters["lj_scaling_factor_sig"])
@@ -169,7 +169,7 @@ def parse_dens_out(ctx, slu, top, results, T, gas_out_name, dens_out_name):
                     ncons = float(words[0])
 
     if status == 0:
-        raise Exception("Job " + gas_out_name.name + " did not finish successfully")
+        raise Exception("Job " + gas_out_name + " did not finish successfully")
     else:
         status = 0
 
