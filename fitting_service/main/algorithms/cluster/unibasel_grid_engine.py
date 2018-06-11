@@ -29,7 +29,7 @@ def generate_gau_setup_script(input_file, output_file, working_directory, number
 #$ -S /bin/sh
 #$ -o {data_folder}
 #$ -e {data_folder} 
-#$ -N {job_name}
+#$ -N WFIT-{job_name}
 #$ -j y
 #$ -pe smp {cpu_cores}
 #$ -m n
@@ -96,6 +96,8 @@ echo "Starting Babel"
 def generate_charmm_setup_script(input_file, output_file, working_directory, charmm_executable, number_of_cpu_cores,
                                  job_name, ld_path, env_path, mpi_executable, mpi_flags, scratch_dir_name,
                                  input_dir_name):
+
+    import os
     return """
 
 ######################################################
@@ -103,7 +105,7 @@ def generate_charmm_setup_script(input_file, output_file, working_directory, cha
 #$ -S /bin/sh
 #$ -o {data_folder}
 #$ -e {data_folder} 
-#$ -N {job_name}
+#$ -N WFIT-{job_name}
 #$ -j y
 #$ -pe smp {cpu_cores}
 #$ -m n
@@ -134,7 +136,7 @@ mkdir -p {data_folder}
 export CHMDIR={input_dir}
 
 my_charmm_para="{charmm_executable}"
-{mpi_executable} {mpi_flags} -np {cpu_cores} $my_charmm_para < {input_file_name} > {output_file_name}
+{mpi_executable} {mpi_flags} -np {cpu_cores} $my_charmm_para < {input_file_name_nopath} > {output_file_name}
 
 ######################################################
 # Copy of the output data to the data directory
@@ -146,7 +148,84 @@ rm -fr /{scratch_dir_name}/$USER.$JOB_ID
 """.format(input_file_name=input_file, output_file_name=output_file, data_folder=working_directory,
            charmm_executable=charmm_executable, cpu_cores=number_of_cpu_cores, job_name=job_name, ld_path=ld_path,
            env_path=env_path, mpi_executable=mpi_executable, mpi_flags=mpi_flags, scratch_dir_name=scratch_dir_name,
-           input_dir=input_dir_name)
+           input_dir=input_dir_name,input_file_name_nopath=os.path.basename(input_file))
+
+
+if __name__ == "__main__":
+    type = sys.argv[1]
+    if type == "gau":
+        print(generate_gau_setup_script("input file", "output file", "workdir", "numcores", "name", "script_path",
+                                        "scratchdir"))
+    elif type == "charmm":
+        print(generate_charmm_setup_script("input file", "output file", "workdir", "charmm", "numcores", "name",
+                                           "ldpath", "env_path", "mpi", "scratchdir"))
+
+
+
+
+def generate_charmm_twostep_setup_script(input_file1, output_file1, input_file2, output_file2,
+                                 working_directory, charmm_executable,
+                                 number_of_cpu_cores, job_name, ld_path, env_path, mpi_executable,
+                                 mpi_flags, scratch_dir_name, input_dir_name):
+
+    import os
+    return """
+
+######################################################
+
+#$ -S /bin/sh
+#$ -o {data_folder}
+#$ -e {data_folder} 
+#$ -N WFIT-{job_name}
+#$ -j y
+#$ -pe smp {cpu_cores}
+#$ -m n
+
+######################################################
+# lib for CHARMM 
+######################################################
+export LD_LIBRARY_PATH={ld_path}:$LD_LIBRARY_PATH
+export PATH={env_path}:$PATH
+
+######################################################
+# Creation of the working directory
+######################################################
+
+mkdir -p /{scratch_dir_name}/$USER.$JOB_ID
+
+cp {input_file_name1} {input_file_name2} /{scratch_dir_name}/$USER.$JOB_ID/.
+
+cd /{scratch_dir_name}/$USER.$JOB_ID
+
+# make data folder
+mkdir -p {data_folder}
+
+######################################################
+#  Run
+######################################################
+
+export CHMDIR={input_dir}
+
+my_charmm_para="{charmm_executable}"
+{mpi_executable} {mpi_flags} -np {cpu_cores} $my_charmm_para < {input_file_name1_nopath} > {output_file_name1}
+
+{mpi_executable} {mpi_flags} -np {cpu_cores} $my_charmm_para < {input_file_name2_nopath} > {output_file_name2}
+
+######################################################
+# Copy of the output data to the data directory
+
+cp /{scratch_dir_name}/$USER.$JOB_ID/* {data_folder}
+
+# removing the working directory
+rm -fr /{scratch_dir_name}/$USER.$JOB_ID
+""".format(input_file_name1=input_file1, input_file_name2=input_file2,
+           output_file_name1=output_file1, output_file_name2=output_file2,
+           data_folder=working_directory, charmm_executable=charmm_executable,
+           cpu_cores=number_of_cpu_cores, job_name=job_name, ld_path=ld_path,
+           env_path=env_path, mpi_executable=mpi_executable, mpi_flags=mpi_flags,
+           scratch_dir_name=scratch_dir_name, input_dir=input_dir_name,
+           input_file_name1_nopath=os.path.basename(input_file1),
+           input_file_name2_nopath=os.path.basename(input_file2))
 
 
 if __name__ == "__main__":

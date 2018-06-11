@@ -1,9 +1,12 @@
 from .cluster.unibasel_grid_engine import generate_charmm_setup_script, number_of_cpu_cores, charmm_executable, ld_path, \
-    env_path, mpi_executable, mpi_flags, scratch_dir_name
+    env_path, mpi_executable, mpi_flags, scratch_dir_name, generate_charmm_twostep_setup_script
 from .toolkit import *
 from .charmm_input import *
 from .scripts.run_scale_vdw import *
+from shutil import move
 import json
+import sys
+import math
 
 
 @register
@@ -21,7 +24,17 @@ import json
 # References: DOI 10.1021/acs.jcim.6b00280
 
 def ljfit(ctx):
+    global tot_charmm_dyna_steps 
+    global charmm_equil_steps
+    tot_charmm_dyna_steps=150000 # number of MD steps in total (including equilibration)
+    charmm_equil_steps=50000 # number of equilibration steps
+
     results = {}  # main results list
+    dg_solv=0.0 # variables to accumulate total solvation free energy components from TI simulations
+    dg_solv_vdw_gas=0.0
+    dg_solv_vdw_solv=0.0
+    dg_solv_elec_gas=0.0
+    dg_solv_elec_solv=0.0
 
     # parse parameters
     ctx.log.info("parameters passed:")
@@ -34,6 +47,7 @@ def ljfit(ctx):
         top = ctx.parameters["lj_filename_charmm_topology"]
         slu = ctx.parameters["lj_filename_solute_pdb"]
         slv = ctx.parameters["lj_filename_solvent_pdb"]
+        slv_res = ctx.parameters["lj_filename_charmm_restart"]
         lpun = ctx.parameters["lj_filename_mtpl_lpun"]
         pureliq = ctx.parameters["lj_filename_pureliquid_pdb"]
         lmb0 = float(ctx.parameters["lj_ti_lambda_0"])
@@ -50,7 +64,7 @@ def ljfit(ctx):
 
     # scale LJ parameters to trial values for this fitting step
     inpdir = ctx.input_dir.name + "/"
-    run_scale_vdw(inpdir + slu, inpdir + top, inpdir + par, sigfac, epsfac, ctx.input_dir.name)
+    scaled_par=run_scale_vdw(inpdir + slu, inpdir + top, inpdir + par, sigfac, epsfac, ctx.input_dir.name)
 
     # set up and submit gas-phase calculation for vaporization enthalpy in "dens" folder
     ctx.log.info("writing input for gas phase calculation:")
@@ -58,27 +72,79 @@ def ljfit(ctx):
     gas_inp_name = gas_inp_dir + "/gas.inp"
     gas_out_dir = ctx.run_out_dir.subdir("dens").full_path
     gas_out_name = gas_out_dir + "/gas.out"
-    gas_inp_file = write_gas_inp(ctx, gas_inp_name, top, slu, lpun).name
+    gas_inp_file = write_gas_inp(ctx, gas_inp_name, top, scaled_par, slu, lpun).name
 
     ctx.log.info("submitting gas-phase calculation:")
     create_charmm_submission_script(ctx, "run-gas.sh", gas_inp_file, gas_out_name, "dens")
-    #####    gas_out_name="/home/wfit/FittingWizardWeb/fitting_service/data/mike-test-lj/gas.out" #######
-    job_id = ctx.schedule_job(ctx.input_dir.full_path + "/dens/run-gas.sh")
+    gas_out_name="/home/wfit/FittingWizardWeb/fitting_service/data/2018-05-31_17-37-57-878275_luhq4/2018-05-31_17-37-57-885123_uNYv3/output/dens/gas.out" #######
+####    job_id = ctx.schedule_job(ctx.input_dir.full_path + "/dens/run-gas.sh")
 
-    # set up and submit pure liquid calculation for vaporization enthalpy and density in "dens" folder
+    # set up pure liquid calculation for vaporization enthalpy and density in "dens" folder
     ctx.log.info("writing input for pure liquid calculation:")
     dens_inp_dir = ctx.input_dir.subdir("dens").full_path
     dens_inp_name = dens_inp_dir + "/density.inp"
     dens_out_dir = ctx.run_out_dir.subdir("dens").full_path
     dens_out_name = dens_out_dir + "/density.out"
-    dens_inp_file = write_dens_inp(ctx, dens_inp_name, top, pureliq, lpun, T).name
+    dens_inp_file = write_dens_inp(ctx, dens_inp_name, top, scaled_par, pureliq, lpun, T).name
 
     ctx.log.info("submitting density calculation:")
     create_charmm_submission_script(ctx, "run.sh", dens_inp_file, dens_out_name, "dens")
 
-    #####    dens_out_name="/home/wfit/FittingWizardWeb/fitting_service/data/mike-test-lj/density.out" #######
-    job_id = ctx.schedule_job(ctx.input_dir.full_path + "/dens/run.sh")
-    ctx.wait_for_all_jobs()
+    # Now set up thermodynamic integration run for solute in water box
+    ti_vdw_gas_inp_dir=ctx.input_dir.subdir("ti/vdw/gas").full_path + "/"
+    ti_vdw_solv_inp_dir=ctx.input_dir.subdir("ti/vdw/solv").full_path + "/"
+    ti_elec_gas_inp_dir=ctx.input_dir.subdir("ti/elec/gas").full_path + "/"
+    ti_elec_solv_inp_dir=ctx.input_dir.subdir("ti/elec/solv").full_path + "/"
+
+
+    tiElecGasJobScripts, tiElecSolvJobScripts, tiOutElecGasFileTrajread, tiOutElecSolvFileTrajread = \
+                         write_ti_elec_inp(ctx,ti_elec_gas_inp_dir,ti_elec_solv_inp_dir,lmb0,lmb1,
+                         dlmbElec,top,slu,slv,lpun,scaled_par,slv_res,T)
+
+    tiVDWGasJobScripts, tiOutVDWGasFile = \
+                         write_ti_vdw_gas_inp(ctx,ti_vdw_gas_inp_dir,lmb0,lmb1,dlmbVDW,
+                         top,slu,slv,lpun,scaled_par,slv_res,T)
+
+    tiVDWSolvJobScripts, tiOutVDWSolvFile = \
+                         write_ti_vdw_gas_inp(ctx,ti_vdw_solv_inp_dir,lmb0,lmb1,dlmbVDW,
+                         top,slu,slv,lpun,scaled_par,slv_res,T)
+
+    write_ti_loop_str(ctx)
+
+    dens_out_name="/home/wfit/FittingWizardWeb/fitting_service/data/2018-05-31_17-37-57-878275_luhq4/2018-05-31_17-37-57-885123_uNYv3/output/dens/density.out" #######
+####    dens_job_id = ctx.schedule_job(ctx.input_dir.full_path + "/dens/run.sh")
+
+####    ti_elec_gas_job_id = {}
+####    for i in range(0,len(tiElecGasJobScripts)):
+####       ti_elec_gas_job_id[i] = ctx.schedule_job(tiElecGasJobScripts[i])
+####
+####    ti_elec_solv_job_id = {}
+####    for i in range(0,len(tiElecSolvJobScripts)):
+####       ti_elec_solv_job_id[i] = ctx.schedule_job(tiElecSolvJobScripts[i])
+####
+####    ti_vdw_gas_job_id = {}
+####    for i in range(0,len(tiVDWGasJobScripts)):
+####       ti_vdw_gas_job_id[i] = ctx.schedule_job(tiVDWGasJobScripts[i])
+####
+####    ti_vdw_solv_job_id = {}
+####    for i in range(0,len(tiVDWSolvJobScripts)):
+####       ti_vdw_solv_job_id[i] = ctx.schedule_job(tiVDWSolvJobScripts[i])
+####
+####    ctx.wait_for_all_jobs()
+
+
+    # check whether density and delta H_vap jobs finished cleanly:
+    check_charmm_status(ctx,gas_out_name)
+    check_charmm_status(ctx,dens_out_name)
+    # check whether TI jobs finished cleanly:
+    for i in range(0,len(tiOutElecGasFileTrajread)):
+       check_charmm_status(ctx,tiOutElecGasFileTrajread[i])
+    for i in range(0,len(tiOutElecSolvFileTrajread)):
+       check_charmm_status(ctx,tiOutElecSolvFileTrajread[i])
+    for i in range(0,len(tiOutVDWGasFile)):
+       check_charmm_status(ctx,tiOutVDWGasFile[i])
+    for i in range(0,len(tiOutVDWSolvFile)):
+       check_charmm_status(ctx,tiOutVDWSolvFile[i])
 
     # gather results for vaporization enthalpy
     parse_dens_out(ctx, slu, top, results, T, gas_out_name, dens_out_name)
@@ -86,18 +152,80 @@ def ljfit(ctx):
     ctx.log.info("Density read from file " + dens_out_name + ": " + str(results["pure_liquid_density"]) + " g/cm^3\n")
     ctx.log.info("Vaporization Enthalpy: " + str(results["vaporization_enthalpy"]) + " kcal/mol\n")
 
+    # gather TI results and subdivide windows as necessary:
+    dlmbVDW /= 2.0
+    for i in range(0,len(tiOutVDWGasFile)):
+       converged, dg_lambda = parse_ti_out(ctx,tiOutVDWGasFile[i])
+       if converged:
+          dg_solv += dg_lambda
+          dg_solv_vdw_gas += dg_lambda
+       else: # subdivide window
+          srcdir=os.path.dirname(tiOutVDWGasFile[i])
+          filename=os.path.basename(tiOutVDWGasFile[i])
+          words=filename.split('_') 
+          lstart=float(words[0])
+          lstop=float(words[1])
+          copytree(srcdir, str(ctx.run_out_dir.subdir(srcdir+"/../not_converged/").full_path)) ####
+####          move(srcdir, str(ctx.run_out_dir.subdir(srcdir+"/../not_converged/")))
+          del tiOutVDWGasFile[i]
+          tiVDWGasJobScripts, tiOutVDWGasFile = \
+                         write_ti_vdw_gas_inp(ctx,ti_vdw_gas_inp_dir,lstart,lstop,dlmbVDW,
+                         top,slu,slv,lpun,scaled_par,slv_res,T)
+    for i in range(0,len(tiOutVDWSolvFile)):
+       converged, dg_lambda = parse_ti_out(ctx,tiOutVDWSolvFile[i])
+       if converged:
+          dg_solv += dg_lambda
+          dg_solv_vdw_solv += dg_lambda
+       else: # subdivide window
+          srcdir=os.path.dirname(tiOutVDWSolvFile[i])
+          filename=os.path.basename(tiOutVDWGasFile[i])
+          words=filename.split('_')  
+          lstart=float(words[0])
+          lstop=float(words[1])
+          copytree(srcdir, str(ctx.run_out_dir.subdir(srcdir+"/../not_converged/").full_path)) ####
+####          move(srcdir, str(ctx.run_out_dir.subdir(srcdir+"/../not_converged/")))          
+          del tiOutVDWSolvFile[i]
+          tiVDWSolvJobScripts, tiOutVDWSolvFile = \
+                         write_ti_vdw_gas_inp(ctx,ti_vdw_solv_inp_dir,lstart,lstop,dlmbVDW,
+                         top,slu,slv,lpun,scaled_par,slv_res,T)
+    for i in range(0,len(tiOutElecGasFileTrajread)):
+       dg_lambda = parse_ti_out_2step(ctx,tiOutElecGasFileTrajread[i])
+       dg_solv += dg_lambda
+       dg_solv_elec_gas += dg_lambda
+    for i in range(0,len(tiOutElecSolvFileTrajread)):
+       dg_lambda = parse_ti_out_2step(ctx,tiOutElecSolvFileTrajread[i])
+       dg_solv += dg_lambda
+       dg_solv_elec_solv += dg_lambda
+
+    results["dg_solv_vdw_gas"] = dg_solv_vdw_gas
+    results["dg_solv_vdw_solv"] = dg_solv_vdw_solv
+    results["dg_solv_elec_gas"] = dg_solv_elec_gas
+    results["dg_solv_elec_solv"] = dg_solv_elec_solv
+    results["dg_solv"] = dg_solv
+
     with ctx.run_out_dir.open_file("results.json", "w") as json_file:
         json.dump(results, json_file)
 
+#################################################################################################
 
-#################################################################################################33
+def copytree(src, dst, symlinks=False, ignore=None):
+    import shutil
+    for item in os.listdir(src):
+       s = os.path.join(src, item)
+       d = os.path.join(dst, item)
+       if os.path.isdir(s):
+           shutil.copytree(s, d, symlinks, ignore)
+       else:
+           shutil.copy2(s, d)
+
+#################################################################################################
 
 def _get_and_log_job_status(ctx, job_id, expected_status):
     job_status = ctx.job_status(job_id)
     ctx.log.info("expected: {} \t actual: {}".format(expected_status, job_status))
 
 
-#################################################################################################33
+#################################################################################################
 
 # Routine to parse vaporization enthalpy / density output
 # Stages comprise:
@@ -203,6 +331,7 @@ def parse_dens_out(ctx, slu, top, results, T, gas_out_name, dens_out_name):
     results["pure_liquid_density"] = density
     results["vaporization_enthalpy"] = delta_H_vap
 
+#################################################################################################
 
 def create_charmm_submission_script(ctx,
                                     filename,
@@ -224,3 +353,232 @@ def create_charmm_submission_script(ctx,
                                                        mpi_flags,
                                                        scratch_dir_name,
                                                        ctx.input_dir.name))
+
+#################################################################################################
+
+def create_charmm_twostep_submission_script(ctx,
+                                    filename,
+                                    charmm_input_file1_name,
+                                    charmm_output_file1_name,
+                                    charmm_input_file2_name,
+                                    charmm_output_file2_name,
+                                    workdir_name,
+                                    number_of_cores=None):
+    number_of_cores = number_of_cores if number_of_cores is not None else number_of_cpu_cores
+    with ctx.input_dir.subdir(workdir_name).open_file(filename, "w") as script_file:
+        script_file.write(generate_charmm_twostep_setup_script(charmm_input_file1_name,
+                                                       charmm_output_file1_name,
+                                                       charmm_input_file2_name,
+                                                       charmm_output_file2_name,
+                                                       ctx.run_out_dir.subdir(workdir_name).full_path,
+                                                       charmm_executable,
+                                                       number_of_cores,
+                                                       ctx._calculation_id,
+                                                       ld_path,
+                                                       env_path,
+                                                       mpi_executable,
+                                                       mpi_flags,
+                                                       scratch_dir_name,
+                                                       ctx.input_dir.name))
+
+#################################################################################################
+
+def write_ti_elec_inp(ctx, ti_elec_gas_inp_dir, ti_elec_solv_inp_dir, lmb0, lmb1, dlmbElec, top, slu, slv, lpun, par, slv_res, T):
+
+    if (lmb1-lmb0)%dlmbElec != 0:
+       ctx.log.info("The lambda range ("+str(lmb0)+" - "+str(lmb1)+") is not divisible by delta lambda for electrostatics "+str(dlmbElec))
+       exit 
+    nlmbElec=int((lmb1-lmb0)/dlmbElec)
+    lmbds=0.0
+
+    tiOutElecGasFileTrajread = {}
+    tiOutElecSolvFileTrajread = {}
+ 
+    tiElecGasJobScripts = {}
+    tiElecSolvJobScripts = {}
+
+    for i in range (0,nlmbElec):
+        stub=str("%.6f"%lmbds)+"_"+str("%.6f"%(lmbds+dlmbElec))
+        tiInpElecGasFile=stub+"_ti_elec_gas.inp"
+        with ctx.input_dir.subdir(ti_elec_gas_inp_dir+stub).open_file(tiInpElecGasFile, "w") as ti_gas_inp:
+            ti_gas_inp.write(write_ti_elec_gas_inp(top,par,slu,lpun,lmbds,lmbds+dlmbElec,charmm_equil_steps,tot_charmm_dyna_steps,T))
+
+        tiInpElecGasTrajreadFile=stub+"_ti_elec_gas_trajread.inp"
+        with ctx.input_dir.subdir(ti_elec_gas_inp_dir+stub).open_file(tiInpElecGasTrajreadFile, "w") as ti_gas_tr_inp:
+            ti_gas_tr_inp.write(write_ti_elec_gas_trajread_inp(top,par,slu,lpun,lmbds,lmbds+dlmbElec,T))
+
+        tiOutElecGasFile=stub+"_ti_elec_gas.log"
+        tiOutElecGasFileTrajread[i]=stub+"_ti_elec_gas_trajread.log"
+        tiElecGasJobScripts[i]=ctx.run_out_dir.subdir("ti/elec/gas/"+stub).full_path+"/run-ti-elec-gas.sh"
+        create_charmm_twostep_submission_script(ctx, "run-ti-elec-gas.sh", ti_elec_gas_inp_dir+stub+"/"+
+                                        tiInpElecGasFile, tiOutElecGasFile,
+                                        ti_elec_gas_inp_dir+stub+"/"+tiInpElecGasTrajreadFile,
+                                        tiOutElecGasFileTrajread[i],
+                                        ctx.run_out_dir.subdir("ti/elec/gas/"+stub).full_path)
+        # add path to make the output file easier to track
+####        tiOutElecGasFileTrajread[i]=ctx.run_out_dir.subdir("ti/elec/gas/"+stub).full_path+"/"+tiOutElecGasFileTrajread[i]
+        tiOutElecGasFileTrajread[i]="/home/wfit/FittingWizardWeb/fitting_service/data/2018-05-31_17-37-57-878275_luhq4/2018-05-31_17-37-57-885123_uNYv3/output/ti/elec/gas/"+stub+"/"+tiOutElecGasFileTrajread[i] ####
+
+        tiInpElecSolvFile=stub+"_ti_elec_solv.inp"
+        with ctx.input_dir.subdir(ti_elec_solv_inp_dir+stub).open_file(tiInpElecSolvFile, "w") as ti_solv_inp:
+            ti_solv_inp.write(write_ti_elec_solv_inp(top,par,slu,slv,slv_res,lpun,lmbds,lmbds+dlmbElec,
+                              charmm_equil_steps, tot_charmm_dyna_steps,T))
+
+        tiInpElecSolvTrajreadFile=stub+"_ti_elec_solv_trajread.inp"
+        with ctx.input_dir.subdir(ti_elec_solv_inp_dir+stub).open_file(tiInpElecSolvTrajreadFile, "w") as ti_solv_tr_inp:
+            ti_solv_tr_inp.write(write_ti_elec_solv_trajread_inp(top,par,slu,slv,lpun,lmbds,lmbds+dlmbElec,T))
+
+        tiOutElecSolvFile=stub+"_ti_elec_solv.log"
+        tiOutElecSolvFileTrajread[i]=stub+"_ti_elec_solv_trajread.log"
+        tiElecSolvJobScripts[i]=ctx.run_out_dir.subdir("ti/elec/solv/"+stub).full_path+"/run-ti-elec-solv.sh"
+        create_charmm_twostep_submission_script(ctx, "run-ti-elec-solv.sh", ti_elec_solv_inp_dir+stub+"/"+
+                                        tiInpElecSolvFile, tiOutElecSolvFile,
+                                        ti_elec_solv_inp_dir+stub+"/"+tiInpElecSolvTrajreadFile,
+                                        tiOutElecSolvFileTrajread[i],
+                                        ctx.run_out_dir.subdir("ti/elec/solv/"+stub).full_path)
+        # add path to make the output file easier to track
+####        tiOutElecSolvFileTrajread[i]=ctx.run_out_dir.subdir("ti/elec/solv/"+stub).full_path+"/"+tiOutElecSolvFileTrajread[i]
+        tiOutElecSolvFileTrajread[i]="/home/wfit/FittingWizardWeb/fitting_service/data/2018-05-31_17-37-57-878275_luhq4/2018-05-31_17-37-57-885123_uNYv3/output/ti/elec/solv/"+stub+"/"+tiOutElecSolvFileTrajread[i] ####
+
+        lmbds += dlmbElec
+    return tiElecGasJobScripts, tiElecSolvJobScripts, tiOutElecGasFileTrajread, tiOutElecSolvFileTrajread
+
+
+#################################################################################################
+
+def write_ti_vdw_gas_inp(ctx, ti_vdw_gas_inp_dir, lmb0, lmb1, dlmbVDW, top, slu, slv, lpun, par, slv_res, T):
+
+    if (lmb1-lmb0)%dlmbVDW != 0:
+       ctx.log.info("The lambda range ("+str(lmb0)+" - "+str(lmb1)+") is not divisible by delta lambda for VDW "+str(dlmbVDW))
+       exit 
+    nlmbVDW=int((lmb1-lmb0)/dlmbVDW)
+    lmbds=0.0
+
+    tiOutVDWGasFile = {}
+    tiVDWGasJobScripts = {}
+
+    for i in range (0,nlmbVDW):
+        stub=str("%.6f"%lmbds)+"_"+str("%.6f"%(lmbds+dlmbVDW))
+        tiInpVDWGasFile=stub+"_ti_vdw_gas.inp"
+        with ctx.input_dir.subdir(ti_vdw_gas_inp_dir+stub).open_file(tiInpVDWGasFile, "w") as ti_gas_inp:
+            ti_gas_inp.write(write_ti_vdw_gas_inp(top,par,slu,
+                                                  lmbds, lmbds+dlmbVDW, charmm_equil_steps, tot_charmm_dyna_steps,T))
+        tiOutVDWGasFile[i]=stub+"_ti_vdw_gas.log"
+        tiVDWGasJobScripts[i]=ctx.run_out_dir.subdir("ti/vdw/gas/"+stub).full_path+"/run-ti-vdw-gas.sh"
+        create_charmm_submission_script(ctx, "run-ti-vdw-gas.sh", ti_vdw_gas_inp_dir+stub+"/"+tiInpVDWGasFile,
+                                        tiOutVDWGasFile[i],ctx.run_out_dir.subdir("ti/vdw/gas/"+stub).full_path)
+        # add path to make the output file easier to track
+####        tiOutVDWGasFile[i]=ctx.run_out_dir.subdir("ti/vdw/gas/"+stub).full_path+"/"+tiOutVDWGasFile[i]
+        tiOutVDWGasFile[i]="/home/wfit/FittingWizardWeb/fitting_service/data/2018-05-31_17-37-57-878275_luhq4/2018-05-31_17-37-57-885123_uNYv3/output/ti/vdw/gas/"+stub+"/"+tiOutVDWGasFile[i] ####
+
+        lmbds += dlmbVDW
+    return tiVDWGasJobScripts, tiOutVDWGasFile
+
+#################################################################################################
+
+def write_ti_vdw_solv_inp(ctx, ti_vdw_solv_inp_dir, lmb0, lmb1, dlmbVDW, top, slu, slv, lpun, par, slv_res, T):
+
+    if (lmb1-lmb0)%dlmbVDW != 0:
+       ctx.log.info("The lambda range ("+str(lmb0)+" - "+str(lmb1)+") is not divisible by delta lambda for VDW "+str(dlmbVDW))
+       exit
+    nlmbVDW=int((lmb1-lmb0)/dlmbVDW)
+    lmbds=0.0
+
+    tiOutVDWSolvFile = {}
+    tiVDWSolvJobScripts = {}
+
+    for i in range (0,nlmbVDW):
+        stub=str("%.6f"%lmbds)+"_"+str("%.6f"%(lmbds+dlmbVDW))
+        tiInpVDWSolvFile=stub+"_ti_vdw_solv.inp"
+        with ctx.input_dir.subdir(ti_vdw_solv_inp_dir+stub).open_file(tiInpVDWSolvFile, "w") as ti_solv_inp:
+            ti_solv_inp.write(write_ti_vdw_solv_inp(top,par,
+                              slu,slv,slv_res,lmbds,lmbds+dlmbVDW,charmm_equil_steps,tot_charmm_dyna_steps,T))
+        tiOutVDWSolvFile[i]=stub+"_ti_vdw_solv.log"
+        tiVDWSolvJobScripts[i]=ctx.run_out_dir.subdir("ti/vdw/solv/"+stub).full_path+"/run-ti-vdw-solv.sh"
+        create_charmm_submission_script(ctx, "run-ti-vdw-solv.sh", ti_vdw_solv_inp_dir+stub+"/"+tiInpVDWSolvFile,
+                                        tiOutVDWSolvFile[i], ctx.run_out_dir.subdir("ti/vdw/solv/"+stub).full_path)
+        # add path to make the output file easier to track
+####        tiOutVDWSolvFile[i]=ctx.run_out_dir.subdir("ti/vdw/solv/"+stub).full_path+"/"+tiOutVDWSolvFile[i]
+        tiOutVDWSolvFile[i]="/home/wfit/FittingWizardWeb/fitting_service/data/2018-05-31_17-37-57-878275_luhq4/2018-05-31_17-37-57-885123_uNYv3/output/ti/vdw/solv/"+stub+"/"+tiOutVDWSolvFile[i] ####
+
+        lmbds += dlmbVDW
+    return tiVDWSolvJobScripts, tiOutVDWSolvFile
+
+#################################################################################################
+
+def write_ti_loop_str(ctx):
+    global charmm_equil_steps, tot_charmm_dyna_steps
+    with ctx.input_dir.open_file("loop.str","w") as loop_str:
+       loop_txt="""LABEL SNAP
+TRAJ READ
+SET TIME ?TIME
+ENERGY CUTIM 14.0
+INCR NTRAJ BY 1
+IF @NTRAJ .LT. {steps} GOTO SNAP
+""".format(steps=int((tot_charmm_dyna_steps-charmm_equil_steps)/100))
+       loop_str.write(loop_txt)
+
+#################################################################################################
+
+def check_charmm_status(ctx,outfile):
+    clean=False
+    with open(outfile,"r") as charmm_out:
+      for line in charmm_out:
+         words = line.split()
+         if len(words) > 4: 
+            if words[0] == "NORMAL" and words[1] == "TERMINATION" and words[3] == "NORMAL" \
+                        and words[4] == "STOP":
+               clean=True
+    if not clean:
+       ctx.log.info("CHARMM run "+outfile+" did not exit cleanly, exiting routine\n")
+       sys.exit()
+    else:
+       ctx.log.info("CHARMM run "+outfile+" completed successfully\n")
+
+#################################################################################################
+
+def parse_ti_out(ctx,outfile):
+    converged=False
+    with open(outfile,"r") as charmm_out:
+      for line in charmm_out:
+         words = line.split()
+         if len(words) > 8:
+            if words[0] == "PERTURBATION>" and words[1] == "Slow" and words[4] == "EPRTOT=":
+               eprtot=float(words[5])
+         if len(words) == 3:
+            if words[0] == "DIFFLC" and words[1] == "=":
+               if float(words[2]) < 0.5:
+                  converged=True
+                  ctx.log.info("CHARMM TI run "+outfile+" converged successfully: DIFFLC="+words[2]+"\n")
+               else:
+                  ctx.log.info("CHARMM TI run "+outfile+" not converged: DIFFLC="+words[2]+"\n")
+
+    return converged, eprtot
+
+#################################################################################################
+
+def parse_ti_out_2step(ctx,outfile):
+    no=0
+    trajEne=[]
+    with open(outfile,"r") as charmm_out:
+      for line in charmm_out:
+         words = line.split()
+         if "ENER EXTERN>" in line:
+            trajEne.append(float(words[3]))
+            no += 1
+            if math.isnan(trajEne[-1]):
+               ctx.log.info("Error. MTP energy is NaN in "+outfile)
+               exit(1)
+         if "ENER IMAGES>" in line:
+            trajEne.append(float(words[3]))
+
+    if len(trajEne) == 0:
+       ctx.log.info("Error. No energy recorded in "+outfile)
+       exit(1)
+
+    avg = sum(trajEne)/no
+    std = math.sqrt(sum([(i-avg)**2 for i in trajEne]))/no 
+
+    return avg
+
+

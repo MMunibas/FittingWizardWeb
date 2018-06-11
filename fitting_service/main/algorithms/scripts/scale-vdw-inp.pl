@@ -8,12 +8,13 @@
 
 use strict;
 
-if(@ARGV+0 != 6) { die "usage: scale-vdw-inp.pl <pdbfile> <topology file> <parameter file> <sigma factor> <eps factor> <path-to-inputs>\n"; }
+if(@ARGV+0 != 7) { die "usage: scale-vdw-inp.pl <pdbfile> <topology file> <parameter file> <sigma factor> <eps factor> <path-to-inputs> <scaled parameter file name>\n"; }
 
 my $res="NULL"; # holds residue type from PDB file
 my $sigfac=$ARGV[3];
 my $epsfac=$ARGV[4];
 my $path=$ARGV[5];
+my $newpar=$ARGV[6];
 
 open(PDB,"<$ARGV[0]");
 
@@ -110,7 +111,7 @@ my @parts1 = split ('/', $ARGV[2]);
 my @parts = split ('\.', $parts1[@parts1-1]);
 pop @parts;
 my $file_no_ext = join '.', @parts;
-my $newpar=$file_no_ext."_scaled.par";
+#my $newpar=$file_no_ext."_scaled.par";
 open(OUT,">$path/$newpar");
 
 while(<PAR>){
