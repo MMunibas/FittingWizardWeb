@@ -38,7 +38,11 @@ Following document describes all algorithms supported by the API.
   * molar_mass (solute molar mass)
   * pure_liquid_density (density of pure liquid)
   * vaporization_enthalpy (free energy of vaporization of pure liquid)
-  * solvation_free_energy (free energy of solvation of solute molecule)
+  * dg_solv (total free energy of solvation of solute molecule)
+  * dg_solv_elec_gas (electrostatic contribution to free energy from gas-phase)
+  * dg_solv_elec_solv (electrostatic contribution to free energy from solution-phase)
+  * dg_solv_vdw_gas (van der Waals contribution to free energy from gas-phase)
+  * dg_solv_vdw_solv (van der Waals contribution to free energy from solution-phase)
 
 **Temporary Files**
  * dens.inp / dens.out: CHARMM input and output files for pure liquid simulation (in dens subfolder)
