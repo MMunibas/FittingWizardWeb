@@ -66,7 +66,7 @@ public class RealGenerateInputWorkflow implements IGenerateInputWorkflow {
         File parFile = scaleParFile(uploaded, charmmRunDir, input);
         File lpunFile = uploaded.lpunFile;
         File liquidDensityLpun = prepareLiquidDensityLpunFile(uploaded, charmmRunDir);
-        double lambda_spacing = input.lambdaSpacing;
+        double lambda_spacing = input.lambda_size_electrostatic;
 
 
         var gasFile = new File(charmmRunDir.getDensity_dir(), "gas_phase.inp");

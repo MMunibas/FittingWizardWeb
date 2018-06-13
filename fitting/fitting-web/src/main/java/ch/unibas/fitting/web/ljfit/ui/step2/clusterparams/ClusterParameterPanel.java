@@ -34,10 +34,6 @@ public class ClusterParameterPanel extends Panel {
         ncpuDeltaGField.setRequired(true);
         form.add(ncpuDeltaGField);
 
-        TextField clusterField = new TextField("clusterName", new PropertyModel(clusterParameterViewModel, "clusterName"));
-        clusterField.setRequired(true);
-        form.add(clusterField);
-
         form.add(new AjaxButton("ok") {
             @Override
             public void onSubmit(AjaxRequestTarget target, Form<?> form) {

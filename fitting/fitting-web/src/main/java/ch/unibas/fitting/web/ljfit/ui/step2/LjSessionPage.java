@@ -21,8 +21,6 @@ import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import javax.inject.Inject;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 
 public class LjSessionPage extends HeaderPage {
 
@@ -40,7 +38,7 @@ public class LjSessionPage extends HeaderPage {
     private ClusterParameterViewModel clusterParameter;
 
     public LjSessionPage() {
-        this.clusterParameter = new ClusterParameterViewModel(8, "beethoven");
+        this.clusterParameter = new ClusterParameterViewModel(8);
 
         add(new AjaxLink("newSession") {
             @Override
@@ -179,8 +177,11 @@ public class LjSessionPage extends HeaderPage {
 
         ljFitRepository.loadSessionForUser(getCurrentUsername())
                 .flatMap(ljFitSession -> {
-                    gridRunSetup.lambda.setObject(ljFitSession.getSessionParameter().lambdaSpacing);
-                    singleRunSetup.lambda.setObject(ljFitSession.getSessionParameter().lambdaSpacing);
+                    gridRunSetup.lambda_size_electrostatic.setObject(ljFitSession.getSessionParameter().lambda_size_electrostatic);
+                    gridRunSetup.lambda_size_vdw.setObject(ljFitSession.getSessionParameter().lambda_size_vdw);
+
+                    singleRunSetup.lambda_size_electrostatic.setObject(ljFitSession.getSessionParameter().lambda_size_electrostatic);
+                    singleRunSetup.lambda_size_vdw.setObject(ljFitSession.getSessionParameter().lambda_size_vdw);
                    return null;
                 });
 

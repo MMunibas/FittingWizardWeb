@@ -29,7 +29,8 @@ import java.util.List;
 
 public class GridRunPanel extends Panel {
 
-    public IModel<Double> lambda = Model.of(0.0);
+    public IModel<Double> lambda_size_electrostatic = Model.of(0.0);
+    public IModel<Double> lambda_size_vdw = Model.of(0.0);
     private List<EpsilonSigmaPair> epsilonSigmaPairCandidates = new ArrayList<>();
 
     public GridRunPanel(String id,
@@ -88,9 +89,9 @@ public class GridRunPanel extends Panel {
 
                     runLjFitsCommand.executeNew(username, new RunFromPage(
                             io.vavr.collection.List.ofAll(pairs),
-                            lambda.getObject(),
-                            clusterParameter.getNcpus(),
-                            clusterParameter.getClusterName()
+                            lambda_size_electrostatic.getObject(),
+                            lambda_size_vdw.getObject(),
+                            clusterParameter.getNcpus()
                     ));
                 }
             }
@@ -111,7 +112,8 @@ public class GridRunPanel extends Panel {
         listContainer.add(gridListView);
         choiceForm.add(listContainer);
 
-        choiceForm.add(UiElementFactory.createLambdaValueField("lambda", lambda));
+        choiceForm.add(UiElementFactory.createLambdaValueField("lambda_size_electrostatic", lambda_size_electrostatic));
+        choiceForm.add(UiElementFactory.createLambdaValueField("lambda_size_vdw", lambda_size_vdw));
 
         inputForm.add(new AjaxButton("generateGrid") {
 

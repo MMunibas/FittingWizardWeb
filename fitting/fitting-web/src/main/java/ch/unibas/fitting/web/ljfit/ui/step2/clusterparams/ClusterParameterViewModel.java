@@ -8,13 +8,10 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
  */
 public class ClusterParameterViewModel implements Serializable {
     private Integer ncpus;
-    private String clusterName;
 
     public ClusterParameterViewModel(
-            int ncpus,
-            String clusterName) {
+            int ncpus) {
         this.ncpus = ncpus;
-        this.clusterName = clusterName;
     }
 
     public Integer getNcpus() {
@@ -25,11 +22,4 @@ public class ClusterParameterViewModel implements Serializable {
         this.ncpus = ncpus;
     }
 
-    public String getClusterName() {
-        return clusterName;
-    }
-
-    public void setClusterName(String clusterName) {
-        this.clusterName = clusterName;
-    }
 }

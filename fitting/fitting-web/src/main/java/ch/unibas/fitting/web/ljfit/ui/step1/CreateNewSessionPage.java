@@ -41,8 +41,10 @@ public class CreateNewSessionPage extends HeaderPage {
     private final FileUploadField liquidUploadFile;
     private final FileUploadField solventUploadFile;
     private final FileUploadField lpunUploadFile;
+    private final FileUploadField resUploadFile;
 
-    private final IModel<Double> lambda = Model.of(0.1);
+    private final IModel<Double> lambda_size_electrostatic = Model.of(0.1);
+    private final IModel<Double> lambda_size_vdw = Model.of(0.1);
 
     private final IModel<Double> temperature = Model.of(298.0);
     private final IModel<Double> molarMass = Model.of();
@@ -66,8 +68,10 @@ public class CreateNewSessionPage extends HeaderPage {
         form.add(liquidUploadFile = createFileUploadField("liquidUploadFile"));
         form.add(solventUploadFile = createFileUploadField("solventUploadFile"));
         form.add(lpunUploadFile = createFileUploadField("lpunUploadFile"));
+        form.add(resUploadFile = createFileUploadField("resUploadFile"));
 
-        form.add(UiElementFactory.createLambdaValueField("lambda", lambda));
+        form.add(UiElementFactory.createLambdaValueField("lambda_size_electrostatic", lambda_size_electrostatic));
+        form.add(UiElementFactory.createLambdaValueField("lambda_size_vdw", lambda_size_vdw));
 
         NumberTextField<Double> temperatureField = new NumberTextField<>("temperature", temperature);
         temperatureField.setRequired(true);
@@ -117,7 +121,8 @@ public class CreateNewSessionPage extends HeaderPage {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 target.add(fp);
                 SessionParameter parameter = new SessionParameter(
-                        lambda.getObject(),
+                        lambda_size_electrostatic.getObject(),
+                        lambda_size_vdw.getObject(),
                         temperature.getObject(),
                         molarMass.getObject(),
                         numberOfResidues.getObject(),
@@ -159,6 +164,7 @@ public class CreateNewSessionPage extends HeaderPage {
         File liquidFile = uploadFile(destination, liquidUploadFile.getFileUpload());
         File solventFile = uploadFile(destination, solventUploadFile.getFileUpload());
         File lpunFile = uploadFile(destination, lpunUploadFile.getFileUpload());
+        File resFile = uploadFile(destination, resUploadFile.getFileUpload());
 
         return new UploadedFileNames(
                 parFile,
@@ -166,7 +172,8 @@ public class CreateNewSessionPage extends HeaderPage {
                 molFile,
                 liquidFile,
                 solventFile,
-                lpunFile);
+                lpunFile,
+                resFile);
     }
 
     private File uploadFile(File destination, FileUpload upload) {

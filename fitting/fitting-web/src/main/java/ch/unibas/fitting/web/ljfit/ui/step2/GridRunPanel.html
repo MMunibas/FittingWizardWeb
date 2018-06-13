@@ -26,8 +26,13 @@
                 <td align="center" style="border: 1px solid"><input wicket:id="selectedCheckbox" type="checkbox"/></td>
             </tr>
         </table>
-        <div>
-            &lambda; spacing: <input wicket:id="lambda" type="number" />
+        <div style="padding: 5px 0px">
+            <p>
+                &lambda; window size electrostatic: <input wicket:id="lambda_size_electrostatic" type="number" />
+            </p>
+            <p>
+                &lambda; window size VWD: <input wicket:id="lambda_size_vdw" type="number" />
+            </p>
         </div>
         <input wicket:id="runGrid" type="submit" value="Run grid" class="btn btn-default" />
 
