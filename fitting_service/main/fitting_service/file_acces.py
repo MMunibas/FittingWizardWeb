@@ -141,7 +141,7 @@ class Directory(IDirectory):
     def subdir(self, name):
         fullpath = os.path.join(self._path, name)
         if not os.path.exists(fullpath):
-            os.mkdir(fullpath, 0o777)
+            os.makedirs(fullpath, 0o777)
         return Directory(fullpath)
 
     def list_files(self):
