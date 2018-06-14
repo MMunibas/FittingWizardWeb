@@ -1,5 +1,6 @@
 package ch.unibas.fitting.web.application.calculation;
 
+import ch.unibas.fitting.shared.config.Settings;
 import de.agilecoders.wicket.jquery.util.Json;
 import io.swagger.client.ApiClient;
 import io.swagger.client.ApiException;
@@ -11,6 +12,7 @@ import io.vavr.control.Option;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.util.file.File;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,9 +24,12 @@ public class CalculationService {
     DefaultApi defaultApi;
     CalculationApi calculationApi;
 
-    public CalculationService() {
+    protected CalculationService() {}
+
+    @Inject
+    public CalculationService(Settings settings) {
         ApiClient client = new ApiClient();
-        client.setBasePath("http://localhost:5000");
+        client.setBasePath(settings.getScriptServiceUri());
         defaultApi = new DefaultApi(client);
         calculationApi = new CalculationApi(client);
     }

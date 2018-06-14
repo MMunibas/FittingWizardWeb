@@ -116,4 +116,8 @@ public class Settings {
     public int getNumberOfBackgroundTaskThreads() {
         return props.getInteger("server.background_threads");
     }
+
+    public String getScriptServiceUri() {
+        return getValue("calculation.service");
+    }
 }
