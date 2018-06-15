@@ -11,7 +11,7 @@ public class CalculationProtocol {
         public final String title;
         public final String username;
         public final StartDefinition[] definitions;
-        public NavigationInfo navigationInfo;
+        public final NavigationInfo navigationInfo;
 
         public Start(String title,
                      String username,
