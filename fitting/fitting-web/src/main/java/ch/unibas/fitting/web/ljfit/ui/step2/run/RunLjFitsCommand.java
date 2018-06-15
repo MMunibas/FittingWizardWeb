@@ -66,7 +66,7 @@ public class RunLjFitsCommand {
 
         var list = List.<StartDefinition>empty();
         for (var pair : run.runPairs) {
-            LjFitRunDir runDir = sessionDir.createRunDir(pair.lambda_sigma, pair.lambda_epsiolon);
+            LjFitRunDir runDir = sessionDir.createRunDir(pair.lambda_sigma, pair.lambda_epsilon);
             writeToJson(runDir.getRunInputJson(), pair);
 
             var map = new HashMap<String, Object>();
@@ -83,12 +83,12 @@ public class RunLjFitsCommand {
             if (files.liquidFile != null)
                 map.put("lj_filename_pureliquid_pdb", files.liquidFile.getName());
             if (files.resFile != null)
-                map.put("lj_filename_charmm_restart", files.liquidFile.getName());
+                map.put("lj_filename_charmm_restart", files.resFile.getName());
 
             map.put("lj_ti_lambda_0", 0.0);
             map.put("lj_ti_lambda_1", 1.0);
             map.put("lj_charmm_simulation_temperature", session.getSessionParameter().temperature);
-            map.put("lj_scaling_factor_eps", pair.lambda_epsiolon);
+            map.put("lj_scaling_factor_eps", pair.lambda_epsilon);
             map.put("lj_scaling_factor_sig", pair.lambda_sigma);
             map.put("lj_ti_lambda_window_size_electrostatic", run.lambda_size_electrostatic);
             map.put("lj_ti_lambda_window_size_vdw", run.lambda_size_vdw);
@@ -101,7 +101,7 @@ public class RunLjFitsCommand {
                     Option.none(),
                     Option.of(() -> {
                         LjFitRunInput input = new LjFitRunInput(
-                                pair.lambda_epsiolon,
+                                pair.lambda_epsilon,
                                 pair.lambda_sigma,
                                 run.lambda_size_electrostatic,
                                 run.lambda_size_vdw,
