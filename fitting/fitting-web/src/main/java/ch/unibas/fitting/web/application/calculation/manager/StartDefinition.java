@@ -1,6 +1,8 @@
 package ch.unibas.fitting.web.application.calculation.manager;
 
 import ch.unibas.fitting.shared.javaextensions.Action;
+import ch.unibas.fitting.shared.javaextensions.Action1;
+import com.google.gson.JsonObject;
 import io.vavr.control.Option;
 
 import java.io.File;
@@ -12,7 +14,7 @@ public class StartDefinition {
     public final File[] inputFiles;
     public final File outputDir;
     public final Option<String> calculationId;
-    public final Option<Action> successCallback;
+    public final Option<Action1<Option<JsonObject>>> successCallback;
     public final boolean doNotDeleteCalculation;
 
     public StartDefinition(String algorithmName,
@@ -27,7 +29,7 @@ public class StartDefinition {
                            File outputDir,
                            File[] inputFiles,
                            Option<String> calculationId,
-                           Option<Action> successCallback,
+                           Option<Action1<Option<JsonObject>>> successCallback,
                            boolean doNotDeleteCalculation){
         this.doNotDeleteCalculation = doNotDeleteCalculation;
         if (!outputDir.isDirectory())

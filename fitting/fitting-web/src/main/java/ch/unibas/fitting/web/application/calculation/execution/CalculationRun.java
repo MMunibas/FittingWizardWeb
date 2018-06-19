@@ -4,11 +4,15 @@ import akka.actor.AbstractActor;
 import akka.actor.Cancellable;
 import akka.actor.Props;
 import ch.unibas.fitting.web.application.calculation.CalculationService;
-import ch.unibas.fitting.web.application.calculation.manager.CalculationProtocol;
 import ch.unibas.fitting.web.application.calculation.manager.StartDefinition;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
+import io.vavr.control.Option;
 import scala.concurrent.duration.Duration;
 
 import java.io.File;
+import java.io.FileReader;
 import java.nio.file.Files;
 import java.util.concurrent.TimeUnit;
 
@@ -128,7 +132,7 @@ public class CalculationRun extends AbstractActor {
 
     private void handle(FinishFailed m) {
         status = RunState.Failed;
-        message = "Communication to service failed:\n" + m.cause;
+        message = "FinishFailed:\n" + m.cause;
         notifyParent();
     }
 
@@ -234,7 +238,14 @@ public class CalculationRun extends AbstractActor {
             }
 
             if (lastUpdate.succeeded) {
-                definition.successCallback.forEach(action -> action.execute());
+                var resultJson = Option.<JsonObject>none();
+                var resultFile = new File(definition.outputDir, "run_results.json");
+                if (resultFile.exists()) {
+                    resultJson = getJsonObject(resultFile);
+                }
+
+                final Option<JsonObject> finalResultJson = resultJson;
+                definition.successCallback.forEach(action -> action.execute(finalResultJson));
             }
 
             context().system().log().debug("finishRun DONE");
@@ -258,6 +269,21 @@ public class CalculationRun extends AbstractActor {
                 status,
                 message,
                 self());
+    }
+
+    private Option<JsonObject> getJsonObject(File file) {
+        try {
+            try (var fr = new FileReader(file)) {
+                try (var jr = new JsonReader(fr)) {
+                    var parser = new JsonParser();
+                    var obj = parser.parse(jr);
+                    return Option.of(obj.getAsJsonObject());
+                }
+            }
+        } catch (Exception e) {
+            context().system().log().error(e, String.format("deserialize of result JSON [%s] failed.", file));
+            return Option.none();
+        }
     }
 
     //endregion
@@ -308,7 +334,6 @@ public class CalculationRun extends AbstractActor {
         public final StatusUpdated lastUpdate;
 
         public FinishDone(StatusUpdated lastUpdate) {
-
             this.lastUpdate = lastUpdate;
         }
     }

@@ -35,16 +35,10 @@ import java.util.LinkedHashSet;
 
 public class RunMtpFitCommand implements IAmACommand {
     @Inject
-    private IBackgroundTasks tasks;
-    @Inject
     private IUserDirectory userDirectory;
-    @Inject
-    private IFitMtpScript fitScript;
     @Inject
     private ChargesFileGenerator chargesFileGenerator;
 
-    @Inject
-    private ExportFitWorkflow exportFit;
     @Inject
     private CreateFit createFit;
     @Inject
@@ -90,14 +84,14 @@ public class RunMtpFitCommand implements IAmACommand {
                         fitOutputDir.getDirectory(),
                         Array.of(generatedCharges.getAbsoluteFile()).toJavaArray(File.class),
                         Option.of(calcId),
-                        Option.of(() -> {
+                        Option.of(json -> {
+
                             var molecules = mtpFitDir.getMoleculeDir().listAllMoleculeNames();
 
                             Fit fit = createFit.createFit(
                                     fitOutputDir.getId(),
                                     rank,
-                                    new File(fitOutputDir.getDirectory(), "fit_results.txt"),
-                                    new File(fitOutputDir.getDirectory(), "output.txt"),
+                                    json.get(),
                                     new InitialQ00(chargeValues),
                                     molecules);
 
@@ -108,64 +102,5 @@ public class RunMtpFitCommand implements IAmACommand {
         );
 
         PageNavigation.ToProgressForCalculation(response);
-    }
-
-    @Deprecated
-    public void execute(String username,
-                        double convergence,
-                        int rank,
-                        boolean ignoreHydrogens,
-                        LinkedHashSet<ChargeValue> chargeValues) {
-
-        TaskHandle th = tasks.spawnTask(
-                username,
-                "MTP Fit",
-                (ctx) -> {
-
-                    MtpFitDir mtpFit = userDirectory.getMtpFitDir(username);
-                    FitOutputDir fitOutputDir = mtpFit.createNextFitOutputDir();
-
-                    File generatedCharges = chargesFileGenerator.generate(
-                            fitOutputDir.getDirectory(),
-                            "generated_charges.txt",
-                            chargeValues);
-
-                    MoleculesDir moleculesDir = mtpFit.getMoleculeDir();
-                    FitMtpInput input = new FitMtpInput(
-                            fitOutputDir,
-                            convergence,
-                            rank,
-                            ignoreHydrogens,
-                            generatedCharges,
-                            moleculesDir.listAllMtpFitTabFiles());
-
-                    FitMtpOutput result = fitScript.execute(input);
-
-                    Fit fit = createFit.createFit(
-                            fitOutputDir.getId(),
-                            rank,
-                            result.getResultsFile(),
-                            result.getOutputFile(),
-                            new InitialQ00(chargeValues),
-                            moleculesDir.listAllMoleculeNames());
-
-                    ExportFitInput exportInput = new ExportFitInput(
-                            fitOutputDir,
-                            moleculesDir,
-                            fit);
-                    exportFit.execute(exportInput);
-
-                    mtpFitRepo.saveFitResult(username, fit);
-
-                    return fit;
-                },
-                (fit, pp) -> {
-                    pp.add("fit_id", fit.getId());
-                    return FittingResultsPage.class;
-                },
-                MtpFitSessionPage.class,
-                Option.of(new PageContext(MtpFitSessionPage.class)));
-
-        PageNavigation.ToProgressForTask(th);
     }
 }

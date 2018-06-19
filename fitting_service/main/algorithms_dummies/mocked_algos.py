@@ -51,11 +51,6 @@ def mtpfit_part2(ctx):
 
     interruptable_wait(ctx, 15)
 
-    data = {
-        "message": "mtpfit_part2_finished"
-    }
-    ctx.write_results(data)
-
 
 def interruptable_wait(ctx, seconds):
     iterations = int(abs(seconds / 5))

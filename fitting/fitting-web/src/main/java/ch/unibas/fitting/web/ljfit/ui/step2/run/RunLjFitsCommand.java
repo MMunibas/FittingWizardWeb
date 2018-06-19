@@ -99,7 +99,7 @@ public class RunLjFitsCommand {
                     runDir.getDirectory(),
                     files.listFiles(),
                     Option.none(),
-                    Option.of(() -> {
+                    Option.of((json) -> {
                         LjFitRunInput input = new LjFitRunInput(
                                 pair.lambda_epsilon,
                                 pair.lambda_sigma,

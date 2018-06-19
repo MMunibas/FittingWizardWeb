@@ -1,6 +1,8 @@
 package ch.unibas.fitting.web.application.calculation.execution;
 
 import akka.actor.ActorRef;
+import com.google.gson.JsonObject;
+import io.vavr.control.Option;
 
 public class RunDetails {
 
