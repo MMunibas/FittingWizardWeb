@@ -96,6 +96,10 @@ public class RunLjFitsCommand {
             map.put("lj_ti_lambda_window_size_electrostatic", run.lambda_size_electrostatic);
             map.put("lj_ti_lambda_window_size_vdw", run.lambda_size_vdw);
 
+            map.put("reference_solvation_energy", session.getSessionParameter().expectedDeltaG);
+            map.put("reference_liquid_density", session.getSessionParameter().expectedDensity);
+            map.put("reference_vaporization_enthalpy", session.getSessionParameter().expectedDeltaH);
+
             list = list.append(new StartDefinition(
                     "ljfit",
                     map,
@@ -104,7 +108,7 @@ public class RunLjFitsCommand {
                     Option.none(),
                     Option.of((json) -> {
                         var charmmResult = new LjFitJsonResult(json.get());
-                        var runResult = createResult(session, input, charmmResult);
+                        var runResult = new LjFitRunResult(session, input, charmmResult);
                         writeToJson(runDir.getRunOutputJson(), runResult);
                     }),
                     false));
@@ -119,38 +123,6 @@ public class RunLjFitsCommand {
         } catch (IOException e) {
             throw new RuntimeException("Failed to write result json "+ file);
         }
-    }
-
-    private LjFitRunResult createResult(
-            LjFitSession session,
-            LjFitRunInput in,
-            LjFitJsonResult ljFitResult) {
-
-        double score_deltaG = Math.pow(ljFitResult.dg_total - session.getSessionParameter().expectedDeltaG, 2);
-        double score_deltaH = Math.pow(ljFitResult.vaporization_enthalpy - session.getSessionParameter().expectedDeltaH, 2);
-        double score_density = Math.pow(ljFitResult.pure_liquid_density - session.getSessionParameter().expectedDensity, 2);
-        double score_total = score_density + (3* score_deltaH) + (5*score_deltaG);
-
-        return new LjFitRunResult(
-                in.lambda_epsilon,
-                in.lambda_sigma,
-                ljFitResult.dg_solv_vdw_gas,
-                ljFitResult.dg_solv_elec_gas,
-                ljFitResult.dg_solv_elec_solv,
-                ljFitResult.dg_solv_vdw_solv,
-                ljFitResult.dg_tot_gas_phase,
-                ljFitResult.dg_tot_solution_phase,
-                ljFitResult.dg_total,
-                session.getSessionParameter().expectedDeltaG,
-                ljFitResult.vaporization_enthalpy,
-                session.getSessionParameter().expectedDeltaH,
-                ljFitResult.pure_liquid_density,
-                session.getSessionParameter().expectedDensity,
-                score_deltaG,
-                score_deltaH,
-                score_density,
-                score_total
-                );
     }
 }
 

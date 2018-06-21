@@ -17,6 +17,11 @@ public class LjFitJsonResult {
     public final double dg_tot_solution_phase;
     public final double dg_total;
 
+    public final double score_deltaG;
+    public final double score_deltaH;
+    public final double score_density;
+    public final double score_total;
+
     public LjFitJsonResult(JsonObject json) {
         molar_mass = json.get("molar_mass").getAsDouble();
         pure_liquid_density = json.get("pure_liquid_density").getAsDouble();
@@ -28,5 +33,10 @@ public class LjFitJsonResult {
         dg_tot_gas_phase = json.get("dg_tot_gas_phase").getAsDouble();
         dg_tot_solution_phase = json.get("dg_tot_solution_phase").getAsDouble();
         dg_total = json.get("dg_total").getAsDouble();
+
+        score_total = json.get("score_total").getAsDouble();
+        score_density = json.get("score_density").getAsDouble();
+        score_deltaG = json.get("score_dg").getAsDouble();
+        score_deltaH = json.get("score_dh").getAsDouble();
     }
 }
