@@ -409,6 +409,8 @@ class CalculationContext(IContext):
         return JobsService().job_status(job_id)
 
     def wait_for_all_jobs(self):
+        job_ids = ', '.join(list(*self.job_ids))
+        self.set_running_status('Waiting for jobs: ' + job_ids)
         self.wait_for_finished_jobs(*self.job_ids)
 
     def write_results(self, json_object):
