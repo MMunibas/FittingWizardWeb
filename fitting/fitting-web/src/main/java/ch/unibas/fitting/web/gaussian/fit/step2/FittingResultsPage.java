@@ -8,6 +8,7 @@ import ch.unibas.fitting.web.jsmol.JsMolHelper;
 import ch.unibas.fitting.web.web.HeaderPage;
 import com.google.inject.Inject;
 import io.vavr.collection.Stream;
+import javafx.scene.paint.Color;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -92,7 +93,7 @@ public class FittingResultsPage extends HeaderPage {
             protected void populateItem(ListItem<FitResultViewModel> item) {
                 FitResultViewModel mol = item.getModelObject();
 
-                item.add(new Label("type", mol.getName()));
+                item.add(new Label("type", mol.getAtomType()));
 
                 item.add(createColoredLabel("Q00", mol));
                 item.add(createColoredLabel("Q10", mol));
@@ -104,8 +105,6 @@ public class FittingResultsPage extends HeaderPage {
                 item.add(createColoredLabel("Q22c", mol));
                 item.add(createColoredLabel("Q22s", mol));
 
-                // Todo: add atom indices to highlight atoms in jsmol
-                //JsMolHelper.addAtomsHighlightingMouseEvent(item, ...);
             }
         });
 
@@ -155,14 +154,11 @@ public class FittingResultsPage extends HeaderPage {
     }
 
     private Label createColoredLabel(String chargeType, FitResultViewModel fitResult) {
-        FitResultViewModel.FitValue fitValue = fitResult.getFitValueFor(chargeType);
+        var value = fitResult.getValue(chargeType);
+        var color = fitResult.getColor(chargeType);
         Label label = new Label(chargeType);
-        if (fitValue == null) {
-            label.add(new AttributeModifier("style", "background-color:white;"));
-        } else {
-            label.setDefaultModel(Model.of(fitValue.getValue()));
-            label.add(new AttributeModifier("style", "background-color:" + fitValue.getColor() + ";"));
-        }
+        label.setDefaultModel(Model.of(value));
+        label.add(new AttributeModifier("style", "background-color:" + color + ";"));
         return label;
     }
 

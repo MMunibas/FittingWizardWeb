@@ -1,10 +1,7 @@
 package ch.unibas.fitting.web.gaussian.fit.step2;
 
-import ch.unibas.fitting.web.gaussian.services.ChargeTypes;
 import ch.unibas.fitting.web.application.algorithms.mtp.ChargeValue;
-import ch.unibas.fitting.web.application.algorithms.mtp.Fit;
 import ch.unibas.fitting.web.application.algorithms.mtp.FitResult;
-import ch.unibas.fitting.web.gaussian.ColorCoder;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
@@ -13,72 +10,41 @@ import java.util.HashMap;
  * Created by tschmidt on 17.06.2016.
  */
 public class FitResultViewModel {
-    private final String name;
-    private HashMap<String, FitValue> values = new HashMap<>();
+    private final String atomType;
+    private HashMap<String, ChargeValue> values = new HashMap<>();
 
     public FitResultViewModel(
-            ColorCoder colorCoder,
-            Fit fit,
             FitResult fr) {
-        this.name = fr.getAtomTypeName();
+        this.atomType = fr.getAtomTypeName();
         fr.getChargeValues().forEach(chargeValue -> {
-            values.put(chargeValue.getMultipoleComponent().toLowerCase(), new FitValue(colorCoder, fit, fr, chargeValue));
+            values.put(chargeValue.getMultipoleComponent().toLowerCase(), chargeValue);
         });
     }
 
-    public FitValue getFitValueFor(String chargeType) {
-        return values.get(chargeType.toLowerCase());
+    public String getAtomType() {
+        return atomType;
     }
 
-    public String getName() {
-        return name;
+    public String getValue(String chargeType) {
+        var charge = value(chargeType.toLowerCase());
+        return String.format("%7.4f", charge == null ? 0.0 : charge);
     }
 
-    public class FitValue {
-        private double value;
-        private String color;
-        public FitValue(ColorCoder colorCoder, Fit fit, FitResult result, ChargeValue value) {
-            this.value = value.getValue();
-            Color col = getColor(colorCoder, value.getMultipoleComponent(), fit, result);
-            color = toRGBCode(col);
-        }
+    public String getColor(String chargeType) {
+        var value = value(chargeType);
+        if (value == null)
+            return "#FFFFFF";
+        value = Math.abs(value);
+        if (chargeType.equalsIgnoreCase("Q00") && value > 0.8)
+            return "#FF0000";
+        if (value > 1.2)
+            return "#FF0000";
+        return "#FFFFFF";
+    }
 
-        public String getColor() {
-            return color;
-        }
-
-        public String getValue() {
-            return getFormattedValue(value);
-        }
-
-        private String getFormattedValue(Double value) {
-            String formatted = value == null ? "" : String.format("%7.4f", value);
-            return formatted;
-        }
-
-        private Color getColor(ColorCoder coder, String chargeType, Fit fit, FitResult fitResult) {
-            Color color = null;
-            Double value = null;
-            if (chargeType.equalsIgnoreCase(ChargeTypes.charge)) {
-                value = fitResult.getAbsDeviationOfQ();
-            } else {
-                value = fitResult.getChargeValue(chargeType);
-            }
-            if (value != null) {
-                double min = fit.getAbsoluteMinValue(chargeType);
-                double max = fit.getAbsoluteMaxValue(chargeType);
-                color = coder.getColor(min, max, Math.abs(value));
-            }
-
-            return color;
-        }
-
-        public String toRGBCode( Color color )
-        {
-            return String.format( "#%02X%02X%02X",
-                    (int)( color.getRed() * 255 ),
-                    (int)( color.getGreen() * 255 ),
-                    (int)( color.getBlue() * 255 ) );
-        }
+    private Double value(String chargeType) {
+        chargeType = chargeType.toLowerCase();
+        if (!values.containsKey(chargeType)) return null;
+        return values.get(chargeType).getValue();
     }
 }
