@@ -1,8 +1,5 @@
 package ch.unibas.fitting.web;
 
-import ch.unibas.fitting.shared.charmm.web.IRunCharmmWorkflowNew;
-import ch.unibas.fitting.shared.charmm.web.MockRunCharmmWorkflowNew;
-import ch.unibas.fitting.shared.charmm.web.RunCharmmWorkflowNew;
 import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.shared.directories.UserDirectory;
@@ -59,14 +56,12 @@ public class WebModule extends AbstractModule {
             bind(IFittabScript.class).to(MockFittabMarkerScript.class);
 
             bind(IGenerateInputWorkflow.class).to(MockGenerateInputWorkflow.class);
-            bind(IRunCharmmWorkflowNew.class).to(MockRunCharmmWorkflowNew.class);
         } else {
             bind(IBabelScript.class).to(RealBabelScript.class);
             bind(ILRAScript.class).to(RealLRAScript.class);
             bind(IFittabScript.class).to(RealFittabMarkerScript.class);
 
             bind(IGenerateInputWorkflow.class).to(RealGenerateInputWorkflow.class);
-            bind(IRunCharmmWorkflowNew.class).to(RunCharmmWorkflowNew.class);
         }
 
         if (settings.getMocksEnabled()) {

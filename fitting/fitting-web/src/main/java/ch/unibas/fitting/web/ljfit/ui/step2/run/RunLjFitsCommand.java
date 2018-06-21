@@ -1,9 +1,6 @@
 package ch.unibas.fitting.web.ljfit.ui.step2.run;
 
-import ch.unibas.fitting.shared.charmm.web.CharmmResultCalculator;
-import ch.unibas.fitting.shared.charmm.web.CharmmResultParser;
-import ch.unibas.fitting.shared.charmm.web.CharmmResultParserOutput;
-import ch.unibas.fitting.shared.charmm.web.ResultCalculatorOutput;
+import ch.unibas.fitting.shared.charmm.web.LjFitJsonResult;
 import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.shared.directories.LjFitRunDir;
 import ch.unibas.fitting.shared.directories.LjFitSessionDir;
@@ -98,6 +95,8 @@ public class RunLjFitsCommand {
                     files.listFiles(),
                     Option.none(),
                     Option.of((json) -> {
+                        var charmmResult = new LjFitJsonResult(json.get());
+
                         LjFitRunInput input = new LjFitRunInput(
                                 pair.lambda_epsilon,
                                 pair.lambda_sigma,
@@ -105,9 +104,7 @@ public class RunLjFitsCommand {
                                 run.lambda_size_vdw,
                                 session.getSessionParameter().temperature);
 
-                        var charmmResult = CharmmResultParser.parseOutput(runDir);
-
-                        LjFitRunResult runResult = createResult(session, input, charmmResult);
+                        var runResult = createResult(session, input, charmmResult);
                         writeToJson(runDir.getRunOutputJson(), runResult);
                     }),
                     false));
@@ -127,36 +124,27 @@ public class RunLjFitsCommand {
     private LjFitRunResult createResult(
             LjFitSession session,
             LjFitRunInput in,
-            CharmmResultParserOutput charmmOutput) {
+            LjFitJsonResult ljFitResult) {
 
-        double gasTotal = charmmOutput.getGas_vdw() + charmmOutput.getGas_mtp();
-        double solTotal = charmmOutput.getSolvent_mtp() + charmmOutput.getSolvent_vdw();
-
-        ResultCalculatorOutput calculatedResult = CharmmResultCalculator.calculateResult(
-                session.getSessionParameter().numberOfResidues,
-                session.getSessionParameter().molarMass,
-                session.getSessionParameter().temperature,
-                charmmOutput);
-
-        double score_deltaG = Math.pow(calculatedResult.getDeltaG() - session.getSessionParameter().expectedDeltaG, 2);
-        double score_deltaH = Math.pow(calculatedResult.getDeltaH() - session.getSessionParameter().expectedDeltaH, 2);
-        double score_density = Math.pow(calculatedResult.getDensity() - session.getSessionParameter().expectedDensity, 2);
+        double score_deltaG = Math.pow(ljFitResult.dg_total - session.getSessionParameter().expectedDeltaG, 2);
+        double score_deltaH = Math.pow(ljFitResult.vaporization_enthalpy - session.getSessionParameter().expectedDeltaH, 2);
+        double score_density = Math.pow(ljFitResult.pure_liquid_density - session.getSessionParameter().expectedDensity, 2);
         double score_total = score_density + (3* score_deltaH) + (5*score_deltaG);
 
         return new LjFitRunResult(
                 in.lambdaEpsilon,
                 in.lambdaSigma,
-                charmmOutput.getGas_vdw(),
-                charmmOutput.getGas_mtp(),
-                charmmOutput.getSolvent_mtp(),
-                charmmOutput.getSolvent_vdw(),
-                gasTotal,
-                solTotal,
-                calculatedResult.getDeltaG(),
+                ljFitResult.dg_solv_vdw_gas,
+                ljFitResult.dg_solv_elec_gas,
+                ljFitResult.dg_solv_elec_solv,
+                ljFitResult.dg_solv_vdw_solv,
+                ljFitResult.dg_tot_gas_phase,
+                ljFitResult.dg_tot_solution_phase,
+                ljFitResult.dg_total,
                 session.getSessionParameter().expectedDeltaG,
-                calculatedResult.getDeltaH(),
+                ljFitResult.vaporization_enthalpy,
                 session.getSessionParameter().expectedDeltaH,
-                calculatedResult.getDensity(),
+                ljFitResult.pure_liquid_density,
                 session.getSessionParameter().expectedDensity,
                 score_deltaG,
                 score_deltaH,
