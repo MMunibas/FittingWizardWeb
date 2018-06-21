@@ -1,6 +1,7 @@
 import os
 import random
 import json
+import threading
 from datetime import datetime
 from hashlib import sha256
 from base64 import urlsafe_b64encode
@@ -11,6 +12,7 @@ from .settings import STORAGE_ROOT
 
 jobs_lock = threading.Lock()
 cancel_lock = threading.Lock()
+status_file_lock = threading.Lock()
 
 
 class IdGenerator(object):
@@ -211,19 +213,18 @@ class CalculationStatus(object):
                 }
 
     def __init__(self, calculation_directory):
-        self._status_file_lock = threading.Lock()
         self.calculation_directory = calculation_directory
 
         if not calculation_directory.contains(self.STATUS_FILE_NAME):
             self._save(self.DEFAULT)
 
     def _load(self):
-        with self._status_file_lock:
+        with status_file_lock:
             with self.calculation_directory.open_file(self.STATUS_FILE_NAME, 'r') as status_file:
                 return json.load(status_file)
 
     def _save(self, status):
-        with self._status_file_lock:
+        with status_file_lock:
             with self.calculation_directory.open_file(self.STATUS_FILE_NAME, 'w') as status_file:
                 json.dump(status, status_file)
 
