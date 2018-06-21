@@ -113,6 +113,7 @@ public class MtpFitSessionPage extends HeaderPage {
 
         NumberTextField ntf = new NumberTextField<>("convergence", convergence);
         ntf.setStep(NumberTextField.ANY);
+        ntf.setMinimum(0.0);
         ntf.setRequired(true);
         form.add(ntf);
 

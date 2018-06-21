@@ -58,11 +58,13 @@ public class ParameterPage extends HeaderPage {
         NumberTextField cores = new NumberTextField<>("numberOfCores", _nCores);
         cores.setRequired(true);
         cores.add(RangeValidator.range(1, 128));
+        cores.setMinimum(1);
         form.add(cores);
 
         NumberTextField multiplicity = new NumberTextField<>("multiplicity", _multiplicity);
         multiplicity.setRequired(true);
-        multiplicity.add(RangeValidator.range(0, 10));
+        multiplicity.add(RangeValidator.range(1, 10));
+        multiplicity.setMinimum(1);
         form.add(multiplicity);
 
         form.add(new AjaxButton("start") {
