@@ -28,6 +28,10 @@ applicationDistribution.from('../javascript') {
     into 'javascript/'
 }
 
+applicationDistribution.from('../help_page') {
+    into 'help_page/'
+}
+
 dependencies {
     compile project(':calculation-client')
 
