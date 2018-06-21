@@ -1,0 +1,12 @@
+{
+  "molar_mass": 112.10339999999998,
+  "pure_liquid_density": 1.3265687785135358,
+  "vaporization_enthalpy": 4.714793968566667,
+  "dg_solv_vdw_gas": -4.902201999999999,
+  "dg_solv_vdw_solv": -4.4881519999999995,
+  "dg_solv_elec_gas": -104.45737299999998,
+  "dg_solv_elec_solv": -188.17128115000003,
+  "dg_tot_gas_phase": -109.35957499999998,
+  "dg_tot_solution_phase": -192.65943315000004,
+  "dg_total": -84.12795815000008
+}

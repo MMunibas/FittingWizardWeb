@@ -21,11 +21,6 @@ def ljfit(ctx):
 
     interruptable_wait(ctx, 15)
 
-    data = {
-        "message": "ljfit_finished"
-    }
-    ctx.write_results(data)
-
 
 @register
 def mtpfit_part1(ctx):
@@ -35,11 +30,6 @@ def mtpfit_part1(ctx):
     ctx.set_running_status('Simulating MTP generating files: Copying')
 
     interruptable_wait(ctx, 15)
-
-    data = {
-        "message": "mtpfit_part1_finished"
-    }
-    ctx.write_results(data)
 
 
 @register
