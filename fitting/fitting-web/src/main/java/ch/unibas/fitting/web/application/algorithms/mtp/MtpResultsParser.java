@@ -1,7 +1,5 @@
 package ch.unibas.fitting.web.application.algorithms.mtp;
 
-import ch.unibas.fitting.shared.fitting.ChargeValue;
-import ch.unibas.fitting.shared.fitting.OutputAtomType;
 import ch.unibas.fitting.web.application.calculation.JsonLoader;
 import com.google.gson.JsonObject;
 import io.vavr.collection.List;

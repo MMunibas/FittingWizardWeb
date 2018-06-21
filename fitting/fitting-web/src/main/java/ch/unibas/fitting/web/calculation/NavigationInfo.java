@@ -1,6 +1,6 @@
 package ch.unibas.fitting.web.calculation;
 
-import ch.unibas.fitting.shared.javaextensions.Action;
+import ch.unibas.fitting.web.infrastructure.javaextensions.Action;
 import ch.unibas.fitting.web.application.task.PageContext;
 import io.vavr.control.Option;
 

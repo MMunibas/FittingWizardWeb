@@ -1,9 +1,8 @@
 package ch.unibas.fitting.web.gaussian.services;
 
-import ch.unibas.fitting.shared.fitting.ChargeValue;
-import ch.unibas.fitting.shared.fitting.Fit;
-import ch.unibas.fitting.shared.tools.LPunAtomType;
-import ch.unibas.fitting.shared.presentation.gaussian.ColorCoder;
+import ch.unibas.fitting.web.application.algorithms.mtp.ChargeValue;
+import ch.unibas.fitting.web.application.algorithms.mtp.Fit;
+import ch.unibas.fitting.web.gaussian.ColorCoder;
 import ch.unibas.fitting.web.gaussian.addmolecule.step6.ChargesViewModel;
 import ch.unibas.fitting.web.gaussian.fit.step1.FitViewModel;
 import ch.unibas.fitting.web.gaussian.fit.step2.FitResultViewModel;

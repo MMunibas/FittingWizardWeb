@@ -1,6 +1,6 @@
 package ch.unibas.fitting.web.gaussian.fit.step1;
 
-import ch.unibas.fitting.shared.fitting.Fit;
+import ch.unibas.fitting.web.application.algorithms.mtp.Fit;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;

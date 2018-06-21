@@ -1,7 +1,7 @@
 package ch.unibas.fitting.web.calculation.commands;
 
-import ch.unibas.fitting.shared.config.Settings;
-import ch.unibas.fitting.shared.directories.IUserDirectory;
+import ch.unibas.fitting.web.Settings;
+import ch.unibas.fitting.web.application.directories.IUserDirectory;
 import ch.unibas.fitting.web.calculation.NavigationInfo;
 import ch.unibas.fitting.web.calculation.OverviewPage;
 import ch.unibas.fitting.web.application.calculation.CalculationManagementClient;

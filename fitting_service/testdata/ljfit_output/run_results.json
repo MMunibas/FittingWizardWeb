@@ -8,5 +8,9 @@
   "dg_solv_elec_solv": -188.17128115000003,
   "dg_tot_gas_phase": -109.35957499999998,
   "dg_tot_solution_phase": -192.65943315000004,
-  "dg_total": -84.12795815000008
+  "dg_total": -84.12795815000008,
+  "score_total" : 1,
+  "score_density" : 1,
+  "score_dg" : 1,
+  "score_dh" : 1
 }

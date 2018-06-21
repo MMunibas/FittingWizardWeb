@@ -1,6 +1,6 @@
 package ch.unibas.fitting.web.gaussian.addmolecule.step3;
 
-import ch.unibas.fitting.shared.xyz.XyzAtom;
+import ch.unibas.fitting.web.application.algorithms.xyz.XyzAtom;
 import org.apache.wicket.model.IModel;
 
 import java.io.Serializable;

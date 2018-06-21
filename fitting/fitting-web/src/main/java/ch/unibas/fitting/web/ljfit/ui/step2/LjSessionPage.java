@@ -1,6 +1,6 @@
 package ch.unibas.fitting.web.ljfit.ui.step2;
 
-import ch.unibas.fitting.shared.workflows.ljfit.LjFitRun;
+import ch.unibas.fitting.web.application.algorithms.ljfit.LjFitRun;
 import ch.unibas.fitting.web.ljfit.services.LjFitRepository;
 import ch.unibas.fitting.web.ljfit.ui.step1.CreateNewSessionPage;
 import ch.unibas.fitting.web.ljfit.ui.step2.clusterparams.ClusterParameterPanel;

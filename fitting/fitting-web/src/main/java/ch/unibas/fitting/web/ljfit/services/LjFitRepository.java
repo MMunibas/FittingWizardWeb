@@ -1,22 +1,18 @@
 package ch.unibas.fitting.web.ljfit.services;
 
-import ch.unibas.fitting.shared.directories.IUserDirectory;
-import ch.unibas.fitting.shared.directories.LjFitSessionDir;
-import ch.unibas.fitting.shared.infrastructure.JsonSerializer;
-import ch.unibas.fitting.shared.workflows.ljfit.LjFitRun;
-import ch.unibas.fitting.shared.workflows.ljfit.LjFitRunInput;
-import ch.unibas.fitting.shared.workflows.ljfit.LjFitRunResult;
-import ch.unibas.fitting.shared.workflows.ljfit.LjFitSession;
-import com.google.gson.Gson;
+import ch.unibas.fitting.web.application.directories.IUserDirectory;
+import ch.unibas.fitting.web.application.directories.LjFitSessionDir;
+import ch.unibas.fitting.web.infrastructure.JsonSerializer;
+import ch.unibas.fitting.web.application.algorithms.ljfit.LjFitRun;
+import ch.unibas.fitting.web.application.algorithms.ljfit.LjFitRunInput;
+import ch.unibas.fitting.web.application.algorithms.ljfit.LjFitRunResult;
+import ch.unibas.fitting.web.application.algorithms.ljfit.LjFitSession;
 import io.vavr.collection.List;
 import io.vavr.control.Option;
-import org.apache.commons.io.FileUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
 
 @Singleton
 public class LjFitRepository {

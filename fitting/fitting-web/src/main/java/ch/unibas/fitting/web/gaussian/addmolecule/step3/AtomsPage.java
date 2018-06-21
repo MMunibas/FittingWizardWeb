@@ -1,16 +1,12 @@
 package ch.unibas.fitting.web.gaussian.addmolecule.step3;
 
-import ch.unibas.fitting.shared.directories.IUserDirectory;
-import ch.unibas.fitting.shared.xyz.XyzFile;
-import ch.unibas.fitting.shared.xyz.XyzFileParser;
+import ch.unibas.fitting.web.application.directories.IUserDirectory;
+import ch.unibas.fitting.web.application.algorithms.xyz.XyzFile;
 import ch.unibas.fitting.web.gaussian.addmolecule.step4.ParameterPage;
 import ch.unibas.fitting.web.jsmol.JsMolHelper;
 import ch.unibas.fitting.web.web.HeaderPage;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.logging.Log;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
@@ -23,7 +19,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import javax.inject.Inject;
-import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 

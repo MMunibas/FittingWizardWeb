@@ -1,8 +1,8 @@
 package ch.unibas.fitting.web.ljfit.ui.step3;
 
 
-import ch.unibas.fitting.shared.directories.IUserDirectory;
-import ch.unibas.fitting.shared.directories.LjFitSessionDir;
+import ch.unibas.fitting.web.application.directories.IUserDirectory;
+import ch.unibas.fitting.web.application.directories.LjFitSessionDir;
 import ch.unibas.fitting.web.ljfit.ui.step2.LjSessionPage;
 import ch.unibas.fitting.web.web.HeaderPage;
 import io.vavr.control.Option;

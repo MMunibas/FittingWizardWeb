@@ -1,8 +1,6 @@
 package ch.unibas.fitting.web.gaussian.fit.step2;
 
-import ch.unibas.fitting.shared.directories.IUserDirectory;
-import ch.unibas.fitting.shared.directories.MtpFitDir;
-import ch.unibas.fitting.web.gaussian.addmolecule.step2.UploadPage;
+import ch.unibas.fitting.web.application.directories.IUserDirectory;
 import ch.unibas.fitting.web.gaussian.fit.step1.FitViewModel;
 import ch.unibas.fitting.web.gaussian.fit.step1.MtpFitSessionPage;
 import ch.unibas.fitting.web.gaussian.services.ViewModelMapper;

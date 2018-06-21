@@ -1,10 +1,10 @@
 package ch.unibas.fitting.web.ljfit.ui.step1;
 
-import ch.unibas.fitting.shared.directories.IUserDirectory;
-import ch.unibas.fitting.shared.directories.LjFitSessionDir;
-import ch.unibas.fitting.shared.workflows.ljfit.LjFitSession;
-import ch.unibas.fitting.shared.workflows.ljfit.SessionParameter;
-import ch.unibas.fitting.shared.workflows.ljfit.UploadedFileNames;
+import ch.unibas.fitting.web.application.directories.IUserDirectory;
+import ch.unibas.fitting.web.application.directories.LjFitSessionDir;
+import ch.unibas.fitting.web.application.algorithms.ljfit.LjFitSession;
+import ch.unibas.fitting.web.application.algorithms.ljfit.SessionParameter;
+import ch.unibas.fitting.web.application.algorithms.ljfit.UploadedFileNames;
 import ch.unibas.fitting.web.ljfit.services.LjFitRepository;
 import ch.unibas.fitting.web.ljfit.ui.UiElementFactory;
 import ch.unibas.fitting.web.ljfit.ui.commands.OpenLjFitSessionCommand;
