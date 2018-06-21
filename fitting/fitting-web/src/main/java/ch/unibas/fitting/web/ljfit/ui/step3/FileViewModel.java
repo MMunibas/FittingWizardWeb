@@ -19,7 +19,7 @@ public class FileViewModel {
 
     @Override
     public String toString() {
-        return String.format("[%s] %s",groupName, file.getName());
+        return groupName;
     }
 
     public String getGroupName() {

@@ -8,6 +8,7 @@ import io.vavr.collection.List;
 import io.vavr.collection.Stream;
 import io.vavr.control.Option;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,18 +79,17 @@ public class LjFitSessionDir extends FittingDirectory {
     public List<FileWithTag> listGeneratedRunFiles(String run) {
         return getRunDir(run)
             .map(dir -> {
-                return List.ofAll(listFiles("Density", dir.getDensity_dir(), new String[] {"inp", "out", "par"}))
-                    .appendAll(listFiles("Gas MTP", dir.getGasMtpDir(), new String[] {"inp", "out", "par"}))
-                        .appendAll(listFiles("Gas VWD", dir.getGasVdwDir(), new String[] {"inp", "out", "par"}))
-                        .appendAll(listFiles("Solv MTP", dir.getSolvMtpDir(), new String[] {"inp", "out", "par"}))
-                        .appendAll(listFiles("Solv VDW", dir.getSolvVdwDir(), new String[] {"inp", "out", "par"}));
+                return List.ofAll(listFiles("", dir.getDirectory(), null));
             })
             .getOrElse(() -> List.empty());
     }
 
     private List<FileWithTag> listFiles(String group, File dir, String[] filter) {
         return Stream.ofAll(FileUtils.listFiles(dir, filter, true))
-                .map(f -> new FileWithTag(group, f))
+                .map(f -> {
+                    String relative = dir.toURI().relativize(f.toURI()).getPath();
+                    return new FileWithTag(relative, f);
+                })
                 .toList();
     }
 
