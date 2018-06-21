@@ -85,8 +85,6 @@ public class RunLjFitsCommand {
             if (files.resFile != null)
                 map.put("lj_filename_charmm_restart", files.resFile.getName());
 
-            map.put("lj_ti_lambda_0", 0.0);
-            map.put("lj_ti_lambda_1", 1.0);
             map.put("lj_charmm_simulation_temperature", session.getSessionParameter().temperature);
             map.put("lj_scaling_factor_eps", pair.lambda_epsilon);
             map.put("lj_scaling_factor_sig", pair.lambda_sigma);
