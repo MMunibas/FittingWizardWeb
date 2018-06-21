@@ -1,6 +1,5 @@
 package ch.unibas.fitting.web.gaussian.fit;
 
-import ch.unibas.fitting.web.gaussian.services.ChargesFileGenerator;
 import ch.unibas.fitting.web.application.directories.FitOutputDir;
 import ch.unibas.fitting.web.application.directories.IUserDirectory;
 import ch.unibas.fitting.web.application.directories.MtpFitDir;
@@ -28,8 +27,6 @@ import java.util.LinkedHashSet;
 public class RunMtpFitCommand implements IAmACommand {
     @Inject
     private IUserDirectory userDirectory;
-    @Inject
-    private ChargesFileGenerator chargesFileGenerator;
 
     @Inject
     private CreateFit createFit;
@@ -52,14 +49,11 @@ public class RunMtpFitCommand implements IAmACommand {
 
         FitOutputDir fitOutputDir = mtpFitDir.createNextFitOutputDir();
 
-        File generatedCharges = chargesFileGenerator.generate(
-                fitOutputDir.getDirectory(),
-                "generated_charges.txt",
-                chargeValues);
+        var initalCharges = createCharges(chargeValues);
 
         var params = new HashMap<String, Object>();
         params.put("mtp_fitting_table_filename", "mtpfittab.txt");
-        params.put("mtp_fitting_charge_filename", generatedCharges.getName());
+        params.put("mtp_fitting_initial_charges", initalCharges);
 
         params.put("mtp_fitting_threshold", convergence);
         params.put("mtp_fitting_rank", rank);
@@ -76,7 +70,7 @@ public class RunMtpFitCommand implements IAmACommand {
                         "mtpfit_part2",
                         params,
                         fitOutputDir.getDirectory(),
-                        Array.of(generatedCharges.getAbsoluteFile()).toJavaArray(File.class),
+                        new File[0],
                         Option.of(calcId),
                         Option.of(json -> {
 
@@ -100,5 +94,13 @@ public class RunMtpFitCommand implements IAmACommand {
         );
 
         PageNavigation.ToProgressForCalculation(response);
+    }
+
+    private HashMap<String, Double> createCharges(LinkedHashSet<ChargeValue> chargeValues) {
+        var map = new HashMap<String, Double>();
+        for (ChargeValue chargeLine : chargeValues) {
+            map.put(String.format("%s_%s", chargeLine.getAtomType(), chargeLine.getMultipoleComponent()), chargeLine.getValue());
+        }
+        return map;
     }
 }
