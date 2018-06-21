@@ -324,11 +324,11 @@ class molecule(object):
     if len(self.q_dip) % 2 != 0:
       print("Error. Odd number of dipole-generating "\
           "point charges.")
-      exit(1)
+      raise Exception('Odd number of dipole-generating charges')
     if len(self.q_quad) % 4 != 0:
       print("Error. Number of quadrupole-generating point " \
           "charges is not a multiple of 4.")
-      exit(1)
+      raise Exception('Number of quadrupole-generating point charges is not 4')
     for i in self.q_dip:
       identified_terms = numpy.array([0, 0])
       name_i = i.atype[0:len(i.atype)-1]
@@ -348,13 +348,13 @@ class molecule(object):
             if j.chrg * (-1.) != i.chrg:
               print("Error. charges between atoms", \
                   i.atype,"and",j.atype,"do not match.")
-              exit(1)
+              raise Exception('Charges between atoms '+i.atype+' and '+j.atype+' do not match')
 
       # Check that both elements of the list are populated
       if identified_terms[0] == 0 or identified_terms[1] == 0:
         print("Error. Non-matching dummy atoms for dipole" \
             " interaction.")
-        exit(1)
+        raise Exception('Non-matching dummy atoms for dipole interaction')
 
     # Same thing for quadrupole
     for i in self.q_quad:
@@ -420,14 +420,15 @@ class molecule(object):
               or identified_terms[2] == 0 or identified_terms[3] == 0:
           print("Error. Non-matching dummy atoms for quadrupole" \
             " interaction.")
-          exit(1)
+          raise Exception('Non-matching dummy atoms for quadrupole interaction')
           
         # Check that there are two negative and two positive charges
         if num_pos_chrgs != 2 or num_pos_chrgs != 2:
           print("Error. Arrangement of charges does not match " \
               "for atoms", i.atype, ",", j.atype,",", k.atype, \
               "and", l.atype)
-          exit(1)
+          raise Exception('Arrangement of charges does not match for atoms '+i.atype+ \
+              ', '+j.atype+', '+k.atype+', '+l.atype)
 
 
   def Calc_locMTP(self):
@@ -557,7 +558,7 @@ class molecule(object):
         atom.Qloc[4] = 0.
       else:
         print("Do not understand the atom kind",atom.refkind)
-        exit(1)
+        raise Exception('Atom kind not found: '+atom.refkind)
             
 
 
@@ -739,12 +740,12 @@ def Get_local_XYZ(AC,refkind,RC):
 
   if nrefA not in [1,2,3,4]: 
     print('Number of reference atoms for the current atom is wrong')
-    exit(0)
+    raise Exception('No. reference atoms for the current atom is not 1,2,3 or 4: '+str(nrefA))
 
   if refkind == 'c3v':
     if nrefA not in [3,4]:
       print('Number of reference atoms for the current atom is wrong')
-      exit(0)
+      raise Exception('No. reference atoms for the current c3v atom is not 3 or 4')
 
     # Z for both nrefA 3&4 points outwards or towards RC[3]
     # Y is perpendicular to the plane of 3&C&4 and to the plane of ((1-C)+(2-C))&Z
@@ -799,7 +800,7 @@ def Get_local_XYZ(AC,refkind,RC):
     else:
       print("Error: Inappropriate number of reference atoms for 'ter' ("+ \
         nrefA+")")
-      exit(1)
+      raise Exception('Incorrect number of reference atoms for environment ter: '+str(nrefA))
 
     loc_xyz = numpy.array([X,Y,Z])
 
@@ -837,7 +838,7 @@ def Get_local_XYZ(AC,refkind,RC):
     else:
       print("Error: Inappropriate number of reference atoms for 'int' ("+ \
         str(nrefA)+")")
-      exit(1)
+      raise Exception('Incorrect number of reference atoms for environment int: '+str(nrefA))
   
     loc_xyz = numpy.array([X,Y,Z])
     
@@ -854,7 +855,7 @@ def Get_local_XYZ(AC,refkind,RC):
     else:
       print("Error: Inappropriate number of reference atoms for 'lin' ("+ \
         nrefA+")")
-      exit(1)
+      raise Exception('Incorrect number of reference atoms for environment lin: '+str(nrefA))
     # Choose X and Y. They are arbitrarily chosen.
     Xtemp = [1.,1.,1.]
     X = numpy.cross(Xtemp,Z)
@@ -867,12 +868,12 @@ def Get_local_XYZ(AC,refkind,RC):
 
   else:
     print("Reference axis system not properly defined for current atom")
-    exit(0)
+    raise Exception('Reference axis system not properly defined for current atom')
 
 def compare_abs_charges(atom_i,atom_j):
   """Compare two partial atomic charges for identity"""
   if abs(float(atom_i.chrg)) != abs(float(atom_j.chrg)):
     print("Error. charges between atoms", \
         i.atype,"and",j.atype,"do not match.")
-    exit(1)            
+    raise Exception('Error. charges between atoms '+i.atype+" and "+j.atype+" do not match.")
     

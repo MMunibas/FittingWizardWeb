@@ -36,18 +36,17 @@ def pun_2_charmm_lpun(punfile, lpunfile):
 #        parmfile = sys.argv[i+1]
 #      elif sys.argv[i] == '-h':
 #        print("Usage: python pun2charmmlpun.py -pun [file] [-par [parfile]] [-h]")
-#        exit(0)
     
     if punfile == '':
       print("Usage: python pun2charmmlpun.py -pun [file] [-par [parfile]] [-h]")
-      exit(0)
+      raise Exception('Incorrect arguments to pun_2_charmm_lpun')
     
     #############
     # Check that the file does not end in .lpun, otherwise quit.
     
     if punfile[punfile.rindex('.'):] == '.lpun':
       print("Error: the script will generate a .lpun file, please rename current file.")
-      exit(1)
+      raise Exception('Input pun file already has lpun extension') 
     
     # Read prmfile if given
     

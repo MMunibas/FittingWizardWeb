@@ -46,7 +46,7 @@ def mk_fittab_mtp(cubefile, vdwfile, punfile, outdir, bondincr=False, si=1.66, s
       print ("Could not recognize file basename.")
       print ("Usage: python mtp_fittab_maker -cube [file] -vdw [file] -pun [file]",\
             "[-si [#]] [-so [#]] [-no_sym] [-bondincr]")
-      exit(0)
+      raise Exception('Incorrect usage error (cube, vdw or punfile not recognized) in mk_fittab_mtp')
     
     if bondincr == True: 
       print ("Reference atoms will be used to ditribute bond increments")
@@ -58,7 +58,7 @@ def mk_fittab_mtp(cubefile, vdwfile, punfile, outdir, bondincr=False, si=1.66, s
       f = open(cubefile,'r')
     except:
       print ("Could not find the -cube input file. Exiting...")
-      exit(0)
+      raise Exception('Cube file not found: '+cubefile)
     
     print ("Reading ESP input file")
     
@@ -128,7 +128,7 @@ def mk_fittab_mtp(cubefile, vdwfile, punfile, outdir, bondincr=False, si=1.66, s
     if lrafound == False:
       print ("Error. No LRA definition in",punfile)
       print ("Use calc_LRA.py to generate a *_l.pun file.")
-      exit(1)
+      raise Exception('No LRA definition in '+punfile)
     mol = molecule()  #MD   mtp_tools.molecule()
     if punfile[-4:] == '.pun':
       mol.readfrompunfile(punfile)
@@ -138,7 +138,7 @@ def mk_fittab_mtp(cubefile, vdwfile, punfile, outdir, bondincr=False, si=1.66, s
       mol.Calc_gloMTP()
     else:
       print ("Was not able to recognize extension of punfile. Exiting...\n")
-      exit(0)
+      raise Exception('Punfile extension not recognized')
     
     ###########
     # Update XYZ coordinates with coordinates from .cube file

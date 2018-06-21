@@ -31,7 +31,12 @@ def ljfit(ctx):
     charmm_equil_steps=50000 #50000 # number of equilibration steps
     MAX_SUB=3 # max allowed number of subdivisions for TI calculations
 
+    lmb0 = 0.0
+    lmb1 = 1.0
+
     results = {}  # main results list
+    dg_gas=0.0
+    dg_liq=0.0
     dg_solv=0.0 # variables to accumulate total solvation free energy components from TI simulations
     dg_solv_vdw_gas=0.0
     dg_solv_vdw_solv=0.0
@@ -52,8 +57,6 @@ def ljfit(ctx):
         slv_res = ctx.parameters["lj_filename_charmm_restart"]
         lpun = ctx.parameters["lj_filename_mtpl_lpun"]
         pureliq = ctx.parameters["lj_filename_pureliquid_pdb"]
-        lmb0 = float(ctx.parameters["lj_ti_lambda_0"])
-        lmb1 = float(ctx.parameters["lj_ti_lambda_1"])
         dlmbElec = float(ctx.parameters["lj_ti_lambda_window_size_electrostatic"])
         dlmbVDW = float(ctx.parameters["lj_ti_lambda_window_size_vdw"])
         T = float(ctx.parameters["lj_charmm_simulation_temperature"])
@@ -63,6 +66,7 @@ def ljfit(ctx):
         pass
 
     ctx.log.info("Input files:\n\t{}".format("\n\t".join(ctx.input_dir.list_files_recursively())))
+    ctx.set_running_status('Setting up run')
 
     # scale LJ parameters to trial values for this fitting step
     inpdir = ctx.input_dir.name + "/"
@@ -77,6 +81,7 @@ def ljfit(ctx):
     gas_inp_file = write_gas_inp(ctx, gas_inp_name, top, scaled_par, slu, lpun).name
 
     ctx.log.info("submitting gas-phase calculation:")
+    ctx.set_running_status('submitting gas-phase calculation')
     create_charmm_submission_script(ctx, "run-gas.sh", gas_inp_file, gas_out_name, "dens")
 ####    gas_out_name="/home/wfit/FittingWizardWeb/fitting_service/data/2018-05-31_17-37-57-878275_luhq4/2018-05-31_17-37-57-885123_uNYv3/output/dens/gas.out" #######
     job_id = ctx.schedule_job(ctx.input_dir.full_path + "/dens/run-gas.sh")
@@ -114,23 +119,31 @@ def ljfit(ctx):
     write_ti_loop_str(ctx)
 
 ####    dens_out_name="/home/wfit/FittingWizardWeb/fitting_service/data/2018-05-31_17-37-57-878275_luhq4/2018-05-31_17-37-57-885123_uNYv3/output/dens/density.out" #######
+    ctx.set_running_status('submitting density calculation')
     dens_job_id = ctx.schedule_job(ctx.input_dir.full_path + "/dens/run.sh")
+    ctx.terminate_if_canceled()
+
+    ctx.set_running_status('submitting TI jobs')
 
     ti_elec_gas_job_id = []
     for i in range(0,len(tiElecGasJobScripts)):
        ti_elec_gas_job_id.append(ctx.schedule_job(tiElecGasJobScripts[i]))
+       ctx.terminate_if_canceled()
 
     ti_elec_solv_job_id = []
     for i in range(0,len(tiElecSolvJobScripts)):
        ti_elec_solv_job_id.append(ctx.schedule_job(tiElecSolvJobScripts[i]))
+       ctx.terminate_if_canceled()
 
     ti_vdw_gas_job_id = []
     for i in range(0,len(tiVDWGasJobScripts)):
        ti_vdw_gas_job_id.append(ctx.schedule_job(tiVDWGasJobScripts[i]))
+       ctx.terminate_if_canceled()
 
     ti_vdw_solv_job_id = []
     for i in range(0,len(tiVDWSolvJobScripts)):
        ti_vdw_solv_job_id.append(ctx.schedule_job(tiVDWSolvJobScripts[i]))
+       ctx.terminate_if_canceled()
 
     ctx.wait_for_all_jobs()
 
@@ -170,7 +183,7 @@ def ljfit(ctx):
        all_converged=True
        if iterations > MAX_SUB:
           ctx.log.info("Subdivided too many times ("+str(iterations)+"). Please check output files and reduce lambda_vdw TI window size if necessary. Exiting.")
-          exit(1)
+          raise Exception('Subdivided too many times. Limit is '+MAX_SUB)
        dlmbVDW /= 2.0
        tiVDWGasSubdivScripts = []
        tiOutVDWGasSubdivFile = []
@@ -185,6 +198,7 @@ def ljfit(ctx):
              dg_solv_vdw_gas += dg_lambda
           else: # subdivide window
              all_converged=False
+             ctx.set_running_status('subdividing TI windows, not yet converged')
              srcdir=os.path.dirname(tiOutVDWGasFile[i])
              filename=os.path.basename(tiOutVDWGasFile[i])
              words=filename.split('_') 
@@ -204,6 +218,7 @@ def ljfit(ctx):
              dg_solv_vdw_solv += dg_lambda
           else: # subdivide window
              all_converged=False
+             ctx.set_running_status('subdividing TI windows, not yet converged')
              srcdir=os.path.dirname(tiOutVDWSolvFile[i])
              filename=os.path.basename(tiOutVDWSolvFile[i])
              words=filename.split('_')  
@@ -221,8 +236,10 @@ def ljfit(ctx):
        ti_vdw_gas_job_id=[]
        for i in range(0,len(tiVDWGasSubdivScripts)):
            ti_vdw_gas_job_id.append(ctx.schedule_job(tiVDWGasSubdivScripts[i]))
+           ctx.terminate_if_canceled()
        for i in range(0,len(tiVDWSolvSubdivScripts)):
            ti_vdw_solv_job_id.append(ctx.schedule_job(tiVDWSolvSubdivScripts[i]))
+           ctx.terminate_if_canceled()
    
        ctx.wait_for_all_jobs()
        iterations += 1
@@ -231,10 +248,11 @@ def ljfit(ctx):
     results["dg_solv_vdw_solv"] = dg_solv_vdw_solv
     results["dg_solv_elec_gas"] = dg_solv_elec_gas
     results["dg_solv_elec_solv"] = dg_solv_elec_solv
-    results["dg_solv"] = dg_solv
+    results["dg_tot_gas_phase"] = dg_solv_vdw_gas + dg_solv_elec_gas
+    results["dg_tot_solution_phase"] = dg_solv_vdw_solv + dg_solv_elec_solv
+    results["dg_total"] = dg_solv
 
-    with ctx.run_out_dir.open_file("results.json", "w") as json_file:
-        json.dump(results, json_file)
+    ctx.write_results(results)
 
 #################################################################################################
 
@@ -417,7 +435,7 @@ def write_ti_elec_inp(ctx, ti_elec_gas_inp_dir, ti_elec_solv_inp_dir, lmb0, lmb1
 
     if abs(int(round((lmb1-lmb0)/dlmbElec))-(lmb1-lmb0)/dlmbElec) > 0.000000001: # if lambda range not exactly divisible by delta_lambda
        ctx.log.info("The lambda range ("+str(lmb0)+" - "+str(lmb1)+") is not divisible by delta lambda for electrostatics "+str(dlmbElec)+" (remainder = "+str((lmb1-lmb0)%dlmbElec)+")\n")
-       exit 
+       raise Exception('Invalid delta lambda for electrostatics (range is not divisible by lambda)')
     nlmbElec=int(round((lmb1-lmb0)/dlmbElec))
     lmbds=lmb0
 
@@ -480,7 +498,7 @@ def write_ti_vdw_gas_inp(ctx, ti_vdw_gas_inp_dir, lmb0, lmb1, dlmbVDW, top, slu,
 
     if abs(int(round((lmb1-lmb0)/dlmbVDW))-(lmb1-lmb0)/dlmbVDW) > 0.000000001: # if lambda range not exactly divisible by delta_lambda
        ctx.log.info("The lambda range ("+str(lmb0)+" - "+str(lmb1)+") is not divisible by delta lambda for VDW "+str(dlmbVDW)+" (remainder = "+str((lmb1-lmb0)%dlmbVDW)+")\n")
-       exit 
+       raise Exception('Invalid delta lambda for VDW (range is not divisible by lambda)')
     nlmbVDW=int(round((lmb1-lmb0)/dlmbVDW))
     lmbds=lmb0
 
@@ -510,7 +528,7 @@ def write_ti_vdw_solv_inp(ctx, ti_vdw_solv_inp_dir, lmb0, lmb1, dlmbVDW, top, sl
 
     if abs(int(round((lmb1-lmb0)/dlmbVDW))-(lmb1-lmb0)/dlmbVDW) > 0.000000001: # if lambda range not exactly divisible by delta_lambda
        ctx.log.info("The lambda range ("+str(lmb0)+" - "+str(lmb1)+") is not divisible by delta lambda for VDW "+str(dlmbVDW)+" (remainder = "+str(abs(int(round((lmb1-lmb0)/dlmbVDW))-(lmb1-lmb0)/dlmbVDW))+") ")
-       exit
+       raise Exception('Invalid delta lambda for VDW (range is not divisible by lambda)')
     nlmbVDW=int(round((lmb1-lmb0)/dlmbVDW))
     lmbds=lmb0
 
@@ -561,7 +579,7 @@ def check_charmm_status(ctx,outfile):
                clean=True
     if not clean:
        ctx.log.info("CHARMM run "+outfile+" did not exit cleanly, exiting routine\n")
-       sys.exit()
+       raise Exception('CHARMM run '+outfile+' did not terminate cleanly')
     else:
        ctx.log.info("CHARMM run "+outfile+" completed successfully\n")
 
@@ -598,13 +616,13 @@ def parse_ti_out_2step(ctx,outfile):
             no += 1
             if math.isnan(trajEne[-1]):
                ctx.log.info("Error. MTP energy is NaN in "+outfile)
-               exit(1)
+               raise Exception('NaN energy in CHARMM MTP run '+outfile)
          if "ENER IMAGES>" in line:
             trajEne.append(float(words[3]))
 
     if len(trajEne) == 0:
        ctx.log.info("Error. No energy recorded in "+outfile)
-       exit(1)
+       raise Exception('No energy found in '+outfile)
 
     avg = sum(trajEne)/no
     std = math.sqrt(sum([(i-avg)**2 for i in trajEne]))/no 

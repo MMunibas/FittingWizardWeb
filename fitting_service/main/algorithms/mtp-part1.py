@@ -32,13 +32,13 @@ def mtpfit_part1(ctx):
         multiplicity = ctx.parameters["mtp_gen_molecule_multiplicity"]
         cmd = ctx.parameters["mtp_gen_gaussian_input_commandline"]
         ncore = ctx.parameters["mtp_gen_gaussian_num_cores"]
-        json_chg_file = ctx.parameters["mtp_gen_charge_filename"]
     except ValueError:
         pass
 
     ctx.log.info("Input files:\n\t{}".format("\n\t".join(ctx.input_dir.list_files_recursively())))
 
     ctx.log.info("Writing Gaussian and GDMA input files\n")
+    ctx.set_running_status('setting up Gaussian calculations')
 
     # set global calculation directory
     calc_out_dir=ctx.input_dir.subdir("../output/").full_path + "/"
@@ -77,6 +77,7 @@ def mtpfit_part1(ctx):
 
     # now run the prepared inputs from a single submission script
     ctx.log.info("submitting gaussian and gdma calculations:")
+    ctx.set_running_status('submitting Gaussian calculations')
     create_gau_submission_script(ctx,
                                  "run-gau.sh", gau_inp_file, gau_out_name, chk_name, fchk_name, gdma_inp_name,
                                  gdma_out_name, grid_pars, cube_file, pun_name, vdw_file_name, xyz_file_name,
@@ -88,11 +89,13 @@ def mtpfit_part1(ctx):
     ctx.log.info("jobs completed")
 
     # now calculate local reference axes
+    ctx.set_running_status('Calculating local reference axes for ' + sdf_file_name)
     ctx.log.info("Calculating local reference axes for " + sdf_file_name)
     local_pun_name = calc_out_dir + "gdma_ref.pun"
     calculate_LRA(sdf_file_name, mtp_out_dir + pun_name, local_pun_name, results)
 
     # and generate fitting table
+    ctx.set_running_status("Generating fitting table for " + cube_file + ", " + vdw_file_name + ", " + local_pun_name)
     ctx.log.info("Generating fitting table for " + cube_file + ", " + vdw_file_name + ", " + local_pun_name)
     mk_fittab_mtp(mtp_out_dir + cube_file, mtp_out_dir + vdw_file_name, local_pun_name, 
                   calc_out_dir)
@@ -104,19 +107,21 @@ def mtpfit_part1(ctx):
     # gather results for subsequent fitting steps
     ctx.log.info("Gathering results")
 
-#    ctx.write_results(results)
-    with ctx.run_out_dir.open_file("results.json", "w") as json_file:
-        json.dump(results, json_file)
+    data={}
+    data["mtp_fit_results"]=results
+    ctx.write_results(data)
+#    with ctx.run_out_dir.open_file("results.json", "w") as json_file:
+#        json.dump(results, json_file)
 
 
-#################################################################################################33
+#################################################################################################
 
 def _get_and_log_job_status(ctx, job_id, expected_status):
     job_status = ctx.job_status(job_id)
     ctx.log.info("expected: {} \t actual: {}".format(expected_status, job_status))
 
 
-#################################################################################################33
+#################################################################################################
 # Grid specifications for ESP cube file generation
 
 def calc_grid_specs(ctx, gau_inp_file):
@@ -176,7 +181,7 @@ def calc_grid_specs(ctx, gau_inp_file):
     return grid_spec
 
 
-#################################################################################################33
+#################################################################################################
 # VDW file for ESP exclusion during multipole fitting
 
 def write_vdw_file(ctx, gau_inp_file, vdw_file_name, mtp_order):

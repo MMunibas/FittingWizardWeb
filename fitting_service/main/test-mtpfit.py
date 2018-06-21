@@ -5,7 +5,7 @@ from fitting_service.calculation_test import CalculationTest
 
 def run_mtp_fit_part1():
 
-    job_path = "/home/wfit/FittingWizardWeb/fitting_service/data/mike-test-mtp/"
+    job_path = "/home/wfit/FittingWizardWeb/fitting_service/test-data/mike-test-mtp/"
 
     mtp_setup1 = CalculationTest()
     mtp_setup1.set_algorithm("mtpfit_part1")
@@ -28,7 +28,8 @@ def run_mtp_fit_part2(mtp_setup2, rank, ignoreH):
     mtp_setup2.set_algorithm("mtpfit_part2")
     mtp_setup2.logger.info("Launch stage 2 of fit")
 
-    charges = mtp_setup2.read_last_run_results()
+    all_results = mtp_setup2.read_last_run_results()
+    charges = all_results["mtp_fit_results"]
 
     mtp_setup2.set_run_params({"mtp_fitting_threshold": 0.1, "mtp_fitting_rank": rank, "mtp_fitting_flag_ignore_H": ignoreH, "mtp_fitting_initial_charges": charges,
            "mtp_fitting_table_filename": "mtpfittab.txt", "mtp_fit_number": 0})

@@ -409,7 +409,7 @@ class CalculationContext(IContext):
         return JobsService().job_status(job_id)
 
     def wait_for_all_jobs(self):
-        job_ids = ', '.join(list(*self.job_ids))
+        job_ids = ', '.join(self.job_ids)
         self.set_running_status('Waiting for jobs: ' + job_ids)
         self.wait_for_finished_jobs(*self.job_ids)
 

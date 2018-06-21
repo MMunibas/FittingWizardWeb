@@ -64,13 +64,12 @@ def calculate_LRA(basename, punchfile, lpunfile, results, pun=True, boxp=False, 
 #      elif sys.argv[i] == '-h':
 #        print ("Usage: python calc_LRA.py -in [base filename] [-lpun] [-boxp] [-punxyz] [-nobondcheck] [-h]")
 #        print ("(Base filename might also end on {.sdf, .log, .pun, .out})")
-#        exit(0)
     
     if basename == '':
       print ("Could not recognize file basename.")
       print ("Usage: python calc_LRA.py -in [base filename] [-lpun] [-boxp] [-punxyz] [-nobondcheck] [-h]")
       print ("(Base filename might also end on {.sdf, .log, .pun, .out})")
-      exit(0)
+      raise Exception('File basename not recognized (empty)')
     
     import copy, os, string
     import rdkit
@@ -110,7 +109,7 @@ def calculate_LRA(basename, punchfile, lpunfile, results, pun=True, boxp=False, 
         print ("Cannot find Gaussian output file", \
           basename+".log or",basename+'.out.')
         print ("Program exiting")
-        exit(0)
+        raise Exception('Cannot find Gaussian output file '+basename+'.log/.out')
     
       f = open(outfile,'r')
       gin = f.readlines()
@@ -122,7 +121,7 @@ def calculate_LRA(basename, punchfile, lpunfile, results, pun=True, boxp=False, 
       if i == len(gin):
         print ("Have not been able to extract the bonding block from the Gaussian output file for ",basename)
         print ("Exiting")
-        exit(0)
+        raise Exception('Could not extract Gaussian bonding block from '+basename)
       gin = gin[i+1:]
       xyzblock = ''
       for line in gin: xyzblock = xyzblock+line.strip()
@@ -157,7 +156,7 @@ def calculate_LRA(basename, punchfile, lpunfile, results, pun=True, boxp=False, 
       print ("Number of atoms in the original SD-File and the Gaussian output file are different for ",basename)
       print ("LRA-assignment stopped.")
       print (len(xyzblock),natoms)
-      exit(1)
+      raise Exception('Number of atoms in SD-file and Gaussian output do not match for '+basename)
     
     for i in range(len(xyzblock)):
       if xyzblock[i][0] == 'H':
@@ -228,12 +227,12 @@ def calculate_LRA(basename, punchfile, lpunfile, results, pun=True, boxp=False, 
       mol = Chem.MolFromMolFile(basename+'.sdf',removeHs=False)
     except:
       print ('Cannot read SD File '+basename+'.sdf properly. Program exiting.')
-      exit(0)
+      raise Exception('Could not read SD file '+basename+'.sdf')
     
     if natoms < 2:
       print ("Problem with ",basename)
       print ("Currently only molecules with 2 or more atoms can be handled. Exiting")
-      exit(0)
+      raise Exception('Too few atoms (must be at least 2)')
     
     ###########
     # Atom type each atom
@@ -467,7 +466,7 @@ def calculate_LRA(basename, punchfile, lpunfile, results, pun=True, boxp=False, 
     if max(dchrg) > 10 or min(dchrg) < (-10): 
       print ("Absolute distributed charges have become very large.")
       print (" Please check your molecule")
-      exit(0) 
+      raise Exception('Charges have become too large (<-10 or >10)')
     
     for i in range(len(dchrg)):
       priorities[i] = priorities[i] + dchrg[i] * 0.01
@@ -611,7 +610,7 @@ def calculate_LRA(basename, punchfile, lpunfile, results, pun=True, boxp=False, 
         line = com_atypes[i]+line
         f.write(line)
         line = line.split()
-        results[line[0]+"_Q00"] = ol_punf[k].strip()
+        results[line[0]+"_Q00"] = float(ol_punf[k].strip())
         rnk = line[-1]
         if rnk == '0':
           for j in range(1): f.write(ol_punf[k+j])
@@ -622,7 +621,7 @@ def calculate_LRA(basename, punchfile, lpunfile, results, pun=True, boxp=False, 
         else:
           print ("Error. Rank not supported ("+rnk+"). Exiting")
           print (line)
-          exit(1)
+          raise Exception('Rank not supported error for rank='+str(rnk))
         f.write('\n')
       f.write('LRA:\n')
       for i in range(len(atoms)):

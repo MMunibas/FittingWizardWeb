@@ -121,7 +121,7 @@ def fit_mtp(rank, charges, outfile, penalty, off_hyd, tabfile):
         print (" -perconf: output RMS error per conformation")
         print ("-MonoConv: Threshold for convergence towards PConly ESP fit (default: 0.1)")
         print ()
-        exit(1)
+        raise Exception('Incorrect arguments for fit.mtp.py')
     
     
     def read_coeffs(list_files):
@@ -152,7 +152,7 @@ def fit_mtp(rank, charges, outfile, penalty, off_hyd, tabfile):
                 f = open(infile,'r')
             except:
                 print ("Error: Could not find",infile,". Exiting.")
-                exit(1)
+                raise Exception('File not found: '+infile)
             readf = [line.split() for line in f.readlines()]
             f.close()
             col_idx = []
@@ -485,7 +485,6 @@ def fit_mtp(rank, charges, outfile, penalty, off_hyd, tabfile):
     
         print (coeffs_names_all)
         print (coeffs_names)
-        #exit(0)
     
         read_coeffs(list_files)
         try:
@@ -552,12 +551,12 @@ def fit_mtp(rank, charges, outfile, penalty, off_hyd, tabfile):
             f = open(infile,'r')
         except:
             print ("Error: Could not find",infile,". Exiting.")
-            exit(1)
+            raise Exception('File not found: '+infile)
         readf = f.readline().split()
         f.close()
         if readf[0] != 'PtID' or readf[-1] != 'aiESP':
             print ("Error: Format error in header of",tabf[i])
-            exit(1)
+            raise Exception('Format error in header of '+tabf[i])
         for j in range(1,len(readf)-1):
             underscore = readf[j].index("_")
             if readf[j][0:2] == "BI" or int(readf[j][underscore+2:underscore+3]) <= rank:
@@ -579,7 +578,7 @@ def fit_mtp(rank, charges, outfile, penalty, off_hyd, tabfile):
     x_comb_init = np.zeros(len(coeffs_names_all))
     print ("Parsing PCs")
     for key, value in charges.items():
-        print ("hello key "+str(charges))
+#        print ("hello key "+str(charges))
         x_comb_init[coeffs_names_all.index(key)] = value
     if len(x_comb_init) != len(coeffs_names_all):
         print ("Warning: length of",load_pc,"and number of coefficients not compatible.")
@@ -599,14 +598,16 @@ def fit_mtp(rank, charges, outfile, penalty, off_hyd, tabfile):
     
     #############
     # Output
+    fitted_charges={}
     if out != '':
         print ("Writing coefficients to",out)
         f = open(out,'w')
         for i in range(len(coeffs_names)):
             f.write("%s %18.15f\n" % (coeffs_names[i],x_i[i]))
+            fitted_charges[coeffs_names[i]]=x_i[i]
         f.close()
-    print ("returning rmse "+str(rmse))
-    return rmse    
+    print ("returning rmse "+str(rmse)+" and fitted multipoles")
+    return rmse, fitted_charges
 
   except Exception as ex:
      print_exception_info(ex)

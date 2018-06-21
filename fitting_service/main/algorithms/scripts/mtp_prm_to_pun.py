@@ -43,7 +43,7 @@ def mtp_prm_to_pun(fit_output, ref_lpun, new_pun):
         print("       out.pun: output punfile")
         print("OPTIONAL:")
         print("          -chg: Net charge of the entire system.")
-        exit(1)
+        raise Exception('Incorrect arguments to mtp_prm_to_pun')
     
     ##############
     # Read command line input
@@ -64,7 +64,7 @@ def mtp_prm_to_pun(fit_output, ref_lpun, new_pun):
         mol.Calc_gloMTP()
     else:
         print("Error. Punfile extension not recognized.")
-        exit(1)
+        raise Exception('Punfile extension not recognized')
     
     #############
     # Parse MTP parameter file
@@ -75,7 +75,7 @@ def mtp_prm_to_pun(fit_output, ref_lpun, new_pun):
         f = open(mtp,'r')
     except:
         print("Error. Could not find",mtp+". Exiting.")
-        exit(1)
+        raise Exception('Could not find mtp file: '+mtp)
     readf = f.readlines()
     for j in range(len(readf)):
         readf[j] = readf[j].split()
