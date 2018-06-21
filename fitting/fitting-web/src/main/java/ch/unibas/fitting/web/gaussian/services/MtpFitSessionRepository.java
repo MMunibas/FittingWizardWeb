@@ -2,10 +2,11 @@ package ch.unibas.fitting.web.gaussian.services;
 
 import ch.unibas.fitting.shared.directories.IUserDirectory;
 import ch.unibas.fitting.shared.directories.MoleculesDir;
+import ch.unibas.fitting.shared.fitting.ChargeValue;
 import ch.unibas.fitting.shared.fitting.Fit;
 import ch.unibas.fitting.shared.infrastructure.JsonSerializer;
 import ch.unibas.fitting.shared.tools.LPunAtomType;
-import ch.unibas.fitting.shared.tools.LPunParser;
+import ch.unibas.fitting.web.application.algorithms.mtp.MtpResultsParser;
 import io.vavr.collection.List;
 import io.vavr.control.Option;
 
@@ -20,16 +21,17 @@ public class MtpFitSessionRepository {
     @Inject
     private JsonSerializer serializer;
     @Inject
-    private LPunParser lPunParser;
+    private MtpResultsParser mtpResultsParser;
 
-    public synchronized List<LPunAtomType> loadLpunAtomTypes(
+    public synchronized List<ChargeValue> loadLpunAtomTypes(
             String username,
             String moleculeName){
         MoleculesDir moleculesDir = userDirectory.getMtpFitDir(username)
                 .getMoleculeDir();
-        File lpun = moleculesDir.findLPunFileFor(moleculeName);
-        List<LPunAtomType> atomTypes = lPunParser.parse(lpun);
-        return atomTypes;
+
+         var json = moleculesDir.getResultsJson(moleculeName);
+
+         return mtpResultsParser.getLpunAtomTypes(json);
     }
 
     public synchronized List<AtomCharge> loadUserCharges(

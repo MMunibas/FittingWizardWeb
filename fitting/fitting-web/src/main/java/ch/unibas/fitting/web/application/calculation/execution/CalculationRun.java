@@ -4,15 +4,13 @@ import akka.actor.AbstractActor;
 import akka.actor.Cancellable;
 import akka.actor.Props;
 import ch.unibas.fitting.web.application.calculation.CalculationService;
+import ch.unibas.fitting.web.application.calculation.JsonLoader;
 import ch.unibas.fitting.web.application.calculation.manager.StartDefinition;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
 import io.vavr.control.Option;
 import scala.concurrent.duration.Duration;
 
 import java.io.File;
-import java.io.FileReader;
 import java.nio.file.Files;
 import java.util.concurrent.TimeUnit;
 
@@ -82,7 +80,7 @@ public class CalculationRun extends AbstractActor {
     }
 
     private void handle(RunProtocol.Cleanup m) {
-        if (definition.doNotDeleteCalculation && status == RunState.Succeeded) return;
+        if (definition.doNotDeleteCalculation) return;
         runAsync(() -> cleanupCalculation(calculationId));
     }
 
@@ -116,7 +114,7 @@ public class CalculationRun extends AbstractActor {
 
     private void handle(StatusUpdated m) {
         if (m.isRunning) {
-            message = "Service status:\n" + m.message;
+            message = m.message;
             triggerUpdate = context()
                     .system()
                     .scheduler()
@@ -146,7 +144,11 @@ public class CalculationRun extends AbstractActor {
         else
             status = RunState.Unknown;
 
-        message = "Last service status:\n" + m.lastUpdate.message;
+        if (m.lastUpdate.message == null || m.lastUpdate.message.isEmpty()) {
+            message = "";
+        } else {
+            message = "Last update:\n" + m.lastUpdate.message;
+        }
         notifyParent();
     }
 
@@ -273,13 +275,7 @@ public class CalculationRun extends AbstractActor {
 
     private Option<JsonObject> getJsonObject(File file) {
         try {
-            try (var fr = new FileReader(file)) {
-                try (var jr = new JsonReader(fr)) {
-                    var parser = new JsonParser();
-                    var obj = parser.parse(jr);
-                    return Option.of(obj.getAsJsonObject());
-                }
-            }
+            return Option.of(JsonLoader.getJsonObject(file));
         } catch (Exception e) {
             context().system().log().error(e, String.format("deserialize of result JSON [%s] failed.", file));
             return Option.none();

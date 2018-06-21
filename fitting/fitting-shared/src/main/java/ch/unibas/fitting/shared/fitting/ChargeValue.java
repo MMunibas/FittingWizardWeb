@@ -17,26 +17,35 @@ import ch.unibas.fitting.shared.tools.AtomTypeId;
 * Time: 19:47
 */
 public class ChargeValue {
-    private final AtomTypeId id;
-    private final String type;
+    private final String atomType;
+    private final String multipoleComponent;
     private final double value;
+    private final int index;
 
-    public ChargeValue(AtomTypeId id, String type, double value) {
-        this.id = id;
-        this.type = type;
+    public ChargeValue(String atomType,
+                       String multipoleComponent,
+                       double value,
+                       int index) {
+        this.atomType = atomType;
+        this.multipoleComponent = multipoleComponent;
         this.value = value;
+        this.index = index;
     }
 
-    public String getType() {
-        return type;
+    public String getMultipoleComponent() {
+        return multipoleComponent;
     }
 
     public double getValue() {
         return value;
     }
 
-    public AtomTypeId getAtomTypeId() {
-        return id;
+    public int getIndex() {
+        return index;
+    }
+
+    public String getAtomType() {
+        return atomType;
     }
 
     @Override
@@ -46,16 +55,16 @@ public class ChargeValue {
 
         ChargeValue that = (ChargeValue) o;
 
-        if (!id.equals(that.id)) return false;
-        if (!type.equals(that.type)) return false;
+        if (!atomType.equals(that.atomType)) return false;
+        if (!multipoleComponent.equals(that.multipoleComponent)) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = type.hashCode();
-        result = 31 * result + id.hashCode();
+        int result = multipoleComponent.hashCode();
+        result = 31 * result + atomType.hashCode();
         return result;
     }
 }

@@ -10,9 +10,7 @@ package ch.unibas.fitting.shared.fitting;
 
 import ch.unibas.fitting.shared.charges.ChargeTypes;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 
 /**
  *
@@ -31,7 +29,7 @@ public class InitialQ00 {
 
     private void verifyCharges() {
         for (ChargeValue chargeValue : chargeValues) {
-            if (!chargeValue.getType().equalsIgnoreCase(ChargeTypes.charge)) {
+            if (!chargeValue.getMultipoleComponent().equalsIgnoreCase(ChargeTypes.charge)) {
                 throw new IllegalArgumentException("Inital charge must be of type Q00.");
             }
         }
