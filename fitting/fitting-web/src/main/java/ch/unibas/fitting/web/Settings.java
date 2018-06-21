@@ -83,4 +83,8 @@ public class Settings {
     public String getScriptServiceUri() {
         return getValue("calculation.service");
     }
+
+    public File getHelpPagesDir() {
+        return getFile("help.path");
+    }
 }

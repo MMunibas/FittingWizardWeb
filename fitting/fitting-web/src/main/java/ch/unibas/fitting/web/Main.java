@@ -62,7 +62,15 @@ public class Main {
         ContextHandler js_context_handler = new ContextHandler("/javascript");
         js_context_handler.setHandler(js_resource_handler);
 
+        var help_handler = new ResourceHandler();
+        help_handler.setResourceBase(settings.getHelpPagesDir().getAbsolutePath());
+        help_handler.setDirectoriesListed(true);
+        help_handler.setWelcomeFiles(new String[] {"index.html"});
+        ContextHandler help_context_handler = new ContextHandler("/help");
+        help_context_handler.setHandler(help_handler);
+
         var handlers = new HandlerList();
+        handlers.addHandler(help_context_handler);
         handlers.addHandler(data_context_handler);
         handlers.addHandler(js_context_handler);
         handlers.addHandler(sch);

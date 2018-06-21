@@ -47,8 +47,6 @@ public class CreateNewSessionPage extends HeaderPage {
     private final IModel<Double> lambda_size_vdw = Model.of(0.1);
 
     private final IModel<Double> temperature = Model.of(298.0);
-    private final IModel<Double> molarMass = Model.of();
-    private final IModel<Integer> numberOfResidues = Model.of();
 
     private final IModel<Double> experimentalDensity = Model.of();
     private final IModel<Double> experimentalDeltaH = Model.of();
@@ -78,20 +76,6 @@ public class CreateNewSessionPage extends HeaderPage {
         temperatureField.setType(Double.class);
         temperatureField.setStep(NumberTextField.ANY);
         form.add(temperatureField);
-
-        NumberTextField<Double> molarMassField = new NumberTextField<>("molarMass", molarMass);
-        molarMassField.setRequired(true);
-        molarMassField.setStep(NumberTextField.ANY);
-        molarMassField.setType(Double.class);
-        molarMassField.setConvertEmptyInputStringToNull(true);
-        form.add(molarMassField);
-
-        NumberTextField<Integer> numberOfResiduesField = new NumberTextField<>("numberOfResidues", numberOfResidues);
-        numberOfResiduesField.setRequired(true);
-        numberOfResiduesField.setStep(1);
-        numberOfResiduesField.setConvertEmptyInputStringToNull(true);
-        numberOfResiduesField.setType(Integer.class);
-        form.add(numberOfResiduesField);
 
         NumberTextField<Double> expectedDensityField = new NumberTextField<>("experimentalDensity", experimentalDensity);
         expectedDensityField.setRequired(true);
@@ -124,8 +108,6 @@ public class CreateNewSessionPage extends HeaderPage {
                         lambda_size_electrostatic.getObject(),
                         lambda_size_vdw.getObject(),
                         temperature.getObject(),
-                        molarMass.getObject(),
-                        numberOfResidues.getObject(),
                         experimentalDensity.getObject(),
                         experimentalDeltaH.getObject(),
                         experimentalDeltaG.getObject());

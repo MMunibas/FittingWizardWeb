@@ -8,12 +8,14 @@
  */
 package ch.unibas.fitting.web.application.algorithms.xyz;
 
+import com.google.common.base.Utf8;
 import io.vavr.collection.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 public class XyzFileParser {
 
@@ -58,7 +60,7 @@ public class XyzFileParser {
         List<XyzAtom> atoms = List.empty();
 
         for (int lineIdx = FirstAtomLine; lineIdx < content.size(); lineIdx++) {
-            String line = content.get(lineIdx);
+            String line = content.get(lineIdx).trim();
 
             boolean lineIsEmpty = line.trim().isEmpty();
             if (lineIsEmpty) break;
