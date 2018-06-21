@@ -11,8 +11,8 @@ public class SingleRunResult {
     public SingleRunResult(LjFitRun result, Option<Double> minRun) {
         this.wasSuccessful = result.wasSuccessful();
         result.input.peek(in -> {
-            this._eps = in.lambdaEpsilon;
-            this._sigma = in.lambdaSigma;
+            this._eps = in.lambda_epsilon;
+            this._sigma = in.lambda_sigma;
         });
         result.result.peek(res -> {
             this._calcdeltaG = res.calcdeltaG;

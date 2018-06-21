@@ -64,7 +64,15 @@ public class RunLjFitsCommand {
         var list = List.<StartDefinition>empty();
         for (var pair : run.runPairs) {
             LjFitRunDir runDir = sessionDir.createRunDir(pair.lambda_sigma, pair.lambda_epsilon);
-            writeToJson(runDir.getRunInputJson(), pair);
+
+            LjFitRunInput input = new LjFitRunInput(
+                    pair.lambda_epsilon,
+                    pair.lambda_sigma,
+                    run.lambda_size_electrostatic,
+                    run.lambda_size_vdw,
+                    session.getSessionParameter().temperature);
+
+            writeToJson(runDir.getRunInputJson(), input);
 
             var map = new HashMap<String, Object>();
             if (files.rtfFile != null)
@@ -96,14 +104,6 @@ public class RunLjFitsCommand {
                     Option.none(),
                     Option.of((json) -> {
                         var charmmResult = new LjFitJsonResult(json.get());
-
-                        LjFitRunInput input = new LjFitRunInput(
-                                pair.lambda_epsilon,
-                                pair.lambda_sigma,
-                                run.lambda_size_electrostatic,
-                                run.lambda_size_vdw,
-                                session.getSessionParameter().temperature);
-
                         var runResult = createResult(session, input, charmmResult);
                         writeToJson(runDir.getRunOutputJson(), runResult);
                     }),
@@ -132,8 +132,8 @@ public class RunLjFitsCommand {
         double score_total = score_density + (3* score_deltaH) + (5*score_deltaG);
 
         return new LjFitRunResult(
-                in.lambdaEpsilon,
-                in.lambdaSigma,
+                in.lambda_epsilon,
+                in.lambda_sigma,
                 ljFitResult.dg_solv_vdw_gas,
                 ljFitResult.dg_solv_elec_gas,
                 ljFitResult.dg_solv_elec_solv,
