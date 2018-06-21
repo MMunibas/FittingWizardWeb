@@ -1,6 +1,6 @@
 package ch.unibas.fitting.web.application.calculation;
 
-import ch.unibas.fitting.shared.config.Settings;
+import ch.unibas.fitting.web.Settings;
 import de.agilecoders.wicket.jquery.util.Json;
 import io.swagger.client.ApiClient;
 import io.swagger.client.ApiException;
@@ -8,7 +8,6 @@ import io.swagger.client.api.CalculationApi;
 import io.swagger.client.api.DefaultApi;
 import io.swagger.client.model.*;
 import io.vavr.collection.List;
-import io.vavr.control.Option;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.util.file.File;
 

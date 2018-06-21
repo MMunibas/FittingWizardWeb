@@ -1,7 +1,6 @@
 package ch.unibas.fitting.web.application.calculation.manager;
 
-import ch.unibas.fitting.shared.javaextensions.Action;
-import ch.unibas.fitting.shared.javaextensions.Action1;
+import ch.unibas.fitting.web.infrastructure.javaextensions.Action1;
 import com.google.gson.JsonObject;
 import io.vavr.control.Option;
 

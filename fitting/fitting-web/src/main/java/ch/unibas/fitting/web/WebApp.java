@@ -31,10 +31,10 @@ public class WebApp extends WebApplication {
 
     private final Injector injector;
     private final SessionCounter counter;
-    private final WebSettings settings;
+    private final Settings settings;
 
     @Inject
-    public WebApp(Injector injector, SessionCounter counter, WebSettings settings) {
+    public WebApp(Injector injector, SessionCounter counter, Settings settings) {
         this.injector = injector;
         this.counter = counter;
         this.settings = settings;

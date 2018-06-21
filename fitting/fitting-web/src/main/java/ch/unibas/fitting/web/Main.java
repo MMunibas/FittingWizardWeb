@@ -1,10 +1,8 @@
 package ch.unibas.fitting.web;
 
-import ch.unibas.fitting.shared.config.Settings;
 import ch.unibas.fitting.web.application.Version;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Stage;
 import org.apache.log4j.*;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.http.WicketServlet;
@@ -28,7 +26,7 @@ public class Main {
     private static final Logger LOGGER = Logger.getLogger(Main.class);
 
     public static void main(String[] args) throws Exception {
-        var settings = WebSettings.load();
+        var settings = Settings.loadConfig();
         setupConsoleLogger(settings);
         LOGGER.info("Starting fitting web " + Version.getManifestVersion());
 

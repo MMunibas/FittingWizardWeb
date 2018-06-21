@@ -1,11 +1,10 @@
 package ch.unibas.fitting.web.gaussian.services;
 
-import ch.unibas.fitting.shared.directories.IUserDirectory;
-import ch.unibas.fitting.shared.directories.MoleculesDir;
-import ch.unibas.fitting.shared.fitting.ChargeValue;
-import ch.unibas.fitting.shared.fitting.Fit;
-import ch.unibas.fitting.shared.infrastructure.JsonSerializer;
-import ch.unibas.fitting.shared.tools.LPunAtomType;
+import ch.unibas.fitting.web.application.directories.IUserDirectory;
+import ch.unibas.fitting.web.application.directories.MoleculesDir;
+import ch.unibas.fitting.web.application.algorithms.mtp.ChargeValue;
+import ch.unibas.fitting.web.application.algorithms.mtp.Fit;
+import ch.unibas.fitting.web.infrastructure.JsonSerializer;
 import ch.unibas.fitting.web.application.algorithms.mtp.MtpResultsParser;
 import io.vavr.collection.List;
 import io.vavr.control.Option;

@@ -30,7 +30,9 @@ applicationDistribution.from('../javascript') {
 
 dependencies {
     compile project(':calculation-client')
-    compile project(':fitting-shared')
+
+    compile group: 'commons-io', name: 'commons-io', version: '2.4'
+    compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
 
     compile group: 'log4j', name: 'log4j', version: '1.2.17'
 

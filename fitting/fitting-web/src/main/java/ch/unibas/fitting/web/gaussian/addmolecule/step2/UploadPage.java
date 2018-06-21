@@ -1,7 +1,6 @@
 package ch.unibas.fitting.web.gaussian.addmolecule.step2;
 
-import ch.unibas.fitting.shared.directories.IUserDirectory;
-import ch.unibas.fitting.web.application.calculation.CalculationManagementClient;
+import ch.unibas.fitting.web.application.directories.IUserDirectory;
 import ch.unibas.fitting.web.application.calculation.CalculationService;
 import ch.unibas.fitting.web.gaussian.addmolecule.step3.AtomsPage;
 import ch.unibas.fitting.web.web.HeaderPage;

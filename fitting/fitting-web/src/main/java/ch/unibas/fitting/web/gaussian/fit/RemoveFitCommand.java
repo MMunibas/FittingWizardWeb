@@ -1,6 +1,6 @@
 package ch.unibas.fitting.web.gaussian.fit;
 
-import ch.unibas.fitting.shared.directories.IUserDirectory;
+import ch.unibas.fitting.web.application.directories.IUserDirectory;
 import ch.unibas.fitting.web.application.IAmACommand;
 import com.google.inject.Inject;
 

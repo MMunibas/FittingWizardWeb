@@ -1,10 +1,10 @@
 package ch.unibas.fitting.web.gaussian.fit.step2;
 
-import ch.unibas.fitting.shared.charges.ChargeTypes;
-import ch.unibas.fitting.shared.fitting.ChargeValue;
-import ch.unibas.fitting.shared.fitting.Fit;
-import ch.unibas.fitting.shared.fitting.FitResult;
-import ch.unibas.fitting.shared.presentation.gaussian.ColorCoder;
+import ch.unibas.fitting.web.gaussian.services.ChargeTypes;
+import ch.unibas.fitting.web.application.algorithms.mtp.ChargeValue;
+import ch.unibas.fitting.web.application.algorithms.mtp.Fit;
+import ch.unibas.fitting.web.application.algorithms.mtp.FitResult;
+import ch.unibas.fitting.web.gaussian.ColorCoder;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;

@@ -1,7 +1,7 @@
 package ch.unibas.fitting.web.application.task;
 
-import ch.unibas.fitting.shared.javaextensions.Function1;
-import ch.unibas.fitting.shared.javaextensions.Function2;
+import ch.unibas.fitting.web.infrastructure.javaextensions.Function1;
+import ch.unibas.fitting.web.infrastructure.javaextensions.Function2;
 import io.vavr.control.Option;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 

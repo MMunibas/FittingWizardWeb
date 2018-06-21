@@ -1,14 +1,14 @@
 package ch.unibas.fitting.web.ljfit.ui.step2.run;
 
-import ch.unibas.fitting.shared.charmm.web.LjFitJsonResult;
-import ch.unibas.fitting.shared.directories.IUserDirectory;
-import ch.unibas.fitting.shared.directories.LjFitRunDir;
-import ch.unibas.fitting.shared.directories.LjFitSessionDir;
-import ch.unibas.fitting.shared.infrastructure.JsonSerializer;
-import ch.unibas.fitting.shared.workflows.charmm.UploadedFiles;
-import ch.unibas.fitting.shared.workflows.ljfit.LjFitRunInput;
-import ch.unibas.fitting.shared.workflows.ljfit.LjFitRunResult;
-import ch.unibas.fitting.shared.workflows.ljfit.LjFitSession;
+import ch.unibas.fitting.web.application.algorithms.ljfit.LjFitJsonResult;
+import ch.unibas.fitting.web.application.directories.IUserDirectory;
+import ch.unibas.fitting.web.application.directories.LjFitRunDir;
+import ch.unibas.fitting.web.application.directories.LjFitSessionDir;
+import ch.unibas.fitting.web.infrastructure.JsonSerializer;
+import ch.unibas.fitting.web.application.algorithms.ljfit.UploadedFiles;
+import ch.unibas.fitting.web.application.algorithms.ljfit.LjFitRunInput;
+import ch.unibas.fitting.web.application.algorithms.ljfit.LjFitRunResult;
+import ch.unibas.fitting.web.application.algorithms.ljfit.LjFitSession;
 import ch.unibas.fitting.web.application.calculation.CalculationManagementClient;
 import ch.unibas.fitting.web.application.calculation.manager.StartDefinition;
 import ch.unibas.fitting.web.calculation.NavigationInfo;

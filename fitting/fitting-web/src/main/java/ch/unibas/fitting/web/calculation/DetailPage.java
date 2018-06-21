@@ -1,6 +1,6 @@
 package ch.unibas.fitting.web.calculation;
 
-import ch.unibas.fitting.shared.javaextensions.Action;
+import ch.unibas.fitting.web.infrastructure.javaextensions.Action;
 import ch.unibas.fitting.web.application.calculation.CalculationService;
 import ch.unibas.fitting.web.application.calculation.SerializedParameter;
 import ch.unibas.fitting.web.web.HeaderPage;
