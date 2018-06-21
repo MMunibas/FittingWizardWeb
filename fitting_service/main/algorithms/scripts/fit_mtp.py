@@ -578,7 +578,6 @@ def fit_mtp(rank, charges, outfile, penalty, off_hyd, tabfile):
     x_comb_init = np.zeros(len(coeffs_names_all))
     print ("Parsing PCs")
     for key, value in charges.items():
-#        print ("hello key "+str(charges))
         x_comb_init[coeffs_names_all.index(key)] = value
     if len(x_comb_init) != len(coeffs_names_all):
         print ("Warning: length of",load_pc,"and number of coefficients not compatible.")

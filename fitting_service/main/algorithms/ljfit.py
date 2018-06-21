@@ -62,6 +62,9 @@ def ljfit(ctx):
         T = float(ctx.parameters["lj_charmm_simulation_temperature"])
         epsfac = float(ctx.parameters["lj_scaling_factor_eps"])
         sigfac = float(ctx.parameters["lj_scaling_factor_sig"])
+        refDG = float(ctx.parameters["reference_solvation_energy"])
+        refDens = float(ctx.parameters["reference_liquid_density"])
+        refDH = float(ctx.parameters["reference_vaporization_enthalpy"])
     except ValueError:
         pass
 
@@ -251,6 +254,11 @@ def ljfit(ctx):
     results["dg_tot_gas_phase"] = dg_solv_vdw_gas + dg_solv_elec_gas
     results["dg_tot_solution_phase"] = dg_solv_vdw_solv + dg_solv_elec_solv
     results["dg_total"] = dg_solv
+    results["score_dg"]=(refDG-dg_solv)**2
+    results["score_density"]=(refDens-results["pure_liquid_density"])**2
+    results["score_dh"]=(refDH-results["vaporization_enthalpy"])**2
+    results["score_total"]=5.0*results["score_dg"] + 3.0*results["score_dh"] + \
+		results["score_density"]
 
     ctx.write_results(results)
 
