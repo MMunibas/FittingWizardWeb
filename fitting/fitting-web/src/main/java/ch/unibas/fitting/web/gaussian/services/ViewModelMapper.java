@@ -2,7 +2,6 @@ package ch.unibas.fitting.web.gaussian.services;
 
 import ch.unibas.fitting.web.application.algorithms.mtp.ChargeValue;
 import ch.unibas.fitting.web.application.algorithms.mtp.Fit;
-import ch.unibas.fitting.web.gaussian.ColorCoder;
 import ch.unibas.fitting.web.gaussian.addmolecule.step6.ChargesViewModel;
 import ch.unibas.fitting.web.gaussian.fit.step1.FitViewModel;
 import ch.unibas.fitting.web.gaussian.fit.step2.FitResultViewModel;
@@ -14,8 +13,6 @@ import javax.inject.Inject;
 
 public class ViewModelMapper {
 
-    @Inject
-    private ColorCoder colorCoder;
     @Inject
     private MtpFitSessionRepository repo;
 
@@ -56,7 +53,7 @@ public class ViewModelMapper {
             return List.empty();
 
         return Stream.ofAll(fit.get().getFitResults())
-                .map(fr -> new FitResultViewModel(colorCoder, fit.get(), fr))
+                .map(fr -> new FitResultViewModel(fr))
                 .toList();
     }
 }
