@@ -22,7 +22,7 @@ public class FitResultViewModel {
             FitResult fr) {
         this.name = fr.getAtomTypeName();
         fr.getChargeValues().forEach(chargeValue -> {
-            values.put(chargeValue.getType().toLowerCase(), new FitValue(colorCoder, fit, fr, chargeValue));
+            values.put(chargeValue.getMultipoleComponent().toLowerCase(), new FitValue(colorCoder, fit, fr, chargeValue));
         });
     }
 
@@ -39,7 +39,7 @@ public class FitResultViewModel {
         private String color;
         public FitValue(ColorCoder colorCoder, Fit fit, FitResult result, ChargeValue value) {
             this.value = value.getValue();
-            Color col = getColor(colorCoder, value.getType(), fit, result);
+            Color col = getColor(colorCoder, value.getMultipoleComponent(), fit, result);
             color = toRGBCode(col);
         }
 

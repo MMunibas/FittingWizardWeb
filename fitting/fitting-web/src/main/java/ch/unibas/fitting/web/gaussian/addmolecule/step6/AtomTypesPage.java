@@ -58,7 +58,8 @@ public class AtomTypesPage extends HeaderPage {
                     List<AtomCharge> userCharges = Stream.ofAll(charges)
                             .filter(vm -> vm.getUserCharge() != null)
                             .map(c -> new AtomCharge(
-                                    c.getAtomLabel(),
+                                    c.getAtomType(),
+                                    c.getIndex(),
                                     c.getUserCharge()))
                             .toList();
 
@@ -87,12 +88,12 @@ public class AtomTypesPage extends HeaderPage {
             {
                 ChargesViewModel charge = item.getModelObject();
 
-                item.add(new Label("name", charge.getAtomLabel()));
+                item.add(new Label("name", charge.getAtomType()));
 
                 NumberTextField<Double> ntf = new NumberTextField<Double>("charge", new PropertyModel<>(charge, "userCharge"));
                 ntf.setStep(NumberTextField.ANY);
                 item.add(ntf);
-                JsMolHelper.addAtomsHighlightingMouseEvent(item, charge.getIndices());
+                JsMolHelper.addAtomsHighlightingMouseEvent(item, charge.getHighlightIndices());
             }
         });
     }
@@ -103,8 +104,6 @@ public class AtomTypesPage extends HeaderPage {
         }
         return List.empty();
     }
-
-
 
     @Override
     public void renderHead(IHeaderResponse response) {

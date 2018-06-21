@@ -8,6 +8,7 @@
  */
 package ch.unibas.fitting.shared.directories;
 
+import ch.unibas.fitting.shared.tools.LPunAtomType;
 import ch.unibas.fitting.shared.xyz.XyzFile;
 import ch.unibas.fitting.shared.xyz.XyzFileParser;
 import io.vavr.collection.List;
@@ -120,5 +121,10 @@ public class MoleculesDir extends FittingDirectory {
         return listAllMoleculeDirs()
                 .map(f -> getFitTabFileFor(f.getName()))
                 .toList();
+    }
+
+    public File getResultsJson(String moleculeName) {
+        var molDir = getMoleculeDirFile(moleculeName);
+        return new File(molDir, "run_results.json");
     }
 }

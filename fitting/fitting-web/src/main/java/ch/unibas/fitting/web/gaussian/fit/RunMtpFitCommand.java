@@ -8,6 +8,7 @@ import ch.unibas.fitting.shared.directories.MtpFitDir;
 import ch.unibas.fitting.shared.fitting.ChargeValue;
 import ch.unibas.fitting.shared.fitting.Fit;
 import ch.unibas.fitting.shared.fitting.InitialQ00;
+import ch.unibas.fitting.shared.fitting.OutputAtomType;
 import ch.unibas.fitting.shared.scripts.fitmtp.FitMtpInput;
 import ch.unibas.fitting.shared.scripts.fitmtp.FitMtpOutput;
 import ch.unibas.fitting.shared.scripts.fitmtp.IFitMtpScript;
@@ -15,6 +16,7 @@ import ch.unibas.fitting.shared.workflows.ExportFitInput;
 import ch.unibas.fitting.shared.workflows.ExportFitWorkflow;
 import ch.unibas.fitting.shared.workflows.gaussian.fit.CreateFit;
 import ch.unibas.fitting.web.application.IAmACommand;
+import ch.unibas.fitting.web.application.algorithms.mtp.MtpResultsParser;
 import ch.unibas.fitting.web.application.calculation.CalculationManagementClient;
 import ch.unibas.fitting.web.application.calculation.manager.StartDefinition;
 import ch.unibas.fitting.web.application.task.IBackgroundTasks;
@@ -26,6 +28,7 @@ import ch.unibas.fitting.web.gaussian.fit.step2.FittingResultsPage;
 import ch.unibas.fitting.web.gaussian.services.MtpFitSessionRepository;
 import ch.unibas.fitting.web.web.PageNavigation;
 import io.vavr.collection.Array;
+import io.vavr.collection.List;
 import io.vavr.control.Option;
 
 import javax.inject.Inject;
@@ -44,6 +47,8 @@ public class RunMtpFitCommand implements IAmACommand {
     @Inject
     private MtpFitSessionRepository mtpFitRepo;
 
+    @Inject
+    MtpResultsParser parser;
     @Inject
     private CalculationManagementClient client;
 
@@ -88,10 +93,14 @@ public class RunMtpFitCommand implements IAmACommand {
 
                             var molecules = mtpFitDir.getMoleculeDir().listAllMoleculeNames();
 
+                            var rmse = parser.getRmseValue(json.get());
+                            var types = parser.getATomTypes(json.get());
+
                             Fit fit = createFit.createFit(
                                     fitOutputDir.getId(),
                                     rank,
-                                    json.get(),
+                                    rmse,
+                                    types,
                                     new InitialQ00(chargeValues),
                                     molecules);
 

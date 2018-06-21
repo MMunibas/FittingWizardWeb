@@ -41,8 +41,10 @@ public class ChargesFileGenerator {
 
         List<String> content = new ArrayList<>();
         for (ChargeValue chargeLine : chargeValues) {
-            String line = String.format("%s_%s %s", chargeLine.getAtomTypeId().getName(),
-                    chargeLine.getType(), String.valueOf(chargeLine.getValue()));
+            String line = String.format("%s_%s %s",
+                    chargeLine.getAtomType(),
+                    chargeLine.getMultipoleComponent(),
+                    String.valueOf(chargeLine.getValue()));
             content.add(line);
         }
 

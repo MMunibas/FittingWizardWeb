@@ -9,22 +9,21 @@
 package ch.unibas.fitting.shared.fitting;
 
 import ch.unibas.fitting.shared.charges.ChargeTypes;
-import ch.unibas.fitting.shared.tools.AtomTypeId;
 import io.vavr.collection.List;
 import org.apache.commons.lang.StringUtils;
 
 public class FitResult {
     private final List<String> moleculeNames;
     private final List<ChargeValue> chargeValues;
-    private final AtomTypeId atomTypeId;
+    private final String atomTypeId;
     private final double initialQ;
 
     public FitResult(
-            AtomTypeId atomTypeId,
+            String atomTypeId,
             List<String> moleculeNames,
             double initialQ,
             OutputAtomType outputAtomType) {
-        if (!atomTypeId.equals(outputAtomType.getId())) {
+        if (!atomTypeId.equals(outputAtomType.getAtomType())) {
              throw new IllegalArgumentException("output atom type's id does not match atom type id.");
         }
         this.atomTypeId = atomTypeId;
@@ -41,7 +40,7 @@ public class FitResult {
         return moleculeNames;
     }
 
-    public AtomTypeId getAtomTypeId() {
+    public String getAtomTypeId() {
         return atomTypeId;
     }
 
@@ -50,7 +49,7 @@ public class FitResult {
      * @return
      */
     public String getAtomTypeName() {
-        return atomTypeId.getName();
+        return atomTypeId;
     }
 
     public double getQ00() {
@@ -76,7 +75,7 @@ public class FitResult {
         prefix = getPrefix(prefix);
         List<Double> result = List.empty();
         for (ChargeValue chargeValue : chargeValues) {
-            if (StringUtils.startsWithIgnoreCase(chargeValue.getType(), prefix)) {
+            if (StringUtils.startsWithIgnoreCase(chargeValue.getMultipoleComponent(), prefix)) {
                 result = result.append(chargeValue.getValue());
             }
         }
@@ -90,7 +89,7 @@ public class FitResult {
     public Double findValueByType(String type) {
         ChargeValue result = null;
         for (ChargeValue chargeValue : chargeValues) {
-            if (chargeValue.getType().equalsIgnoreCase(type)) {
+            if (chargeValue.getMultipoleComponent().equalsIgnoreCase(type)) {
                 result = chargeValue;
                 break;
             }

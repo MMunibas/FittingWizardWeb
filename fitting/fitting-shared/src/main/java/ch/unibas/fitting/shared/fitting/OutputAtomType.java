@@ -9,20 +9,19 @@
 package ch.unibas.fitting.shared.fitting;
 
 
-import ch.unibas.fitting.shared.tools.AtomTypeId;
 import io.vavr.collection.List;
 
 public class OutputAtomType {
-    private final AtomTypeId id;
+    private final String atomType;
     private List<ChargeValue> chargeValues;
 
-    public OutputAtomType(AtomTypeId id, List<ChargeValue> chargeValues) {
-        this.id = id;
+    public OutputAtomType(String atomType, List<ChargeValue> chargeValues) {
+        this.atomType = atomType;
         this.chargeValues = chargeValues;
     }
 
-    public AtomTypeId getId() {
-        return id;
+    public String getAtomType() {
+        return atomType;
     }
 
     public List<ChargeValue> getChargeValues() {

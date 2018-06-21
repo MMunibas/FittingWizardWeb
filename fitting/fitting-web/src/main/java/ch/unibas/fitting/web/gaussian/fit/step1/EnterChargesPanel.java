@@ -43,7 +43,7 @@ public class EnterChargesPanel extends Panel {
             protected void populateItem(ListItem<ChargesViewModel> item) {
                 ChargesViewModel mol = item.getModelObject();
 
-                item.add(new Label("type", mol.getAtomLabel()));
+                item.add(new Label("type", mol.getAtomType()));
 
                 NumberTextField chargeField = new NumberTextField("charge", new PropertyModel<String>(mol, "userCharge"));
                 chargeField.setStep(NumberTextField.ANY);

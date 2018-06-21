@@ -2,7 +2,6 @@ package ch.unibas.fitting.web.gaussian.fit.step1;
 
 import ch.unibas.fitting.shared.charges.ChargeTypes;
 import ch.unibas.fitting.shared.fitting.ChargeValue;
-import ch.unibas.fitting.shared.tools.AtomTypeId;
 import ch.unibas.fitting.web.gaussian.addmolecule.step2.UploadPage;
 import ch.unibas.fitting.web.gaussian.addmolecule.step6.ChargesViewModel;
 import ch.unibas.fitting.web.gaussian.fit.RemoveFitCommand;
@@ -182,7 +181,7 @@ public class MtpFitSessionPage extends HeaderPage {
         LOGGER.debug("Starting fit");
 
         LinkedHashSet<ChargeValue> charges = _userCharges.stream()
-                .map(a -> new ChargeValue(new AtomTypeId(a.getAtomLabel()), ChargeTypes.charge, a.getUserCharge()))
+                .map(a -> new ChargeValue(a.getAtomType(), ChargeTypes.charge, a.getUserCharge(), a.getIndex()))
                 .collect(Collectors.toCollection(() -> new LinkedHashSet<>()));
 
         runFit.executeNew(getCurrentUsername(),
