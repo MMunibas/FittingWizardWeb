@@ -1,7 +1,7 @@
 package ch.unibas.fitting.web.welcome;
 
-import ch.unibas.fitting.web.web.UserSession;
-import ch.unibas.fitting.web.web.WizardPage;
+import ch.unibas.fitting.web.misc.UserSession;
+import ch.unibas.fitting.web.misc.WizardPage;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RequiredTextField;

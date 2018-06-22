@@ -1,12 +1,12 @@
 package ch.unibas.fitting.web.calculation.commands;
 
-import ch.unibas.fitting.web.Settings;
-import ch.unibas.fitting.web.application.directories.IUserDirectory;
+import ch.unibas.fitting.Settings;
+import ch.unibas.fitting.application.directories.IUserDirectory;
 import ch.unibas.fitting.web.calculation.NavigationInfo;
 import ch.unibas.fitting.web.calculation.OverviewPage;
-import ch.unibas.fitting.web.application.calculation.CalculationManagementClient;
-import ch.unibas.fitting.web.application.calculation.manager.StartDefinition;
-import ch.unibas.fitting.web.web.PageNavigation;
+import ch.unibas.fitting.application.calculation.CalculationManagementClient;
+import ch.unibas.fitting.application.calculation.manager.StartDefinition;
+import ch.unibas.fitting.web.misc.PageNavigation;
 import org.apache.commons.io.FileUtils;
 
 import javax.inject.Inject;

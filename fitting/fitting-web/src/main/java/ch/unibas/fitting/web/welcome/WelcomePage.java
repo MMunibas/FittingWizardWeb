@@ -1,8 +1,8 @@
 package ch.unibas.fitting.web.welcome;
 
-import ch.unibas.fitting.web.gaussian.commands.OpenMtpFitSession;
-import ch.unibas.fitting.web.ljfit.ui.commands.OpenLjFitSessionCommand;
-import ch.unibas.fitting.web.web.HeaderPage;
+import ch.unibas.fitting.web.mtpfit.commands.OpenMtpFitSession;
+import ch.unibas.fitting.web.ljfit.commands.OpenLjFitSessionCommand;
+import ch.unibas.fitting.web.misc.HeaderPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.model.PropertyModel;

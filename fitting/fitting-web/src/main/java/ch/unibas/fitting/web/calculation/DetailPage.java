@@ -1,9 +1,9 @@
 package ch.unibas.fitting.web.calculation;
 
-import ch.unibas.fitting.web.infrastructure.javaextensions.Action;
-import ch.unibas.fitting.web.application.calculation.CalculationService;
-import ch.unibas.fitting.web.application.calculation.SerializedParameter;
-import ch.unibas.fitting.web.web.HeaderPage;
+import ch.unibas.fitting.infrastructure.javaextensions.Action;
+import ch.unibas.fitting.application.calculation.CalculationService;
+import ch.unibas.fitting.application.calculation.SerializedParameter;
+import ch.unibas.fitting.web.misc.HeaderPage;
 import io.swagger.client.model.Status;
 import io.vavr.Tuple2;
 import org.apache.wicket.ajax.AjaxRequestTarget;
