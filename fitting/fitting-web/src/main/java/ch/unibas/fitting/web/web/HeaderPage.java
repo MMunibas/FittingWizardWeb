@@ -40,7 +40,7 @@ public abstract class HeaderPage extends WizardPage {
         navbar.addComponents(new ImmutableNavbarComponent(
                 new NavbarButton<AdminPage>(AdminPage.class, Model.of("Sessions")), Navbar.ComponentPosition.LEFT));
         navbar.addComponents(new ImmutableNavbarComponent(
-                new NavbarExternalLink(Model.of("./help"), Buttons.Type.Menu)
+                new NavbarExternalLink(Model.of("help"), Buttons.Type.Menu)
                         .setLabel(Model.of("Help"))
                         .setTarget(BootstrapExternalLink.Target.blank)
             ,Navbar.ComponentPosition.LEFT));
