@@ -26,14 +26,12 @@ import java.util.LinkedHashSet;
 public class RunMtpFitCommand implements IAmACommand {
     @Inject
     private IUserDirectory userDirectory;
-
     @Inject
     private CreateFit createFit;
     @Inject
     private MtpFitSessionRepository mtpFitRepo;
-
     @Inject
-    MtpResultsParser parser;
+    private MtpResultsParser parser;
     @Inject
     private CalculationManagementClient client;
 
@@ -59,7 +57,7 @@ public class RunMtpFitCommand implements IAmACommand {
         params.put("mtp_fitting_flag_ignore_H", ignoreHydrogens);
         params.put("mtp_fit_number", fitOutputDir.getId());
 
-        var response = client.spawnTask(
+        var response = client.spawnCalculationGroup(
                 "Running MTP fit",
                 username,
                 new NavigationInfo(

@@ -49,7 +49,7 @@ public class SingleRunPanel extends Panel {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 RunPair pair = new RunPair(singlePair.getSigma(), singlePair.getEps());
 
-                runLjFitsCommand.executeNew(username, new RunFromPage(
+                runLjFitsCommand.execute(username, new RunFromPage(
                         pair,
                         lambda_size_electrostatic.getObject(),
                         lambda_size_vdw.getObject(),

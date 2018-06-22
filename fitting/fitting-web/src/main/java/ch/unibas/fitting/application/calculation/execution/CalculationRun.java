@@ -169,7 +169,7 @@ public class CalculationRun extends AbstractActor {
                 service.uploadInputFile(calculationId, file);
             }
 
-            service.startRun(calculationId, definition.algorithmName, definition.parameters);
+            service.startRun(calculationId, definition.algorithmType, definition.parameters);
 
             context().system().log().debug("setupRun DONE");
             self().tell(new SetupDone(), self());

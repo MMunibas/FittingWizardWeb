@@ -34,21 +34,18 @@ public class RunLjFitsCommand {
 
     @Inject
     private LjFitRepository ljFitRepository;
-
     @Inject
     private IUserDirectory userDirectory;
-
     @Inject
     private JsonSerializer serializer;
-
     @Inject
     private CalculationManagementClient calculationClient;
 
-    public void executeNew(String username, RunFromPage runs) {
+    public void execute(String username, RunFromPage runs) {
 
         var definitions = prepare(username, runs);
 
-        var response = calculationClient.spawnTask("Running LJ Fits",
+        var response = calculationClient.spawnCalculationGroup("Running LJ Fits",
                 username,
                 new NavigationInfo(() -> PageNavigation.ToPage(LjSessionPage.class), () -> PageNavigation.ToPage(LjSessionPage.class)),
                 definitions.toJavaArray(StartDefinition.class));

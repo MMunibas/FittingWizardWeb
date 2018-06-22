@@ -55,7 +55,7 @@ public class OverviewPage extends HeaderPage {
         add(new ListView<>("algorithmList", algorithmsModel) {
             @Override
             protected void populateItem(ListItem item) {
-                item.add(new Label("algorithmName", (String)item.getModelObject()));
+                item.add(new Label("algorithmType", (String)item.getModelObject()));
             }
         });
 

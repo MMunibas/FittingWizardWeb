@@ -30,17 +30,25 @@ public class CalculationManagementClient {
     /**
      * Required for wicket and guice integration
      **/
-    public CalculationManagementClient() {}
+    protected CalculationManagementClient() {}
 
     public CalculationProtocol.ListAllRunsResponse listExecutions() {
         return askSynchronously(new CalculationProtocol.ListAllRuns());
     }
 
-    public CalculationProtocol.StartResponse spawnTask(String title,
-                                                       String username,
-                                                       NavigationInfo navigationInfo,
-                                                       StartDefinition... starts) {
-        return askSynchronously(new CalculationProtocol.Start(title, username, navigationInfo, starts));
+    /**
+     * Spawns a new calculation group with one or more calculation runs.
+     * @param title name shown in the {@link ch.unibas.fitting.web.misc.ProgressPage}
+     * @param username association to the user of the spawned {@link ch.unibas.fitting.application.calculation.execution.CalculationGroup}
+     * @param navigationInfo details of navigation behavior when calculation is finished
+     * @param startDefinitions details of all calculation runs which are spawned together as a {@link ch.unibas.fitting.application.calculation.execution.CalculationGroup}
+     * @return
+     */
+    public CalculationProtocol.StartResponse spawnCalculationGroup(String title,
+                                                                   String username,
+                                                                   NavigationInfo navigationInfo,
+                                                                   StartDefinition... startDefinitions) {
+        return askSynchronously(new CalculationProtocol.Start(title, username, navigationInfo, startDefinitions));
     }
 
     public Option<GroupDetails> getGroupInfo(String groupId) {

@@ -36,7 +36,7 @@ public class StartDummyAlgoCommand {
         }
         output_dir.mkdirs();
 
-        var startResponse = calculationManagement.spawnTask(
+        var startResponse = calculationManagement.spawnCalculationGroup(
                 "Running test algorithm",
                 username,
                 new NavigationInfo(() -> PageNavigation.ToPage(OverviewPage.class)),

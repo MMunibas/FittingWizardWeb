@@ -25,12 +25,10 @@ public class RunMtpGenerateFilesCommand implements IAmACommand {
 
     @Inject
     private IUserDirectory userDir;
-
     @Inject
     private CalculationManagementClient client;
     @Inject
     private CalculationService calculationService;
-
 
     public void execute(String username,
                         String moleculeName,
@@ -56,7 +54,7 @@ public class RunMtpGenerateFilesCommand implements IAmACommand {
                 .getMoleculeDir()
                 .createMoleculeDir(moleculeName);
 
-        var response = client.spawnTask(
+        var response = client.spawnCalculationGroup(
                 "Generate MTP files",
                 username,
                 new NavigationInfo(
