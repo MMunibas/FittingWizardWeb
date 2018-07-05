@@ -11,7 +11,7 @@ from .job import JobsService
 from .settings import CALCULATION_METADATA_FILE_NAME, RUN_METADATA_FILE_NAME
 
 
-VERSION = 0.2
+VERSION = 1.0
 
 
 @synchronized

@@ -1,0 +1,104 @@
+package ch.unibas.fitting.web.mtpfit.session.step2;
+
+import ch.unibas.fitting.application.directories.IUserDirectory;
+import ch.unibas.fitting.application.calculation.CalculationService;
+import ch.unibas.fitting.web.mtpfit.session.step3.AtomsPage;
+import ch.unibas.fitting.web.misc.HeaderPage;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.upload.FileUpload;
+import org.apache.wicket.markup.html.form.upload.FileUploadField;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.lang.Bytes;
+
+import javax.inject.Inject;
+import java.io.File;
+
+
+/**
+ * Created by martin on 05.06.2016.
+ */
+public class UploadPage extends HeaderPage {
+
+    @Inject
+    private IUserDirectory _userDir;
+    @Inject
+    private CalculationService calculationService;
+
+    private final FileUploadField file;
+
+    public UploadPage() {
+        final Component feedback = new FeedbackPanel("feedback").setOutputMarkupId(true);
+        add(feedback);
+
+        final Form form = new Form("form")
+        {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            protected void onSubmit()
+            {
+                FileUpload upload = file.getFileUpload();
+                if (upload == null)
+                {
+                    LOGGER.debug("No file uploaded");
+                    return;
+                }
+
+                cleanupMtpSession();
+
+                LOGGER.debug("File-Name: " + upload.getClientFileName() + " File-Size: " +
+                        Bytes.bytes(upload.getSize()).toString());
+
+                File destination = _userDir.getMtpFitDir(getCurrentUsername())
+                        .getMoleculeDir()
+                        .getXyzFileFor(upload.getClientFileName());
+
+                try {
+                    upload.writeTo(destination);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+                PageParameters pp = new PageParameters();
+                String moleculeName = FilenameUtils.removeExtension(destination.getName());
+                pp.add("molecule_name", moleculeName);
+
+                setResponsePage(AtomsPage.class, pp);
+            }
+        };
+        form.setMaxSize(Bytes.megabytes(2));
+        add(form);
+        form.add(file = new FileUploadField("file"));
+        form.add(new Label("max", new Model<>(form.getMaxSize().toString())));
+        form.add(new AjaxButton("ajaxSubmit")
+        {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+                LOGGER.debug("done");
+                target.add(feedback);
+            }
+
+            @Override
+            protected void onError(AjaxRequestTarget target, Form<?> form) {
+                target.add(feedback);
+            }
+        });
+    }
+
+    private void cleanupMtpSession() {
+        _userDir.getMtpFitDir(getCurrentUsername())
+                .readCalculationId()
+                .forEach(s -> calculationService.deleteCalculation(s));
+
+        _userDir.deleteMtpFitDir(getCurrentUsername());
+    }
+}

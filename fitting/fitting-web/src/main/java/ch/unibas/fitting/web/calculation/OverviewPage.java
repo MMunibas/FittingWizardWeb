@@ -1,10 +1,10 @@
 package ch.unibas.fitting.web.calculation;
 
-import ch.unibas.fitting.web.application.calculation.CalculationService;
+import ch.unibas.fitting.application.calculation.CalculationService;
 import ch.unibas.fitting.web.calculation.commands.StartDummyAlgoCommand;
-import ch.unibas.fitting.web.application.calculation.CalculationManagementClient;
-import ch.unibas.fitting.web.application.calculation.execution.RunDetails;
-import ch.unibas.fitting.web.web.HeaderPage;
+import ch.unibas.fitting.application.calculation.CalculationManagementClient;
+import ch.unibas.fitting.application.calculation.execution.RunDetails;
+import ch.unibas.fitting.web.misc.HeaderPage;
 import io.swagger.client.model.CalculationStatus;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -55,7 +55,7 @@ public class OverviewPage extends HeaderPage {
         add(new ListView<>("algorithmList", algorithmsModel) {
             @Override
             protected void populateItem(ListItem item) {
-                item.add(new Label("algorithmName", (String)item.getModelObject()));
+                item.add(new Label("algorithmType", (String)item.getModelObject()));
             }
         });
 
