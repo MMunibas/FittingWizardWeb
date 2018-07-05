@@ -172,11 +172,11 @@ def ljfit(ctx):
 
     # gather TI results and subdivide windows as necessary:
     for i in range(0,len(tiOutElecGasFileTrajread)):
-       dg_lambda = parse_ti_out_2step(ctx,tiOutElecGasFileTrajread[i])
+       dg_lambda = parse_ti_out_2step(ctx,tiOutElecGasFileTrajread[i]) * dlmbElec
        dg_solv -= dg_lambda
        dg_solv_elec_gas += dg_lambda
     for i in range(0,len(tiOutElecSolvFileTrajread)):
-       dg_lambda = parse_ti_out_2step(ctx,tiOutElecSolvFileTrajread[i])
+       dg_lambda = parse_ti_out_2step(ctx,tiOutElecSolvFileTrajread[i]) * dlmbElec
        dg_solv += dg_lambda
        dg_solv_elec_solv += dg_lambda
 
@@ -311,11 +311,12 @@ def parse_dens_out(ctx, slu, top, results, T, gas_out_name, dens_out_name):
     with ctx.input_dir.open_file(slu, "r") as pdb:
         for line in pdb:
             words = line.split()
-            if words[0].upper() == "ATOM":
-                if res and words[3] != res:
-                    raise Exception(
-                        "More than one residue type (" + res + " and " + words[3] + ") in solute pdb " + slu)
-                res = words[3]
+            if len(words) > 3:
+               if words[0].upper() == "ATOM":
+                   if res and words[3] != res:
+                       raise Exception(
+                           "More than one residue type (" + res + " and " + words[3] + ") in solute pdb " + slu)
+                   res = words[3]
         ctx.log.info("RES type is " + res)
     pdb.close()
     ctx.log.info("Reading Atomic Masses from Topology file " + top)
@@ -361,7 +362,7 @@ def parse_dens_out(ctx, slu, top, results, T, gas_out_name, dens_out_name):
     with ctx.run_out_dir.open_file(dens_out_name, "r") as liq_output:
         for line in liq_output:
             words = line.split()
-            if len(words) > 0:
+            if len(words) > 1:
                 if words[0].upper() == "RESIDUE" and words[1].upper() == "SEQUENCE":
                     nres = float(words[3])
                 if words[0].upper() == "AVER" and words[1].upper() == "PRESS>":

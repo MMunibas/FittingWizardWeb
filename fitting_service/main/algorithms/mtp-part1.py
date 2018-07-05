@@ -199,7 +199,22 @@ def write_vdw_file(ctx, gau_inp_file, vdw_file_name, mtp_order):
                  'Br': 3.685,
                  'I': 4.063,
                  'Fe': 4.0,
-                 'Zn': 2.80}
+                 'Zn': 2.80,
+                 '1': 2.268,
+                 '2': 2.301,
+                 '0': 0.0,
+                 '5': 3.931,
+                 '6': 3.496,
+                 '7': 2.91,
+                 '8': 2.646,
+                 '9': 2.551,
+                 '15': 3.591,
+                 '16': 3.496,
+                 '17': 3.42,
+                 '35': 3.685,
+                 '53': 4.063,
+                 '26': 4.0,
+                 '30': 2.80}
 
     atm = []
     with ctx.input_dir.open_file(gau_inp_file, "r") as gau_inp:
@@ -220,6 +235,10 @@ def write_vdw_file(ctx, gau_inp_file, vdw_file_name, mtp_order):
     with ctx.run_out_dir.open_file(vdw_file_name, 'w') as vdw_file:
         vdw_file.write('\n')
         for i in range(len(atm)):
+            if atm[i] in vdw_radii:
+               radius=vdw_radii[atm[i]]
+            else:
+               radius=3.5
             vdw_file.write(str(vdw_radii[atm[i]]) + '\n')
             vdw_file.write(str(mtp_order) + '\n\n')
 

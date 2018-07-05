@@ -14,6 +14,7 @@ from .settings import CALCULATION_METADATA_FILE_NAME, RUN_METADATA_FILE_NAME
 VERSION = 0.2
 
 
+@synchronized
 class CalculationService(metaclass=Singleton):
     def __init__(self):
         jobs_service = JobsService()
