@@ -2,7 +2,7 @@ import threading
 from logging import getLogger
 from os import system
 from .i_job_management import IJobManagement
-from fitting_service.file_acces import Storage, JobStatus
+from fitting_service.file_acces import StorageService, JobStatus
 from toolkit import RepeatingTimer, TransparentQueue
 
 single_node_job_manager = None
@@ -21,10 +21,10 @@ class SingleNodeJobManagement(IJobManagement):
         return ClusterSimulation(num_workers)
 
     def cancel_job(self, job_id):
-        calcs = Storage().list_all_calculations()
-        for calc in calcs:
-            if job_id in Storage().get_jobs_file(calc).list():
-                Storage().get_cancel_file(calc).is_set = True
+        calc_dirs = StorageService().list_all_calculations()
+        for calc in calc_dirs:
+            if calc.has_job_running(job_id):
+                calc.set_canceled()
 
     def schedule_new_job(self, job_name, command):
         job = SimulatedJob(job_name, command)

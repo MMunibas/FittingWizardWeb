@@ -12,7 +12,7 @@ def named_lock(name):
     def decorator(func):
         def synced_func(self, *a, **kw):
             if not hasattr(self, name):
-                setattr(self, name, threading.Lock())
+                setattr(self, name, threading.RLock())
             lock = getattr(self, name)
             with lock:
                 return func(*a, **kw)
@@ -51,10 +51,10 @@ def synchronize_with(lock):
 def synchronized(item):
     if isinstance(item, str):
         return named_lock(item)(item)
-    elif type(item) is type(threading.Lock()):
+    elif type(item) is type(threading.RLock()):
         return synchronize_with(item)(item)
     else:
-        lock = threading.Lock()
+        lock = threading.RLock()
         return synchronize_with(lock)(item)
 
 

@@ -2,7 +2,7 @@ import threading
 from logging import getLogger
 
 from toolkit import RepeatingTimer, Singleton
-from .file_acces import IdGenerator, Storage
+from .file_acces import IdGenerator, StorageService
 from .job_managers import SingleNodeJobManagement, GridEngineJobManagement
 from .settings import JOB_MANAGEMENT_TYPE, QSTAT_PATH, QSUB_PATH, QDEL_PATH
 
@@ -25,12 +25,12 @@ class JobsService(metaclass=Singleton):
             self.simulated_cluster.shutdown()
 
     def list_jobs_for_calculation(self, calculation_id):
-        return Storage().get_jobs_file(calculation_id).list()
+        return StorageService().get_calculation_directory(calculation_id).list_job_ids()
 
     def schedule_new_job(self, calculation_id: str, command: str):
         job_name = "WFIT_{}_{}".format(calculation_id, IdGenerator.base64_id(5))
         job_id = self.job_management_impl.schedule_new_job(job_name, command)
-        Storage().get_jobs_file(calculation_id).add(job_id)
+        StorageService().get_calculation_directory(calculation_id).add_job_id(job_id)
         JobStatusUpdater().watch(job_id)
         return job_id
 
@@ -43,7 +43,7 @@ class JobsService(metaclass=Singleton):
     def wait_for_finished(self, calculation_id: str, job_id_array: list):
         for job_id in job_id_array:
             JobStatusUpdater().wait_for_finished(job_id)
-            Storage().get_jobs_file(calculation_id).remove(job_id)
+            StorageService().get_calculation_directory(calculation_id).remove_job_id(job_id)
 
 
 class JobStatusUpdater(metaclass=Singleton):

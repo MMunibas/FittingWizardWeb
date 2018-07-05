@@ -16,8 +16,7 @@ FITTING_SERVICE_PORT = 5000
 STORAGE_ROOT = "../data"
 
 
-CALCULATION_METADATA_FILE_NAME = "calculation_meta.json"
-RUN_METADATA_FILE_NAME = "run_meta.json"
+
 
 
 

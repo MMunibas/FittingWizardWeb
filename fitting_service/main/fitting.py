@@ -4,7 +4,7 @@ import sys
 import os
 
 import algorithms_dummies
-from fitting_service import app, Storage, Scanner
+from fitting_service import app, StorageService, Scanner
 
 import fitting_service.settings as settings
 from fitting_service.algorithms import scanner
@@ -21,7 +21,7 @@ def app_name():
 
 
 if __name__ == '__main__':
-    Storage().initialize()
+    StorageService().initialize()
     if len(sys.argv) > 1 and sys.argv[1] == '--mock':
         scanner.ALGORITHM_PACKAGE = algorithms_dummies
         mock_mode = True

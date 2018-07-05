@@ -1,13 +1,14 @@
-from flask import Flask, request, redirect, send_file
+from flask import Flask, request, redirect, send_file, json
 from flask_restplus import Resource, Api, fields
 from werkzeug.datastructures import FileStorage
-from .calculation import CalculationService, CalculationStatus
-from .calculation import InvalidInputException, CalculationRunningException
+from werkzeug.utils import secure_filename
+
+from .calculation import CalculationService, SERVICE_VERSION
 from .job import JobsService
 
 app = Flask(__name__)
 api = Api(app,
-          version='0.1',
+          version=SERVICE_VERSION,
           title='Calculation Service API',
           description='Provides operations for running different kind of calculations',
           validate=True)
@@ -17,9 +18,9 @@ ns_calculation = api.namespace('calculation', description='Fitting Operations')
 
 model_svc_info = ns_global.model('ServiceInfo',
                                  {
-                                     'version': fields.Float(required=True,
+                                     'version': fields.String(required=True,
                                                              description='Current service version',
-                                                             example=0.1),
+                                                             example="0.1"),
                                      'server_status': fields.String(required=True,
                                                                     description='Couster status',
                                                                     example='totally insane')
@@ -152,8 +153,8 @@ class AlgorithmList(Resource):
         """
         Returns a list of calculations
         """
-        pass
-        return CalculationService().list_algorithms()
+        algorithms = CalculationService().list_algorithms()
+        return {"algorithms": algorithms}
 
 
 @ns_calculation.route('/')
@@ -163,7 +164,12 @@ class CalculationList(Resource):
         """
         Returns a list of available calculations
         """
-        return CalculationService().list_all_calculations()
+        calc_dirs = CalculationService().list_all_calculations()
+
+        return {"calculations": list({
+                                  "id": dir.get_id(),
+                                  "status": dir.get_status()
+                              } for dir in calc_dirs)}
 
     @api.expect(model_calculation)
     @api.response(200, 'create new calculation', model=model_calc_id)
@@ -171,7 +177,9 @@ class CalculationList(Resource):
         """
         Creates new calculation
         """
-        return CalculationService().create_new_calculation(api.payload)
+        calculation_details = json.loads(api.payload["parameters"])
+        calc_id = CalculationService().create_new_calculation(calculation_details)
+        return {"calculation": calc_id}
 
 
 @ns_calculation.route('/<string:calculation_id>')
@@ -195,13 +203,11 @@ class CalculationResource(Resource):
         """
         if not CalculationService().calculation_exists(calculation_id):
             return redirect(request.url, 404)
-        try:
-            CalculationService().set_calculation_parameters(calculation_id, api.payload)
-            return CalculationService().get_calculation_status(calculation_id)
 
-        except Exception as ex:
-            print(ex)
-            return redirect(request.url, 405)
+        calc_params = json.loads(api.payload["parameters"])
+
+        CalculationService().set_calculation_parameter(calculation_id, calc_params)
+        return CalculationService().get_calculation_status(calculation_id)
 
     @api.response(200, 'calculation deleted successfully')
     @api.response(405, 'calculation already running')
@@ -209,13 +215,12 @@ class CalculationResource(Resource):
         """
         Deletes the specified calculation
         """
-
         if not CalculationService().calculation_exists(calculation_id):
             return redirect(request.url, 404)
-        try:
-            return CalculationService().delete_calculation(calculation_id)
-        except CalculationRunningException:
+        if CalculationService().is_calculation_running(calculation_id):
             return redirect(request.url, 405)
+
+        return CalculationService().delete_calculation(calculation_id)
 
 
 @ns_calculation.route('/<string:calculation_id>/cancel')
@@ -228,6 +233,7 @@ class CancelCalculationAction(Resource):
         """
         if not CalculationService().calculation_exists(calculation_id):
             return redirect(request.url, 404)
+
         CalculationService().cancel_calculation(calculation_id)
 
 
@@ -236,25 +242,24 @@ class RunCalculationAction(Resource):
     @api.response(200, 'calculation successfully started', model=model_run_id)
     @api.response(404, 'no calculation with id {calculation_id} found')
     @api.response(405, 'calculation already running or algorithm not supported')
-    @api.response(412, 'input validation failed')
     @api.expect(model_calculation_run)
     def post(self, calculation_id):
         """
         Start a run of this calculation
         """
-        if not CalculationService().calculation_exists(calculation_id):
-            return {'message': 'calculation not found'}, 404
         algo = self.api.payload['algorithm']
         if not CalculationService().is_algorithm_supported(algo):
             return {'message': 'algorithm not supported'}, 405
-
-        try:
-            runid = CalculationService().run_calculation(calculation_id, self.api.payload, False)
-            return {"run_id": runid}
-        except CalculationRunningException:
+        if not CalculationService().calculation_exists(calculation_id):
+            return {'message': 'calculation not found'}, 404
+        if CalculationService().is_calculation_running(calculation_id):
             return {'message': 'calculation already running'}, 405
-        except InvalidInputException:
-            return {'message': 'invalid input'}, 412
+
+        if not isinstance(self.api.payload, dict):
+            raise Exception("wrong input")
+
+        runid = CalculationService().run_calculation(calculation_id, self.api.payload, False)
+        return {"run_id": runid}
 
 
 @ns_calculation.route('/<string:calculation_id>/jobs')
@@ -281,7 +286,9 @@ class InputFileListResource(Resource):
         """
         if not CalculationService().calculation_exists(calculation_id):
             return redirect(request.url, 404)
-        return CalculationService().list_input_files(calculation_id)
+
+        files = CalculationService().list_input_files(calculation_id)
+        return {"files": files}
 
     @api.response(200, 'file uploaded successfully')
     @api.response(404, 'no calculation with id {calculation_id} found')
@@ -293,10 +300,16 @@ class InputFileListResource(Resource):
         """
         if not CalculationService().calculation_exists(calculation_id):
             return redirect(request.url, 404)
-        try:
-            return CalculationService().upload_file(calculation_id, request)
-        except InvalidInputException:
-            return redirect(request.url, 405)
+
+        if 'file' not in request.files:
+            return {'message': 'no file provided'}, 405
+
+        file = request.files['file']
+        if file.filename == '':
+            return {'message': 'filename missing'}, 405
+
+        filename = secure_filename(file.filename)
+        CalculationService().save_input_file(calculation_id, filename, file)
 
 
 @ns_calculation.route('/<string:calculation_id>/input/<path:relative_path>')
@@ -312,7 +325,6 @@ class InputFileDownloadResource(Resource):
             return redirect(request.url, 404)
 
         return send_file(CalculationService().get_input_file_absolute_path(calculation_id, relative_path))
-
 
     @api.response(200, 'File deleted')
     def delete(self, calculation_id, relative_path):
@@ -356,9 +368,11 @@ class OutputFileListResource(Resource):
         """
         if not CalculationService().calculation_exists(calculation_id):
             return redirect(request.url, 404)
-        if CalculationService().get_calculation_status(calculation_id)[CalculationStatus.LAST_RUN]:
-            return CalculationService().list_output_files(calculation_id)
-        return {"files": []}
+        if not CalculationService().check_if_run_exists(calculation_id):
+            return {"files": []}
+
+        files = CalculationService().list_output_files(calculation_id)
+        return {"files": files}
 
 
 @ns_calculation.route('/<string:calculation_id>/output/<path:relative_path>')
@@ -372,11 +386,10 @@ class OutputFileDownloadResource(Resource):
         """
         if not CalculationService().calculation_exists(calculation_id):
             return redirect(request.url, 404)
+        if not CalculationService().check_if_run_exists(calculation_id):
+            return redirect(request.url, 405)
 
-        if CalculationService().get_calculation_status(calculation_id)[CalculationStatus.LAST_RUN]:
-            return send_file(CalculationService().get_output_file_absolute_path(calculation_id, relative_path))
-
-        return redirect(request.url, 405)
+        return send_file(CalculationService().get_output_file_absolute_path(calculation_id, relative_path))
 
     @api.response(200, 'File deleted')
     def delete(self, calculation_id, relative_path):
@@ -385,8 +398,8 @@ class OutputFileDownloadResource(Resource):
         """
         if not CalculationService().calculation_exists(calculation_id):
             return redirect(request.url, 404)
+        if not CalculationService().check_if_run_exists(calculation_id):
+            return redirect(request.url, 405)
 
-        if CalculationService().get_calculation_status(calculation_id)[CalculationStatus.LAST_RUN]:
-            return CalculationService().delete_output_file(calculation_id, relative_path)
+        return CalculationService().delete_output_file(calculation_id, relative_path)
 
-        return redirect(request.url, 405)

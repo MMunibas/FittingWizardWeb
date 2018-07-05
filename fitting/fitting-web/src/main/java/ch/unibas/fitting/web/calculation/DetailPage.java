@@ -1,11 +1,12 @@
 package ch.unibas.fitting.web.calculation;
 
-import ch.unibas.fitting.infrastructure.javaextensions.Action;
 import ch.unibas.fitting.application.calculation.CalculationService;
 import ch.unibas.fitting.application.calculation.SerializedParameter;
+import ch.unibas.fitting.infrastructure.javaextensions.Action;
 import ch.unibas.fitting.web.misc.HeaderPage;
 import io.swagger.client.model.Status;
 import io.vavr.Tuple2;
+import org.apache.log4j.Logger;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -22,7 +23,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import scala.collection.concurrent.Debug;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class DetailPage extends HeaderPage {
+
+    private static final Logger LOGGER = Logger.getLogger(DetailPage.class);
 
     @Inject
     private CalculationService calculationService;
@@ -331,7 +333,7 @@ public class DetailPage extends HeaderPage {
             outputFiles.setObject(calculationService.listOutputFiles(calculationId).toJavaList());
         }
         catch (Exception ex){
-            Debug.log("api communication failed");
+            LOGGER.error("api communication failed", ex);
         }
     }
 }
