@@ -140,7 +140,7 @@ class Directory(IDirectory):
 
     @property
     def name(self):
-        return self.full_path.split("\\")[-1]
+        return os.path.dirname(self.full_path)
 
     def subdir(self, name):
         fullpath = os.path.join(self._path, name)
