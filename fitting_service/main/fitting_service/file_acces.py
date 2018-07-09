@@ -140,7 +140,7 @@ class Directory(IDirectory):
 
     @property
     def name(self):
-        return os.path.dirname(self.full_path)
+        return os.path.basename(self.full_path)
 
     def subdir(self, name):
         fullpath = os.path.join(self._path, name)
