@@ -7,7 +7,7 @@ jar {
     }
 }
 
-mainClassName = 'ch.unibas.fitting.web.Main'
+mainClassName = 'ch.unibas.fitting.Main'
 
 sourceSets {
     main {
