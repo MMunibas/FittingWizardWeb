@@ -6,6 +6,7 @@ import ch.unibas.fitting.application.calculation.CalculationManagementClient;
 import ch.unibas.fitting.application.calculation.execution.RunDetails;
 import ch.unibas.fitting.web.misc.HeaderPage;
 import io.swagger.client.model.CalculationStatus;
+import org.apache.log4j.Logger;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -19,6 +20,8 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import javax.inject.Inject;
 
 public class OverviewPage extends HeaderPage {
+
+    private static final Logger LOGGER = Logger.getLogger(OverviewPage.class);
 
     @Inject
     private CalculationService calculationService;
@@ -144,17 +147,16 @@ public class OverviewPage extends HeaderPage {
     private void updateModels() {
         try {
             var info = calculationService.getServiceInfo();
-            serviceVersion.setObject(info.getVersion().toString());
+            serviceVersion.setObject(info.getVersion());
             serviceStatus.setObject(info.getServerStatus());
             algorithmsModel.setObject(calculationService.listAlgorithms().toJavaList());
             calculationsModel.setObject(calculationService.listCalculations().toJavaList());
             executionModel.setObject(calculationManagement.listExecutions().runDetails.toJavaList());
         } catch (Exception ex) {
             errorMessageModel.setObject(ex.getMessage());
-            System.out.println("api communication failed");
+            LOGGER.error("api communication failed", ex);
         }
 
         errorMessageContainer.setVisible(!(errorMessageModel.getObject()==null || errorMessageModel.getObject().equals("") || errorMessageModel.getObject().equals("")));
     }
-
 }

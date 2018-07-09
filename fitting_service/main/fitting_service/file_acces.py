@@ -1,18 +1,15 @@
+import json
 import os
 import random
-import json
-import threading
-from datetime import datetime
-from hashlib import sha256
 from base64 import urlsafe_b64encode
 from contextlib import contextmanager
+from datetime import datetime
+from hashlib import sha256
+from logging import getLogger
+
 from algorithms.toolkit import IDirectory
 from toolkit import *
 from .settings import STORAGE_ROOT
-
-jobs_lock = threading.Lock()
-cancel_lock = threading.Lock()
-status_file_lock = threading.Lock()
 
 
 class IdGenerator(object):
@@ -73,7 +70,8 @@ class Filename(object):
         return "{}_{}".format(Timestamp.now(), IdGenerator.base64_id(5))
 
 
-class Storage(metaclass=Singleton):
+@synchronized
+class StorageService(metaclass=Singleton):
     def __init__(self):
         self._storage_root = Directory(STORAGE_ROOT)
 
@@ -82,32 +80,25 @@ class Storage(metaclass=Singleton):
             os.mkdir(path)
         self._storage_root = Directory(path)
 
-    def get_calculation_directory(self, calculation_id):
-        return self.root.subdir(calculation_id)
+    def _get_calculation_directory_path(self, calculation_id):
+        return os.path.join(self._root.full_path, calculation_id)
 
-    def get_calculation_directory_path(self, calculation_id):
-        return os.path.join(self.root.full_path, calculation_id)
+    def get_calculation_directory(self, calculation_id):
+        if not self.contains_calculation(calculation_id):
+            raise Exception("calculation {} not found".format(calculation_id))
+
+        calc_dir = self._get_calculation_directory_path(calculation_id)
+        return CalculationDirectory(calc_dir)
 
     def contains_calculation(self, calculation_id):
-        return self.root.has_subdir(calculation_id)
+        return self._root.has_subdir(calculation_id)
 
     def list_all_calculations(self):
-        return self.root.list_subdirs()
-
-    def get_status_file(self, calculation_id):
-        return CalculationStatus(self.get_calculation_directory(calculation_id))
-
-    def get_jobs_file(self, calculation_id):
-        return JobFile(self.get_calculation_directory(calculation_id))
-
-    def get_cancel_file(self, calculation_id):
-        return CancelFile(self.get_calculation_directory(calculation_id))
-
-    def get_output_dir(self, calculation, run):
-        return self.get_calculation_directory(calculation).subdir(run).subdir("output")
+        sub_dirs = self._root.list_subdirs()
+        return list(self.get_calculation_directory(dir) for dir in sub_dirs)
 
     @property
-    def root(self):
+    def _root(self):
         return self._storage_root
 
     def initialize(self):
@@ -124,6 +115,17 @@ class Storage(metaclass=Singleton):
             os.rmdir(path)
             return True
         return False
+
+    def create_new_calculation(self, parameter):
+        new_id = Filename.new_calculation_filename()
+        if self.contains_calculation(new_id):
+            raise Exception("calculation {} already exists".format(new_id))
+
+        calc_dir_path = self._get_calculation_directory_path(new_id)
+        calc_dir = CalculationDirectory(calc_dir_path)
+        calc_dir.init_directory()
+        calc_dir.set_calculation_parameter(parameter)
+        return calc_dir.get_id()
 
 
 class Directory(IDirectory):
@@ -184,8 +186,210 @@ class Directory(IDirectory):
 
     @contextmanager
     def open_file(self, name, mode):
-        with open(os.path.join(self._path, name), mode) as handle:
+        with open(self.get_path(name), mode) as handle:
             yield handle
+
+    def get_path(self, relative_path):
+        return os.path.join(self.full_path, relative_path)
+
+
+@synchronized
+class CalculationDirectory(Directory):
+    CALCULATION_METADATA_FILE_NAME = "calculation_meta.json"
+    RUN_METADATA_FILE_NAME = "run_meta.json"
+    RESULTS_FILE_NAME = 'run_results.json'
+
+    def __init__(self, calc_dir_path):
+        Directory.__init__(self, calc_dir_path)
+        self._calculation_id = self.name
+        self._logger = getLogger(self.__class__.__name__)
+
+    def init_directory(self):
+        self._get_input_dir()
+        self.get_status_file()
+        self.set_calculation_parameter({})
+
+    def get_id(self):
+        return self._calculation_id
+
+    def _get_input_dir(self):
+        return self.subdir("input")
+
+    def _get_last_run_output(self):
+        last_run_dir = self.subdir(self.get_last_run())
+        return last_run_dir.subdir("output")
+
+    def list_input_files(self):
+        return self._get_input_dir().list_files_recursively()
+
+    def list_last_run_output_files(self):
+        return self._get_last_run_output().list_files_recursively()
+
+    def get_last_run_outputfile_path(self, relative_path):
+        return os.path.join(self._get_last_run_output().full_path, relative_path)
+
+    def get_status_file(self):
+        return _CalculationStatus(self)
+
+    def has_job_running(self, job_id):
+        return job_id in self._get_jobs_file().list_job_ids()
+
+    def _get_jobs_file(self):
+        return _JobFile(self)
+
+    def is_canceled(self):
+        self._get_cancel_file().is_canceled()
+
+    def set_canceled(self):
+        self._get_cancel_file().set_canceled()
+
+    def _get_cancel_file(self):
+        return _CancelFile(self)
+
+    def get_output_dir(self, run_id):
+        return self.subdir(run_id).subdir("output")
+
+    def update_status(self, status, message):
+        self._status.update_status(status, message)
+
+    def save_input_file(self, filename, data):
+        input_dir = self.subdir("input")
+        data.save(os.path.join(input_dir.full_path, filename))
+
+    def prepare_run(self, run_details):
+        if self._status.is_running:
+            raise Exception("calculation is already running")
+
+        self._get_cancel_file().delete()
+        self._get_jobs_file().clear()
+        run_id = Filename.new_run_filename()
+        run_dir = self.get_run_dir(run_id)
+        run_dir.subdir("output")
+
+        self._write_run_details(run_id, run_details)
+        self._status.set_last_run(run_id)
+
+        return run_id
+
+    def list_job_ids(self):
+        return self._get_jobs_file().list_job_ids()
+
+    def add_job_id(self, job_id):
+        self._get_jobs_file().add(job_id)
+
+    def remove_job_id(self, job_id):
+        self._get_jobs_file().remove(job_id)
+
+    def get_status(self):
+        return self._status.to_dict()
+
+    def get_last_run(self):
+        return self._status.last_run()
+
+    def is_running(self):
+        return self._status.is_running
+
+    @property
+    def _status(self):
+        status = _CalculationStatus(self)
+
+        if status.last_run():
+            with self.subdir(status.last_run()).open_file(self.RUN_METADATA_FILE_NAME, "r") as f:
+                run_params = json.load(f)
+        else:
+            run_params = None
+
+        status.set_run_parameters(run_params)
+        status.set_input_files(self.subdir("input").list_files_recursively())
+
+        if os.path.exists(self.get_path(self.CALCULATION_METADATA_FILE_NAME)):
+            with self.open_file(self.CALCULATION_METADATA_FILE_NAME, "r") as f:
+                calculation_prams = json.load(f)["parameters"]
+        else:
+            calculation_prams = '{}'
+        status.set_calculation_parameters(calculation_prams)
+        return status
+
+    def read_last_run_result(self):
+        last_run = self._status.last_run()
+        if last_run is None:
+            return None
+        return self.read_run_result(last_run)
+
+    def read_run_result(self, run_id):
+        run_dir = self.subdir(run_id)
+        run_out_dir = run_dir.subdir('output')
+        if not run_out_dir.contains(self.RESULTS_FILE_NAME):
+            return None
+
+        with run_out_dir.open_file(self.RESULTS_FILE_NAME, 'r') as json_file:
+            return json.load(json_file)
+
+    def write_run_results(self, run_id, json_object):
+        run_output = self.subdir(run_id).subdir('output')
+        with run_output.open_file(self.RESULTS_FILE_NAME, 'w') as json_file:
+            json.dump(json_object, json_file)
+
+    def set_calculation_parameter(self, parameters):
+        meta = {}
+        if os.path.exists(self.get_path(self.CALCULATION_METADATA_FILE_NAME)):
+            with self.open_file(self.CALCULATION_METADATA_FILE_NAME, "r") as meta_file:
+                meta = json.load(meta_file)
+
+        meta["parameters"] = parameters
+
+        with self.open_file(self.CALCULATION_METADATA_FILE_NAME, "w") as meta_file:
+            json.dump(meta, meta_file)
+
+    def get_calculation_parameters(self):
+        params = {}
+
+        with self.open_file(self.CALCULATION_METADATA_FILE_NAME, "r") as calc_meta:
+            for k, v in json.load(calc_meta)["parameters"].items():
+                params[k] = v
+
+        return params
+
+    def _write_run_details(self, run_id, run_parameters):
+        run_dir = self.get_run_dir(run_id)
+
+        with run_dir.open_file(self.RUN_METADATA_FILE_NAME, "w") as f:
+            json.dump(run_parameters, f)
+
+    def get_run_parameters(self, run_id):
+        run_dir = self.get_run_dir(run_id)
+
+        params = {}
+        with run_dir.open_file(self.RUN_METADATA_FILE_NAME, "r") as run_meta:
+            json_content = json.load(run_meta)
+            from_file = json.loads(json_content["parameters"])
+            for k, v in from_file.items():
+                params[k] = v
+
+        return params
+
+    def get_merged_parameters(self, run_id):
+        calc_params = self.get_calculation_parameters()
+        run_params = self.get_run_parameters(run_id)
+
+        for k, v in run_params.items():
+            calc_params[k] = v
+
+        return calc_params
+
+    def get_algorithm_type(self, run_id):
+        run_dir = self.get_run_dir(run_id)
+        with run_dir.open_file(self.RUN_METADATA_FILE_NAME, "r") as run_meta:
+            return json.load(run_meta)["algorithm"]
+
+    def get_run_dir(self, run_id):
+        return self.subdir(run_id)
+
+    def has_existing_run(self):
+        return self.read_last_run_result() is not None
+
+    def get_input_file_path(self, relative_path):
+        return os.path.join(self._get_input_dir().full_path, relative_path)
 
 
 class Status:
@@ -196,7 +400,7 @@ class Status:
     FAILED = "Failed"
 
 
-class CalculationStatus(object):
+class _CalculationStatus(object):
     STATUS_FILE_NAME = ".status"
 
     LAST_RUN = "last_run"
@@ -207,10 +411,10 @@ class CalculationStatus(object):
     RUN_PARAMETERS = "run_parameters"
 
     DEFAULT = {
-                    LAST_RUN: None,
-                    STATUS: Status.CREATED,
-                    MESSAGE: ""
-                }
+        LAST_RUN: None,
+        STATUS: Status.CREATED,
+        MESSAGE: ""
+    }
 
     def __init__(self, calculation_directory):
         self.calculation_directory = calculation_directory
@@ -219,14 +423,12 @@ class CalculationStatus(object):
             self._save(self.DEFAULT)
 
     def _load(self):
-        with status_file_lock:
-            with self.calculation_directory.open_file(self.STATUS_FILE_NAME, 'r') as status_file:
-                return json.load(status_file)
+        with self.calculation_directory.open_file(self.STATUS_FILE_NAME, 'r') as status_file:
+            return json.load(status_file)
 
     def _save(self, status):
-        with status_file_lock:
-            with self.calculation_directory.open_file(self.STATUS_FILE_NAME, 'w') as status_file:
-                json.dump(status, status_file)
+        with self.calculation_directory.open_file(self.STATUS_FILE_NAME, 'w') as status_file:
+            json.dump(status, status_file)
 
     def __str__(self):
         return str(self._load())
@@ -241,10 +443,8 @@ class CalculationStatus(object):
         self._update_file(update)
 
     def last_run(self):
-        try:
-            return self._load()[self.LAST_RUN]
-        except:
-            return None
+        content = self._load()
+        return content[self.LAST_RUN]
 
     def update_status(self, status, message: str):
         def update(d):
@@ -254,12 +454,9 @@ class CalculationStatus(object):
         self._update_file(update)
 
     def _update_file(self, update_callback):
-        try:
-            status = self._load()
-            update_callback(status)
-            self._save(status)
-        except Exception as ex:
-            print(ex)
+        status = self._load()
+        update_callback(status)
+        self._save(status)
 
     @property
     def is_running(self):
@@ -271,22 +468,24 @@ class CalculationStatus(object):
 
     def set_calculation_parameters(self, calculation_prams):
         def update(d):
-            calculation_prams["parameters"] = json.dumps(calculation_prams["parameters"])
-            d[self.CALCULATION_PARAMETERS] = calculation_prams
+            json_parms = {"parameters": json.dumps(calculation_prams)}
+            d[self.CALCULATION_PARAMETERS] = json_parms
+
         self._update_file(update)
 
     def set_run_parameters(self, run_params):
         def update(d):
+            json_parms = None
             if run_params is not None:
-                run_params["parameters"] = json.dumps(run_params["parameters"])
-                pass
-            d[self.RUN_PARAMETERS] = run_params
+                json_parms = {"parameters": json.dumps(run_params["parameters"])}
+            d[self.RUN_PARAMETERS] = json_parms
 
         self._update_file(update)
 
     def set_input_files(self, input_files):
         def update(d):
             d[self.INPUT_FILES] = input_files
+
         self._update_file(update)
 
 
@@ -296,26 +495,29 @@ class JobStatus:
     NOT_FOUND = "not found"
 
 
-class JobFile:
+class _JobFile:
     JOBS_FILE_NAME = ".jobs"
 
     def clear(self):
         def update(l):
             l.clear()
+
         self._update_file(update)
 
-    def list(self):
+    def list_job_ids(self):
         return self._load()
 
     def add(self, job_id):
         def add_job(jobs):
             jobs.append(job_id)
+
         self._update_file(add_job)
 
     def remove(self, job_id):
         def remove_job(jobs):
             if job_id in jobs:
                 jobs.remove(job_id)
+
         self._update_file(remove_job)
 
     def __init__(self, calculation_directory):
@@ -328,7 +530,6 @@ class JobFile:
         func(jobs)
         self._save(jobs)
 
-    @synchronize_with(jobs_lock)
     def _load(self):
         if self.calculation_directory.contains(self.JOBS_FILE_NAME):
             with self.calculation_directory.open_file(self.JOBS_FILE_NAME, "r") as jobs_file:
@@ -336,7 +537,6 @@ class JobFile:
         else:
             return []
 
-    @synchronize_with(jobs_lock)
     def _save(self, jobs):
         with self.calculation_directory.open_file(self.JOBS_FILE_NAME, "w") as jobs_file:
             json.dump(jobs, jobs_file)
@@ -345,17 +545,15 @@ class JobFile:
         return str(self._load())
 
 
-class CancelFile:
+class _CancelFile:
     CANCEL_FILE_NAME = ".cancel"
 
     def __init__(self, calculation_directory):
         self.calculation_directory = calculation_directory
 
-    @synchronize_with(cancel_lock)
     def _get(self):
         return self.calculation_directory.contains(self.CANCEL_FILE_NAME)
 
-    @synchronize_with(cancel_lock)
     def _set(self, value):
         if value:
             with self.calculation_directory.open_file(self.CANCEL_FILE_NAME, "w") as cancel_file:
@@ -363,19 +561,15 @@ class CancelFile:
         else:
             self._del()
 
-    @synchronize_with(cancel_lock)
     def _del(self):
         if self.calculation_directory.contains(self.CANCEL_FILE_NAME):
             self.calculation_directory.delete_file(self.CANCEL_FILE_NAME)
 
-    @property
-    def is_set(self):
+    def is_canceled(self):
         return self._get()
 
-    @is_set.setter
-    def is_set(self, value):
-        self._set(value)
+    def set_canceled(self):
+        self._set(True)
 
-    @is_set.deleter
-    def is_set(self):
+    def delete(self):
         self._del()

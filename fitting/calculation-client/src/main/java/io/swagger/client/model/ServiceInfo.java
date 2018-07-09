@@ -30,12 +30,12 @@ import java.math.BigDecimal;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2018-04-13T10:04:30.475Z")
 public class ServiceInfo {
   @SerializedName("version")
-  private BigDecimal version = null;
+  private String version = null;
 
   @SerializedName("server_status")
   private String serverStatus = null;
 
-  public ServiceInfo version(BigDecimal version) {
+  public ServiceInfo version(String version) {
     this.version = version;
     return this;
   }
@@ -45,11 +45,11 @@ public class ServiceInfo {
    * @return version
   **/
   @ApiModelProperty(example = "0.1", required = true, value = "Current service version")
-  public BigDecimal getVersion() {
+  public String getVersion() {
     return version;
   }
 
-  public void setVersion(BigDecimal version) {
+  public void setVersion(String version) {
     this.version = version;
   }
 
