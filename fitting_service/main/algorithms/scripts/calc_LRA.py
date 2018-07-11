@@ -19,18 +19,16 @@
 import sys
 import json
 
-def distribute_charge(atom,chrg):
+def distribute_charge(atom,chrg,checked,hbrdz,dchrg):
   """Identifies groups of atoms connected by pi systems 
      and distributes charge assignment among these."""
-  global checked
-  global hbrdz
-  global dchrg
   neighbors = atom.GetNeighbors()
   for at in neighbors:
     if checked[at.GetIdx()] == False and (hbrdz[at.GetIdx()] in ['SP2','SP']):
       checked[at.GetIdx()] = True
       dchrg[at.GetIdx()] += chrg
       distribute_charge(at,chrg)
+  return checked,dchrg
 
 def print_exception_info(exception):
     traceback = exception.__traceback__
@@ -351,7 +349,7 @@ def calculate_LRA(basename, punchfile, lpunfile, results, pun=True, boxp=False, 
       checked = [False] * natoms
       checked[i] = True
       if fchrg[i] != 0 and (hbrdz[i] in ['SP2','SP']): 
-        distribute_charge(atom,fchrg[i])
+        checked,dchrg=distribute_charge(atom,fchrg[i],checked,hbrdz,dchrg)
     
     for i in range(len(dchrg)):
       if dchrg[i] > 0:

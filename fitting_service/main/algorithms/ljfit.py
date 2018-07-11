@@ -24,9 +24,6 @@ import math
 # References: DOI 10.1021/acs.jcim.6b00280
 
 def ljfit(ctx):
-    global tot_charmm_dyna_steps 
-    global charmm_equil_steps
-    global MAX_SUB
     tot_charmm_dyna_steps=150000 #150000 # number of MD steps in total (including equilibration)
     charmm_equil_steps=50000 #50000 # number of equilibration steps
     MAX_SUB=3 # max allowed number of subdivisions for TI calculations
@@ -72,8 +69,8 @@ def ljfit(ctx):
     ctx.set_running_status('Setting up run')
 
     # scale LJ parameters to trial values for this fitting step
-    inpdir = ctx.input_dir.name + "/"
-    scaled_par=run_scale_vdw(inpdir + slu, inpdir + top, inpdir + par, sigfac, epsfac, ctx.input_dir.name)
+    inpdir = ctx.input_dir.full_path + "/"
+    scaled_par=run_scale_vdw(inpdir + slu, inpdir + top, inpdir + par, sigfac, epsfac, inpdir)
 
     # set up and submit gas-phase calculation for vaporization enthalpy in "dens" folder
     ctx.log.info("writing input for gas phase calculation:")
@@ -109,17 +106,17 @@ def ljfit(ctx):
 
     tiElecGasJobScripts, tiElecSolvJobScripts, tiOutElecGasFileTrajread, tiOutElecSolvFileTrajread = \
                          write_ti_elec_inp(ctx,ti_elec_gas_inp_dir,ti_elec_solv_inp_dir,lmb0,lmb1,
-                         dlmbElec,top,slu,slv,lpun,scaled_par,slv_res,T)
+                         dlmbElec,top,slu,slv,lpun,scaled_par,slv_res,T,tot_charmm_dyna_steps,charmm_equil_steps)
 
     tiVDWGasJobScripts, tiOutVDWGasFile = \
                          write_ti_vdw_gas_inp(ctx,ti_vdw_gas_inp_dir,lmb0,lmb1,dlmbVDW,
-                         top,slu,slv,lpun,scaled_par,slv_res,T)
+                         top,slu,slv,lpun,scaled_par,slv_res,T,tot_charmm_dyna_steps,charmm_equil_steps)
 
     tiVDWSolvJobScripts, tiOutVDWSolvFile = \
                          write_ti_vdw_solv_inp(ctx,ti_vdw_solv_inp_dir,lmb0,lmb1,dlmbVDW,
-                         top,slu,slv,lpun,scaled_par,slv_res,T)
+                         top,slu,slv,lpun,scaled_par,slv_res,T,tot_charmm_dyna_steps,charmm_equil_steps)
 
-    write_ti_loop_str(ctx)
+    write_ti_loop_str(ctx,tot_charmm_dyna_steps,charmm_equil_steps)
 
 ####    dens_out_name="/home/wfit/FittingWizardWeb/fitting_service/data/2018-05-31_17-37-57-878275_luhq4/2018-05-31_17-37-57-885123_uNYv3/output/dens/density.out" #######
     ctx.set_running_status('submitting density calculation')
@@ -211,7 +208,7 @@ def ljfit(ctx):
              move(srcdir, str(ctx.run_out_dir.subdir(srcdir+"/../not_converged/").full_path))
              tmpScripts, tmpFiles = \
                             write_ti_vdw_gas_inp(ctx,ti_vdw_gas_inp_dir,lstart,lstop,dlmbVDW,
-                            top,slu,slv,lpun,scaled_par,slv_res,T)
+                            top,slu,slv,lpun,scaled_par,slv_res,T,tot_charmm_dyna_steps,charmm_equil_steps)
              tiVDWGasSubdivScripts.extend(tmpScripts)
              tiOutVDWGasSubdivFile.extend(tmpFiles)
        for i in range(0,len(tiOutVDWSolvFile)):
@@ -230,7 +227,7 @@ def ljfit(ctx):
              move(srcdir, str(ctx.run_out_dir.subdir(srcdir+"/../not_converged/").full_path))          
              tmpScripts, tmpFiles = \
                             write_ti_vdw_solv_inp(ctx,ti_vdw_solv_inp_dir,lstart,lstop,dlmbVDW,
-                            top,slu,slv,lpun,scaled_par,slv_res,T)
+                            top,slu,slv,lpun,scaled_par,slv_res,T,tot_charmm_dyna_steps,charmm_equil_steps)
              tiVDWSolvSubdivScripts.extend(tmpScripts)
              tiOutVDWSolvSubdivFile.extend(tmpFiles)
    
@@ -409,7 +406,7 @@ def create_charmm_submission_script(ctx,
                                                        mpi_executable,
                                                        mpi_flags,
                                                        scratch_dir_name,
-                                                       ctx.input_dir.name))
+                                                       ctx.input_dir.full_path))
 
 #################################################################################################
 
@@ -436,11 +433,11 @@ def create_charmm_twostep_submission_script(ctx,
                                                        mpi_executable,
                                                        mpi_flags,
                                                        scratch_dir_name,
-                                                       ctx.input_dir.name))
+                                                       ctx.input_dir.full_path))
 
 #################################################################################################
 
-def write_ti_elec_inp(ctx, ti_elec_gas_inp_dir, ti_elec_solv_inp_dir, lmb0, lmb1, dlmbElec, top, slu, slv, lpun, par, slv_res, T):
+def write_ti_elec_inp(ctx, ti_elec_gas_inp_dir, ti_elec_solv_inp_dir, lmb0, lmb1, dlmbElec, top, slu, slv, lpun, par, slv_res, T, tot_charmm_dyna_steps, charmm_equil_steps):
 
     if abs(int(round((lmb1-lmb0)/dlmbElec))-(lmb1-lmb0)/dlmbElec) > 0.000000001: # if lambda range not exactly divisible by delta_lambda
        ctx.log.info("The lambda range ("+str(lmb0)+" - "+str(lmb1)+") is not divisible by delta lambda for electrostatics "+str(dlmbElec)+" (remainder = "+str((lmb1-lmb0)%dlmbElec)+")\n")
@@ -503,7 +500,7 @@ def write_ti_elec_inp(ctx, ti_elec_gas_inp_dir, ti_elec_solv_inp_dir, lmb0, lmb1
 
 #################################################################################################
 
-def write_ti_vdw_gas_inp(ctx, ti_vdw_gas_inp_dir, lmb0, lmb1, dlmbVDW, top, slu, slv, lpun, par, slv_res, T):
+def write_ti_vdw_gas_inp(ctx, ti_vdw_gas_inp_dir, lmb0, lmb1, dlmbVDW, top, slu, slv, lpun, par, slv_res, T, tot_charmm_dyna_steps, charmm_equil_steps):
 
     if abs(int(round((lmb1-lmb0)/dlmbVDW))-(lmb1-lmb0)/dlmbVDW) > 0.000000001: # if lambda range not exactly divisible by delta_lambda
        ctx.log.info("The lambda range ("+str(lmb0)+" - "+str(lmb1)+") is not divisible by delta lambda for VDW "+str(dlmbVDW)+" (remainder = "+str((lmb1-lmb0)%dlmbVDW)+")\n")
@@ -533,7 +530,7 @@ def write_ti_vdw_gas_inp(ctx, ti_vdw_gas_inp_dir, lmb0, lmb1, dlmbVDW, top, slu,
 
 #################################################################################################
 
-def write_ti_vdw_solv_inp(ctx, ti_vdw_solv_inp_dir, lmb0, lmb1, dlmbVDW, top, slu, slv, lpun, par, slv_res, T):
+def write_ti_vdw_solv_inp(ctx, ti_vdw_solv_inp_dir, lmb0, lmb1, dlmbVDW, top, slu, slv, lpun, par, slv_res, T, tot_charmm_dyna_steps, charmm_equil_steps):
 
     if abs(int(round((lmb1-lmb0)/dlmbVDW))-(lmb1-lmb0)/dlmbVDW) > 0.000000001: # if lambda range not exactly divisible by delta_lambda
        ctx.log.info("The lambda range ("+str(lmb0)+" - "+str(lmb1)+") is not divisible by delta lambda for VDW "+str(dlmbVDW)+" (remainder = "+str(abs(int(round((lmb1-lmb0)/dlmbVDW))-(lmb1-lmb0)/dlmbVDW))+") ")
@@ -563,8 +560,7 @@ def write_ti_vdw_solv_inp(ctx, ti_vdw_solv_inp_dir, lmb0, lmb1, dlmbVDW, top, sl
 
 #################################################################################################
 
-def write_ti_loop_str(ctx):
-    global charmm_equil_steps, tot_charmm_dyna_steps
+def write_ti_loop_str(ctx, tot_charmm_dyna_steps, charmm_equil_steps):
     with ctx.input_dir.open_file("loop.str","w") as loop_str:
        loop_txt="""LABEL SNAP
 TRAJ READ
