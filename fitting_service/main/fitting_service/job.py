@@ -3,7 +3,7 @@ from logging import getLogger
 
 from toolkit import RepeatingTimer, Singleton
 from .file_acces import IdGenerator, StorageService
-from .job_managers import SingleNodeJobManagement, GridEngineJobManagement
+from .job_managers import SingleNodeJobManagement, GridEngineJobManagement, SlurmJobManagement
 from .settings import JOB_MANAGEMENT_TYPE, QSTAT_PATH, QSUB_PATH, QDEL_PATH
 
 
@@ -14,6 +14,9 @@ class JobsService(metaclass=Singleton):
 
         elif JOB_MANAGEMENT_TYPE == "GridEngineJobManagement":
             self.job_management_impl = GridEngineJobManagement(QSTAT_PATH, QSUB_PATH, QDEL_PATH)
+
+        elif JOB_MANAGEMENT_TYPE == "SlurmJobManagement":
+            self.job_management_impl = SlurmJobManagement(QSTAT_PATH, QSUB_PATH, QDEL_PATH)
 
     def start_job_synchronization(self):
         JobStatusUpdater(self.job_management_impl)
