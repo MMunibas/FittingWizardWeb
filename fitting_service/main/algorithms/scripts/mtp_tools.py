@@ -734,10 +734,6 @@ def Get_local_XYZ(AC,refkind,RC):
   
   nrefA = len(RC)
   
-  print(nrefA)
-  
-  print(RC)
-
   if nrefA not in [1,2,3,4]: 
     print('Number of reference atoms for the current atom is wrong')
     raise Exception('No. reference atoms for the current atom is not 1,2,3 or 4: '+str(nrefA))

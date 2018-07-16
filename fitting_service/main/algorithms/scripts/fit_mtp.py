@@ -380,7 +380,6 @@ def optimization(penalize,row, col, dat, esp, esp_chg, row_chg, col_chg, dat_chg
 
 # Calculate new coefficients with adapted threshold
         npenalties,row,col,dat,esp=add_penalties(coeffs_names,row_chg,col_chg,dat_chg,esp_chg,row_i,chrg_i,ncoeff_entries,x_comb_init,pref_cc,prefactor,npenalties,row,col,dat,esp)
-        print("npenalties = %i" %npenalties)
         A = sps.coo_matrix((dat,(row,col)),shape=(row_i+chrg_i+npenalties,len(coeffs_names))).tocsr()
         b = np.array(esp)
         x_i = iterative(A, b)
@@ -443,9 +442,6 @@ def opt_esp(list_files,penalize,rnk,ncoeff_entries,coeffs_names_all,coeffs_names
         if name[0:2] == "BI" or int(name[idx_+2:idx_+3]) <= rnk:
             if not (off_hyd == True and name[0] == 'H' and int(name[idx_+2:idx_+3]) > 0):
                 coeffs_names.append(name) 
-
-    print (coeffs_names_all)
-    print (coeffs_names)
 
     # Read coefficients; bookkeep row, column, and associated data points
     # of each element parsed.

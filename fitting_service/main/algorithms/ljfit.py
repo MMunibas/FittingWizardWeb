@@ -349,6 +349,8 @@ def parse_dens_out(ctx, slu, top, results, T, gas_out_name, dens_out_name):
                     gas_ener = float(words[2])
                 if words[1] == "constraints" and words[2] == "will":
                     ncons = float(words[0])
+                if words[0] == "Number" and words[1] == "of" and words[2] == "atoms":
+                    Nat = float(words[4])
 
     if status == 0:
         raise Exception("Job " + gas_out_name + " did not finish successfully")
