@@ -1,17 +1,15 @@
-#!/home/wfit/bin/python-3.6.5-env/bin/python3 
-
 from fitting_service.calculation_test import CalculationTest
 
 
 def run_mtp_fit_part1():
 
-    job_path = "/home/wfit/FittingWizardWeb/fitting_service/test-data/mike-test-mtp/"
+    job_path = "/data/wfit/FittingWizardWeb/fitting_service/testdata/mtp-co/"
 
     mtp_setup1 = CalculationTest()
     mtp_setup1.set_algorithm("mtpfit_part1")
     mtp_setup1.logger.info("run mtpfit algorithm")
 
-    xyzfile="HF.xyz"
+    xyzfile="co.xyz"
     mtp_setup1.set_calculation_params({"mtp_gen_filename_xyz": xyzfile, "mtp_gen_molecule_charge": "0"})
 
     mtp_setup1.add_input_file(job_path + xyzfile)

@@ -1,4 +1,4 @@
-from .cluster.unibasel_grid_engine import generate_charmm_setup_script, number_of_cpu_cores, charmm_executable, ld_path, \
+from .cluster.unibasel_slurm import generate_charmm_setup_script, number_of_cpu_cores, charmm_executable, ld_path, \
     env_path, mpi_executable, mpi_flags, scratch_dir_name, generate_charmm_twostep_setup_script
 from .toolkit import *
 from .charmm_input import *
@@ -7,6 +7,7 @@ from shutil import move
 import json
 import sys
 import math
+import time
 
 
 @register
@@ -145,6 +146,7 @@ def ljfit(ctx):
        ti_vdw_solv_job_id.append(ctx.schedule_job(tiVDWSolvJobScripts[i]))
        ctx.terminate_if_canceled()
 
+    time.sleep(15)
     ctx.wait_for_all_jobs()
 
 
@@ -240,7 +242,8 @@ def ljfit(ctx):
        for i in range(0,len(tiVDWSolvSubdivScripts)):
            ti_vdw_solv_job_id.append(ctx.schedule_job(tiVDWSolvSubdivScripts[i]))
            ctx.terminate_if_canceled()
-   
+  
+       time.sleep(5) 
        ctx.wait_for_all_jobs()
        iterations += 1
 
