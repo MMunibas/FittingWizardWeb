@@ -97,7 +97,6 @@ public class Main {
         } catch (IOException ex) {
         }
         BasicConfigurator.configure(app);
-
-        LOGGER.setLevel(Level.DEBUG);
+        Logger.getRootLogger().setLevel(Level.INFO);
     }
 }

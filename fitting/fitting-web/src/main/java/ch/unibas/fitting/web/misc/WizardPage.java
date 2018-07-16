@@ -12,14 +12,10 @@ import javax.inject.Inject;
  */
 public abstract class WizardPage extends WebPage {
 
-    protected final Logger LOGGER;
+    protected final static Logger LOGGER = Logger.getLogger(WizardPage.class);
 
     @Inject
     private CalculationManagementClient managementClient;
-
-    protected WizardPage() {
-        LOGGER = org.apache.log4j.Logger.getLogger(this.getClass());
-    }
 
     public UserSession session() {
         return UserSession.current();
