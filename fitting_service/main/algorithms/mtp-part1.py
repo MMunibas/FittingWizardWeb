@@ -1,7 +1,7 @@
 import json
 import os.path
 
-from .cluster.unibasel_slurm import generate_gau_setup_script, number_of_cpu_cores, \
+from .cluster.unibasel_grid_engine import generate_gau_setup_script, number_of_cpu_cores, \
     gau_login_script, scratch_dir_name, gau_formchk, gdma, cubegen, fieldcomp, babel
 from .gaussian_input import *
 from .scripts.calc_LRA import calculate_LRA
