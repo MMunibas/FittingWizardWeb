@@ -25,7 +25,7 @@ public class ShowFileContentPanel extends WizardPanel {
         try {
             content = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
         } catch (IOException ex) {
-            Logger.error("Error while reading " + file.getAbsolutePath() + " : " + ex);
+            LOGGER.error("Error while reading " + file.getAbsolutePath() + " : " + ex);
         }
 
         return content;

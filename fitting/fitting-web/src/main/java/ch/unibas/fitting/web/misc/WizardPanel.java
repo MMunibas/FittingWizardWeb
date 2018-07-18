@@ -1,5 +1,6 @@
 package ch.unibas.fitting.web.misc;
 
+import org.apache.log4j.Logger;
 import org.apache.wicket.markup.html.panel.Panel;
 
 /**
@@ -7,10 +8,9 @@ import org.apache.wicket.markup.html.panel.Panel;
  */
 public abstract class WizardPanel extends Panel {
 
-    protected final org.apache.log4j.Logger Logger;
+    protected final static Logger LOGGER = Logger.getLogger(WizardPanel.class);
 
     public WizardPanel(String id) {
         super(id);
-        Logger = org.apache.log4j.Logger.getLogger(this.getClass());
     }
 }

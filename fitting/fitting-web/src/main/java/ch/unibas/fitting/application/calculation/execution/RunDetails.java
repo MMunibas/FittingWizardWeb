@@ -4,7 +4,9 @@ import akka.actor.ActorRef;
 import com.google.gson.JsonObject;
 import io.vavr.control.Option;
 
-public class RunDetails {
+import java.io.Serializable;
+
+public class RunDetails implements Serializable {
 
     public final String executionId;
     public final String groupId;

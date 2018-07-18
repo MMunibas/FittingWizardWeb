@@ -3,8 +3,9 @@ package ch.unibas.fitting.web.ljfit.fitting.step3;
 import ch.unibas.fitting.application.directories.FileWithTag;
 
 import java.io.File;
+import java.io.Serializable;
 
-public class FileViewModel {
+public class FileViewModel implements Serializable {
     private final File file;
     private String groupName;
 

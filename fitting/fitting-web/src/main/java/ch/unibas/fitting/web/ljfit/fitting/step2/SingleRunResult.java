@@ -3,7 +3,9 @@ package ch.unibas.fitting.web.ljfit.fitting.step2;
 import ch.unibas.fitting.application.algorithms.ljfit.LjFitRun;
 import io.vavr.control.Option;
 
-public class SingleRunResult {
+import java.io.Serializable;
+
+public class SingleRunResult implements Serializable {
     boolean wasSuccessful, isLowestScore;
     String dirName;
     Double _eps, _sigma, _VDWGAS, _MTPGAS, _MTPSOL, _VDWSOL, _GASTOTAL, _SOLTOTAL, _calcdeltaG, _expdeltaG, _calcdeltaH, _expdeltaH, _calcdensity, _expdensity, _deltaG, _deltaH, _density, _Score;

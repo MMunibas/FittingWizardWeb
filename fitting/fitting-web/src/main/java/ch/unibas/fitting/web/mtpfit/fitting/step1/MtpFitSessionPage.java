@@ -26,6 +26,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import javax.inject.Inject;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -36,7 +37,7 @@ import java.util.stream.Collectors;
  */
 public class MtpFitSessionPage extends HeaderPage {
 
-    private static class Rank {
+    private static class Rank implements Serializable {
         private String _name;
         private int _rank;
 

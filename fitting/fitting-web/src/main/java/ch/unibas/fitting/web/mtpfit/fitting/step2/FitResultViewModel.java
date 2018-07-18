@@ -3,12 +3,13 @@ package ch.unibas.fitting.web.mtpfit.fitting.step2;
 import ch.unibas.fitting.application.algorithms.mtpfit.ChargeValue;
 import ch.unibas.fitting.application.algorithms.mtpfit.FitResult;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * Created by tschmidt on 17.06.2016.
  */
-public class FitResultViewModel {
+public class FitResultViewModel implements Serializable {
     private final String atomType;
     private HashMap<String, ChargeValue> values = new HashMap<>();
 
