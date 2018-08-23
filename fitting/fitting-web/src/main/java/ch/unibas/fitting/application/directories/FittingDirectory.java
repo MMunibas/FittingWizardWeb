@@ -4,12 +4,13 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.io.Serializable;
 
 /**
  * Created by mhelmer-mobile on 19.06.2016.
  */
-abstract class FittingDirectory {
-    protected final Logger LOGGER;
+abstract class FittingDirectory implements Serializable {
+    protected static final Logger LOGGER  = Logger.getLogger(FittingDirectory.class);
 
     protected final String username;
     private final File directory;
@@ -17,7 +18,6 @@ abstract class FittingDirectory {
     protected FittingDirectory(String username,
                                File directory) {
         this.username = username;
-        LOGGER = Logger.getLogger(getClass());
         directory.mkdirs();
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException("Given directory does not exist " + directory.getAbsolutePath());

@@ -9,12 +9,14 @@
 package ch.unibas.fitting.application.algorithms.mtpfit;
 
 
+import java.io.Serializable;
+
 /**
 * User: mhelmer
 * Date: 11.12.13
 * Time: 19:47
 */
-public class ChargeValue {
+public class ChargeValue implements Serializable {
     private final String atomType;
     private final String multipoleComponent;
     private final double value;
