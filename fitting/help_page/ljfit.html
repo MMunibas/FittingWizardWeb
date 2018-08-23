@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Fitting Wizard Help</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Style the side navigation */
+.sidenav {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #a8bde0;
+    overflow-x: hidden;
+}
+
+
+/* Side navigation links */
+.sidenav a {
+    color: black;
+    padding: 4px;
+    text-indent: 20px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color on hover */
+.sidenav a:hover {
+    color: white;
+}
+
+.rightside {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    background-color: #ffffff;
+    overflow-x: hidden;
+}
+
+/* Style the content */
+.content {
+    margin-left: 300px;
+    padding-left: 20px;
+    word-wrap: break-word;
+    width: 900px;
+}
+</style>
+  </head>
+  <body dir="ltr" lang="en-GB">
+    <div class="sidenav"> <br>
+      <br>
+      <br>
+      <a href="index.html">1. Overview</a> <a href="mtpfit.html">2. MTP
+        Fit</a> <a href="ljfit.html">3. LJ Fit</a><br>
+    </div>
+    <div class="content">
+      <p style="margin-bottom: 0in; font-weight: normal" align="center"><font
+          face="Liberation Sans, sans-serif"><font style="font-size:
+            28pt" size="6">Fitting Web 2.0.1: Help</font></font></p>
+      <br>
+      <font size="+1"><b>Contents:</b></font><br>
+      <font size="+1">3. &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <a
+          href="#3._LJ_Fit">LJ Fit</a><br>
+        3.1 &nbsp;&nbsp;&nbsp; &nbsp; <a
+          href="#3.1_Debugging_crashed_grid_points">Debugging crashed
+          grid points</a></font><br>
+      <br>
+      <div id="MTP Fit" dir="ltr">
+        <p style="margin-bottom: 0in; font-weight: normal" align="left"><font
+            face="Liberation Sans, sans-serif"><font style="font-size:
+              24pt" size="6"><a name="3._LJ_Fit"></a>3. LJ Fit</font></font></p>
+        <p style="margin-bottom: 0in; font-weight: normal" align="left"><font
+            face="Liberation Sans, sans-serif"><font style="font-size:
+              14pt" size="4">Lennard-Jones fitting takes place using a
+              grid-based approach. The approach used is determined by
+              the large computational expense involved in calculating
+              the y-data (in particular the solvation free energies)
+              required to score each set of parameters. The first
+              restriction that is used to save time is to reduce the
+              dimensionality of the fitting problem. This is achieved by
+              scaling all the initial Lennard Jones parameters for the
+              molecule of interest by a single scaling factor "λσ", and
+              all of the Lennard Jones&nbsp; ε parameters by another
+              scaling factor "λε".<br>
+            </font></font></p>
+        <p style="margin-bottom: 0in; font-weight: normal" align="left"><font
+            face="Liberation Sans, sans-serif"><font style="font-size:
+              14pt" size="4">As no analytical gradients are available,
+              the next time-saving measure is to use a simple grid-based
+              fitting approach that doesn't require numerical gradients
+              to be calculated, where different scaling factors are
+              applied across a grid (e.g. a 3x3 grid where λσ= {0.9,
+              1.0, 1.1}, λε= {0.9, 1.0, 1.1}). The best result is chosen
+              from the grid, or the fit can be further refined by
+              creating a finer grid around the best point in the first
+              grid. Even this stripped-down fitting approach can be
+              expected to take of the order of days to complete.<br>
+            </font></font></p>
+        <p style="margin-bottom: 0in; font-weight: normal" align="left"><font
+            face="Liberation Sans, sans-serif"><font style="font-size:
+              14pt" size="4">The basic workflow for Lennard-Jones
+              fitting in the fitting wizard is as follows:</font></font></p>
+        <p style="margin-bottom: 0in" align="left"><br>
+        </p>
+        <ol>
+          <li>
+            <p style="margin-bottom: 0in; font-weight: normal"
+              align="left"> <font face="Albany, sans-serif"><font
+                  style="font-size: 14pt" size="4"><a
+                    href="#Set_up_an_equilibrated_multipolar_system"><font
+                      color="#3366ff">Set up an equlibrated multipolar
+                      system</font></a><br>
+                </font></font></p>
+          </li>
+          <li>
+            <p style="margin-bottom: 0in; font-weight: normal"
+              align="left"> <font face="Albany, sans-serif"><font
+                  style="font-size: 14pt" size="4"><a
+                    href="#Upload_supporting_CHARMM_files"><font
+                      color="#3366ff">Upload supporting CHARMM files</font></a><br>
+                </font></font></p>
+          </li>
+          <li>
+            <p style="margin-bottom: 0in; font-weight: normal"
+              align="left"> <font face="Albany, sans-serif"><font
+                  style="font-size: 14pt" size="4"><a
+                    href="#Enter_reference_data_values"><font
+                      color="#3366ff">Enter reference data values /
+                      simulation parameters</font></a><br>
+                </font></font></p>
+          </li>
+          <li>
+            <p style="margin-bottom: 0in; font-weight: normal"
+              align="left"> <font face="Albany, sans-serif"><font
+                  style="font-size: 14pt" size="4"><a
+                    href="#Select_point_or_grid_parameters"><font
+                      color="#3366ff">Select point or grid parameters
+                      for grid-based parameter fitting</font></a><br>
+                </font></font></p>
+          </li>
+          <li>
+            <p style="margin-bottom: 0in; font-weight: normal"
+              align="left"> <a
+                href="#Inspect_fitting_results_and_define_grid"><font
+                  face="Albany, sans-serif" color="#3366ff"><font
+                    style="font-size: 14pt" size="4">Inspect fitting
+                    results and define grid for further refinement as
+                    necessary</font></font></a></p>
+          </li>
+        </ol>
+        <p style="margin-bottom: 0in" align="left"><br>
+        </p>
+        <p style="margin-bottom: 0in; font-weight: normal" align="left"><font
+            face="Liberation Sans, sans-serif"><font style="font-size:
+              14pt" size="4">In more detail:</font></font></p>
+        <p style="margin-bottom: 0in" align="left"><br>
+        </p>
+        <ol>
+          <li>
+            <p style="margin-top: 0.17in; page-break-after: avoid"><font
+                face="Albany, sans-serif"><font style="font-size: 14pt"
+                  size="4"><font color="#3366ff"><a
+                      name="Set_up_an_equilibrated_multipolar_system"></a>Set
+
+
+
+
+
+
+
+                    up an equilibrated multipolar system</font><br>
+                </font></font></p>
+            <p style="margin-bottom: 0in; font-weight: normal"
+              align="left"><font face="Liberation Sans, sans-serif"><font
+                  style="font-size: 14pt" size="4">This can be done
+                  using a tool such as the CHARMM GUI to save time. The
+                  Fitting Wizard expects a single multipolar solute
+                  molecule solvated in a periodic TIP3P water box, and
+                  to save computing resources used by the wizard it
+                  currently requires this system to have been fully
+                  equilibrated before files are uploaded. To preserve
+                  equilibration a CHARMM "restart" file is also
+                  required, to avoid reassigning random velocities.</font></font></p>
+            <font face="Liberation Sans, sans-serif"><font
+                style="font-size: 14pt" size="4"> </font></font>
+            <p style="margin-bottom: 0in; font-weight: normal"
+              align="left"><font face="Liberation Sans, sans-serif"><font
+                  style="font-size: 14pt" size="4"> A final requirement
+                  is to use a tool such as "packmol" to pack a box with
+                  replicas of the solute molecule, representing the
+                  solute in liquid form. This box will be used to run
+                  simulations of the pure liquid in order to determine
+                  the liquid's density and vaporization enthalpy.<br>
+                  <br>
+                </font></font> </p>
+          </li>
+          <li><font size="4"><font face="Albany, sans-serif"><font
+                  color="#3366ff"><a
+                    name="Upload_supporting_CHARMM_files"></a>Upload
+                  supporting CHARMM files</font><br clear="all">
+                <br clear="all">
+              </font></font><font face="Liberation Sans, sans-serif"><font
+                style="font-size: 14pt" size="4"><img src="lj-1.png"
+                  alt="Screenshot 1" width="400" height="486"><br>
+                <br>
+                The required files are the CHARMM parameter file used
+                for equilibration, the corresponding topology (rtf)
+                file, a PDB file containing the molecule for which you
+                are fitting parameters (with coordinates taken from the
+                final step of your equilibration), a PDB file containing
+                the solvent only with solute molecule removed, a "pure
+                liquid" PDB file containing the coordinates from packmol
+                used to create a box of pure liquid from replicas of the
+                solute molecule, the corresponding CHARMM MTPL module
+                lpun file containing multipole moments for the solute
+                molecule (also used for your equilibration, probably
+                generated using the MTP-Fit module of the Fitting
+                Wizard), and the restart file produced at the end of
+                your equilibration.<br>
+                <br>
+              </font></font> <font face="Liberation Sans, sans-serif"><font
+                style="font-size: 14pt" size="4"> </font></font></li>
+          <li><font face="Albany, sans-serif" color="#3366ff"><font
+                style="font-size: 14pt" size="4"><a
+                  name="Enter_reference_data_values"></a>Enter reference
+                data values / simulation parameters</font></font><br
+              clear="all">
+            <font face="Liberation Sans, sans-serif"><font
+                style="font-size: 14pt" size="4"><br clear="all">
+                Experimental data entered here are used as target
+                "y-data" to evaluate the score in subsequent fitting.
+                The experimental density refers to the density of the
+                molecule to be fitted in pure liquid form (this assumes
+                that the substance forms a liquid at simulation
+                temperature). The vaporization enthalpy again refers to
+                the molecule in pure liquid form. The hydration free
+                energy refers to the free energy of solvation of a
+                single molecule in pure liquid water, as estimated by
+                thermodynamic integration calculations in CHARMM (see
+                publication cited in "Overview" for details).<br>
+                <p style="margin-bottom: 0in; font-weight: normal"
+                  align="left">The "lambda" window size parameters
+                  determine the thermodynamic integration window sizes
+                  for electrostatic and Lennard-Jone (van der Waals)
+                  calculations. The simulation temperature applies to
+                  both pure liquid and thermodynamic integration
+                  calculations, so if the TIP3P water model is to be
+                  used then a value of around 298 K is safest.<br>
+                </p>
+                <p style="margin-bottom: 0in; font-weight: normal"
+                  align="left">Clicking "Start new session" launches the
+                  fitting session overview page.</p>
+              </font></font></li>
+          <br>
+          <li><font face="Albany, sans-serif"><font style="font-size:
+                14pt" size="4"><font color="#3366ff"><a
+                    name="Select_point_or_grid_parameters"></a>Select
+                  point or grid parameters for grid-based parameter
+                  fitting</font><br>
+              </font></font>
+            <p style="margin-bottom: 0in; font-weight: normal"
+              align="left"><font size="4"><font face="Liberation Sans,
+                  sans-serif"><img src="lj-2.png" alt="Screenshot 2"
+                    width="680" height="437"><br>
+                  <br>
+                  This page shows an overview of all fitting grid points
+                  calculated so far (if any) in a table view. You can
+                  either submit a single, custom point (useful for
+                  checking performance of initial parameters or refining
+                  the fit after running a grid), or submit a grid of λε
+                  and λσ points using "Run grid values". </font></font></p>
+            <font size="4"><font face="Liberation Sans, sans-serif">
+                <p style="margin-bottom: 0in; font-weight: normal"
+                  align="left">The "run grid values" pop-up generates
+                  the fitting grid described above. An <i>n</i> x <i>m</i>
+                  grid with <i>n</i> λε points and <i>m</i> λσ points
+                  centered at [<font size="4"><font face="Liberation
+                      Sans, sans-serif">λε=</font></font>1.0, λσ=1.0] is
+                  generated by setting the "Number λε"and "Number λσ"
+                  values appropriately. The step-size between grid
+                  points is set using Δ λσ, so λε = {0.95, 1.00, 1.05}
+                  would be created using "Number λε = 3" and "Δ λε =
+                  0.05". Click "Generate values" to create the
+                  corresponding grid. You are also given the opportunity
+                  to change the window size for thermodynamic
+                  integration calculations (originally set in step 3)
+                  for both the electrostatic and van der Waals terms
+                  independently. Once all parameters are set correctly,
+                  click "Run grid" to submit calculations to the
+                  cluster. <br>
+                </p>
+              </font></font> <font size="4"><font face="Liberation
+                Sans, sans-serif">
+                <p style="margin-bottom: 0in; font-weight: normal"
+                  align="left">The "Run custom values" button is used to
+                  run a single grid point with any <font size="4"><font
+                      face="Liberation Sans, sans-serif">λε</font></font>,
+                  λσ value. Again the thermodynamic integration wind<font
+                    face="Liberation Sans, sans-serif">ow sizes can be
+                    redefined, and the calcu<font face="Liberation Sans,
+                      sans-serif">lations are launched by cli<font
+                        face="Liberation Sans, sans-serif">cking
+                        "Execute single run"</font></font></font><br>
+                  <font size="4"><font face="Liberation Sans,
+                      sans-serif"> </font></font></p>
+              </font></font><font size="4"><font face="Liberation Sans,
+                sans-serif">
+                <p style="margin-bottom: 0in; font-weight: normal"
+                  align="left">Note that a large number of calculations
+                  will be launched as there are many TI windows to be
+                  evaluated, and that if the Lennard-Jones TI windows
+                  are set too large then they will not converge, the
+                  windows will automatically by subdivided and the
+                  smaller windows must then also be evaluated. If the
+                  windows are set too small then an unnecessarily large
+                  number of windows must be evaluated. The job ids from
+                  the running jobs will be displayed under the progress
+                  bar after launching calculations, allowing you to
+                  track their progress on the server or cluster where
+                  the jobs are submitted by the fitting wizard.</p>
+                <br>
+              </font></font></li>
+          <li><font face="Albany, sans-serif" color="#3366ff"><font
+                style="font-size: 14pt" size="4"><a
+                  name="Inspect_fitting_results_and_define_grid"></a>Inspect
+
+
+
+
+
+
+
+                fitting results and define grid for further refinement
+                as necessary</font></font><font face="Albany,
+              sans-serif"><font style="font-size: 14pt" size="4"><br>
+              </font></font>
+            <p style="margin-bottom: 0in;" align="left"><font size="4"><font
+                  face="Liberation Sans, sans-serif"><img src="lj-3.png"
+                    alt="Screenshot 3" width="780" height="210"><br>
+                  <br>
+                  After all pure liquid, gas phase and thermodynamic
+                  integration runs have successfully completed, the user
+                  can return to the "LJ Fitting Session" page. Results
+                  for each grid point are shown in the table, with the
+                  best result (lowest "score") highlighted in bold. Any
+                  entries highlighted red indicate a problem with the
+                  run, usually meaning that some part of the run has
+                  crashed. Grid points can be deleted, removing the
+                  associated files from the server by using the trash
+                  icon. Additional calculations can be performed using
+                  the "Run grid values" and "Run custom values" buttons
+                  as before. To help with debugging, the user can also
+                  access all files generated by the fitting wizard
+                  during the calculations using the file icon at the
+                  left side of each grid point's data. This can be
+                  useful to identify the cause of a crash, such as </font></font><font
+                size="4"><font face="Liberation Sans, sans-serif">λε or
+                  λσ moving out of the reasonable range, or a defective
+                  file being uploaded at the start of the fit.<br>
+                </font></font></p>
+          </li>
+        </ol>
+        <font face="Liberation Sans, sans-serif"><font face="Liberation
+            Sans, sans-serif"> </font></font></div>
+      <font style="font-size: 14pt" size="4">
+        <div id="LJ Fit" dir="ltr">
+          <p style="margin-bottom: 0in" align="left"><font
+              face="Liberation Sans, sans-serif"><font style="font-size:
+                24pt" size="6"><a
+                  name="3.1_Debugging_crashed_grid_points"></a>3.1
+                Debugging crashed grid points<br>
+              </font></font><font size="4"><br>
+              After a failed run the most important diagnostic step is
+              to identify which part of the run failed and to download
+              the corresponding files. Messages from the scripts may be
+              printed to the "job progress" screen (screen with progress
+              bar), helping to pin down where the calculation crashed.
+              If you have access to the log files of the fitting service
+              (running on the cluster), then these may provide more
+              detailed information, as well as the log files for the UI
+              which are written on the UI server. Make a note of the
+              "Calculation id" from the job progress page as this will
+              help you to find the correct folders on the server if
+              necessary.</font><br>
+          </p>
+          <p style="margin-bottom: 0in" align="left">Even without access
+            to the logs and without a meaningful error message from the
+            job progress page, the necessary information may be found by
+            continuing to the "LJ Fitting Session" screen. The failed
+            grid point will be highlighted in red, and the associated
+            files may be accessible using the file browser icon to the
+            left of the table. The output files can be browsed to
+            identify which job(s) did not terminate successfully and
+            why.<br>
+          </p>
+          <p style="margin-bottom: 0in" align="left">If no files were
+            uploaded, the files can still be found on either the cluster
+            or the server hosting the UI. On the cluster you should look
+            inside the "fitting_service/data" folder in the installation
+            directory of the fitting service. The folders here are named
+            by calculation id, so if you were able to note this from the
+            jobs status page (page with the progress bar) after your
+            jobs finished running then you can use it to identify which
+            folder contains your job files. If you don't know the
+            calculation id, the first half of the calculation ids are
+            based on the time that you first created the calculation by
+            starting a new "LJ Fit" session (the time that you first
+            uploaded the files for this LJ fit), so use this information
+            to identify which folders are most likely. To check that you
+            have identified the correct folder, browse to the "input"
+            subfolder and check that the files you uploaded are there.
+            If so then check the other folder with automatically
+            generated run id in the same folder as "input" to find
+            subfolders containing the output from your jobs. Note that
+            upon job completion these files may have been copied to the
+            UI and deleted, in which case you will need to fetch them
+            there instead.<br>
+          </p>
+          <p style="margin-bottom: 0in" align="left">On the server
+            hosting the UI you can similarly check in the installation
+            directory of the UI service (named e.g. fitting-web-2.0.1),
+            which contains the "bin" folder from which the UI is
+            launched. This directory also contains a subfolder named
+            "data", which in turn contains a subfolder corresponding to
+            each username with an open session. The relevant files, if
+            they have been uploaded from the cluster, will be in
+            subdirectories of this folder.<br>
+          </p>
+          <p style="margin-bottom: 0in" align="left"><a
+              href="mtpfit.html/"><font face="Liberation Sans,
+                sans-serif"><font style="font-size: 14pt" size="4"><span
+                    style="font-weight: normal">Previous</span></font></font></a><span
+              style="font-weight: normal">: </span><font
+              style="font-size: 14pt" size="4"><span style="font-weight:
+                normal">MTP</span></font><span style="font-weight:
+              normal"> Fit</span></p>
+        </div>
+      </font></div>
+    <font style="font-size: 14pt" size="4"><font style="font-size: 14pt"
+        size="4"> <font size="4"> <font face="Liberation Sans,
+            sans-serif"><font style="font-size: 14pt" size="4"><font
+                size="4"> </font></font></font> </font> </font></font>
+  </body>
+</html>

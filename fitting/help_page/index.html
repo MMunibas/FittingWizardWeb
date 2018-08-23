@@ -1,4 +1,141 @@
-<h1>Fitting Web Help</h1>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
 
-<p>Welcome!!</p>
-<p><a href="child.html">Go to another page</a></p>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Fitting Wizard Help</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Style the side navigation */
+.sidenav {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #a8bde0;
+    overflow-x: hidden;
+}
+
+
+/* Side navigation links */
+.sidenav a {
+    color: black;
+    padding: 4px;
+    text-indent: 20px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color on hover */
+.sidenav a:hover {
+    color: white;
+}
+
+/* Style the content */
+.content {
+    margin-left: 300px;
+    padding-left: 20px;
+    word-wrap: break-word;
+    width: 900px;
+}
+</style>
+  </head>
+  <body dir="ltr" lang="en-GB">
+    <div class="sidenav"> <br>
+      <br>
+      <br>
+      <a href="index.html">1. Overview</a> <a href="mtpfit.html">2. MTP
+        Fit</a> <a href="ljfit.html">3. LJ Fit</a>
+    </div>
+    <div class="content">
+      <p style="margin-bottom: 0in; font-weight: normal" align="center"><font
+          face="Liberation Sans, sans-serif"><font style="font-size:
+            28pt" size="6">Fitting
+            Web 2.0.1: Help</font></font></p>
+      <p style="margin-bottom: 0in" align="left"><br>
+      </p>
+      <p style="margin-bottom: 0in" align="left"><br>
+      </p>
+      <div id="Overview" dir="ltr"><a name="Overview|region"></a>
+        <p style="margin-bottom: 0in; font-weight: normal" align="left"><a
+            name="Intro"></a> <font face="Liberation Sans, sans-serif"><font
+              style="font-size: 24pt" size="6">Overview</font></font></p>
+        <p style="margin-bottom: 0in" align="left"><br>
+        </p>
+        <p style="margin-bottom: 0in; font-weight: normal" align="left"><font
+            face="Liberation Sans, sans-serif"><font style="font-size:
+              14pt" size="4">The Fitting Wizard aims to provide a
+              complete, automated workflow to obtain multipole moments
+              and Lennard-Jones parameters that can subsequently be used
+              in molecular dynamics simulations with the CHARMM software
+              package. The process is divided into two independent
+              stages, so that fitting of only multipole moments or only
+              Lennard-Jones parameters is also possible. The two fitting
+              processes are described in more detail in the
+              corresponding subsections.<br>
+            </font></font></p>
+        <p style="margin-bottom: 0in; font-weight: normal" align="left"><font
+            face="Liberation Sans, sans-serif"><font style="font-size:
+              14pt" size="4">A copy of the fitting wizard software can
+              be obtained from the GIT repository (<a
+                href="https://github.com/MMunibas/FittingWizardWeb">https://github.com/MMunibas/FittingWizardWeb</a>).
+              You should download the latest branch and follow
+              installation instructions on the group wiki: <a
+href="http://pc-studix0/wiki-meuwly/index.php/Group_Github#Web_Fitting_Environment">http://pc-studix0/wiki-meuwly/index.php/Group_Github#Web_Fitting_Environment</a>.
+              It runs as two separate components, ideally running on
+              separate servers. The web UI contains the interface that
+              is used to upload files, enter reference data and
+              simulation parameters, store final files and display
+              results. The API is designed to run on a server or cluster
+              and handles job management, accepting files and new
+              sessions from the UI and using python scripts supplied by
+              developers in the Meuwly group to run the corresponding
+              calculations, then return the results to the UI.<br>
+            </font></font></p>
+        <p style="margin-bottom: 0in" align="left"><font
+            face="Liberation Sans, sans-serif"><font style="font-size:
+              14pt" size="4"><span style="font-weight: normal">For more
+                details on how you can set up a multipolar simulation in
+                CHARMM once you have obtained your parameters, please
+                see the <a
+href="https://www.charmm.org/charmm/documentation/by-version/c42b1/params/doc/mtpl/">CHARMM
+
+                  MTPL documentation</a>. For scientific details on the
+                fitting method or to cite this tool, please refer to the
+                <a
+                  href="https://pubs.acs.org/doi/10.1021/acs.jcim.6b00280">original
+
+                  publication</a> (DOI: 10.1021/acs.jcim.6b00280).<br>
+              </span></font></font></p>
+      </div>
+      <p style="margin-bottom: 0in" align="left"><font face="Liberation
+          Sans, sans-serif"><font style="font-size: 14pt" size="4"><span
+              style="font-weight: normal"><b>Prerequisite </b><b>experience:</b>
+              Note that the Fitting Wizard is designed to manage the
+              many requisite Gaussian, CHARMM, GDMA and other
+              calculations for you to greatly simplify the workflow, but
+              you will still need a good working knowledge of these
+              programs to obtain reliable results. Responsibility to
+              interpret results correctly and check that generated input
+              and output files are meaningful still lies with the user.<br>
+            </span></font></font>
+      </p>
+      <p style="margin-bottom: 0in" align="left"><font face="Liberation
+          Sans, sans-serif"><font style="font-size: 14pt" size="4"><a
+              href="mtpfit.html">Next</a>:
+            MTP Fit</font></font></p>
+    </div>
+  </body>
+</html>
