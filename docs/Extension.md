@@ -1,6 +1,6 @@
 # Extending the Fitting Wizard
 Release: 2.0.1  
-Author: Mike Devereux
+File Author: Mike Devereux
 
 The following sections describe how the Fitting Wizard may be extended by scientific developers (developers working on the scientific algorithms or making minor modifications to the web UI to add new properties, rather than developers making larger changes to the UI or changes to the API).
 

@@ -2,7 +2,7 @@
 # FittingWizard
 ----------------------------------------------
 Release: 2.0.1
-Author: Mike Devereux
+File Author: Mike Devereux
 
 A Java-based Web application with separate Python API that assists the user in performing forcefield parameter optimization by using Quantum Chemistry and Molecular Dynamics software.
 
