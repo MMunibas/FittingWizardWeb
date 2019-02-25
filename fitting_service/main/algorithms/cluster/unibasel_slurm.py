@@ -1,20 +1,24 @@
 import sys
 
-script_path = "/data/wfit/FittingWizardWeb/fitting_service/main/algorithms/scripts/"
+# These are cluster-specific, to be defined by sys admin:
 
-charmm_executable = "/data/wfit/charmm/charmm-intel2018"
-mpi_executable = "/usr/mpi/intel/openmpi-1.10.4-hfi/bin/mpirun"
+script_path = "/home/wfit/FittingWizardWeb/fitting_service/main/algorithms/scripts/"
+
+charmm_executable = "/home/wfit/charmm/charmm-intel2018"
+mpi_executable = "/opt/intel/openmpi-3.1.1/bin/mpirun"
 mpi_flags = "--bind-to none"
 scratch_dir_name = "scratch"
-ld_path = "/usr/mpi/intel/openmpi-1.10.4-hfi/lib64:/opt/intel/l_comp_lib_2018.3.222_comp.for_redist/compilers_and_libraries_2018.3.222/linux/compiler/lib/intel64_lin/"
-env_path = "/usr/mpi/intel/openmpi-1.10.4-hfi/bin:/opt/cluster/programs/charmm/c42b2/exec/gnu_M/intel/charmm:/opt/TurboVNC/bin:/opt/cluster/admin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/areca/sbin/:/opt/c3-4:/home/devereux/.local/bin:/home/devereux/bin"
+ld_path = "/opt/intel/mkl/include:/opt/intel/mkl/lib/intel64:/opt/intel/openmpi-3.1.1/lib:/opt/intel/openmpi-3.1.1/include:/opt/intel/compilers_and_libraries_2018.3.222/linux/compiler/lib/intel64_lin"
+env_path = "/opt/intel/openmpi-3.1.1/bin:/opt/intel/mkl/bin:/opt/cluster/programs/charmm/c43b1/build/cmake:/opt/c3-4"
 number_of_cpu_cores = 8
 
-gau_login_script = "/opt/cluster/programs/g09_d.01/g09/bsd/g09.login.bash"
-gau_formchk = "/opt/cluster/programs/g09_d.01/g09/formchk"
-gdma = "/data/wfit/bin/gdma"
-cubegen = "/opt/cluster/programs/g09_d.01/g09/cubegen"
-babel = "/usr/bin/babel"
+gau_login_script = "/opt/cluster/programs/g09/g09_d.01/g09/bsd/g09.login.bash"
+gau_formchk = "/opt/cluster/programs/g09/g09_d.01/g09/formchk"
+gdma = "/home/wfit/bin/gdma-2.2.04/bin/gdma"
+cubegen = "/opt/cluster/programs/g09/g09_d.01/g09/cubegen"
+babel = "/bin/babel"
+
+# These are bundled with the source, can leave as they are:
 
 fieldcomp = script_path+"/fieldcomp"
 

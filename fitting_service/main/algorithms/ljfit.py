@@ -1,8 +1,9 @@
-from .cluster.unibasel_grid_engine import generate_charmm_setup_script, number_of_cpu_cores, charmm_executable, ld_path, \
+from .cluster.unibasel_slurm import generate_charmm_setup_script, number_of_cpu_cores, charmm_executable, ld_path, \
     env_path, mpi_executable, mpi_flags, scratch_dir_name, generate_charmm_twostep_setup_script
 from .toolkit import *
 from .charmm_input import *
 from .scripts.run_scale_vdw import *
+from .scripts.run_expand_lpun import *
 from shutil import move
 import json
 import sys
@@ -88,12 +89,27 @@ def ljfit(ctx):
     job_id = ctx.schedule_job(ctx.input_dir.full_path + "/dens/run-gas.sh")
 
     # set up pure liquid calculation for vaporization enthalpy and density in "dens" folder
+
+    # expand lpun file for density calculation (MTPL routine requires each molecule to be defined separately
+    # in the lpun file, the uploaded lpun is for one molecule only). First determine no. residues in pure liquid:
+    nmol="1"
+    with ctx.input_dir.open_file(pureliq, "r") as pdb:
+        for line in pdb:
+            words = line.split()
+            if len(words) > 3:
+               if words[0].upper() == "ATOM":
+                   nmol = line[23:26]
+        ctx.log.info("Number of molecules in pure liquid box: " + nmol)
+    pdb.close()
+
+    liquid_lpun=run_expand_lpun(inpdir + lpun, nmol, inpdir)
+
     ctx.log.info("writing input for pure liquid calculation:")
     dens_inp_dir = ctx.input_dir.subdir("dens").full_path
     dens_inp_name = dens_inp_dir + "/density.inp"
     dens_out_dir = ctx.run_out_dir.subdir("dens").full_path
     dens_out_name = dens_out_dir + "/density.out"
-    dens_inp_file = write_dens_inp(ctx, dens_inp_name, top, scaled_par, pureliq, lpun, T).name
+    dens_inp_file = write_dens_inp(ctx, dens_inp_name, top, scaled_par, pureliq, liquid_lpun, T).name
 
     ctx.log.info("submitting density calculation:")
     create_charmm_submission_script(ctx, "run.sh", dens_inp_file, dens_out_name, "dens")

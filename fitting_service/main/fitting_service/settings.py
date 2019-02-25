@@ -4,10 +4,10 @@
 #QDEL_PATH = "C:\\Users\\eknecht\\Desktop\\grid_engine_mock\\qdel"
 
 
-JOB_MANAGEMENT_TYPE = "GridEngineJobManagement"
-QSUB_PATH = "/opt/sge/bin/linux-x64/qsub"
-QSTAT_PATH = "/opt/sge/bin/linux-x64/qstat"
-QDEL_PATH = "/opt/sge/bin/linux-x64/qdel"
+JOB_MANAGEMENT_TYPE = "SlurmJobManagement"
+QSUB_PATH = "/bin/sbatch"
+QSTAT_PATH = "/bin/sacct"
+QDEL_PATH = "/bin/scancel"
 
 FITTING_SERVICE_URI = 'http://localhost'
 FITTING_SERVICE_HOST = '0.0.0.0'
