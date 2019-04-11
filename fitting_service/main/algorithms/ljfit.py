@@ -202,7 +202,7 @@ def ljfit(ctx):
        all_converged=True
        if iterations > MAX_SUB:
           ctx.log.info("Subdivided too many times ("+str(iterations)+"). Please check output files and reduce lambda_vdw TI window size if necessary. Exiting.")
-          raise Exception('Subdivided too many times. Limit is '+MAX_SUB)
+          raise Exception('Subdivided too many times. Limit is '+str(MAX_SUB))
        dlmbVDW /= 2.0
        tiVDWGasSubdivScripts = []
        tiOutVDWGasSubdivFile = []
@@ -211,6 +211,7 @@ def ljfit(ctx):
        tmpScripts = []
        tmpFiles = []
        for i in range(0,len(tiOutVDWGasFile)):
+          check_charmm_status(ctx,tiOutVDWGasFile[i])
           converged, dg_lambda = parse_ti_out(ctx,tiOutVDWGasFile[i])
           if converged:
              dg_solv += dg_lambda
@@ -231,6 +232,7 @@ def ljfit(ctx):
              tiVDWGasSubdivScripts.extend(tmpScripts)
              tiOutVDWGasSubdivFile.extend(tmpFiles)
        for i in range(0,len(tiOutVDWSolvFile)):
+          check_charmm_status(ctx,tiOutVDWSolvFile[i])
           converged, dg_lambda = parse_ti_out(ctx,tiOutVDWSolvFile[i])
           if converged:
              dg_solv -= dg_lambda
