@@ -4,7 +4,7 @@ import sys
 
 script_path = "/home/wfit/FittingWizardWeb/fitting_service/main/algorithms/scripts/"
 
-charmm_executable = "/home/wfit/charmm/charmm-intel2018"
+charmm_executable = "/usr/local/bin/charmm"
 mpi_executable = "/opt/intel/openmpi-3.1.1/bin/mpirun"
 mpi_flags = "--bind-to none"
 scratch_dir_name = "scratch"
