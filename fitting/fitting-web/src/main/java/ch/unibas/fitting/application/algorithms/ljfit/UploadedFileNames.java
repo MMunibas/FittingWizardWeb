@@ -7,7 +7,6 @@ public class UploadedFileNames {
     public final String rtfFile;
     public final String molFile;
     public final String liquidFile;
-    public final String solventFile;
     public final String lpunFile;
     public final String resFile;
 
@@ -16,14 +15,12 @@ public class UploadedFileNames {
             File rtfFile,
             File molFile,
             File liquidFile,
-            File solventFile,
             File lpunFile,
             File resFile) {
         this.parFile = nameOrNull(parFile);
         this.rtfFile = nameOrNull(rtfFile);
         this.molFile = nameOrNull(molFile);
         this.liquidFile = nameOrNull(liquidFile);
-        this.solventFile = nameOrNull(solventFile);
         this.lpunFile = nameOrNull(lpunFile);
         this.resFile = nameOrNull(resFile);
     }

@@ -4,11 +4,13 @@ from .toolkit import *
 from .charmm_input import *
 from .scripts.run_scale_vdw import *
 from .scripts.run_expand_lpun import *
+from .scripts.divide_pdb import *
 from shutil import move
 import json
 import sys
 import math
 import time
+import os
 
 
 @register
@@ -42,6 +44,8 @@ def ljfit(ctx):
     dg_solv_elec_gas=0.0
     dg_solv_elec_solv=0.0
 
+    sluname='' # string to hold resname of solute from pure liquid file
+
     # parse parameters
     ctx.log.info("parameters passed:")
 
@@ -51,8 +55,7 @@ def ljfit(ctx):
     try:
         par = ctx.parameters["lj_filename_charmm_parameter"]
         top = ctx.parameters["lj_filename_charmm_topology"]
-        slu = ctx.parameters["lj_filename_solute_pdb"]
-        slv = ctx.parameters["lj_filename_solvent_pdb"]
+        box = ctx.parameters["lj_filename_solute_pdb"]
         slv_res = ctx.parameters["lj_filename_charmm_restart"]
         lpun = ctx.parameters["lj_filename_mtpl_lpun"]
         pureliq = ctx.parameters["lj_filename_pureliquid_pdb"]
@@ -70,9 +73,49 @@ def ljfit(ctx):
     ctx.log.info("Input files:\n\t{}".format("\n\t".join(ctx.input_dir.list_files_recursively())))
     ctx.set_running_status('Setting up run')
 
-    # scale LJ parameters to trial values for this fitting step
     inpdir = ctx.input_dir.full_path + "/"
+    slu = os.path.splitext(box)[0]+'_slu.pdb' # derive a filename for solute pdb
+    slv = os.path.splitext(box)[0]+'_slv.pdb' # derive a filename for solvent pdb
+
+
+    # set up pure liquid calculation for vaporization enthalpy and density in "dens" folder
+
+    # expand lpun file for density calculation (MTPL routine requires each molecule to be defined separately
+    # in the lpun file, the uploaded lpun is for one molecule only). First determine no. residues in pure liquid:
+    nmol="1"
+    with ctx.input_dir.open_file(pureliq, "r") as pdb:
+        for line in pdb:
+            words = line.split()
+            if len(words) > 3:
+               if words[0].upper() == "ATOM":
+                   nmol = line[23:26]
+                   tname = sluname
+                   sluname = line[17:21]
+                   if int(nmol) != 1:
+                     if tname != sluname:
+                       raise Exception('More than one residue type found in pure liquid PDB file: '+tname+', '+sluname)
+        ctx.log.info("Number of molecules in pure liquid box: " + nmol)
+        ctx.log.info("Solute residue name is: " + sluname)
+    pdb.close()
+
+    ctx.log.info("splitting solvated system into separate solute and solvent PDBs:")
+    divide_pdb(inpdir+box, sluname, inpdir+slu, inpdir+slv)
+
+    # scale LJ parameters to trial values for this fitting step
     scaled_par=run_scale_vdw(inpdir + slu, inpdir + top, inpdir + par, sigfac, epsfac, inpdir)
+
+    liquid_lpun=run_expand_lpun(inpdir + lpun, nmol, inpdir)
+
+    ctx.log.info("writing input for pure liquid calculation:")
+    dens_inp_dir = ctx.input_dir.subdir("dens").full_path
+    dens_inp_name = dens_inp_dir + "/density.inp"
+    dens_out_dir = ctx.run_out_dir.subdir("dens").full_path
+    dens_out_name = dens_out_dir + "/density.out"
+    dens_inp_file = write_dens_inp(ctx, dens_inp_name, top, scaled_par, pureliq, liquid_lpun, T).name
+
+    ctx.log.info("submitting density calculation:")
+    create_charmm_submission_script(ctx, "run.sh", dens_inp_file, dens_out_name, "dens")
+
 
     # set up and submit gas-phase calculation for vaporization enthalpy in "dens" folder
     ctx.log.info("writing input for gas phase calculation:")
@@ -88,31 +131,6 @@ def ljfit(ctx):
 ####    gas_out_name="/home/wfit/FittingWizardWeb/fitting_service/data/2018-05-31_17-37-57-878275_luhq4/2018-05-31_17-37-57-885123_uNYv3/output/dens/gas.out" #######
     job_id = ctx.schedule_job(ctx.input_dir.full_path + "/dens/run-gas.sh")
 
-    # set up pure liquid calculation for vaporization enthalpy and density in "dens" folder
-
-    # expand lpun file for density calculation (MTPL routine requires each molecule to be defined separately
-    # in the lpun file, the uploaded lpun is for one molecule only). First determine no. residues in pure liquid:
-    nmol="1"
-    with ctx.input_dir.open_file(pureliq, "r") as pdb:
-        for line in pdb:
-            words = line.split()
-            if len(words) > 3:
-               if words[0].upper() == "ATOM":
-                   nmol = line[23:26]
-        ctx.log.info("Number of molecules in pure liquid box: " + nmol)
-    pdb.close()
-
-    liquid_lpun=run_expand_lpun(inpdir + lpun, nmol, inpdir)
-
-    ctx.log.info("writing input for pure liquid calculation:")
-    dens_inp_dir = ctx.input_dir.subdir("dens").full_path
-    dens_inp_name = dens_inp_dir + "/density.inp"
-    dens_out_dir = ctx.run_out_dir.subdir("dens").full_path
-    dens_out_name = dens_out_dir + "/density.out"
-    dens_inp_file = write_dens_inp(ctx, dens_inp_name, top, scaled_par, pureliq, liquid_lpun, T).name
-
-    ctx.log.info("submitting density calculation:")
-    create_charmm_submission_script(ctx, "run.sh", dens_inp_file, dens_out_name, "dens")
 
     # Now set up thermodynamic integration run for solute in water box
     ti_vdw_gas_inp_dir=ctx.input_dir.subdir("ti/vdw/gas").full_path + "/"
