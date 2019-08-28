@@ -41,6 +41,9 @@ public class FittingResultsPage extends HeaderPage {
     private ViewModelMapper mapper;
 
     private String moleculeName = "";
+    private String moleculeDir = "";
+    private String mdcmXyzFile = "";
+    private String mdcmFitNum = "";
     private IModel<File> lpunFile = Model.of();
     private IModel<FitViewModel> selectedFitId = Model.of();
     private IModel<List<FitViewModel>> fitIds = Model.ofList(new ArrayList<>());
@@ -51,6 +54,7 @@ public class FittingResultsPage extends HeaderPage {
     public FittingResultsPage(PageParameters pp) {
 
         String value = pp.get("fit_id").toString();
+        mdcmFitNum = value;
         Integer initialFit = null;
         if  (value != null)
             initialFit = Integer.parseInt(value);
@@ -92,17 +96,13 @@ public class FittingResultsPage extends HeaderPage {
             protected void populateItem(ListItem<FitResultViewModel> item) {
                 FitResultViewModel mol = item.getModelObject();
 
-                item.add(new Label("type", mol.getAtomType()));
-
+                item.add(createColoredLabel("X", mol));
+                item.add(createColoredLabel("Y", mol));
+                item.add(createColoredLabel("Z", mol));
                 item.add(createColoredLabel("Q00", mol));
-                item.add(createColoredLabel("Q10", mol));
-                item.add(createColoredLabel("Q11c", mol));
-                item.add(createColoredLabel("Q11s", mol));
-                item.add(createColoredLabel("Q20", mol));
-                item.add(createColoredLabel("Q21c", mol));
-                item.add(createColoredLabel("Q21s", mol));
-                item.add(createColoredLabel("Q22c", mol));
-                item.add(createColoredLabel("Q22s", mol));
+
+                mdcmXyzFile = mol.getMdcmXyzFile();
+                mdcmFitNum = mol.getMdcmFitNum();
 
             }
         });
@@ -122,6 +122,8 @@ public class FittingResultsPage extends HeaderPage {
         }
         moleculeName = userDirectory.getMtpFitDir(getCurrentUsername())
                 .getMoleculeDir().getAnyMoleculeName();
+        moleculeDir = userDirectory.getMtpFitDir(getCurrentUsername())
+                .getMoleculeDir().getMoleculeDirFile(moleculeName).getPath();
         fitIds.setObject(allFits);
 
         if (fitId == null)
@@ -157,7 +159,7 @@ public class FittingResultsPage extends HeaderPage {
         var color = fitResult.getColor(chargeType);
         Label label = new Label(chargeType);
         label.setDefaultModel(Model.of(value));
-        label.add(new AttributeModifier("style", "background-color:" + color + ";"));
+//        label.add(new AttributeModifier("style", "background-color:" + color + ";"));
         return label;
     }
 
@@ -166,7 +168,10 @@ public class FittingResultsPage extends HeaderPage {
         super.renderHead(response);
 
         response.render(JavaScriptHeaderItem.forUrl("/javascript/jsmol/JSmol.min.js"));
-        String filename = JsMolHelper.getXyzUrl(getCurrentUsername(), moleculeName);
-        response.render(JavaScriptHeaderItem.forScript("var Info = {width: 400,height: 400,serverURL: \"http://chemapps.stolaf.edu/jmol/jsmol/php/jsmol.php\",use: \"HTML5\",j2sPath: \"/javascript/jsmol/j2s\",script: \"background black;load " + filename + "; selectionhalos on;select none;\",console: \"jmolApplet0_infodiv\"}", "jsmol_info"));
+        File mdcmWithPath = new File(mdcmXyzFile);
+        String mdcmNoPath = mdcmWithPath.getName();
+        String mdcmURL = JsMolHelper.getMdcmXyzUrl(getCurrentUsername(), mdcmFitNum, mdcmNoPath);
+
+        response.render(JavaScriptHeaderItem.forScript("var Info = {width: 400,height: 400,serverURL: \"http://chemapps.stolaf.edu/jmol/jsmol/php/jsmol.php\",use: \"HTML5\",j2sPath: \"/javascript/jsmol/j2s\",script: \"background black;load " + mdcmURL + "; selectionhalos on;select none;\",console: \"jmolApplet0_infodiv\"}", "jsmol_info"));
     }
 }

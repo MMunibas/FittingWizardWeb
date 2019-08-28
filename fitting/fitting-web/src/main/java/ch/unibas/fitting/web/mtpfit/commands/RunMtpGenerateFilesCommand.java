@@ -16,6 +16,7 @@ import io.vavr.control.Option;
 import javax.inject.Inject;
 import java.io.File;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 /**
  * Created by mhelmer-mobile on 17.06.2016.
@@ -32,6 +33,7 @@ public class RunMtpGenerateFilesCommand implements IAmACommand {
 
     public void execute(String username,
                         String moleculeName,
+                        String axisFileName,
                         Integer netCharge,
                         String quantum,
                         Integer nCores,
@@ -39,6 +41,12 @@ public class RunMtpGenerateFilesCommand implements IAmACommand {
 
         MtpFitDir mtpFitDir = userDir.getMtpFitDir(username);
         File moleculeFile = mtpFitDir.getMoleculeDir().getXyzFileFor(moleculeName);
+        File fitDestination = mtpFitDir.getMoleculeDir().getSessionDir();
+        File axisFile = new File(fitDestination,axisFileName);
+
+        var fileArray = new ArrayList<>();
+        fileArray.add(moleculeFile);
+        fileArray.add(axisFile);
 
         var calculationId = calculationService.createCalculation();
         mtpFitDir.writeCalculationId(calculationId);
@@ -49,13 +57,14 @@ public class RunMtpGenerateFilesCommand implements IAmACommand {
         params.put("mtp_gen_molecule_multiplicity", multiplicity);
         params.put("mtp_gen_gaussian_input_commandline", quantum);
         params.put("mtp_gen_gaussian_num_cores", nCores);
+        params.put("dcm_axis_filename", axisFile.getName());
 
         File moleculeDestinationDir = mtpFitDir
                 .getMoleculeDir()
                 .createMoleculeDir(moleculeName);
 
         var response = client.spawnCalculationGroup(
-                "Generate MTP files",
+                "Step1: Fit Atomic Charge Models to MEP",
                 username,
                 new NavigationInfo(
                         () -> PageNavigation.ToPageWithParameter(AtomTypesPage.class, "molecule_name", moleculeName),
@@ -64,7 +73,7 @@ public class RunMtpGenerateFilesCommand implements IAmACommand {
                         "mtpfit_part1",
                         params,
                         moleculeDestinationDir,
-                        Array.of(moleculeFile).toJavaArray(File.class),
+                        fileArray.toArray(new File[0]),
                         Option.of(calculationId),
                         Option.none(),
                         true

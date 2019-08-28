@@ -2,22 +2,27 @@ import json
 import os.path
 
 from .cluster.unibasel_slurm import generate_gau_setup_script, number_of_cpu_cores, \
-    gau_login_script, scratch_dir_name, gau_formchk, gdma, cubegen, fieldcomp, babel
+    gau_login_script, scratch_dir_name, gau_formchk, gdma, cubegen, fieldcomp, babel, \
+    generate_atom_chg_fit_script, cubefit_exe
 from .gaussian_input import *
 from .scripts.calc_LRA import calculate_LRA
 from .scripts.mtp_fittab_maker import mk_fittab_mtp
+from .scripts.mtpfit import mtpfit
 from .toolkit import *
 
 
 @register
-# Routine to run initial calculations for an MTP-Fit. Components are:
+# Routine to run initial calculations for an MDCM-Fit. Components are:
 #	1. Run gaussian to generate a checkpoint file
 #	2. Use formchk and cubegen to generate an ESP grid
-#       3. Run GDMA to obtain reference atomic multipoles
-#       4. Run helper scripts for atom typing, to define local axes and to set up fitting table
-# References: DOI 10.1021/acs.jcim.6b00280
+#       3. Run mtpfit.py to fit high-ranking atomic multipoles to the MEP
+#       4. Run pcubefit.x to fit atomic MDCM charge models to the atomic electrostatic potential
+#       5. Run pcubefit.x to fit molecular charge models to the MEP
 
 def mtpfit_part1(ctx):
+    LMAX=5 # maximum atomic multipole rank for multipole fitting
+    max_chgs_per_atom=4 # maximum number of MDCM charges to fit per atom to provide initial guesses for molecular fit
+
     results = {}  # main results list
 
     # parse parameters
@@ -32,16 +37,17 @@ def mtpfit_part1(ctx):
         multiplicity = ctx.parameters["mtp_gen_molecule_multiplicity"]
         cmd = ctx.parameters["mtp_gen_gaussian_input_commandline"]
         ncore = ctx.parameters["mtp_gen_gaussian_num_cores"]
+        axisFile = ctx.parameters["dcm_axis_filename"]
     except ValueError:
         pass
 
     ctx.log.info("Input files:\n\t{}".format("\n\t".join(ctx.input_dir.list_files_recursively())))
 
-    ctx.log.info("Writing Gaussian and GDMA input files\n")
+    ctx.log.info("Writing Gaussian input files\n")
     ctx.set_running_status('setting up Gaussian calculations')
 
     # set global calculation directory
-    calc_out_dir=ctx.input_dir.subdir("../output/").full_path + "/"
+#    calc_out_dir=ctx.input_dir.subdir("../output/").full_path + "/"
 
     # set up Gaussian single point calculation to generate checkpoint file
     basename = os.path.splitext(xyz)[0]
@@ -56,59 +62,55 @@ def mtpfit_part1(ctx):
     fchk_name = mtp_out_dir + basename + ".fchk"
     gau_inp_file = write_gaussian_inp(ctx, xyz, gau_inp_name, chk_name, cmd, charge, multiplicity, ncore).name
 
-    # set up GDMA calculation on Gaussian fchk file
-    pun_name = "gdma_original.pun"
-    gdma_inp_name = basename + ".gdma.inp"
-    gdma_out_name = basename + ".gdma.log"
-    gdma_sh = mtp_out_dir + basename + ".gdma.sh"
-    gdma_fchk = basename + ".fchk"
-    gdma_inp_file = write_gdma_inp(ctx, mtp_out_dir, gdma_inp_name, gdma_out_name, gdma_fchk, pun_name, 0).name
-
     # set up cubegen grid parameters for ESP grid file
     grid_pars = calc_grid_specs(ctx, gau_inp_file)
-    cube_file = basename + ".pot.cube"
-
-    # write vdw radius file for fitting script (used to exclude ESP inside atomic radius)
-    vdw_file_name = basename + ".vdw"
-    write_vdw_file(ctx, gau_inp_file, vdw_file_name, 0)
-
-    # get sdf file name
-    sdf_file_name = mtp_out_dir + basename + ".sdf"
+    pot_cube_file = basename + ".pot.cube"
+    dens_cube_file = basename + ".dens.cube"
 
     # now run the prepared inputs from a single submission script
-    ctx.log.info("submitting gaussian and gdma calculations:")
+    ctx.log.info("submitting gaussian calculations:")
     ctx.set_running_status('submitting Gaussian calculations')
     create_gau_submission_script(ctx,
-                                 "run-gau.sh", gau_inp_file, gau_out_name, chk_name, fchk_name, gdma_inp_name,
-                                 gdma_out_name, grid_pars, cube_file, pun_name, vdw_file_name, xyz_file_name,
-                                 sdf_file_name, ncore)
+                                 "run-gau.sh", gau_inp_file, gau_out_name, chk_name, fchk_name, 
+                                 grid_pars, pot_cube_file, dens_cube_file, ncore)
 
     job_id = ctx.schedule_job(ctx.input_dir.full_path + "/run-gau.sh") 
     ctx.wait_for_all_jobs() 
 
     ctx.log.info("jobs completed")
 
-    # now calculate local reference axes
-    ctx.set_running_status('Calculating local reference axes for ' + sdf_file_name)
-    ctx.log.info("Calculating local reference axes for " + sdf_file_name)
-    local_pun_name = calc_out_dir + "gdma_ref.pun"
-    calculate_LRA(sdf_file_name, mtp_out_dir + pun_name, local_pun_name, results)
+    # fit high-ranking (l=LMAX) multipoles to MEP in Gaussian cube files, write output to mtpl_file
+    ctx.log.info("Fitting atomic multipoles")
+    ctx.set_running_status('Fitting atomic multipoles') 
+    mtpl_file = mtp_out_dir + basename + "-mtpl.dat"
+    pot_cube_file = mtp_out_dir + pot_cube_file
+    dens_cube_file = mtp_out_dir + dens_cube_file
+    mtpfit(pot_cube_file, dens_cube_file, LMAX, charge, mtpl_file, results)
 
-    # and generate fitting table
-    ctx.set_running_status("Generating fitting table for " + cube_file + ", " + vdw_file_name + ", " + local_pun_name)
-    ctx.log.info("Generating fitting table for " + cube_file + ", " + vdw_file_name + ", " + local_pun_name)
-    mk_fittab_mtp(mtp_out_dir + cube_file, mtp_out_dir + vdw_file_name, local_pun_name, 
-                  calc_out_dir)
+    # now fit atomic charge models to atomic multipoles using "pcubefit.x" (O. Unke). Each number of charges is
+    # submitted as a separate job (i.e. job 1 fits 1 charge per atom, job 2 fits 2 charges per atom and so on...)
+    ctx.log.info("Fitting atomic charge models to atomic multipole expansions")
+    ctx.set_running_status('Fitting atomic charge models to atomic multipoles')
+    for i in range(1, max_chgs_per_atom+1):
+      job_name=str(i)+"_chgs_per_atom"
+      script_name="fit_"+job_name+".sh"
+      create_atom_chg_fit_submission_script(ctx, script_name, mtpl_file, pot_cube_file, dens_cube_file, 
+                   i, job_name, cubefit_exe, ncore)
+      job_id = ctx.schedule_job(ctx.input_dir.full_path + "/" + script_name)
+    ctx.wait_for_all_jobs()
 
-    # clean up "cube" file (often large)
-    ctx.log.info("Cleaning up cube file " + mtp_out_dir + cube_file)
-    os.remove(mtp_out_dir + cube_file)
+    # now store parameters in json file for molecular fitting
+    part1_params = {'mtpl_file': mtpl_file, 'pot_cube_file':pot_cube_file,
+                 'dens_cube_file':dens_cube_file, 'ncore':ncore, 'xyz':xyz,
+                 'part1_dir':mtp_out_dir, 'axis_file':axisFile}
+    with ctx.run_out_dir.open_file("../../params_part1.json", "w") as json_file:
+       json.dump(part1_params, json_file)
 
     # gather results for subsequent fitting steps
     ctx.log.info("Gathering results")
 
     data={}
-    data["mtp_fit_results"]=results
+    data["mdcm_fit_results"]=results
     ctx.write_results(data)
 #    with ctx.run_out_dir.open_file("results.json", "w") as json_file:
 #        json.dump(results, json_file)
@@ -184,101 +186,37 @@ def calc_grid_specs(ctx, gau_inp_file):
 #################################################################################################
 # VDW file for ESP exclusion during multipole fitting
 
-# Using atomic radii from Table 12 of https://pubs.acs.org/doi/10.1021/jp8111556
-# (Truhlar et al., "Consistent van der Waals Radii for the Whole Main Group")
-# Converted to Bohr
-
 def write_vdw_file(ctx, gau_inp_file, vdw_file_name, mtp_order):
-    vdw_radii = {'H': 2.079,
-                 'He': 2.646,
-                 'Li': 3.420,
-                 'Be': 2.891,
-                 'B': 3.628,
-                 'C': 3.213,
-                 'N': 2.929,
-                 'O': 2.872,
-                 'F': 2.778,
-                 'Ne': 2.910,
-                 'Na': 4.290,
-                 'Mg': 3.269,
-                 'Al': 3.477,
-                 'Si': 3.968,
-                 'P': 3.402,
-                 'S': 3.402,
-                 'Cl': 3.307,
-                 'Ar': 3.553,
-                 'K': 5.197,
-                 'Ca': 4.365,
-                 'Ga': 3.534,
-                 'Ge': 3.987,
-                 'As': 3.496,
-                 'Se': 3.590,
-                 'Br': 3.458,
-                 'Kr': 3.817,
-                 'Rb': 5.726,
-                 'Sr': 4.705,
-                 'In': 3.647,
-                 'Sn': 4.101,
-                 'Sb': 3.893,
-                 'Te': 3.893,
-                 'I': 3.742,
-                 'Xe': 4.082,
-                 'Cs': 6.482,
-                 'Ba': 5.046,
-                 'Tl': 3.704,
-                 'Pb': 3.817,
-                 'Bi': 3.912, 
-                 'Po': 3.723,
-                 'At': 3.817,
-                 'Rn': 4.157,
+    vdw_radii = {'H': 2.268,
+                 'He': 2.301,
+                 'Du': 0.0,
+                 'B': 3.931,
+                 'C': 3.496,
+                 'N': 2.91,
+                 'O': 2.646,
+                 'F': 2.551,
+                 'P': 3.591,
+                 'S': 3.496,
+                 'Cl': 3.42,
+                 'Br': 3.685,
+                 'I': 4.063,
                  'Fe': 4.0,
                  'Zn': 2.80,
-                 'Du': 0.0,
-                 '1': 2.079,
-                 '2': 2.646,
-                 '3': 3.420,
-                 '4': 2.891,
-                 '5': 3.628,
-                 '6': 3.213,
-                 '7': 2.929,
-                 '8': 2.872,
-                 '9': 2.778,
-                 '10': 2.910,
-                 '11': 4.290,
-                 '12': 3.269,
-                 '13': 3.477,
-                 '14': 3.968,
-                 '15': 3.402,
-                 '16': 3.402,
-                 '17': 3.307,
-                 '18': 3.553,
-                 '19': 5.197,
-                 '20': 4.365,
-                 '31': 3.534,
-                 '32': 3.987,
-                 '33': 3.496,
-                 '34': 3.590,
-                 '35': 3.458,
-                 '36': 3.817,
-                 '37': 5.726,
-                 '38': 4.705,
-                 '49': 3.647,
-                 '50': 4.101,
-                 '51': 3.893,
-                 '52': 3.893,
-                 '53': 3.742,
-                 '54': 4.082,
-                 '55': 6.482,
-                 '56': 5.046,
-                 '81': 3.704,
-                 '82': 3.817,
-                 '82': 3.912,
-                 '84': 3.723,
-                 '85': 3.817,
-                 '86': 4.157,
+                 '1': 2.268,
+                 '2': 2.301,
+                 '0': 0.0,
+                 '5': 3.931,
+                 '6': 3.496,
+                 '7': 2.91,
+                 '8': 2.646,
+                 '9': 2.551,
+                 '15': 3.591,
+                 '16': 3.496,
+                 '17': 3.42,
+                 '35': 3.685,
+                 '53': 4.063,
                  '26': 4.0,
-                 '30': 2.80,
-                 '0': 0.0}
+                 '30': 2.80}
 
     atm = []
     with ctx.input_dir.open_file(gau_inp_file, "r") as gau_inp:
@@ -308,6 +246,25 @@ def write_vdw_file(ctx, gau_inp_file, vdw_file_name, mtp_order):
 
     vdw_file.close()
 
+def create_atom_chg_fit_submission_script(ctx,
+                                          filename,
+                                          multipole_file,
+                                          pot_cube_file,
+                                          dens_cube_file,
+                                          chgs_per_atom,
+                                          job_name,
+                                          cubefit_exe,
+                                          number_of_cores=None):
+    number_of_cores = number_of_cores if number_of_cores is not None else number_of_cpu_cores 
+    with ctx.input_dir.open_file(filename, "w") as script_file:
+        script_file.write(generate_atom_chg_fit_script(multipole_file,
+                                                       pot_cube_file,
+                                                       dens_cube_file,
+                                                       chgs_per_atom,
+                                                       job_name,
+                                                       number_of_cores,
+                                                       ctx.run_out_dir.full_path,
+                                                       cubefit_exe))
 
 def create_gau_submission_script(ctx,
                                  filename,
@@ -315,14 +272,9 @@ def create_gau_submission_script(ctx,
                                  gau_output_file_name,
                                  chk_file,
                                  fchk_file,
-                                 gdma_inp_name,
-                                 gdma_out_name,
                                  grid_spec,
-                                 cube_file,
-                                 gdma_pun_file,
-                                 vdw_file_name,
-                                 xyz_file_name,
-                                 sdf_file_name,
+                                 pot_cube_file,
+                                 dens_cube_file,
                                  number_of_cores=None):
     number_of_cores = number_of_cores if number_of_cores is not None else number_of_cpu_cores
     with ctx.input_dir.open_file(filename, "w") as script_file:
@@ -336,15 +288,7 @@ def create_gau_submission_script(ctx,
                                                     gau_formchk,
                                                     chk_file,
                                                     fchk_file,
-                                                    gdma,
-                                                    gdma_inp_name,
-                                                    gdma_out_name,
                                                     grid_spec,
                                                     cubegen,
-                                                    cube_file,
-                                                    fieldcomp,
-                                                    gdma_pun_file,
-                                                    vdw_file_name,
-                                                    babel,
-                                                    xyz_file_name,
-                                                    sdf_file_name))
+                                                    pot_cube_file,
+                                                    dens_cube_file))

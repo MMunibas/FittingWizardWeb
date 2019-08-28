@@ -10,7 +10,11 @@ import java.util.HashMap;
 
 public class MtpResultsParser {
     public double getRmseValue(JsonObject json) {
-        return json.get("mtp_fit_RMSE").getAsDouble();
+        return json.get("mdcm_fit_RMSE").getAsDouble();
+    }
+
+    public String getMdcmXyzFile(JsonObject json) {
+        return json.get("ui_xyz_file").getAsString();
     }
 
     public List<ChargeValue> getLpunAtomTypes(File f) {
@@ -33,7 +37,7 @@ public class MtpResultsParser {
 
     private List<ChargeValue> getCharges(JsonObject root) {
 
-        var results = root.get("mtp_fit_results").getAsJsonObject();
+        var results = root.get("mdcm_fit_results").getAsJsonObject();
 
         var charges = List.<ChargeValue>empty();
 

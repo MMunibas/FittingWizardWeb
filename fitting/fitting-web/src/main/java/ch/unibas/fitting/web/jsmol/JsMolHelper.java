@@ -17,6 +17,13 @@ public class JsMolHelper {
                 ".xyz";
     }
 
+    public static String getMdcmXyzUrl(String username, String fit, String fileName) {
+        return "/data/" +
+                username +
+                "/mtp_fit/fits/" + fit + "/" +
+                fileName;
+    }
+
     public static void addAtomsHighlightingMouseEvent(Item<?> item, int index) {
         addAtomsHighlightingMouseEvent(item, new int[]{index});
     }

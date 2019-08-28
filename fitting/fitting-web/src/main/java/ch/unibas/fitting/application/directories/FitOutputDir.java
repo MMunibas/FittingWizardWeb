@@ -23,7 +23,7 @@ public class FitOutputDir extends FittingDirectory {
     public Option<File> getLpunFile() {
 
         for (File f: getDirectory().listFiles()) {
-            if (f.getName().endsWith(".lpun")) {
+            if (f.getName().endsWith(".dcm")) {
                 return Option.of(f);
             }
         }

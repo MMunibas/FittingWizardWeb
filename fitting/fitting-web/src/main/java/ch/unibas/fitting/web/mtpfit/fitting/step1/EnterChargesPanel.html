@@ -1,5 +1,6 @@
 <wicket:panel xmlns:wicket="http://www.w3.org/1999/xhtml">
-    <h3>Please enter charges for the given atom types.</h3>
+    <h3>Start fitting?</h3>
+    <h4> (May take several hours, depending on the number of charges)</h4>
 
     <form wicket:id="form">
         <p>
@@ -7,16 +8,6 @@
             <input wicket:id="cancel" type="submit" value="Cancel" class="btn btn-default" />
         </p>
 
-        <table cellspacing="0" class="table">
-            <tr>
-                <th>Atom type</th>
-                <th>Charge</th>
-            </tr>
-            <tr wicket:id="atomTypes">
-                <td><span wicket:id="type"></span></td>
-                <td><input wicket:id="charge" type="number" /></td>
-            </tr>
-        </table>
     </form>
 
     <div wicket:id="feedback"></div>

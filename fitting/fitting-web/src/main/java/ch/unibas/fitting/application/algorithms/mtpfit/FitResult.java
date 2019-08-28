@@ -16,8 +16,12 @@ public class FitResult {
     private final List<ChargeValue> chargeValues;
     private final String atomTypeId;
     private final double initialQ;
+    private String mdcmXyzFile;
+    private String mdcmFitNum;
 
     public FitResult(
+            String mdcmXyzFile,
+            String mdcmFitNum,
             String atomTypeId,
             List<String> moleculeNames,
             double initialQ,
@@ -29,6 +33,8 @@ public class FitResult {
         this.moleculeNames = moleculeNames;
         this.initialQ = initialQ;
         this.chargeValues = outputAtomType.getChargeValues();
+        this.mdcmXyzFile = mdcmXyzFile;
+        this.mdcmFitNum = mdcmFitNum;
     }
 
     /**
@@ -53,6 +59,14 @@ public class FitResult {
 
     public double getQ00() {
         return findValueByType(ChargeTypes.charge);
+    }
+
+    public String getMdcmXyzFile() {
+        return mdcmXyzFile;
+    }
+
+    public String getMdcmFitNum() {
+        return mdcmFitNum;
     }
 
     public double getInitialQ() {

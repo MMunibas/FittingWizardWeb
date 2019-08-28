@@ -1,6 +1,6 @@
 <wicket:extend xmlns:wicket="http://www.w3.org/1999/xhtml">
     <div style="align-content: center">
-        <h1 style="display: inline">MTP fit results</h1>
+        <h1 style="display: inline">MDCM fit results</h1>
         <input wicket:id="newSession" type="button" value="Start new session"
                style="margin-left: 5px;"
                class="btn btn-default"/>
@@ -19,44 +19,23 @@
                     <col class="col-md-6">
                 </colgroup>
                 <tr>
-                    <td>&lambda;<sub>PC</sub> (constraint for charges)</td>
-                    <td><input wicket:id="convergence" type="number" /></td>
+                    <td>Number of charges (for whole molecule)</td>
+                    <td><input wicket:id="numChgs" type="number" /></td>
                 </tr>
-                <tr>
-                    <td>Rank of expansion</td>
+<!--                <tr>
+                    <td>Number of charges (for whole molecule)</td>
                     <td><select wicket:id="rank" /></td>
                 </tr>
-                <tr>
+-                <tr>
                     <td>Ignore all hydrogen multipoles</td>
                     <td><input type="checkbox" wicket:id="ignoreHydrogens" /></td>
-                </tr>
+                </tr> -->
             </table>
         </form>
     </div>
 
 
     <div wicket:id="feedback"></div>
-
-    <table cellspacing="0" class="table">
-        <thead>
-            <th>Index</th>
-            <th>Created</th>
-            <th>RMSE</th>
-            <th>Rank</th>
-            <th>Options</th>
-        </thead>
-        <tr wicket:id="fits">
-            <td wicket:id="index" />
-            <td wicket:id="created" />
-            <td wicket:id="rmse" />
-            <td wicket:id="rank" />
-            <td>
-                <button wicket:id="remove" type="button" class="btn btn-default">
-                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                </button>
-            </td>
-        </tr>
-    </table>
 
     <div wicket:id="modalWindow"></div>
 

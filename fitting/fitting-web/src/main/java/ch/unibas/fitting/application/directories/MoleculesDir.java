@@ -88,6 +88,9 @@ public class MoleculesDir extends FittingDirectory {
         return new File(getDirectory(), withoutExt + ".xyz");
     }
 
+    public File getSessionDir() { // M. Devereux
+        return getDirectory();
+    }
 
     public Option<XyzFile> getXyzFile(String moleculeName) {
         File f = getXyzFileFor(moleculeName);

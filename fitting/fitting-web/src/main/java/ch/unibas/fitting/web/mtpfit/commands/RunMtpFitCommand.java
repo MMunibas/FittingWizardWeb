@@ -36,9 +36,7 @@ public class RunMtpFitCommand implements IAmACommand {
     private CalculationManagementClient client;
 
     public void executeNew(String username,
-                           double convergence,
-                           int rank,
-                           boolean ignoreHydrogens,
+                           int numChgs,
                            LinkedHashSet<ChargeValue> chargeValues) {
 
         MtpFitDir mtpFitDir = userDirectory.getMtpFitDir(username);
@@ -49,16 +47,12 @@ public class RunMtpFitCommand implements IAmACommand {
         var initalCharges = createCharges(chargeValues);
 
         var params = new HashMap<String, Object>();
-        params.put("mtp_fitting_table_filename", "mtpfittab.txt");
-        params.put("mtp_fitting_initial_charges", initalCharges);
 
-        params.put("mtp_fitting_threshold", convergence);
-        params.put("mtp_fitting_rank", rank);
-        params.put("mtp_fitting_flag_ignore_H", ignoreHydrogens);
+        params.put("mdcm_total_charges", numChgs);
         params.put("mtp_fit_number", fitOutputDir.getId());
 
         var response = client.spawnCalculationGroup(
-                "Running MTP fit",
+                "Running MDCM molecular fit",
                 username,
                 new NavigationInfo(
                         () -> PageNavigation.ToPageWithParameter(FittingResultsPage.class, "fit_id", String.valueOf(fitOutputDir.getId())),
@@ -75,10 +69,12 @@ public class RunMtpFitCommand implements IAmACommand {
 
                             var rmse = parser.getRmseValue(json.get());
                             var types = parser.getATomTypes(json.get());
-
+                            var mdcmXyzFile = String.valueOf(fitOutputDir.getDirectory()) + "/" + parser.getMdcmXyzFile(json.get()) ;
+ 
                             Fit fit = createFit.createFit(
+                                    mdcmXyzFile,
                                     fitOutputDir.getId(),
-                                    rank,
+                                    numChgs,
                                     rmse,
                                     types,
                                     new InitialQ00(chargeValues),

@@ -1,0 +1,38 @@
+Using JAVA /usr/java/jdk-10.0.2//bin/java
+log4j:WARN No appenders could be found for logger (ch.unibas.fitting.ConfigFile).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+23 [main] INFO ch.unibas.fitting.Main  - Starting fitting web 2.0.1
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$2 (file:/home/wfit/fitting-web-2.0.1-mdcm/lib/guice-4.0.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$2
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+399 [main] INFO org.eclipse.jetty.util.log  - Logging initialized @665ms
+469 [main] INFO ch.unibas.fitting.Main  - Starting jetty server
+470 [main] INFO org.eclipse.jetty.server.Server  - jetty-9.3.9.v20160517
+496 [main] INFO org.eclipse.jetty.server.handler.ContextHandler  - Started o.e.j.s.h.ContextHandler@2d778add{/help,null,AVAILABLE}
+496 [main] INFO org.eclipse.jetty.server.handler.ContextHandler  - Started o.e.j.s.h.ContextHandler@73302995{/data,null,AVAILABLE}
+496 [main] INFO org.eclipse.jetty.server.handler.ContextHandler  - Started o.e.j.s.h.ContextHandler@1838ccb8{/javascript,null,AVAILABLE}
+578 [main] INFO org.apache.wicket.Application  - [ch.unibas.fitting.Main$1-78fa769e] init: Wicket extensions initializer
+589 [main] INFO org.apache.wicket.Application  - [ch.unibas.fitting.Main$1-78fa769e] init: Wicket core library initializer
+590 [main] INFO org.apache.wicket.RequestListenerInterface  - registered listener interface [RequestListenerInterface name=IBehaviorListener, method=public abstract void org.apache.wicket.behavior.IBehaviorListener.onRequest()]
+591 [main] INFO org.apache.wicket.RequestListenerInterface  - registered listener interface [RequestListenerInterface name=IFormSubmitListener, method=public abstract void org.apache.wicket.markup.html.form.IFormSubmitListener.onFormSubmitted()]
+591 [main] INFO org.apache.wicket.RequestListenerInterface  - registered listener interface [RequestListenerInterface name=ILinkListener, method=public abstract void org.apache.wicket.markup.html.link.ILinkListener.onLinkClicked()]
+591 [main] INFO org.apache.wicket.RequestListenerInterface  - registered listener interface [RequestListenerInterface name=IOnChangeListener, method=public abstract void org.apache.wicket.markup.html.form.IOnChangeListener.onSelectionChanged()]
+591 [main] INFO org.apache.wicket.RequestListenerInterface  - registered listener interface [RequestListenerInterface name=IResourceListener, method=public abstract void org.apache.wicket.IResourceListener.onResourceRequested()]
+762 [main] INFO wicket-jquery-selectors  - initialize wicket jquery selectors with given settings: de.agilecoders.wicket.jquery.settings.WicketJquerySelectorsSettings@464649c
+795 [main] INFO wicket-webjars  - initialize wicket webjars with given settings: WebjarsSettings{readFromCacheTimeout=3 seconds, resourceStreamProvider=ClassLoader, recentVersionPlaceHolder='current', assetPathCollectors=[de.agilecoders.wicket.webjars.collectors.ClasspathAssetPathCollector@55f3c410, de.agilecoders.wicket.webjars.collectors.VfsAssetPathCollector@11acdc30, de.agilecoders.wicket.webjars.collectors.FileAssetPathCollector@770d4269], webjarsPackage='META-INF.resources.webjars', webjarsPath='META-INF/resources/webjars', resourcePattern=META-INF/resources/webjars/.*, webjarsPathPattern=/webjars/([^\/]*)\/([^\/]*)\/(.*), useCdnResources=false, cdnUrl='//cdn.jsdelivr.net:80'}
+803 [main] INFO org.apache.wicket.protocol.http.WebApplication  - [ch.unibas.fitting.Main$1-78fa769e] Started Wicket version 7.9.0 in DEPLOYMENT mode
+803 [main] INFO org.eclipse.jetty.server.handler.ContextHandler  - Started o.e.j.s.ServletContextHandler@72b16078{/,null,AVAILABLE}
+818 [main] INFO org.eclipse.jetty.server.AbstractConnector  - Started ServerConnector@780ec4a5{HTTP/1.1,[http/1.1]}{0.0.0.0:8081}
+818 [main] INFO org.eclipse.jetty.server.Server  - Started @1089ms
+818 [main] INFO ch.unibas.fitting.Main  - Server started
+3647 [qtp708348097-15] INFO ch.unibas.fitting.WebApp  - Tracking new session null
+3761 [qtp708348097-15] INFO ch.unibas.fitting.application.directories.UserDirectory  - Using root dir ../data
+17790 [qtp708348097-13] INFO ch.unibas.fitting.application.algorithms.xyz.XyzFileParser  - Initializing parser for file /home/wfit/fitting-web-2.0.1-mdcm/data/devereux/mtp_fit/molecule/h2o.xyz
+17790 [qtp708348097-13] INFO ch.unibas.fitting.application.algorithms.xyz.XyzFileParser  - Reading lines from file.
+17790 [qtp708348097-13] INFO ch.unibas.fitting.application.algorithms.xyz.XyzFileParser  - Parsing atom count from file.
+17791 [qtp708348097-13] INFO ch.unibas.fitting.application.algorithms.xyz.XyzFileParser  - File contains 3 atoms.
+17791 [qtp708348097-13] INFO ch.unibas.fitting.application.algorithms.xyz.XyzFileParser  - Parsing atoms.
+24122 [ForkJoinPool.commonPool-worker-9] INFO wicket-jquery-selectors  - try to get settings, but WicketJquerySelectors wasn't installed to current application. Fallback to default settings.

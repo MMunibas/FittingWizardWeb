@@ -76,6 +76,8 @@ public class RunLjFitsCommand {
                 map.put("lj_filename_charmm_topology", files.rtfFile.getName());
             if (files.molFile != null)
                 map.put("lj_filename_solute_pdb", files.molFile.getName());
+            if (files.solventFile != null)
+                map.put("lj_filename_solvent_pdb", files.solventFile.getName());
             if (files.parFile != null)
                 map.put("lj_filename_charmm_parameter", files.parFile.getName());
             if (files.lpunFile != null)

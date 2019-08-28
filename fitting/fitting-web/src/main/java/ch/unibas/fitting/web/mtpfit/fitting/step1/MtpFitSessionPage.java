@@ -37,34 +37,7 @@ import java.util.stream.Collectors;
  */
 public class MtpFitSessionPage extends HeaderPage {
 
-    private static class Rank implements Serializable {
-        private String _name;
-        private int _rank;
-
-        public Rank(String name, int rank) {
-            this._name = name;
-            this._rank = rank;
-        }
-
-        public int getRank() {
-            return _rank;
-        }
-
-        public String toString() {
-            return _name;
-        }
-    }
-
-    private static List<Rank> ranks = new ArrayList();
-    static {
-        ranks.add(new Rank("Point charges", 0));
-        ranks.add(new Rank("Point charges and dipoles", 1));
-        ranks.add(new Rank("Point charges, dipoles and quadrupoles", 2));
-    }
-
-    private Rank rank = ranks.get(0);;
-    private IModel<Double> convergence = Model.of(0.1);
-    private IModel<Boolean> ignoreHydrogens = Model.of(false);
+    private IModel<Integer> numChgs = Model.of(1);
 
     @Inject
     private RunMtpFitCommand runFit;
@@ -112,16 +85,11 @@ public class MtpFitSessionPage extends HeaderPage {
         fp.setOutputMarkupPlaceholderTag(true);
         add(fp);
 
-        NumberTextField ntf = new NumberTextField<>("convergence", convergence);
+        NumberTextField ntf = new NumberTextField<>("numChgs", numChgs);
         ntf.setStep(NumberTextField.ANY);
-        ntf.setMinimum(0.0);
+        ntf.setMinimum(1);
         ntf.setRequired(true);
         form.add(ntf);
-
-        form.add(new DropDownChoice("rank", new PropertyModel(this, "rank"), ranks));
-
-        CheckBox hydro = new CheckBox("ignoreHydrogens", ignoreHydrogens);
-        form.add(hydro);
 
         form.add(new AjaxButton("start") {
             @Override
@@ -130,9 +98,7 @@ public class MtpFitSessionPage extends HeaderPage {
 
                 LOGGER.debug("Showing user charges dialog");
                 LOGGER.debug("FitMtpInput Parameters: " +
-                        "convergence: " + convergence.getObject() + ", " +
-                        "rank: " + rank.getRank() + ", " +
-                        "ignoreHydrogens: " + ignoreHydrogens.getObject());
+                        "numChgs: " + numChgs.getObject());
 
                 chargesDialog.show(target);
             }
@@ -162,11 +128,6 @@ public class MtpFitSessionPage extends HeaderPage {
             protected void populateItem(ListItem<FitViewModel> item) {
                 FitViewModel vm = item.getModelObject();
 
-                item.add(new Label("index", Model.of(vm.getIndex())));
-                item.add(new Label("created", Model.of(vm.getCreated())));
-                item.add(new Label("rmse", Model.of(vm.getRmse())));
-                item.add(new Label("rank", Model.of(vm.getRank())));
-
                 item.add(new AjaxLink("remove") {
 
                     @Override
@@ -187,9 +148,7 @@ public class MtpFitSessionPage extends HeaderPage {
                 .collect(Collectors.toCollection(() -> new LinkedHashSet<>()));
 
         runFit.executeNew(getCurrentUsername(),
-                convergence.getObject(),
-                rank.getRank(),
-                ignoreHydrogens.getObject(),
+                numChgs.getObject(),
                 charges);
     }
 

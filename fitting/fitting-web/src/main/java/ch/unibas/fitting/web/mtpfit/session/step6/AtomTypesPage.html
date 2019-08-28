@@ -1,20 +1,24 @@
 <wicket:extend xmlns:wicket="http://www.w3.org/1999/xhtml">
-    <h1>Atom types and user defined charges</h1>
+    <h1>Fitted charges from mutlipole fitting</h1>
 
     <form wicket:id="form">
         <p>
             <input wicket:id="save" type="submit" value="Start session" class="btn btn-default" />
         </p>
 
-        <h3>The following table shows all atom types</h3>
+        <h3>The following table shows charge terms only</h3>
         <p>
-            You may enter initial charges here, which will be used as target values later. Values shown are from GDMA.
+            Atomic MDCM charges have now been fitted in preparation for fitting the
+            molecular MDCM. The first step in this process was to fit atom-centered
+            multipoles to the MEP. The MDCM charge model for each atom was then
+            fitted to the ESP from the atomic multipoles. The leading (charge) terms
+            from the multipole expansions are listed below.
         </p>
 
         <table cellspacing="0" class="table table-hover">
             <thead>
                 <tr>
-                    <th>Atom type</th>
+                    <th>Atom</th>
                     <th>Charge</th>
                 </tr>
             </thead>

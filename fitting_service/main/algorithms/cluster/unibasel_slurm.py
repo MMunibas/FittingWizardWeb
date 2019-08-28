@@ -2,7 +2,7 @@ import sys
 
 # These are cluster-specific, to be defined by sys admin:
 
-script_path = "/home/wfit/FittingWizardWeb/fitting_service/main/algorithms/scripts/"
+script_path = "/home/wfit/FittingWizardWeb-mdcm/fitting_service/main/algorithms/scripts/"
 
 charmm_executable = "/usr/local/bin/charmm"
 mpi_executable = "/opt/intel/openmpi-3.1.1/bin/mpirun"
@@ -18,14 +18,15 @@ gdma = "/home/wfit/bin/gdma-2.2.04/bin/gdma"
 cubegen = "/opt/cluster/programs/g09/g09_d.01/g09/cubegen"
 babel = "/bin/babel"
 
+cubefit_exe = script_path+"/pcubefit.x" # code to fit MDCM charge models using differential evolution 
+
 # These are bundled with the source, can leave as they are:
 
 fieldcomp = script_path+"/fieldcomp"
 
 def generate_gau_setup_script(input_file, output_file, working_directory, number_of_cpu_cores, job_name,
-                              gau_login_script, scratch_dir_name, gau_formchk, chk_file, fchk_file, gdma, gdma_inp_name,
-                              gdma_out_name, grid_spec, cubegen, cube_file, fieldcomp, gdma_pun_file, vdw_file_name,
-                              babel, xyz_file_name, sdf_file_name):
+                              gau_login_script, scratch_dir_name, gau_formchk, chk_file, fchk_file, 
+                              grid_spec, cubegen, pot_cube_file, dens_cube_file):
     return """#!/bin/bash
 
 ######################################################
@@ -34,7 +35,7 @@ def generate_gau_setup_script(input_file, output_file, working_directory, number
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task={cpu_cores}
-#SBATCH -p short
+#SBATCH -p ib
 #SBATCH -o {data_folder}/slurm-$JOBID.out
 
 ######################################################
@@ -65,36 +66,68 @@ echo "Starting formchk"
 {formchk} {chk_file} {fchk_file}
 
 ######################################################
-#  Run GDMA Calculation
-######################################################
-echo "Starting GDMA"
-{gdma} < {gdma_inp_name} > {gdma_out_name}
-
-######################################################
 #  Run Cubegen for ESP grid
 ######################################################
 echo "Starting CubeGen"
-echo -e {grid_spec} | {cubegen} 0 potential {fchk_file} {cube_file} -1
+echo -e {grid_spec} | {cubegen} 0 potential {fchk_file} {pot_cube_file} -1
 
 ######################################################
-#  Run FieldComp ESP fitting code
+#  Run Cubegen for Density grid
 ######################################################
-echo "Starting fieldcomp"
-{fieldcomp} -cube {cube_file} -vdw {vdw_file} -pun {pun_file} > fieldcomp.log
-
-######################################################
-#  Convert xyz file to sdf for connectivity
-######################################################
-echo "Starting Babel"
-{babel} -ixyz {xyz_file} -osdf > {sdf_file}
+echo "Starting CubeGen"
+echo -e {grid_spec} | {cubegen} 0 density {fchk_file} {dens_cube_file} -1  
 
 """.format(input_file_name=input_file, output_file_name=output_file, data_folder=working_directory,
            cpu_cores=number_of_cpu_cores, job_name=job_name, login_script=gau_login_script,
            scratch_dir_name=scratch_dir_name, formchk=gau_formchk, chk_file=chk_file, fchk_file=fchk_file,
-           workdir=working_directory, gdma=gdma, gdma_inp_name=gdma_inp_name, gdma_out_name=gdma_out_name,
-           grid_spec=grid_spec, cubegen=cubegen, cube_file=cube_file, fieldcomp=fieldcomp, pun_file=gdma_pun_file,
-           vdw_file=vdw_file_name, babel=babel, xyz_file=xyz_file_name, sdf_file=sdf_file_name)
+           workdir=working_directory,grid_spec=grid_spec, cubegen=cubegen, pot_cube_file=pot_cube_file,
+           dens_cube_file=dens_cube_file)
 
+def generate_atom_chg_fit_script(multipole_file, pot_cube_file, dens_cube_file, chgs_per_atom, job_name,
+            cpu_cores, working_directory, cubefit_exe):
+    import os
+    return """#!/bin/bash
+
+######################################################
+
+#SBATCH --job-name={job_name}
+#SBATCH --nodes=1
+#SBATCH --ntasks={cpu_cores}
+#SBATCH --cpus-per-task=1
+#SBATCH -p ib
+#SBATCH -o {workdir}/slurm-$JOBID.out
+
+######################################################
+cd {workdir}
+mkdir slices
+{cubefit} -greedy {mtpl_file} -esp {pot_cube} -dens {dens_cube} -nacmin {nchgs} -nacmax {nchgs} -ntry 5 -onlymultipoles -v >> {job_name}_charge_to_multipole_fit_out.txt 
+
+""".format(mtpl_file=multipole_file, pot_cube=pot_cube_file, dens_cube=dens_cube_file, nchgs=chgs_per_atom,
+           job_name=job_name, cpu_cores=cpu_cores, workdir=working_directory, cubefit=cubefit_exe)
+
+def generate_mol_chg_fit_script(multipole_file, pot_cube_file, dens_cube_file, job_name,
+            cpu_cores, working_directory, cubefit_exe, part1_dir, num_of_charges):
+    import os
+    return """#!/bin/bash
+
+######################################################
+
+#SBATCH --job-name={job_name}
+#SBATCH --nodes=1
+#SBATCH --ntasks={cpu_cores}
+#SBATCH --cpus-per-task=1
+#SBATCH -p ib
+#SBATCH -o {workdir}/slurm-$JOBID.out
+
+######################################################
+cd {workdir}
+cp {part1_dir}/multipole*_*charges.xyz .
+mkdir slices
+{cubefit} -greedy {mtpl_file} -esp {pot_cube} -dens {dens_cube} -ncmin {nchgs} -ncmax {nchgs} -nacmax 3 -ntry 5 -v >> {job_name}_molecular_charge_fit.out 
+
+""".format(mtpl_file=multipole_file, pot_cube=pot_cube_file, dens_cube=dens_cube_file,
+           job_name=job_name, cpu_cores=cpu_cores, workdir=working_directory, cubefit=cubefit_exe,
+           nchgs=num_of_charges, part1_dir=part1_dir)
 
 def generate_charmm_setup_script(input_file, output_file, working_directory, charmm_executable, number_of_cpu_cores,
                                  job_name, ld_path, env_path, mpi_executable, mpi_flags, scratch_dir_name,

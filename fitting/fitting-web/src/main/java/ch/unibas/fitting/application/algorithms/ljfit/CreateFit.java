@@ -11,7 +11,8 @@ import java.util.ArrayList;
 
 public class CreateFit {
 
-    public Fit createFit(int fitId,
+    public Fit createFit(String mdcmXyzFile,
+                         int fitId,
                          int rank,
                          double rmse,
                          List<OutputAtomType> atomTypes,
@@ -21,11 +22,13 @@ public class CreateFit {
         return new Fit(fitId,
                 rmse,
                 rank,
-                createFitResults(molecleNames, atomTypes, initialQ00),
+                createFitResults(mdcmXyzFile, String.valueOf(fitId), molecleNames, atomTypes, initialQ00),
                 DateTime.now());
     }
 
     private List<FitResult> createFitResults(
+            String mdcmXyzFile,
+            String mdcmFitNum,
             List<String> moleculeNames,
             List<OutputAtomType> outputAtomTypes,
             InitialQ00 initialValues) {
@@ -33,9 +36,11 @@ public class CreateFit {
         for (OutputAtomType outputAtomType : outputAtomTypes) {
             String atomTypeId = outputAtomType.getAtomType();
 
-            double initialQ = initialValues.findQ00(atomTypeId);
+            double initialQ = 0.0; //initialValues.findQ00(atomTypeId);
 
-            FitResult fitResult = new FitResult(atomTypeId,
+            FitResult fitResult = new FitResult(mdcmXyzFile,
+                    mdcmFitNum,
+                    atomTypeId,
                     moleculeNames,
                     initialQ,
                     outputAtomType);

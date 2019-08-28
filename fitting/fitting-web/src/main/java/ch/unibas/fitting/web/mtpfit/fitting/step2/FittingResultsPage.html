@@ -15,43 +15,33 @@
             <p style="display: inline">
                 Fit: <select wicket:id="fitNumbers"></select>
             </p>
-            <input wicket:id="download" type="button" value="Download LPUN" class="btn btn-default"/>
+            <input wicket:id="download" type="button" value="Download DCM File" class="btn btn-default"/>
         </div>
     </form>
 
     <div>
         <table cellspacing="0" class="table">
             <tr>
-                <th>Atom type</th>
-                <th>Q00</th>
-                <th>Q10</th>
-                <th>Q1C</th>
-                <th>Q1S</th>
-                <th>Q20</th>
-                <th>Q21C</th>
-                <th>Q21S</th>
-                <th>Q22C</th>
-                <th>Q22S</th>
+                <th>X</th>
+                <th>Y</th>
+                <th>Z</th>
+                <th>Charge</th>
             </tr>
             <tr wicket:id="fitResults">
-                <td><span wicket:id="type"></span></td>
+                <td wicket:id="X" />
+                <td wicket:id="Y" />
+                <td wicket:id="Z" />
                 <td wicket:id="Q00" />
-                <td wicket:id="Q10" />
-                <td wicket:id="Q11c" />
-                <td wicket:id="Q11s" />
-                <td wicket:id="Q20" />
-                <td wicket:id="Q21c" />
-                <td wicket:id="Q21s" />
-                <td wicket:id="Q22c" />
-                <td wicket:id="Q22s" />
             </tr>
         </table>
 
         <p>
-            Red values: Q00 > 0.8, rest > 1.2
+            <b>RMSE</b>: <span wicket:id="rmse"></span> kcal/mol
         </p>
+        <br>
         <p>
-            Root Mean Square Error (RMSE): <span wicket:id="rmse"></span> kcal/mol
+            Nuclear positions (white) with final MDCM charge positions.<br>
+            (Blue: +ve, Red: -ve)
         </p>
     </div>
 

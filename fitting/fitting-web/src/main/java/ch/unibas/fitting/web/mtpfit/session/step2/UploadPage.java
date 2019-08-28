@@ -4,6 +4,7 @@ import ch.unibas.fitting.application.directories.IUserDirectory;
 import ch.unibas.fitting.application.calculation.CalculationService;
 import ch.unibas.fitting.web.mtpfit.session.step3.AtomsPage;
 import ch.unibas.fitting.web.misc.HeaderPage;
+import ch.unibas.fitting.web.mtpfit.session.step2.UploadedMDCMFiles;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -32,6 +33,7 @@ public class UploadPage extends HeaderPage {
     private CalculationService calculationService;
 
     private final FileUploadField file;
+    private final FileUploadField axisUploadFile;
 
     public UploadPage() {
         final Component feedback = new FeedbackPanel("feedback").setOutputMarkupId(true);
@@ -51,14 +53,37 @@ public class UploadPage extends HeaderPage {
                     return;
                 }
 
+                FileUpload aUpload = axisUploadFile.getFileUpload();
+                if (aUpload == null)
+                {
+                    LOGGER.debug("No axis file uploaded");
+                    return;
+                }
+
                 cleanupMtpSession();
 
-                LOGGER.debug("File-Name: " + upload.getClientFileName() + " File-Size: " +
+                LOGGER.info("File-Name: " + upload.getClientFileName() + " File-Size: " +
                         Bytes.bytes(upload.getSize()).toString());
+
+                LOGGER.info("Axis File-Name: " + aUpload.getClientFileName() + " File-Size: " +
+                        Bytes.bytes(aUpload.getSize()).toString());
+
+                File fitDestination = _userDir.getMtpFitDir(getCurrentUsername())
+                        .getMoleculeDir()
+                        .getSessionDir();
 
                 File destination = _userDir.getMtpFitDir(getCurrentUsername())
                         .getMoleculeDir()
                         .getXyzFileFor(upload.getClientFileName());
+
+                File axisFile = new File(fitDestination, aUpload.getClientFileName());
+                try {
+                    aUpload.writeTo(axisFile);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+                UploadedMDCMFiles uploadedMDCMFiles = new UploadedMDCMFiles(axisFile);
 
                 try {
                     upload.writeTo(destination);
@@ -69,6 +94,7 @@ public class UploadPage extends HeaderPage {
                 PageParameters pp = new PageParameters();
                 String moleculeName = FilenameUtils.removeExtension(destination.getName());
                 pp.add("molecule_name", moleculeName);
+                pp.add("axis_file_name", axisFile.getName());
 
                 setResponsePage(AtomsPage.class, pp);
             }
@@ -76,6 +102,7 @@ public class UploadPage extends HeaderPage {
         form.setMaxSize(Bytes.megabytes(2));
         add(form);
         form.add(file = new FileUploadField("file"));
+        form.add(axisUploadFile = new FileUploadField("axisUploadFile"));
         form.add(new Label("max", new Model<>(form.getMaxSize().toString())));
         form.add(new AjaxButton("ajaxSubmit")
         {

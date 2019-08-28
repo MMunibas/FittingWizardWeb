@@ -11,14 +11,26 @@ import java.util.HashMap;
  */
 public class FitResultViewModel implements Serializable {
     private final String atomType;
+    private String mdcmXyzFile;
+    private String mdcmFitNum;
     private HashMap<String, ChargeValue> values = new HashMap<>();
 
     public FitResultViewModel(
             FitResult fr) {
         this.atomType = fr.getAtomTypeName();
+        this.mdcmXyzFile = fr.getMdcmXyzFile();
+        this.mdcmFitNum = fr.getMdcmFitNum();
         fr.getChargeValues().forEach(chargeValue -> {
             values.put(chargeValue.getMultipoleComponent().toLowerCase(), chargeValue);
         });
+    }
+
+    public String getMdcmXyzFile() {
+        return mdcmXyzFile;
+    }
+
+    public String getMdcmFitNum() {
+        return mdcmFitNum;
     }
 
     public String getAtomType() {

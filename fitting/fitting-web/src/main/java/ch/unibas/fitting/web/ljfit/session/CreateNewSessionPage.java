@@ -39,6 +39,7 @@ public class CreateNewSessionPage extends HeaderPage {
     private final FileUploadField rtfOrTopUploadFile;
     private final FileUploadField molUploadFile;
     private final FileUploadField liquidUploadFile;
+    private final FileUploadField solventUploadFile;
     private final FileUploadField lpunUploadFile;
     private final FileUploadField resUploadFile;
 
@@ -63,6 +64,7 @@ public class CreateNewSessionPage extends HeaderPage {
         form.add(rtfOrTopUploadFile = createFileUploadField("rtfOrTopUploadFile"));
         form.add(molUploadFile = createFileUploadField("molUploadFile"));
         form.add(liquidUploadFile = createFileUploadField("liquidUploadFile"));
+        form.add(solventUploadFile = createFileUploadField("solventUploadFile"));
         form.add(lpunUploadFile = createFileUploadField("lpunUploadFile"));
         form.add(resUploadFile = createFileUploadField("resUploadFile"));
 
@@ -142,6 +144,7 @@ public class CreateNewSessionPage extends HeaderPage {
         File rtfFile = uploadFile(destination, rtfOrTopUploadFile.getFileUpload());
         File molFile = uploadFile(destination, molUploadFile.getFileUpload());
         File liquidFile = uploadFile(destination, liquidUploadFile.getFileUpload());
+        File solventFile = uploadFile(destination, solventUploadFile.getFileUpload());
         File lpunFile = uploadFile(destination, lpunUploadFile.getFileUpload());
         File resFile = uploadFile(destination, resUploadFile.getFileUpload());
 
@@ -150,6 +153,7 @@ public class CreateNewSessionPage extends HeaderPage {
                 rtfFile,
                 molFile,
                 liquidFile,
+                solventFile,
                 lpunFile,
                 resFile);
     }

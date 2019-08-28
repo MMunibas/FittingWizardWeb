@@ -38,20 +38,6 @@ public class EnterChargesPanel extends Panel {
         fp.setOutputMarkupPlaceholderTag(true);
         add(fp);
 
-        form.add(new ListView<ChargesViewModel>("atomTypes", EnterChargesPanel.this.atomTypes) {
-            @Override
-            protected void populateItem(ListItem<ChargesViewModel> item) {
-                ChargesViewModel mol = item.getModelObject();
-
-                item.add(new Label("type", mol.getAtomType()));
-
-                NumberTextField chargeField = new NumberTextField("charge", new PropertyModel<String>(mol, "userCharge"));
-                chargeField.setStep(NumberTextField.ANY);
-                chargeField.setRequired(true);
-                item.add(chargeField);
-            }
-        });
-
         form.add(new AjaxButton("start") {
             @Override
             public void onSubmit(AjaxRequestTarget target, Form<?> form) {

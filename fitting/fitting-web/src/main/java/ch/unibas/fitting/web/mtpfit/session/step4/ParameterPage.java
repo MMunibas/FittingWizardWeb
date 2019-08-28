@@ -28,6 +28,7 @@ public class ParameterPage extends HeaderPage {
     private IModel<Integer> _multiplicity = Model.of(1);
 
     private final String moleculeName;
+    private final String axisFileName;
 
     @Inject
     private RunMtpGenerateFilesCommand runGaussian;
@@ -36,6 +37,10 @@ public class ParameterPage extends HeaderPage {
 
         this.moleculeName = pp.get("molecule_name").toString();
         if (moleculeName == null)
+            PageNavigation.ToPage(UploadPage.class);
+
+        this.axisFileName = pp.get("axis_file_name").toString();
+        if (axisFileName == null)
             PageNavigation.ToPage(UploadPage.class);
 
         Form form = new Form("form");
@@ -73,6 +78,7 @@ public class ParameterPage extends HeaderPage {
 
                 runGaussian.execute(getCurrentUsername(),
                         moleculeName,
+                        axisFileName,
                         _netCharge.getObject(),
                         _quantum.getObject(),
                         _nCores.getObject(),

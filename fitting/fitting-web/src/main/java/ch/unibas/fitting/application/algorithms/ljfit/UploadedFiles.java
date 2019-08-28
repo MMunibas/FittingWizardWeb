@@ -8,6 +8,7 @@ public class UploadedFiles {
     public final File rtfFile;
     public final File molFile;
     public final File liquidFile;
+    public final File solventFile;
     public final File lpunFile;
     public final File resFile;
 
@@ -16,6 +17,7 @@ public class UploadedFiles {
         this.rtfFile = fileOrNull(baseDir, uploadedFileNames.rtfFile);
         this.molFile = fileOrNull(baseDir, uploadedFileNames.molFile);
         this.liquidFile = fileOrNull(baseDir, uploadedFileNames.liquidFile);
+        this.solventFile = fileOrNull(baseDir, uploadedFileNames.solventFile);
         this.lpunFile = fileOrNull(baseDir, uploadedFileNames.lpunFile);
         this.resFile = fileOrNull(baseDir, uploadedFileNames.resFile);
     }
@@ -32,6 +34,7 @@ public class UploadedFiles {
         safeAdd(rtfFile, array);
         safeAdd(molFile, array);
         safeAdd(liquidFile, array);
+        safeAdd(solventFile, array);
         safeAdd(lpunFile, array);
         safeAdd(resFile, array);
         return array.toArray(new File[0]);

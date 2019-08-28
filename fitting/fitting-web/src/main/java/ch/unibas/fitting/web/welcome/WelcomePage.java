@@ -24,7 +24,7 @@ public class WelcomePage extends HeaderPage {
     public WelcomePage() {
 
         List<String> selections = Arrays.asList(new String[] {
-                "MTP Fit using Gaussian",
+                "MDCM Fit using Gaussian",
                 "LJ Fit using CHARMM" });
 
         RadioChoice<String> fittingOptions = new RadioChoice<>("types",
@@ -36,7 +36,7 @@ public class WelcomePage extends HeaderPage {
             @Override
             protected void onSubmit() {
 
-                if ("MTP Fit using Gaussian".equalsIgnoreCase(navigationSelection)) {
+                if ("MDCM Fit using Gaussian".equalsIgnoreCase(navigationSelection)) {
                     startMtpFitSession.execute(getCurrentUsername());
                 } else if ("LJ Fit using CHARMM".equalsIgnoreCase(navigationSelection)) {
                     startLjFitSession.execute(getCurrentUsername());

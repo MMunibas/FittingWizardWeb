@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 public class AtomsPage extends HeaderPage {
 
     private String moleculeName;
+    private String axisFileName;
     private IModel<XyzFile> _xyzFile;
 
     @Inject
@@ -36,6 +37,7 @@ public class AtomsPage extends HeaderPage {
     public AtomsPage(PageParameters pp) {
 
         this.moleculeName = pp.get("molecule_name").toString();
+        this.axisFileName = pp.get("axis_file_name").toString();
 
         add(new Label("filename", Model.of(moleculeName != null ? moleculeName + ".xyz" : "no file defined")));
 
@@ -62,6 +64,7 @@ public class AtomsPage extends HeaderPage {
 
                 PageParameters pp = new PageParameters();
                 pp.add("molecule_name", moleculeName);
+                pp.add("axis_file_name", axisFileName);
 
                 setResponsePage(ParameterPage.class, pp);
             }
