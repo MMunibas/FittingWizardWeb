@@ -333,10 +333,10 @@ def parse_dens_out(ctx, slu, top, results, T, gas_out_name, dens_out_name):
             words = line.split()
             if len(words) > 3:
                if words[0].upper() == "ATOM":
-                   if res and words[3] != res:
+                   if res and words[3].upper != res:
                        raise Exception(
                            "More than one residue type (" + res + " and " + words[3] + ") in solute pdb " + slu)
-                   res = words[3]
+                   res = words[3].upper
         ctx.log.info("RES type is " + res)
     pdb.close()
     ctx.log.info("Reading Atomic Masses from Topology file " + top)
@@ -347,14 +347,14 @@ def parse_dens_out(ctx, slu, top, results, T, gas_out_name, dens_out_name):
             words = line.split()
             if len(words) > 0:
                 if words[0].upper() == "MASS":
-                    masses[words[2]] = words[3]
-                if words[0].upper() == "RESI" and words[1] == res:
+                    masses[words[2].upper] = words[3].upper
+                if words[0].upper() == "RESI" and words[1].upper == res:
                     resF = True
                 elif words[0].upper() == "RESI":
                     resF = False
                 if resF == True and words[0].upper() == "ATOM":
-                    if words[2] in masses:
-                        mmass += float(masses[words[2]])
+                    if words[2].upper in masses:
+                        mmass += float(masses[words[2].upper])
                     else:
                         raise Exception("Atom type " + words[2] + " not found in list of atomic masses")
     if mmass == 0.0:
