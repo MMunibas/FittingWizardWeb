@@ -822,7 +822,8 @@ def Get_local_XYZ(AC,refkind,RC):
       if numpy.dot(D,D) > 0 and numpy.dot(D,Z) < 0: Z = (-1)*Z
       Y = norm(numpy.cross(Z,numpy.cross(norm(AC-RC[0])+norm(AC-RC[1])+norm(RC[2]-AC),Z)))
       X = numpy.cross(Y,Z)
-      if numpy.dot(X,RC[0]-AC) < 0: X = (-1)*X                    # 13/12/11 Changed to this system due to consistency problems
+#      if numpy.dot(X,RC[0]-AC) < 0: X = (-1)*X                    # 13/12/11 Changed to this system due to consistency problems
+      if numpy.dot(X,AC-RC[1]) > 0: X = (-1)*X    # MD: 13/12/11 correction from Christian doesn't seem to be implemented in CHARMM...
       
     # Z for nrefA 2: is perpendicular to the plain of AC, RC[0] and RC[1]
     # Y for nrefA 2: bisects the angle RC[0],AC,RC[1]   
